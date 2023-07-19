@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -33,8 +35,7 @@ public class SecurityConfig {
         http.cors();
         http.csrf().disable();
 
-                
-                http.authorizeRequests() // 요청에 대한 권한 설정
+        http.authorizeRequests() // 요청에 대한 권한 설정
                 .antMatchers("/auth/signup").permitAll()
                 .antMatchers("/api-docs/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
