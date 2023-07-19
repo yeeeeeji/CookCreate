@@ -1,5 +1,6 @@
 package com.mmt.service;
 
+import com.mmt.domain.entity.Member;
 import com.mmt.domain.request.UserLoginPostReq;
 import com.mmt.domain.request.UserSignUpReq;
 import com.mmt.domain.response.ResponseDto;
@@ -14,4 +15,5 @@ public interface MemberService {
     public ResponseDto signUp(UserSignUpReq userSignUpReq) throws Exception;
     public ResponseDto login(UserLoginPostReq userLoginPostReq, HttpServletResponse response);
     public ResponseDto logout(HttpServletRequest request, HttpServletResponse response);
+    public Member getUserInfo(String userId);
 }

@@ -4,7 +4,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-
 public class UserDetailsImpl implements UserDetails { // UserDetails는 security에서 지원
 
     private Member member;
@@ -29,7 +28,7 @@ public class UserDetailsImpl implements UserDetails { // UserDetails는 security
 
     @Override
     public String getUsername() {
-        return null;
+        return this.member.getUserId();
     }
 
     @Override

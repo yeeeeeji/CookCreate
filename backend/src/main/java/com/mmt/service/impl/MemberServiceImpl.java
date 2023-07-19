@@ -7,6 +7,7 @@ import com.mmt.domain.entity.RefreshToken;
 import com.mmt.domain.request.UserLoginPostReq;
 import com.mmt.domain.request.UserSignUpReq;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.UserInfoRes;
 import com.mmt.repository.MemberRepository;
 import com.mmt.repository.RefreshTokenRepository;
 import com.mmt.service.MemberService;
@@ -87,6 +88,13 @@ public class MemberServiceImpl implements MemberService {
         setHeader(response, tokenDto);
 
         return new ResponseDto(HttpStatus.OK.value(), "Success Logout");
+    }
+
+    @Override
+    public Member getUserInfo(String userId) {
+        Member member = memberRepository.findByUserId(userId).orElseThrow(
+                () -> new RuntimeException("Not found Account"));
+        return member;
     }
 
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {
