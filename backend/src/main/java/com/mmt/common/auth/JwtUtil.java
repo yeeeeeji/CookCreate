@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtUtil {
+public class JwtUtil { // 토큰을 생성하고 토큰에서 정보를 가져옴.
 
     private final UserDetailsServiceImpl userDetailsService;
     private final RefreshTokenRepository refreshTokenRepository;

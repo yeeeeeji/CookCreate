@@ -1,8 +1,7 @@
 package com.mmt.config;
 
+import com.mmt.common.auth.JwtFilter;
 import com.mmt.common.auth.JwtUtil;
-import com.mmt.common.exception.JwtAccessDeniedHandler;
-import com.mmt.common.exception.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,8 +22,6 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -31,28 +29,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .csrf().disable()
-                .formLogin().disable()
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-                .exceptionHandling() // 401, 403 Exception 핸들링
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
+        http.cors();
+        http.csrf().disable();
 
-                .and()
-                .authorizeRequests() // 요청에 대한 권한 설정
-                .antMatchers("/authenticate").authenticated()
-                .anyRequest().permitAll()
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-                .and()
-                .sessionManagement() // 세션 사용하지 않음
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http.authorizeRequests().antMatchers("/auth/**", "/swagger-ui/index.html").permitAll()
+                .anyRequest().authenticated()
+                .and().addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
-                //.and()
-                //.apply(new JwtSecurityConfig(jwtUtil))
+        return http.build();
 
-                .and().build();
     }
 
     @Bean
