@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -73,6 +74,19 @@ public class MemberServiceImpl implements MemberService {
         setHeader(response, tokenDto);
 
         return new ResponseDto(HttpStatus.OK.value(), "Success Login");
+    }
+
+    @Transactional
+    @Override
+    public ResponseDto logout(HttpServletRequest request, HttpServletResponse response) {
+        jwtUtil.logout(request);
+
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setAccessToken(null);
+        tokenDto.setRefreshToken(null);
+        setHeader(response, tokenDto);
+
+        return new ResponseDto(HttpStatus.OK.value(), "Success Logout");
     }
 
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {

@@ -24,6 +24,7 @@ import io.jsonwebtoken.security.Keys;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 
 @Slf4j
 @Component
@@ -122,5 +123,16 @@ public class JwtUtil { // 토큰을 생성하고 토큰에서 정보를 가져�
     // refresh token 헤더 설정
     public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
         response.setHeader("Refresh_Token", refreshToken);
+    }
+
+    public void logout(HttpServletRequest request){
+        String refreshToken = getHeaderToken(request, "Refresh");
+        removeRefreshToken(refreshToken);
+    }
+
+    @Transactional
+    public void removeRefreshToken(String refreshToken){
+        refreshTokenRepository.findByRefreshToken(refreshToken)
+                .ifPresent(r -> r.setRefreshToken(null));
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
@@ -39,5 +40,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseDto login(@RequestBody UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
         return memberService.login(userLoginPostReq, response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseDto login(HttpServletRequest request, HttpServletResponse response) {
+        return memberService.logout(request, response);
     }
 }
