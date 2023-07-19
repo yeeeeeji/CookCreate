@@ -37,7 +37,7 @@ public class AuthController {
 
     @Operation(summary = "회원 가입", description = "회원 가입한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "successful operation",
+            @ApiResponse(responseCode = "201", description = "success",
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
             @ApiResponse(responseCode = "400", description = "bad request operation",
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class)))
@@ -47,11 +47,28 @@ public class AuthController {
         return memberService.signUp(userSignUpReq);
     }
 
+    @Operation(summary = "로그인", description = "<b>아이디와 비밀번호</b>를 입력해 로그인 한다..")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success",
+                    content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 계정입니다.",
+                    content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+                    content = @Content(schema = @Schema(implementation = UserSignUpReq.class)))
+    })
     @PostMapping("/login")
     public ResponseDto login(@RequestBody UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
         return memberService.login(userLoginPostReq, response);
     }
 
+    @Operation(summary = "로그아웃", description = "<b>로그인 상태인 사용자</b>는 로그아웃 할 수 있다.")
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success",
+                    content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED",
+                    content = @Content(schema = @Schema(implementation = UserSignUpReq.class)))
+    })
     @PostMapping("/logout")
     public ResponseDto login(HttpServletRequest request, HttpServletResponse response) {
         return memberService.logout(request, response);

@@ -36,7 +36,7 @@ public class SecurityConfig {
         http.csrf().disable();
 
         http.authorizeRequests() // 요청에 대한 권한 설정
-                .antMatchers("/auth/signup").permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .antMatchers("/api-docs/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .anyRequest().authenticated();
