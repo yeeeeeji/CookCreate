@@ -7,7 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mmt.domain.response.ResponseVo;
+import com.mmt.domain.response.ResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -23,9 +23,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         PrintWriter writer = response.getWriter();
         ErrorCode errorCode = CommonErrorCode.UNAUTHORIZED;
-        ResponseVo responseVo = ResponseVo.builder()
-                .status(errorCode.getResultCode())
-                .message(errorCode.getResultMessage()).build();
+//        ResponseDto responseDto = ResponseDto.builder()
+//                .status(errorCode.getResultCode())
+//                .message(errorCode.getResultMessage()).build();
         try{
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 //            writer.write(CmmnVar.GSON.toJson(responseVo));

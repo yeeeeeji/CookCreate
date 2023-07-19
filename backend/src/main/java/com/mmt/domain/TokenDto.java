@@ -1,10 +1,16 @@
 package com.mmt.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
+@Getter
+@NoArgsConstructor
 public class TokenDto {
-    private String token;
+    private String accessToken;
+    private String refreshToken;
+
+    public TokenDto(String accessToken, String refreshToken){
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 }

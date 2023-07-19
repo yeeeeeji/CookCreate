@@ -1,6 +1,6 @@
 package com.mmt.config;
 
-import com.mmt.common.auth.TokenProvider;
+import com.mmt.common.auth.JwtUtil;
 import com.mmt.common.exception.JwtAccessDeniedHandler;
 import com.mmt.common.exception.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final TokenProvider tokenProvider;
+    private final JwtUtil jwtUtil;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
@@ -48,8 +48,8 @@ public class SecurityConfig {
                 .sessionManagement() // 세션 사용하지 않음
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                .and()
-                .apply(new JwtSecurityConfig(tokenProvider))
+                //.and()
+                //.apply(new JwtSecurityConfig(jwtUtil))
 
                 .and().build();
     }
