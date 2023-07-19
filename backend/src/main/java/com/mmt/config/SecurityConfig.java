@@ -35,9 +35,8 @@ public class SecurityConfig {
         http.cors();
         http.csrf().disable();
 
-                
-                http.authorizeRequests() // 요청에 대한 권한 설정
-                .antMatchers("/auth/**").permitAll()
+        http.authorizeRequests() // 요청에 대한 권한 설정
+                .antMatchers("/auth/signup").permitAll()
                 .antMatchers("/api-docs/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .anyRequest().authenticated();
