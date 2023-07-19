@@ -20,6 +20,10 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
+    // 클라이언트가 요청을 보내면 딱한번 실행이됨.
+    // 클라이언트가 header에 토큰값을 실어보내면
+    // doFilterInternal안에서 토큰검증후 인증객체 생성후
+    // Security Context에 정보 저장
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtFilter.class);
 
