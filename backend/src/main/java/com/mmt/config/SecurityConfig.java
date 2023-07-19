@@ -11,9 +11,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
 
 @Configuration
 @EnableWebSecurity
@@ -26,14 +25,12 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf().disable()
+                .cors()
+                .and()
+
                 .formLogin().disable()
 
                 .exceptionHandling() // 401, 403 Exception 핸들링
@@ -42,8 +39,10 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests() // 요청에 대한 권한 설정
-                .antMatchers("/authenticate").authenticated()
-                .anyRequest().permitAll()
+                .antMatchers("/auth/signup").permitAll()
+                .antMatchers("/api-docs/**").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .anyRequest().authenticated()
 
                 .and()
                 .sessionManagement() // 세션 사용하지 않음
@@ -58,6 +57,6 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-                .antMatchers("/favicon.ico");
+                .antMatchers("/img");
     }
 }

@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Getter
@@ -13,5 +14,6 @@ public class Member extends BaseTimeEntity {
 
     @Id
     private String userId;
+    @NotBlank
     private String userPw;
 }

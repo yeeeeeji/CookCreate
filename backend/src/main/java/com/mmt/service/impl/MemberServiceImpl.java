@@ -23,8 +23,11 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = new Member();
 
-        member.setUserId(userInfo.getId());
-        member.setUserPw(passwordEncoder.encode(userInfo.getPassword()));
+        //아이디 중복 검사
+        if(!memberRepository.findByUserId(userInfo.getId()).isPresent()) {
+            member.setUserId(userInfo.getId());
+            member.setUserPw(passwordEncoder.encode(userInfo.getPassword()));
+        }
 
         return memberRepository.save(member);
     }
