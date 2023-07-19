@@ -19,6 +19,9 @@ public class Member extends BaseTimeEntity {
     private String userId;
     @NotBlank
     private String userPw;
+    @NotBlank
+    private String nickname;
+
 
     public Member(UserSignUpReq userSignUpReq){
         this.userId = userSignUpReq.getUserId();
