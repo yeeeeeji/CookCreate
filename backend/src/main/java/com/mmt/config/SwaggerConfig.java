@@ -9,8 +9,6 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Arrays;
-
 @OpenAPIDefinition(
         info = @Info(title = "CookCreate API 명세서",
                 description = "실시간 피드백 요리 과외 서비스 API 명세서",

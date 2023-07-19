@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class UserLoginPostReq {
-    private String id;
-    private String password;
+    private String userId;
+    private String userPw;
 }
