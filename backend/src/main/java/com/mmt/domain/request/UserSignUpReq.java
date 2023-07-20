@@ -23,7 +23,7 @@ public class UserSignUpReq {
     @Length(min = 2, max = 8, message = "닉네임은 2자 이상 8자 이하여야 합니다.")
     @NotBlank(message = "닉네임을 입력해주세요.")
     private String nickname;
-    private int phoneNumber;
+    private String phoneNumber;
     @Email(message = "이메일 형식을 지켜주세요.")
     private String userEmail;
     private String food;

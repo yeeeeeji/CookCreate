@@ -102,7 +102,7 @@ public class MemberServiceImpl implements MemberService {
         tokenDto.setRefreshToken(null);
         setHeader(response, tokenDto);
 
-        return new ResponseDto(HttpStatus.OK, "Success Logout");
+        return new ResponseDto(HttpStatus.OK, "Success");
     }
 
     @Override
@@ -139,16 +139,23 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Optional<Member> updateUserInfo(String userId, UserUpdateReq userUpdateReq) {
-        Optional<Member> member = memberRepository.findByUserId(userId);
-        member.ifPresent(t -> {
-            if(userUpdateReq.getNickname() != null) {
-                t.setNickname(userUpdateReq.getNickname());
-            }
-            this.memberRepository.save(t);
-        });
+    public ResponseDto updateUserInfo(String userId, UserUpdateReq userUpdateReq) {
 
-        return member;
+        if(memberRepository.findByUserId(userId).isPresent()) {
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 계정입니다.");
+        }
+
+        Member member = memberRepository.findByUserId(userId).get();
+        // 비밀번호 확인
+        if(userUpdateReq.getUserPw() != userUpdateReq.getUserPwCk()) {
+            return new ResponseDto(HttpStatus.BAD_REQUEST, "비밀번호 확인을 다시 입력해주세요.");
+        }
+
+        userUpdateReq.setEncodePw(passwordEncoder.encode(userUpdateReq.getUserPw()));
+        member.update(userUpdateReq);
+        this.memberRepository.save(member);
+
+        return new ResponseDto(HttpStatus.OK, "Success");
     }
 
     @Override
