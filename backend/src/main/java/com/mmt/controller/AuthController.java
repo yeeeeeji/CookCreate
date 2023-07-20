@@ -59,21 +59,21 @@ public class AuthController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
-            @ApiResponse(responseCode = "401", description = "아이디와 비밀번호를 확인해주세요.",
+            @ApiResponse(responseCode = "401", description = "비밀번호를 확인해주세요.",
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 계정입니다.",
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class)))
     })
     @PostMapping("/login")
-    public ResponseDto login(@Valid @RequestBody UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
+    public ResponseDto login(@RequestBody UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
         return memberService.login(userLoginPostReq, response);
     }
 
     @Operation(summary = "아이디 중복 체크", description = "존재하는 아이디인지 확인한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "사용 가능한 아이디입니다.",
+            @ApiResponse(responseCode = "200", description = "사용 가능한 ID입니다.",
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
-            @ApiResponse(responseCode = "409", description = "이미 존재하는 아이디입니다.",
+            @ApiResponse(responseCode = "409", description = "이미 존재하는 사용자 ID입니다.",
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class)))
     })
     @GetMapping("/check/{userId}")

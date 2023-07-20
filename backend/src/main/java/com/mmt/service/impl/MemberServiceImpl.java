@@ -87,7 +87,7 @@ public class MemberServiceImpl implements MemberService {
         // response 헤더에 Access Token / Refresh Token 넣음
         setHeader(response, tokenDto);
 
-        return new ResponseDto(HttpStatus.OK, "Success Login");
+        return new ResponseDto(HttpStatus.OK, "Success");
     }
 
     @Transactional
@@ -105,32 +105,24 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public ResponseDto checkUserId(String userId){
-        try {
-            Optional<Member> result = memberRepository.findByUserId(userId);
+        Optional<Member> result = memberRepository.findByUserId(userId);
 
-            if(result.isPresent()){ // user id로 찾아서 값이 존재한다면 해당 아이디는 사용 불가
-                return new ResponseDto(HttpStatus.CONFLICT, "이미 존재하는 사용자 ID입니다.");
-            }else{
-                return new ResponseDto(HttpStatus.OK, "사용 가능한 ID입니다.");
-            }
-        }catch (Exception e){
-            return new ResponseDto(HttpStatus.OK, "사용 가능한 ID입니다.");
+        if(result.isPresent()){ // user id로 찾아서 값이 존재한다면 해당 아이디는 사용 불가
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 존재하는 사용자 ID입니다.");
         }
+
+        return new ResponseDto(HttpStatus.OK, "사용 가능한 ID입니다.");
     }
 
     @Override
     public ResponseDto checkNickname(String nickname){
-        try {
-            Optional<Member> result = memberRepository.findByNickname(nickname);
+        Optional<Member> result = memberRepository.findByNickname(nickname);
 
-            if(result.isPresent()){ // 닉네임으로 찾아서 값이 존재한다면 해당 아이디는 사용 불가
-                return new ResponseDto(HttpStatus.CONFLICT, "이미 존재하는 사용자 닉네임입니다.");
-            }else{
-                return new ResponseDto(HttpStatus.OK, "사용 가능한 닉네임입니다.");
-            }
-        }catch (Exception e){
-            return new ResponseDto(HttpStatus.OK, "사용 가능한 닉네임입니다.");
+        if(result.isPresent()){ // 닉네임으로 찾아서 값이 존재한다면 해당 아이디는 사용 불가
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 존재하는 사용자 닉네임입니다.");
         }
+
+        return new ResponseDto(HttpStatus.OK, "사용 가능한 닉네임입니다.");
     }
 
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {
