@@ -13,7 +13,6 @@ import java.util.Optional;
 public interface MemberService {
 
     // 회원가입
-
     public ResponseDto signUp(UserSignUpReq userSignUpReq) throws Exception;
     public ResponseDto login(UserLoginPostReq userLoginPostReq, HttpServletResponse response);
 
@@ -22,4 +21,6 @@ public interface MemberService {
     public Optional<Member> updateUserInfo(String userId, UserUpdateReq userUpdateReq);
     public ResponseDto deleteUser(String userId);
 
+    public ResponseDto checkUserId(String userId);
+    public ResponseDto checkNickname(String nickname);
 }
