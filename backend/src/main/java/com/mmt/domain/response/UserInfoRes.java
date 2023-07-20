@@ -16,6 +16,7 @@ public class UserInfoRes {
     Role role;
     String introduce;
     String profileImg;
+    String introUrl;
     String createdDate;
 
     public UserInfoRes(Member member) {

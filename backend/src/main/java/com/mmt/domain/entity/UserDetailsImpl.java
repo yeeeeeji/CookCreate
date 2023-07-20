@@ -22,9 +22,7 @@ public class UserDetailsImpl implements UserDetails { // UserDetails는 security
     }
 
     @Override
-    public String getPassword() {
-        return null;
-    }
+    public String getPassword() { return this.member.getUserPw();}
 
     @Override
     public String getUsername() {
