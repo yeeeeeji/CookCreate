@@ -31,7 +31,22 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public ResponseDto signUp(UserSignUpReq userSignUpReq) throws Exception {
+    public ResponseDto signUp(UserSignUpReq userSignUpReq){
+
+        // 비밀번호 확인
+        if(!userSignUpReq.getUserPw().equals(userSignUpReq.getUserPwCk())) {
+            return new ResponseDto(HttpStatus.BAD_REQUEST, "비밀번호 확인을 다시 입력해주세요.");
+        }
+
+        // 아이디 중복 확인
+        if(checkUserId(userSignUpReq.getUserId()).getStatusCode().equals(HttpStatus.CONFLICT)){
+            return new ResponseDto(HttpStatus.CONFLICT, "중복된 아이디입니다.");
+        }
+
+        // 닉네임 중복 확인
+        if(checkNickname(userSignUpReq.getNickname()).getStatusCode().equals(HttpStatus.CONFLICT)){
+            return new ResponseDto(HttpStatus.CONFLICT, "중복된 닉네임입니다.");
+        }
 
         // 패스워드 암호화
         userSignUpReq.setEncodePw(passwordEncoder.encode(userSignUpReq.getUserPw()));
@@ -39,20 +54,19 @@ public class MemberServiceImpl implements MemberService {
 
         // 회원가입 성공
         memberRepository.save(member);
-        return new ResponseDto(HttpStatus.OK.value(), "Success");
+        return new ResponseDto(HttpStatus.CREATED, "Success");
     }
 
     @Transactional
     @Override
     public ResponseDto login(UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
         // 아이디 검사
-        Member member = memberRepository.findByUserId(userLoginPostReq.getUserId()).orElseThrow(
-                () -> new RuntimeException("Not found Account")
-        );
+        Optional<Member> member = memberRepository.findByUserId(userLoginPostReq.getUserId());
+        if(member.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 계정입니다.");
 
         // 비밀번호 검사
-        if(!passwordEncoder.matches(userLoginPostReq.getUserPw(), member.getUserPw())) {
-            throw new RuntimeException("Not matches Password");
+        if(!passwordEncoder.matches(userLoginPostReq.getUserPw(), member.get().getUserPw())) {
+            return new ResponseDto(HttpStatus.UNAUTHORIZED, "비밀번호를 확인해주세요.");
         }
 
         // 아이디 정보로 Token생성
@@ -73,7 +87,7 @@ public class MemberServiceImpl implements MemberService {
         // response 헤더에 Access Token / Refresh Token 넣음
         setHeader(response, tokenDto);
 
-        return new ResponseDto(HttpStatus.OK.value(), "Success Login");
+        return new ResponseDto(HttpStatus.OK, "Success Login");
     }
 
     @Transactional
@@ -86,7 +100,7 @@ public class MemberServiceImpl implements MemberService {
         tokenDto.setRefreshToken(null);
         setHeader(response, tokenDto);
 
-        return new ResponseDto(HttpStatus.OK.value(), "Success Logout");
+        return new ResponseDto(HttpStatus.OK, "Success Logout");
     }
 
     @Override
@@ -95,12 +109,12 @@ public class MemberServiceImpl implements MemberService {
             Optional<Member> result = memberRepository.findByUserId(userId);
 
             if(result.isPresent()){ // user id로 찾아서 값이 존재한다면 해당 아이디는 사용 불가
-                return new ResponseDto(HttpStatus.CONFLICT.value(), "이미 존재하는 사용자 ID입니다.")
+                return new ResponseDto(HttpStatus.CONFLICT, "이미 존재하는 사용자 ID입니다.");
             }else{
-                return new ResponseDto(HttpStatus.OK.value(), "사용 가능한 ID입니다.");
+                return new ResponseDto(HttpStatus.OK, "사용 가능한 ID입니다.");
             }
         }catch (Exception e){
-            return new ResponseDto(HttpStatus.OK.value(), "사용 가능한 ID입니다.");
+            return new ResponseDto(HttpStatus.OK, "사용 가능한 ID입니다.");
         }
     }
 
@@ -110,12 +124,12 @@ public class MemberServiceImpl implements MemberService {
             Optional<Member> result = memberRepository.findByNickname(nickname);
 
             if(result.isPresent()){ // 닉네임으로 찾아서 값이 존재한다면 해당 아이디는 사용 불가
-                return new ResponseDto(HttpStatus.CONFLICT.value(), "이미 존재하는 사용자 닉네임입니다.")
+                return new ResponseDto(HttpStatus.CONFLICT, "이미 존재하는 사용자 닉네임입니다.");
             }else{
-                return new ResponseDto(HttpStatus.OK.value(), "사용 가능한 닉네임입니다.");
+                return new ResponseDto(HttpStatus.OK, "사용 가능한 닉네임입니다.");
             }
         }catch (Exception e){
-            return new ResponseDto(HttpStatus.OK.value(), "사용 가능한 닉네임입니다.");
+            return new ResponseDto(HttpStatus.OK, "사용 가능한 닉네임입니다.");
         }
     }
 

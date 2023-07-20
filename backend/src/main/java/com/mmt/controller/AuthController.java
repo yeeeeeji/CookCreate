@@ -11,9 +11,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @Tag(name = "인증 API", description = "인증 관련 API 입니다.")
 @RestController
@@ -27,25 +33,39 @@ public class AuthController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "success",
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
-            @ApiResponse(responseCode = "400", description = "bad request operation",
-                    content = @Content(schema = @Schema(implementation = UserSignUpReq.class)))
+            @ApiResponse(responseCode = "400", description = "형식이 맞지 않습니다.",
+                    content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
     })
     @PostMapping("/signup")
-    public ResponseDto signup(@RequestBody UserSignUpReq userSignUpReq) throws Exception {
-        return memberService.signUp(userSignUpReq);
+    public ResponseEntity<ResponseDto> signup(@RequestBody @Valid UserSignUpReq userSignUpReq, BindingResult bindingResult){
+        ResponseDto responseDto = new ResponseDto();
+        try{
+            responseDto = memberService.signUp(userSignUpReq);
+
+            if(bindingResult.hasErrors()){
+                StringBuilder stringBuilder = new StringBuilder();
+                for(FieldError fieldError : bindingResult.getFieldErrors()){
+                    stringBuilder.append(fieldError.getDefaultMessage());
+                }
+                responseDto = new ResponseDto(HttpStatus.BAD_REQUEST, stringBuilder.toString());
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 
     @Operation(summary = "로그인", description = "<b>아이디와 비밀번호</b>를 입력해 로그인 한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 계정입니다.",
-                    content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
             @ApiResponse(responseCode = "401", description = "아이디와 비밀번호를 확인해주세요.",
+                    content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 계정입니다.",
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class)))
     })
     @PostMapping("/login")
-    public ResponseDto login(@RequestBody UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
+    public ResponseDto login(@Valid @RequestBody UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
         return memberService.login(userLoginPostReq, response);
     }
 
