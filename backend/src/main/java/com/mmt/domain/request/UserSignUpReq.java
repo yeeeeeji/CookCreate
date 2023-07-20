@@ -9,6 +9,7 @@ import javax.validation.constraints.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserSignUpReq {
 
     @Length(min = 4, max = 10, message = "아이디는 4자 이상 10자 이하여야 합니다.")

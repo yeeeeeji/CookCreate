@@ -105,6 +105,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public ResponseDto checkUserId(String userId){
+        if(userId.length() < 4 || userId.length() > 10) return new ResponseDto(HttpStatus.BAD_REQUEST, "아이디는 4자 이상 10자 이하여야 합니다.");
+
         Optional<Member> result = memberRepository.findByUserId(userId);
 
         if(result.isPresent()){ // user id로 찾아서 값이 존재한다면 해당 아이디는 사용 불가
@@ -116,6 +118,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public ResponseDto checkNickname(String nickname){
+        if(nickname.length() < 2 || nickname.length() > 8) return new ResponseDto(HttpStatus.BAD_REQUEST, "아이디는 2자 이상 8자 이하여야 합니다.");
+
         Optional<Member> result = memberRepository.findByNickname(nickname);
 
         if(result.isPresent()){ // 닉네임으로 찾아서 값이 존재한다면 해당 아이디는 사용 불가
