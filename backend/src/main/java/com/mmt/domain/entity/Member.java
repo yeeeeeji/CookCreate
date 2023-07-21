@@ -2,11 +2,13 @@ package com.mmt.domain.entity;
 
 import com.mmt.domain.Role;
 import com.mmt.domain.request.UserSignUpReq;
+import com.mmt.domain.request.UserUpdateReq;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
@@ -20,7 +22,7 @@ public class Member extends BaseTimeEntity {
     private String userId;
     private String userPw;
     private String nickname;
-    private int phoneNumber;
+    private String phoneNumber;
     private String userEmail;
     private String food;
     private Role role;
@@ -36,5 +38,14 @@ public class Member extends BaseTimeEntity {
         this.userEmail = userSignUpReq.getUserEmail();
         this.food = userSignUpReq.getFood();
         this.role = userSignUpReq.getRole();
+    }
+
+    public void update(UserUpdateReq userUpdateReq){
+        this.userPw = userUpdateReq.getUserPw();
+        this.nickname = userUpdateReq.getNickname();
+        this.phoneNumber = userUpdateReq.getPhoneNumber();
+        this.userEmail = userUpdateReq.getUserEmail();
+        this.food = userUpdateReq.getFood();
+        this.introduce = userUpdateReq.getIntroduce();
     }
 }

@@ -5,22 +5,32 @@ import com.mmt.domain.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class UserInfoRes {
     String userId;
     String nickname;
-    int phoneNumber;
+    String phoneNumber;
     String userEmail;
     String food;
     Role role;
     String introduce;
     String profileImg;
     String introUrl;
-    String createdDate;
+    LocalDateTime createdDate;
 
     public UserInfoRes(Member member) {
         this.userId = member.getUserId();
         this.nickname = member.getNickname();
+        this.phoneNumber = member.getPhoneNumber();
+        this.userEmail = member.getUserEmail();
+        this.food = member.getFood();
+        this.role = member.getRole();
+        this.introduce = member.getIntroduce();
+        this.profileImg = member.getProfileImg();
+        this.introUrl = member.getIntroUrl();
+        this.createdDate = member.getCreatedDate();
     }
 }

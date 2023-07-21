@@ -10,10 +10,14 @@ public class UserUpdateReq {
     private String userPw;
     private String userPwCk;
     private String nickname;
-    private int phoneNumber;
+    private String phoneNumber;
     private String userEmail;
     private String food;
     private String introduce;
     private String profileImg;
     private String introUrl;
+
+    public void setEncodePw(String encodePw){
+        this.userPw = encodePw;
+    }
 }
