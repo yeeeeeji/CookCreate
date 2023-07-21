@@ -1,4 +1,4 @@
-package com.mmt.domain.entity;
+package com.mmt.domain.entity.Auth;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
