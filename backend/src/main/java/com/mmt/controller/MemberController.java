@@ -1,7 +1,6 @@
 package com.mmt.controller;
 
 import com.mmt.domain.entity.UserDetailsImpl;
-import com.mmt.domain.request.UserSignUpReq;
 import com.mmt.domain.request.UserUpdateReq;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.UserInfoRes;
@@ -18,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +38,9 @@ public class MemberController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
                     content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
-            @ApiResponse(responseCode = "400", description = "bad request operation",
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+            @ApiResponse(responseCode = "403", description = "권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = UserInfoRes.class)))
     })
     @GetMapping("/{userId}")
@@ -60,7 +60,9 @@ public class MemberController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "bad request operation",
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @PutMapping("/{userId}")
@@ -79,14 +81,12 @@ public class MemberController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "bad request operation",
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @PostMapping("/logout")
     public ResponseDto login(HttpServletRequest request, HttpServletResponse response) {
         return memberService.logout(request, response);
     }
-
-
 
 }
