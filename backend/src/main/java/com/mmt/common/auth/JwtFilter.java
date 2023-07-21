@@ -66,6 +66,9 @@ public class JwtFilter extends OncePerRequestFilter {
                     jwtExceptionHandler(response, "RefreshToken Expired", HttpStatus.BAD_REQUEST);
                     return;
                 }
+            } else {
+                jwtExceptionHandler(response, "RefreshToken Expired", HttpStatus.BAD_REQUEST);
+                return;
             }
         }
 
