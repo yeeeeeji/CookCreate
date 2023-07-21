@@ -13,6 +13,8 @@ import com.mmt.repository.MemberRepository;
 import com.mmt.repository.RefreshTokenRepository;
 import com.mmt.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -141,13 +144,13 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public ResponseDto updateUserInfo(String userId, UserUpdateReq userUpdateReq) {
 
-        if(memberRepository.findByUserId(userId).isPresent()) {
+        if(!memberRepository.findByUserId(userId).isPresent()) {
             return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 계정입니다.");
         }
 
         Member member = memberRepository.findByUserId(userId).get();
         // 비밀번호 확인
-        if(userUpdateReq.getUserPw() != userUpdateReq.getUserPwCk()) {
+        if(!userUpdateReq.getUserPw().equals(userUpdateReq.getUserPwCk())) {
             return new ResponseDto(HttpStatus.BAD_REQUEST, "비밀번호 확인을 다시 입력해주세요.");
         }
 
