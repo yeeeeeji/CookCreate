@@ -4,7 +4,7 @@ function Signup() {
   const [userId, setUserId] = useState('')
   const [userPw, setUserPw] = useState('')
   const [userPwCk, setUserPwCk] = useState('')
-  const [nickName, setNickName] = useState('')
+  const [nickname, setNickName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [userEmail, setUserEmail] = useState('')
 
@@ -79,16 +79,32 @@ function Signup() {
 
   const idDupliCheck = () => {
     console.log('중복체크 api 처리해야')
+    axios
+    .get(`api/v1/auth/check`, {userId})
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
   }
   const nicknameDupliCheck = () => {
     console.log('중복체크 api 처리해야')
+    axios
+    .get(`api/v1/auth/check`, {nickname})
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
   }
 
   const handleSignup = (e) => {
     e.preventDefault()
     axios
     .post(`api/v1/auth/signup`, 
-    {userId, userPw, userPwCk, nickName, phoneNumber, userEmail})
+    {userId, userPw, userPwCk, nickname, phoneNumber, userEmail})
     .then((res) => {
       console.log(res)
       console.log('회원가입 완료!')
@@ -150,7 +166,7 @@ function Signup() {
         <div className='inputTitle'>닉네임</div>
         <div className='inputWrap'>
           <input type="nickname" className='input'
-          value={nickName}
+          value={nickname}
           onChange={
             onChangeUserNickName
           }
