@@ -1,9 +1,9 @@
 package com.mmt.domain.entity.lesson;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 public class LessonStep { // 요리 진행 단계
 
     @Id
@@ -20,6 +19,7 @@ public class LessonStep { // 요리 진행 단계
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id")
+    @JsonIgnore
     private Lesson lesson;
 
     private int stepOrder;

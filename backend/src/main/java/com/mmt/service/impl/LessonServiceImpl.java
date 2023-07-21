@@ -6,6 +6,7 @@ import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.lesson.LessonStep;
 import com.mmt.domain.request.LessonPostReq;
+import com.mmt.domain.response.LessonDetailRes;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.repository.*;
 import com.mmt.service.LessonService;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,8 +24,9 @@ import java.util.Optional;
 public class LessonServiceImpl implements LessonService {
 
     private final LessonRepository lessonRepository;
-    private final LessonStepRepository lessonStepRepository;
+    private final LessonCategoryRepository lessonCategoryRepository;
     private final LessonParticipantRepository lessonParticipantRepository;
+    private final LessonStepRepository lessonStepRepository;
     private final MemberRepository memberRepository;
 
     @Transactional
@@ -55,5 +59,41 @@ public class LessonServiceImpl implements LessonService {
         lessonParticipantRepository.save(lessonParticipant);
 
         return new ResponseDto(HttpStatus.CREATED, "Success");
+    }
+
+    @Override
+    public LessonDetailRes getLessonDetail(int lessonId) {
+        Optional<Lesson> lesson = lessonRepository.findByLessonId(lessonId);
+        LessonDetailRes result = new LessonDetailRes();
+        if(lesson.isPresent()) {
+            result = new LessonDetailRes(lesson.get());
+
+            // categoryName 세팅
+            Optional<LessonCategory> lessonCategory = lessonCategoryRepository.findById(lesson.get().getLessonCategory().getCategoryId());
+            if(lessonCategory.isPresent()) result.setCategoryName(lessonCategory.get().getCategoryTitle());
+
+            // lessonParticipantList 세팅
+            List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findByLesson_LessonId(lessonId);
+            List<Member> memberList = new ArrayList<>();
+            for (LessonParticipant lp : lessonParticipantList){
+                Member member = new Member();
+                String userId = lp.getUserId();
+                member.setUserId(userId);
+                member.setNickname(memberRepository.findByUserId(userId).get().getNickname());
+                memberList.add(member);
+            }
+            result.setLessonParticipantList(memberList);
+
+            // remaining 세팅
+            result.setRemaining(result.getMaximum() - lessonParticipantList.size() + 1);
+
+            // lessonStepList 세팅
+            List<LessonStep> lessonStepList = lessonStepRepository.findByLesson_LessonId(lessonId);
+            result.setLessonStepList(lessonStepList);
+
+            // TODO: reviewAvg 세팅 -> review 기능 구현 후
+        }
+
+        return result;
     }
 }

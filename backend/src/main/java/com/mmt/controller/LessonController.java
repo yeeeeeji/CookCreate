@@ -3,6 +3,7 @@ package com.mmt.controller;
 import com.mmt.domain.Role;
 import com.mmt.domain.entity.Auth.UserDetailsImpl;
 import com.mmt.domain.request.LessonPostReq;
+import com.mmt.domain.response.LessonDetailRes;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.UserInfoRes;
 import com.mmt.service.LessonService;
@@ -68,5 +69,20 @@ public class LessonController {
         ResponseDto responseDto = lessonService.reserve(lessonPostReq);
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    }
+
+    @Operation(summary = "과외 상세보기", description = "과외 내용을 상세하게 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+    })
+    @GetMapping("/{lessonId}")
+    public ResponseEntity<LessonDetailRes> getLessonDetail(@PathVariable(value = "lessonId") int lessonId, Authentication authentication){
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (userDetails.getUsername()));
+
+        return new ResponseEntity<>(lessonService.getLessonDetail(lessonId), HttpStatus.OK);
     }
 }
