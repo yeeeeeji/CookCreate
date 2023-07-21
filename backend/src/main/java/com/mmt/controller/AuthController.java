@@ -39,16 +39,19 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<ResponseDto> signup(@RequestBody @Valid UserSignUpReq userSignUpReq, BindingResult bindingResult){
         ResponseDto responseDto = new ResponseDto();
+
+        if(bindingResult.hasErrors()){
+            StringBuilder stringBuilder = new StringBuilder();
+            for(FieldError fieldError : bindingResult.getFieldErrors()){
+                stringBuilder.append(fieldError.getDefaultMessage());
+            }
+//            responseDto = new ResponseDto(HttpStatus.BAD_REQUEST, stringBuilder.toString());
+            return new ResponseEntity<>(new ResponseDto(HttpStatus.BAD_REQUEST, stringBuilder.toString()), HttpStatus.BAD_REQUEST);
+        }
         try{
             responseDto = memberService.signUp(userSignUpReq);
 
-            if(bindingResult.hasErrors()){
-                StringBuilder stringBuilder = new StringBuilder();
-                for(FieldError fieldError : bindingResult.getFieldErrors()){
-                    stringBuilder.append(fieldError.getDefaultMessage());
-                }
-                responseDto = new ResponseDto(HttpStatus.BAD_REQUEST, stringBuilder.toString());
-            }
+
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

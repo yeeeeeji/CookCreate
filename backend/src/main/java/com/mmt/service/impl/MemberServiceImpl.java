@@ -1,6 +1,7 @@
 package com.mmt.service.impl;
 
 import com.mmt.common.auth.JwtUtil;
+import com.mmt.domain.Role;
 import com.mmt.domain.TokenDto;
 import com.mmt.domain.entity.Member;
 import com.mmt.domain.entity.RefreshToken;
@@ -154,6 +155,13 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public ResponseDto deleteUser(String userId) {
         return null;
+    }
+
+    @Override
+    public Role getRole(String userId){
+        Optional<Member> member = memberRepository.findByUserId(userId);
+        System.out.println(member.get().getRole());
+        return member.get().getRole();
     }
 
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {

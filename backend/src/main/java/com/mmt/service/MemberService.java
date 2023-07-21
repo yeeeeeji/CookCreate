@@ -1,5 +1,6 @@
 package com.mmt.service;
 
+import com.mmt.domain.Role;
 import com.mmt.domain.entity.Member;
 import com.mmt.domain.request.UserLoginPostReq;
 import com.mmt.domain.request.UserSignUpReq;
@@ -23,4 +24,6 @@ public interface MemberService {
 
     public ResponseDto checkUserId(String userId);
     public ResponseDto checkNickname(String nickname);
+
+    public Role getRole(String userID);
 }

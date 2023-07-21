@@ -1,6 +1,7 @@
 package com.mmt.common.auth;
 
 import java.security.Key;
+import java.time.Duration;
 import java.util.*;
 
 import com.mmt.domain.TokenDto;
@@ -35,7 +36,7 @@ public class JwtUtil { // 토큰을 생성하고 토큰에서 정보를 가져�
     private final RefreshTokenRepository refreshTokenRepository;
     private final Logger LOGGER = LoggerFactory.getLogger(JwtUtil.class);
 
-    private static final long ACCESS_TIME =  60 * 1000L;
+    private static final long ACCESS_TIME =  Duration.ofMinutes(30).toMillis();
     private static final long REFRESH_TIME =  2 * 60 * 1000L;
     public static final String ACCESS_TOKEN = "Access_Token";
     public static final String REFRESH_TOKEN = "Refresh_Token";
