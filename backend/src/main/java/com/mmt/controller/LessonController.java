@@ -1,7 +1,7 @@
 package com.mmt.controller;
 
 import com.mmt.domain.Role;
-import com.mmt.domain.entity.UserDetailsImpl;
+import com.mmt.domain.entity.Auth.UserDetailsImpl;
 import com.mmt.domain.request.LessonPostReq;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.UserInfoRes;
