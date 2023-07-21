@@ -45,9 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
             // security context에 인증 정보저장
             if(jwtUtil.tokenValidation(accessToken)){
                 setAuthentication(jwtUtil.getUserIdFromToken(accessToken));
-            }
-            // 어세스 토큰이 만료된 상황 && 리프레시 토큰 또한 존재하는 상황
-            else if (refreshToken != null) {
+            } else if (refreshToken != null) { // 어세스 토큰이 만료된 상황 && 리프레시 토큰 또한 존재하는 상황
                 // 리프레시 토큰 검증 && 리프레시 토큰 DB에서  토큰 존재유무 확인
                 boolean isRefreshToken = jwtUtil.refreshTokenValidation(refreshToken);
                 // 리프레시 토큰이 유효하고 리프레시 토큰이 DB와 비교했을때 똑같다면
@@ -60,14 +58,12 @@ public class JwtFilter extends OncePerRequestFilter {
                     jwtUtil.setHeaderAccessToken(response, newAccessToken);
                     // Security context에 인증 정보 넣기
                     setAuthentication(jwtUtil.getUserIdFromToken(newAccessToken));
-                }
-                // 리프레시 토큰이 만료 || 리프레시 토큰이 DB와 비교했을때 똑같지 않다면
-                else {
-                    jwtExceptionHandler(response, "RefreshToken Expired", HttpStatus.BAD_REQUEST);
+                } else { // 리프레시 토큰이 만료 || 리프레시 토큰이 DB와 비교했을때 똑같지 않다면
+                    jwtExceptionHandler(response, "재로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
                     return;
                 }
             } else {
-                jwtExceptionHandler(response, "RefreshToken Expired", HttpStatus.BAD_REQUEST);
+                jwtExceptionHandler(response, "재로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
                 return;
             }
         }

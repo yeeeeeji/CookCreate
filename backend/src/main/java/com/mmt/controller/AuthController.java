@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -45,16 +44,15 @@ public class AuthController {
             for(FieldError fieldError : bindingResult.getFieldErrors()){
                 stringBuilder.append(fieldError.getDefaultMessage());
             }
-//            responseDto = new ResponseDto(HttpStatus.BAD_REQUEST, stringBuilder.toString());
             return new ResponseEntity<>(new ResponseDto(HttpStatus.BAD_REQUEST, stringBuilder.toString()), HttpStatus.BAD_REQUEST);
         }
+
         try{
             responseDto = memberService.signUp(userSignUpReq);
-
-
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 
