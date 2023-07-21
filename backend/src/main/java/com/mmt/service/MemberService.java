@@ -22,4 +22,6 @@ public interface MemberService {
 
     public ResponseDto checkUserId(String userId);
     public ResponseDto checkNickname(String nickname);
+
+    public Role getRole(String userID);
 }
