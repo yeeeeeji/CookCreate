@@ -1,10 +1,9 @@
 package com.mmt.service.impl;
 
-import com.mmt.domain.entity.Member;
-import com.mmt.domain.entity.UserDetailsImpl;
+import com.mmt.domain.entity.Auth.Member;
+import com.mmt.domain.entity.Auth.UserDetailsImpl;
 import com.mmt.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

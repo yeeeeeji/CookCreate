@@ -5,7 +5,7 @@ import java.time.Duration;
 import java.util.*;
 
 import com.mmt.domain.TokenDto;
-import com.mmt.domain.entity.RefreshToken;
+import com.mmt.domain.entity.Auth.RefreshToken;
 import com.mmt.repository.RefreshTokenRepository;
 import com.mmt.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.mmt.service;
 
 import com.mmt.domain.Role;
-import com.mmt.domain.entity.Member;
+import com.mmt.domain.entity.Auth.Member;
 import com.mmt.domain.request.UserLoginPostReq;
 import com.mmt.domain.request.UserSignUpReq;
 import com.mmt.domain.request.UserUpdateReq;
@@ -9,7 +9,6 @@ import com.mmt.domain.response.ResponseDto;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 public interface MemberService {
 

@@ -1,6 +1,7 @@
-package com.mmt.domain.entity;
+package com.mmt.domain.entity.Auth;
 
 import com.mmt.domain.Role;
+import com.mmt.domain.entity.BaseTimeEntity;
 import com.mmt.domain.request.UserSignUpReq;
 import com.mmt.domain.request.UserUpdateReq;
 import lombok.Getter;
