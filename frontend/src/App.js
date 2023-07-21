@@ -1,37 +1,31 @@
-import React, {useEffect} from 'react';
-import Login from './component/views/Login';
-import Signup from './component/views/Signup';
-import { BrowserRouter, Link, Route, Routes, Router } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import {createStore} from 'redux'
-
-import { Provider, useSelector, useDispatch, connect } from 'react-redux';
+import React from 'react';
+import NavBar from './component/Header/NavBar';
+import SignUp from './pages/signUp';
+import LogIn from './pages/logIn';
+import MainPage from './pages/mainPage';
+import Footer from './component/Footer/Footer';
+import TotalLessons from './pages/totalLessons';
+import SignUpBefore from './pages/signUpBefore';
+import LessonsRanking from './pages/lessonRanking'
+import { Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
-    // <Provider store={store}>
-    <BrowserRouter>
     <div>
-      <Navbar bg="light" data-bs-theme="light">
-        <Container>
-          <Nav className="me-auto">
-            <Nav.Link href="/SignUp">Cookiee 회원가입</Nav.Link>
-            <Nav.Link href="/SignUp">Cookyer 회원가입</Nav.Link>
-            <Nav.Link href="/Login">로그인</Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
-
+      <NavBar />
+      {/* 링크 이곳에 추가 */}
       <Routes>
-        <Route path='SignUp' element={<Signup/>}></Route>
-        <Route path='Login' element={<Login/>}></Route>
+        <Route path='/' element={<MainPage />} />
+        <Route path='/signup' element={<SignUp />} />
+        <Route path='/login' element={<LogIn />} />
+        <Route path='/totallessons' element={<TotalLessons />} />
+        <Route path='/signupbefore' element={<SignUpBefore/>}/>
+        <Route path='/lessonranking' element={<LessonsRanking/>}></Route>
       </Routes>
+      <br />
+      <hr />
+      <Footer />
     </div>
-    </BrowserRouter>
-    // </Provider>
   );
 }
 
