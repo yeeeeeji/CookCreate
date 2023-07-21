@@ -1,6 +1,6 @@
 package com.mmt.controller;
 
-import com.mmt.domain.entity.UserDetailsImpl;
+import com.mmt.domain.entity.Auth.UserDetailsImpl;
 import com.mmt.domain.request.UserUpdateReq;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.UserInfoRes;
@@ -66,15 +66,17 @@ public class MemberController {
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @PutMapping("/{userId}")
-    public ResponseDto updateUserInfo(
+    public ResponseEntity<ResponseDto> updateUserInfo(
             @Parameter(description = "회원 id") @PathVariable String userId,
             @RequestBody UserUpdateReq userUpdateReq, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        ResponseDto responseDto = new ResponseDto(HttpStatus.FORBIDDEN, "권한이 없습니다.");
         if(userDetails.getUsername().equals(userId)) {
-            return memberService.updateUserInfo(userId, userUpdateReq);
+            responseDto = memberService.updateUserInfo(userId, userUpdateReq);
+            return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
         }
 
-        return new ResponseDto(HttpStatus.FORBIDDEN, "권한이 없습니다.");
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 
     @Operation(summary = "로그아웃", description = "<b>로그인 상태인 사용자가 로그아웃</b>한다.")
@@ -85,8 +87,9 @@ public class MemberController {
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @PostMapping("/logout")
-    public ResponseDto login(HttpServletRequest request, HttpServletResponse response) {
-        return memberService.logout(request, response);
+    public ResponseEntity<ResponseDto> logout(HttpServletRequest request, HttpServletResponse response) {
+        ResponseDto responseDto = memberService.logout(request, response);
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 
 }
