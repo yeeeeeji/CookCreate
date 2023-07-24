@@ -10,6 +10,7 @@ function Login() {
     axios.post(`api/v1/auth/login`, {userId, userPw})
     .then((res)=>{
       console.log('로그인 성공', res)
+      console.log(res.headers.access_token)
     })
     .catch((err) =>{
       console.log(err)
