@@ -1,14 +1,10 @@
 package com.mmt.domain.response;
 
-import java.util.ArrayList;
-
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class ResponseDto {
     private HttpStatus statusCode;

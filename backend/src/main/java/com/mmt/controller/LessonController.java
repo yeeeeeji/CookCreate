@@ -4,6 +4,7 @@ import com.mmt.domain.Role;
 import com.mmt.domain.entity.Auth.UserDetailsImpl;
 import com.mmt.domain.request.LessonPostReq;
 import com.mmt.domain.response.LessonDetailRes;
+import com.mmt.domain.response.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.UserInfoRes;
 import com.mmt.service.LessonService;
@@ -84,5 +85,35 @@ public class LessonController {
         log.debug("authentication: " + (userDetails.getUsername()));
 
         return new ResponseEntity<>(lessonService.getLessonDetail(lessonId), HttpStatus.OK);
+    }
+
+    @Operation(summary = "과외 불러오기", description = "최근에 예약한 과외 내용을 불러온다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+            @ApiResponse(responseCode = "403", description = "Cookyer만 이용 가능합니다",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+            @ApiResponse(responseCode = "404", description = "이전에 예약한 화상 과외 내역이 없습니다.",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+    })
+    @GetMapping("/latest")
+    public ResponseEntity<LessonLatestRes> getLessonLatest(Authentication authentication){
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (userDetails.getUsername()));
+
+        LessonLatestRes lessonLatestRes = new LessonLatestRes();
+        String loginId = userDetails.getUsername(); // 현재 로그인한 아이디
+
+        if(!memberService.getRole(loginId).equals(Role.COOKYER)){ // 권한 에러
+            lessonLatestRes.setStatusCode(HttpStatus.FORBIDDEN);
+            lessonLatestRes.setMessage("Cookyer만 이용 가능합니다.");
+            return new ResponseEntity<>(new LessonLatestRes(), lessonLatestRes.getStatusCode());
+        }
+
+        lessonLatestRes = lessonService.getLessonLatest(loginId);
+
+        return new ResponseEntity<>(lessonLatestRes, lessonLatestRes.getStatusCode());
     }
 }

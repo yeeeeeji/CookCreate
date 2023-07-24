@@ -7,10 +7,12 @@ import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.lesson.LessonStep;
 import com.mmt.domain.request.LessonPostReq;
 import com.mmt.domain.response.LessonDetailRes;
+import com.mmt.domain.response.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.repository.*;
 import com.mmt.service.LessonService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +60,8 @@ public class LessonServiceImpl implements LessonService {
         lessonParticipant.setCompleted(false);
         lessonParticipantRepository.save(lessonParticipant);
 
+        // TODO: 채팅방 생성
+
         return new ResponseDto(HttpStatus.CREATED, "Success");
     }
 
@@ -95,5 +99,22 @@ public class LessonServiceImpl implements LessonService {
         }
 
         return result;
+    }
+
+    @Override
+    public LessonLatestRes getLessonLatest(String userId) {
+        LessonLatestRes lessonLatestRes = new LessonLatestRes();
+        List<Lesson> lessonList = lessonRepository.findAllByCookyerId(userId, Sort.by(Sort.Direction.DESC, "createdDate"));
+
+        if(lessonList.size() == 0){
+            lessonLatestRes.setStatusCode(HttpStatus.NOT_FOUND);
+            lessonLatestRes.setMessage("이전에 예약한 화상 과외 내역이 없습니다.");
+        }else{
+            lessonLatestRes = new LessonLatestRes(lessonList.get(0));
+            lessonLatestRes.setStatusCode(HttpStatus.OK);
+            lessonLatestRes.setMessage("Success");
+        }
+
+        return lessonLatestRes;
     }
 }
