@@ -6,6 +6,7 @@ import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.lesson.LessonStep;
 import com.mmt.domain.request.LessonPostReq;
+import com.mmt.domain.request.LessonPutReq;
 import com.mmt.domain.response.LessonDetailRes;
 import com.mmt.domain.response.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
@@ -65,6 +66,36 @@ public class LessonServiceImpl implements LessonService {
         return new ResponseDto(HttpStatus.CREATED, "Success");
     }
 
+    @Transactional
+    @Override
+    public ResponseDto modifyLesson(LessonPutReq lessonPutReq) {
+        Optional<Lesson> find = lessonRepository.findByLessonId(lessonPutReq.getLessonId());
+
+        if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+
+        // 저장된 단계들 삭제 -> 순서, 개수, 내용 모두 바뀔 수 있음
+        lessonStepRepository.deleteAllByLesson_LessonId(lessonPutReq.getLessonId());
+
+        // 변경된 값만 저장
+        Lesson lesson = find.get();
+        lesson.update(lessonPutReq);
+
+        // lesson에 카테고리 아이디 저장
+        LessonCategory lessonCategory = new LessonCategory();
+        lessonCategory.setCategoryId(lessonPutReq.getCategoryId());
+        lesson.setLessonCategory(lessonCategory);
+
+        Lesson save = lessonRepository.save(lesson);
+
+        // 새로운 진행 단계에 lesson id 저장
+        for(LessonStep lessonStep : save.getLessonStepList()){
+            lessonStep.setLesson(save);
+            lessonStepRepository.save(lessonStep);
+        }
+
+        return new ResponseDto(HttpStatus.OK, "Success");
+    }
+
     @Override
     public LessonDetailRes getLessonDetail(int lessonId) {
         Optional<Lesson> lesson = lessonRepository.findByLessonId(lessonId);
@@ -96,9 +127,11 @@ public class LessonServiceImpl implements LessonService {
             result.setLessonStepList(lessonStepList);
 
             // TODO: reviewAvg 세팅 -> review 기능 구현 후
-        }
 
-        return result;
+            return result;
+        }else{
+            return null;
+        }
     }
 
     @Override

@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface LessonStepRepository extends JpaRepository<LessonStep, Integer> {
     List<LessonStep> findByLesson_LessonId(int lessonId);
+    void deleteAllByLesson_LessonId(int lessonId);
 }

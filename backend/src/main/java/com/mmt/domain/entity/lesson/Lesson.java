@@ -2,13 +2,14 @@ package com.mmt.domain.entity.lesson;
 
 import com.mmt.domain.entity.BaseTimeEntity;
 import com.mmt.domain.request.LessonPostReq;
+import com.mmt.domain.request.LessonPutReq;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
+@DynamicUpdate // 변경된 컬럼만 찾아서 변경
 public class Lesson extends BaseTimeEntity {
 
     @Id
@@ -56,5 +58,16 @@ public class Lesson extends BaseTimeEntity {
         this.videoUrl = lessonPostReq.getVideoUrl();
         this.thumbnailUrl = lessonPostReq.getThumbnailUrl();
         this.lessonStepList = lessonPostReq.getLessonStepList();
+    }
+
+    public void update(LessonPutReq lessonPutReq){
+        this.lessonId = lessonPutReq.getLessonId();
+        this.lessonTitle = lessonPutReq.getLessonTitle();
+        this.cookyerId = lessonPutReq.getCookyerId();
+        this.description = lessonPutReq.getDescription();
+        this.materials = String.join(",", lessonPutReq.getMaterials());
+        this.videoUrl = lessonPutReq.getVideoUrl();
+        this.thumbnailUrl = lessonPutReq.getThumbnailUrl();
+        this.lessonStepList = lessonPutReq.getLessonStepList();
     }
 }

@@ -3,6 +3,7 @@ package com.mmt.controller;
 import com.mmt.domain.Role;
 import com.mmt.domain.entity.Auth.UserDetailsImpl;
 import com.mmt.domain.request.LessonPostReq;
+import com.mmt.domain.request.LessonPutReq;
 import com.mmt.domain.response.LessonDetailRes;
 import com.mmt.domain.response.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
@@ -68,6 +69,48 @@ public class LessonController {
 
         lessonPostReq.setCookyerId(loginId);
         ResponseDto responseDto = lessonService.reserve(lessonPostReq);
+
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    }
+
+    @Operation(summary = "과외 수정하기", description = "예약한 과외를 수정한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+            @ApiResponse(responseCode = "400", description = "형식을 맞춰주세요.",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+            @ApiResponse(responseCode = "403", description = "예약한 Cookyer만 이용 가능합니다.",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class)))
+    })
+    @PutMapping("")
+    public ResponseEntity<ResponseDto> modifyLesson(@RequestBody @Valid LessonPutReq lessonPutReq, BindingResult bindingResult, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (userDetails.getUsername()));
+
+        if(bindingResult.hasErrors()){ // valid error
+            StringBuilder stringBuilder = new StringBuilder();
+            for(FieldError fieldError : bindingResult.getFieldErrors()){
+                stringBuilder.append(fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(new ResponseDto(HttpStatus.BAD_REQUEST, stringBuilder.toString()), HttpStatus.BAD_REQUEST);
+        }
+
+        LessonDetailRes lessonDetailRes = lessonService.getLessonDetail(lessonPutReq.getLessonId());
+        if(lessonDetailRes == null){ // 존재 유무 확인
+            return new ResponseEntity<>(new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다."), HttpStatus.NOT_FOUND);
+        }
+
+        String loginId = userDetails.getUsername(); // 현재 로그인한 아이디
+        if(!loginId.equals(lessonDetailRes.getCookyerId())){ // 권한 에러
+            return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "예약한 Cookyer만 이용 가능합니다."), HttpStatus.FORBIDDEN);
+        }
+
+        lessonPutReq.setCookyerId(loginId);
+        ResponseDto responseDto = lessonService.modifyLesson(lessonPutReq);
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
