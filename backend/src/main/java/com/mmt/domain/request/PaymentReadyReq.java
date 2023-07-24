@@ -6,5 +6,4 @@ import lombok.Data;
 public class PaymentReadyReq {
     private String userId;
     private int lessonId;
-    private int totalAmount;
 }
