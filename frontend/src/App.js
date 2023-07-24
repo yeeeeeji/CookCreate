@@ -6,7 +6,7 @@ import MainPage from './pages/mainPage';
 import Footer from './component/Footer/Footer';
 import TotalLessons from './pages/totalLessons';
 import SignUpBefore from './pages/signUpBefore';
-import LessonsRanking from './pages/lessonRanking'
+import LessonsRanking from './pages/lessonRanking'  
 import { Route, Routes } from 'react-router-dom';
 
 function App() {

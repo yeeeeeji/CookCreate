@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import store from '../../store'
+import { useSelector } from "react-redux";
+
 function Signup() {
   const [userId, setUserId] = useState('')
   const [userPw, setUserPw] = useState('')
@@ -132,18 +135,19 @@ function Signup() {
     })
   }
 
+  const role = useSelector((state) => state.userType).userType;
+
   const handleSignup = (e) => {
     e.preventDefault()
-
-
     axios
     .post(`api/v1/auth/signup`, 
-    {userId, userPw, userPwCk, nickname, phoneNumber, userEmail})
+    {userId, userPw, userPwCk, nickname, phoneNumber, userEmail, role})
     .then((res) => {
       console.log(res)
       console.log('회원가입 완료!')
     })
     .catch((err) =>{
+      console.log(err)
       serUserCanSignUp(err.response.data.message)
     })
     }

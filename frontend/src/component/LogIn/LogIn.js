@@ -1,19 +1,26 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { loginAction } from '../../actions/actions_auth';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [userId, setUserId] = useState('');
   const [userPw, setUserPw] = useState('');
-
+  const [errMsg, setErrMsg] = useState('')
   const handleLogin = (e) => {
     e.preventDefault()
     axios.post(`api/v1/auth/login`, {userId, userPw})
     .then((res)=>{
       console.log('로그인 성공', res)
-      console.log(res.headers.access_token)
+      dispatch(loginAction(res.headers.access_token, userId));
+      navigate("/")
     })
     .catch((err) =>{
-      console.log(err)
+      console.log(err.response.data.message)
+      setErrMsg(err.response.data.message)
     })
   }
 
@@ -24,33 +31,37 @@ function Login() {
         입력해주세요
       </div>
       <div className='contentWrap'>
-        
         <div className='inputTitle'>아이디</div>
-        <div>
-          <div className='inputWrap'/>
-          <input type="text"
-          className='input'
-          value={userId}
-          onChange={(e)=>{
-            setUserId(e.target.value)
-          }}
-          placeholder='아이디'/>
-        </div>
+          <div>
+            <div className='inputWrap'/>
+            <input type="text"
+            className='input'
+            value={userId}
+            onChange={(e)=>{
+              setUserId(e.target.value)
+            }}
+            placeholder='아이디'
+            autoComplete="off"
+            />
+          </div>
 
-        <div className='inputTitle'>비밀번호</div>
-        <div>
-          <div className='inputWrap'/>
-          <input type="password"
-          className='input'
-          value={userPw}
-          onChange={(e) =>{
-            setUserPw(e.target.value)
-          }}
-          placeholder='비밀번호'/>
-        </div>
-        <br />
-        
-        <button onClick ={handleLogin} className='bottomBtn'>확인</button>
+          <div className='inputTitle'>비밀번호</div>
+          <div>
+            <div className='inputWrap'/>
+            <input type="password"
+            className='input'
+            value={userPw}
+            onChange={(e) =>{
+              setUserPw(e.target.value)
+            }}
+            placeholder='비밀번호'
+            autoComplete="current-password" // 자동완성 방지
+            />
+          </div>
+          <br />
+          
+          <button onClick ={handleLogin} className='bottomBtn'>확인</button>
+        {errMsg}
       </div>
     </div>
   );
