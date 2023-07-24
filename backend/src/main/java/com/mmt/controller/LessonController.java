@@ -115,6 +115,37 @@ public class LessonController {
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 
+    @Operation(summary = "과외 삭제하기", description = "예약한 과외를 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "success",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+            @ApiResponse(responseCode = "403", description = "예약한 Cookyer만 이용 가능합니다.",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class)))
+    })
+    @DeleteMapping("/{lessonId}")
+    public ResponseEntity<ResponseDto> deleteLesson(@PathVariable(value = "lessonId") int lessonId, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (userDetails.getUsername()));
+
+        LessonDetailRes lessonDetailRes = lessonService.getLessonDetail(lessonId);
+        if(lessonDetailRes == null){ // 존재 유무 확인
+            return new ResponseEntity<>(new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다."), HttpStatus.NOT_FOUND);
+        }
+
+        String loginId = userDetails.getUsername(); // 현재 로그인한 아이디
+        if(!loginId.equals(lessonDetailRes.getCookyerId())){ // 권한 에러
+            return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "예약한 Cookyer만 이용 가능합니다."), HttpStatus.FORBIDDEN);
+        }
+
+        ResponseDto responseDto = lessonService.deleteLesson(lessonId);
+
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    }
+
     @Operation(summary = "과외 상세보기", description = "과외 내용을 상세하게 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",

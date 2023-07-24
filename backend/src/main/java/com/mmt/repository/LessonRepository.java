@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
     Optional<Lesson> findByLessonId(int lessonId);
     List<Lesson> findAllByCookyerId(String cookyerId, Sort createdDate);
+    void deleteByLessonId(int lessonId);
 }

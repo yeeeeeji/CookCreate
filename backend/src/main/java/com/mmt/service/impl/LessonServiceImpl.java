@@ -13,6 +13,7 @@ import com.mmt.domain.response.ResponseDto;
 import com.mmt.repository.*;
 import com.mmt.service.LessonService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -91,6 +92,18 @@ public class LessonServiceImpl implements LessonService {
         for(LessonStep lessonStep : save.getLessonStepList()){
             lessonStep.setLesson(save);
             lessonStepRepository.save(lessonStep);
+        }
+
+        return new ResponseDto(HttpStatus.OK, "Success");
+    }
+
+    @Transactional
+    @Override
+    public ResponseDto deleteLesson(int lessonId) {
+        try {
+            lessonRepository.deleteByLessonId(lessonId);
+        }catch (EmptyResultDataAccessException e){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
         }
 
         return new ResponseDto(HttpStatus.OK, "Success");
