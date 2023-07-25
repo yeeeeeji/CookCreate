@@ -1,4 +1,4 @@
-package com.mmt.domain.response;
+package com.mmt.domain.response.lesson;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mmt.domain.entity.Auth.Member;

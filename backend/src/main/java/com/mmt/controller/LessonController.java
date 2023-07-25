@@ -2,16 +2,17 @@ package com.mmt.controller;
 
 import com.mmt.domain.Role;
 import com.mmt.domain.entity.Auth.UserDetailsImpl;
-import com.mmt.domain.request.LessonPostReq;
-import com.mmt.domain.request.LessonPutReq;
-import com.mmt.domain.response.LessonDetailRes;
-import com.mmt.domain.response.LessonLatestRes;
+import com.mmt.domain.request.lesson.LessonPostReq;
+import com.mmt.domain.request.lesson.LessonPutReq;
+import com.mmt.domain.request.lesson.LessonSearchReq;
+import com.mmt.domain.response.lesson.LessonDetailRes;
+import com.mmt.domain.response.lesson.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.UserInfoRes;
+import com.mmt.domain.response.lesson.LessonSearchRes;
 import com.mmt.service.LessonService;
 import com.mmt.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,6 +28,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @Tag(name = "과외 글 API", description = "과외 글 관련 API입니다.")
 @Slf4j
@@ -41,13 +44,13 @@ public class LessonController {
     @Operation(summary = "과외 예약하기", description = "과외를 예약한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "success",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "형식을 맞춰주세요.",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "403", description = "Cookyer만 이용 가능합니다.",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class)))
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @PostMapping("")
     public ResponseEntity<ResponseDto> reserve(@RequestBody @Valid LessonPostReq lessonPostReq, BindingResult bindingResult, Authentication authentication) {
@@ -76,15 +79,15 @@ public class LessonController {
     @Operation(summary = "과외 수정하기", description = "예약한 과외를 수정한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "형식을 맞춰주세요.",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "403", description = "예약한 Cookyer만 이용 가능합니다.",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class)))
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @PutMapping("")
     public ResponseEntity<ResponseDto> modifyLesson(@RequestBody @Valid LessonPutReq lessonPutReq, BindingResult bindingResult, Authentication authentication) {
@@ -118,13 +121,13 @@ public class LessonController {
     @Operation(summary = "과외 삭제하기", description = "예약한 과외를 삭제한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "success",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "403", description = "예약한 Cookyer만 이용 가능합니다.",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class)))
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @DeleteMapping("/{lessonId}")
     public ResponseEntity<ResponseDto> deleteLesson(@PathVariable(value = "lessonId") int lessonId, Authentication authentication) {
@@ -144,6 +147,16 @@ public class LessonController {
         ResponseDto responseDto = lessonService.deleteLesson(lessonId);
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    }
+
+    @Operation(summary = "과외 검색하기", description = "과외 글 목록을 검색한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+    })
+    @GetMapping("")
+    public ResponseEntity<List<LessonSearchRes>> getLessonList(@RequestBody LessonSearchReq lessonSearchReq){
+        return new ResponseEntity<>(lessonService.getLessonList(lessonSearchReq), HttpStatus.OK);
     }
 
     @Operation(summary = "과외 상세보기", description = "과외 내용을 상세하게 조회한다.")

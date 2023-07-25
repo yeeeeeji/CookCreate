@@ -5,11 +5,13 @@ import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.lesson.LessonStep;
-import com.mmt.domain.request.LessonPostReq;
-import com.mmt.domain.request.LessonPutReq;
-import com.mmt.domain.response.LessonDetailRes;
-import com.mmt.domain.response.LessonLatestRes;
+import com.mmt.domain.request.lesson.LessonPostReq;
+import com.mmt.domain.request.lesson.LessonPutReq;
+import com.mmt.domain.request.lesson.LessonSearchReq;
+import com.mmt.domain.response.lesson.LessonDetailRes;
+import com.mmt.domain.response.lesson.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.lesson.LessonSearchRes;
 import com.mmt.repository.*;
 import com.mmt.service.LessonService;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +21,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -107,6 +110,74 @@ public class LessonServiceImpl implements LessonService {
         }
 
         return new ResponseDto(HttpStatus.OK, "Success");
+    }
+
+    @Override
+    public List<LessonSearchRes> getLessonList(LessonSearchReq lessonSearchReq) {
+        // 키워드 포함 여부, 가나다순/가격순 정렬까지만한 결과
+        List<Lesson> lessonList = lessonRepository.findBySearchOption(lessonSearchReq);
+        List<LessonSearchRes> result = new ArrayList<>();
+        for(Lesson lesson : lessonList){
+            LessonSearchRes lessonSearchRes = new LessonSearchRes(lesson);
+
+            // remaining 세팅
+            List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findByLesson_LessonId(lesson.getLessonId());
+            lessonSearchRes.setRemaining(lesson.getMaximum() - lessonParticipantList.size() + 1);
+
+            // TODO: reviewAvg 세팅
+
+            // 카테고리 포함 여부
+            if(lessonSearchReq.getCategory() != null && !lessonSearchReq.getCategory().isEmpty()){
+                List<Integer> categoryList = lessonSearchReq.getCategory();
+                boolean isContain = false;
+                for (int category : categoryList){
+                    if(lesson.getLessonCategory().getCategoryId() == category){
+                        isContain = true;
+                        break;
+                    }
+                }
+                if(!isContain) { // 카테고리가 포함된게 아니면 반환값에 추가할 필요 없음
+                    continue;
+                }
+            }
+
+            // 마감과외 숨기기/보여주기 -> 마감은 과외 시작 시간 12시간 전
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd\'T\'HH:mm:ss");
+            LocalDateTime lessonDate = LocalDateTime.parse(lesson.getLessonDate(), formatter).minusHours(12);
+            LocalDateTime now = LocalDateTime.now();
+            if(lessonSearchReq.isDeadline()){
+                // 숨기기
+                if(now.isAfter(lessonDate)){
+                    continue;
+                }
+            }
+            lessonSearchRes.setToDeadline(Duration.between(now, lessonDate).getSeconds());
+            System.out.println(lessonSearchRes.getToDeadline());
+            result.add(lessonSearchRes);
+        }
+        // 마감임박순 정렬 -> 0에 가까운 순서 -> 음수는 맨뒤로
+        if(lessonSearchReq.getOrder() != null && !lessonSearchReq.getOrder().isEmpty()){
+            if(lessonSearchReq.getOrder().equals("date")){
+                Collections.sort(result, new Comparator<LessonSearchRes>() {
+                    @Override
+                    public int compare(LessonSearchRes o1, LessonSearchRes o2) {
+                        return (int) (o1.getToDeadline() - o2.getToDeadline());
+                    }
+                });
+
+                for (int i=result.size()-1; i>=0; i--){
+                    if(result.get(i).getToDeadline() < 0){
+                        LessonSearchRes lessonSearchRes = result.get(i);
+                        result.remove(lessonSearchRes);
+                        result.add(lessonSearchRes);
+                    }
+                }
+            }
+        }
+
+        // TODO: 평점순, 리뷰순 정렬
+
+        return result;
     }
 
     @Override

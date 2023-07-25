@@ -1,19 +1,17 @@
-package com.mmt.domain.response;
+package com.mmt.domain.response.lesson;
 
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonStep;
-import com.mmt.domain.request.LessonPostReq;
+import com.mmt.domain.response.ResponseDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.util.Arrays;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class LessonLatestRes extends ResponseDto{
+public class LessonLatestRes extends ResponseDto {
 
     private String lessonTitle;
     private String cookyerId;

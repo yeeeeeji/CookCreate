@@ -1,8 +1,8 @@
 package com.mmt.domain.entity.lesson;
 
 import com.mmt.domain.entity.BaseTimeEntity;
-import com.mmt.domain.request.LessonPostReq;
-import com.mmt.domain.request.LessonPutReq;
+import com.mmt.domain.request.lesson.LessonPostReq;
+import com.mmt.domain.request.lesson.LessonPutReq;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

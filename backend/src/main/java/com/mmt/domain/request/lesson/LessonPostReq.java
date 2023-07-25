@@ -1,27 +1,31 @@
-package com.mmt.domain.request;
+package com.mmt.domain.request.lesson;
 
+import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonStep;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class LessonPutReq {
-    @NotNull(message = "아이디는 필수입력값입니다.")
+public class LessonPostReq {
     private int lessonId;
-    @NotBlank(message = "제목은 필수입력값입니다.")
     private String lessonTitle;
     private String cookyerId;
-    @NotNull(message = "카테고리는 필수입력값입니다.")
     @Min(value = 1, message = "유효한 카테고리를 선택해주세요.")
     @Max(value = 7, message = "유효한 카테고리를 선택해주세요.")
     private int categoryId;
     private String description;
-    @NotEmpty(message = "준비물은 필수입력값입니다.")
+    @Min(value = 4, message = "최대인원은 4명 이상이여야 합니다.")
+    @Max(value = 6, message = "최대인원은 6명 이하여야 합니다.")
+    private int maximum;
+    private int price;
     private List<String> materials;
+    private String lessonDate;
     private String videoUrl;
     private String thumbnailUrl;
-    @NotEmpty(message = "요리 단계는 필수입력값입니다.")
     private List<LessonStep> lessonStepList;
 }
