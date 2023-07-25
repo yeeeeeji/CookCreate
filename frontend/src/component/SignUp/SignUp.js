@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import store from '../../store'
 import { useSelector } from "react-redux";
-
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginAction } from '../../actions/actions_auth'
+import FoodList from './FoodList';
 function Signup() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [userId, setUserId] = useState('')
   const [userPw, setUserPw] = useState('')
   const [userPwCk, setUserPwCk] = useState('')
   const [nickname, setNickName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [userEmail, setUserEmail] = useState('')
+  const [food, setFood] = useState([]); // 이 부분에서 food와 setFood를 정의
 
   //오류 메세지 저장
   const [userIdMessage, setUserIdMessage] = useState('')
@@ -99,16 +105,21 @@ function Signup() {
   const onChangeUserEmail = async (e) => {
     const value = e.target.value
     await setUserEmail(value)
-    const emailRegex =
-    /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
-    if (emailRegex.test(value)) {
-      setIsUserEmail(true)
-      setUserEmailMessage('올바른 이메일 형식입니다!')
-    } else {
-      setIsUserEmail(false)
-      setUserEmailMessage('올바른 이메일 형식을 입력하세요')
+    if (value === '') {
+      setIsUserEmail(true);
+      return;
     }
-  }
+
+    const emailRegex = /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    if (emailRegex.test(value)) {
+      setIsUserEmail(true);
+      setUserEmailMessage('올바른 이메일 형식입니다!');
+    } else {
+      setIsUserEmail(false);
+      setUserEmailMessage('올바른 이메일 형식을 입력하세요');
+    }
+  };
+
   //중복 체크 로직
   const idDupliCheck = () => {
     axios
@@ -134,20 +145,41 @@ function Signup() {
       setIsNNdup(false)
     })
   }
-
+  // 쿠키 / 쿠커 구현 로직
   const role = useSelector((state) => state.userType).userType;
+  
+  // 음식 선택 로직. props로 소통
+  const handleSelectedFood = (selectedFood) => {
+    if (food.includes(selectedFood)) {
+      setFood(food.filter(item => item !== selectedFood)); // 음식 제거
+    } else {
+      setFood([...food, selectedFood]); // 음식 추가
+    }
+  };
+
 
   const handleSignup = (e) => {
     e.preventDefault()
+    const foodString = food.join(',');
+    console.log(foodString)
     axios
     .post(`api/v1/auth/signup`, 
-    {userId, userPw, userPwCk, nickname, phoneNumber, userEmail, role})
+    {userId, userPw, userPwCk, nickname, phoneNumber, userEmail, role, food:foodString})
     .then((res) => {
-      console.log(res)
-      console.log('회원가입 완료!')
+      navigate("/")
+      axios.post(`api/v1/auth/login`, {
+        userId,
+        userPw
+      })
+      .then((res)=>{
+        dispatch(loginAction(res.headers.access_token, userId));
+        navigate("/")
+      })
+      .catch((err) =>{
+        console.log(err.response.data.message)
+      })
     })
     .catch((err) =>{
-      console.log(err)
       serUserCanSignUp(err.response.data.message)
     })
     }
@@ -230,7 +262,7 @@ function Signup() {
           </div>
         </div>
 
-        <div className='inputTitle'>이메일</div>
+        <div className='inputTitle'>이메일(선택사항)</div>
         <div className='inputWrap'>
           <input type="email" className='input'
           value={userEmail}
@@ -244,12 +276,22 @@ function Signup() {
         </div>
 
         <br/>
-
+        <FoodList selectedFood={food} toggleFood={handleSelectedFood} />
         <button onClick={handleSignup}
           className="bottomBtn"
-          disabled={!(isUserId && isIdDupli && isUserPw && isUserPwCk && isNickname && isNicknameDupli && isPhoneNumber && isUserEmail)}
-          >
-            회원가입
+          disabled={
+            !(
+              isUserId &&
+              isIdDupli &&
+              isUserPw &&
+              isUserPwCk &&
+              isNickname &&
+              isNicknameDupli &&
+              isPhoneNumber
+              // isUserEmail // 이메일 유효성 검사 상태 추가
+            )
+          }>
+          회원가입
         </button>
       </div>
       {userCanSignUp}

@@ -4,18 +4,23 @@ import SearchBar from './SearchBar';
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-
+import '../../style/navbar.css'
 function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch()
   const isLogged = useSelector((state) => state.userinfo.isLogin)
-  const nickname = useSelector((state) => state.userinfo.nickname);
+  const nickname = useSelector((state) => state.userinfo.nickname)
+  const role = useSelector((state) => state.userType).userType;
+
   const Logout = () => {
     dispatch({type : "LOGOUT"})
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('nickname')
     navigate("/")
+    
   }
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div style={{ display: 'flex', alignItems: 'center' }} className='navbar'>
       <Link to='/'>
         로고
       </Link> |
@@ -29,7 +34,9 @@ function NavBar() {
       <SearchBar />
       {isLogged ? (
         <div>
-        {nickname}님, <span onClick={Logout}>로그아웃</span>
+          {role}
+          {nickname}님, <span onClick={Logout}>로그아웃</span>
+          <Link to='registerlesson'>과외 등록</Link>
       </div>
       ) : (
         <React.Fragment>
