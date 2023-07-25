@@ -3,6 +3,7 @@ package com.mmt.controller;
 import com.mmt.domain.request.UserLoginPostReq;
 import com.mmt.domain.request.UserSignUpReq;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.UserLoginRes;
 import com.mmt.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -66,8 +67,9 @@ public class AuthController {
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class)))
     })
     @PostMapping("/login")
-    public ResponseDto login(@RequestBody UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
-        return memberService.login(userLoginPostReq, response);
+    public ResponseEntity<UserLoginRes> login(@RequestBody UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
+        UserLoginRes userLoginRes = memberService.login(userLoginPostReq, response);
+        return new ResponseEntity<>(userLoginRes, userLoginRes.getStatusCode());
     }
 
     @Operation(summary = "아이디 중복 체크", description = "존재하는 아이디인지 확인한다.")
@@ -77,9 +79,10 @@ public class AuthController {
             @ApiResponse(responseCode = "409", description = "이미 존재하는 사용자 ID입니다.",
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class)))
     })
-    @GetMapping("/check/{userId}")
-    public ResponseDto checkUserId(@PathVariable("userId") String userId) {
-        return memberService.checkUserId(userId);
+    @GetMapping("/checkId/{userId}")
+    public ResponseEntity<ResponseDto> checkUserId(@PathVariable("userId") String userId) {
+        ResponseDto responseDto = memberService.checkUserId(userId);
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 
     @Operation(summary = "닉네임 중복 체크", description = "존재하는 닉네임인지 확인한다.")
@@ -89,8 +92,9 @@ public class AuthController {
             @ApiResponse(responseCode = "409", description = "이미 존재하는 닉네임입니다.",
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class)))
     })
-    @GetMapping("/check/{nickname}")
-    public ResponseDto checkNickname(@PathVariable("nickname") String nickname) {
-        return memberService.checkNickname(nickname);
+    @GetMapping("/checkNick/{nickname}")
+    public ResponseEntity<ResponseDto> checkNickname(@PathVariable("nickname") String nickname) {
+        ResponseDto responseDto = memberService.checkNickname(nickname);
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 }

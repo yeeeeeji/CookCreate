@@ -9,6 +9,7 @@ import com.mmt.domain.request.UserLoginPostReq;
 import com.mmt.domain.request.UserSignUpReq;
 import com.mmt.domain.request.UserUpdateReq;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.UserLoginRes;
 import com.mmt.repository.MemberRepository;
 import com.mmt.repository.RefreshTokenRepository;
 import com.mmt.service.MemberService;
@@ -63,14 +64,22 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public ResponseDto login(UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
+    public UserLoginRes login(UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
+        UserLoginRes userLoginRes = new UserLoginRes();
+
         // 아이디 검사
         Optional<Member> member = memberRepository.findByUserId(userLoginPostReq.getUserId());
-        if(member.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 계정입니다.");
+        if(member.isEmpty()) {
+            userLoginRes.setStatusCode(HttpStatus.NOT_FOUND);
+            userLoginRes.setMessage("존재하지 않는 계정입니다.");
+            return userLoginRes;
+        }
 
         // 비밀번호 검사
         if(!passwordEncoder.matches(userLoginPostReq.getUserPw(), member.get().getUserPw())) {
-            return new ResponseDto(HttpStatus.UNAUTHORIZED, "비밀번호를 확인해주세요.");
+            userLoginRes.setStatusCode(HttpStatus.UNAUTHORIZED);
+            userLoginRes.setMessage("비밀번호를 확인해주세요.");
+            return userLoginRes;
         }
 
         // 아이디 정보로 Token생성
@@ -91,7 +100,14 @@ public class MemberServiceImpl implements MemberService {
         // response 헤더에 Access Token / Refresh Token 넣음
         setHeader(response, tokenDto);
 
-        return new ResponseDto(HttpStatus.OK, "Success");
+        userLoginRes.setRole(member.get().getRole());
+        userLoginRes.setNickname(member.get().getNickname());
+
+        // ok 세팅
+        userLoginRes.setStatusCode(HttpStatus.OK);
+        userLoginRes.setMessage("Success");
+
+        return userLoginRes;
     }
 
     @Transactional
