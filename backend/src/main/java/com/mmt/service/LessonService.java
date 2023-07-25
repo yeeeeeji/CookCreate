@@ -13,6 +13,7 @@ import java.util.List;
 public interface LessonService {
 
     ResponseDto reserve(LessonPostReq lessonPostReq);
+    ResponseDto apply(int lessonId, String userId);
     ResponseDto modifyLesson(LessonPutReq lessonPutReq);
     ResponseDto deleteLesson(int lessonId);
     List<LessonSearchRes> getLessonList(LessonSearchReq lessonSearchReq);

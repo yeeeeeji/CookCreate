@@ -1,4 +1,4 @@
-package com.mmt.repository;
+package com.mmt.repository.lesson;
 
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import org.springframework.data.jpa.repository.JpaRepository;

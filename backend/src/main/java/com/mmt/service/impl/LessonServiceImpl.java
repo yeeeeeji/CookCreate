@@ -13,6 +13,10 @@ import com.mmt.domain.response.lesson.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.lesson.LessonSearchRes;
 import com.mmt.repository.*;
+import com.mmt.repository.lesson.LessonCategoryRepository;
+import com.mmt.repository.lesson.LessonParticipantRepository;
+import com.mmt.repository.lesson.LessonRepository;
+import com.mmt.repository.lesson.LessonStepRepository;
 import com.mmt.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -68,6 +72,23 @@ public class LessonServiceImpl implements LessonService {
         // TODO: 채팅방 생성
 
         return new ResponseDto(HttpStatus.CREATED, "Success");
+    }
+
+    @Override
+    public ResponseDto apply(int lessonId, String userId) {
+        Optional<Lesson> lesson = lessonRepository.findByLessonId(lessonId);
+        if(lesson.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+
+        // TODO: 추가하기 전 결제 완료 확인
+        LessonParticipant lessonParticipant = new LessonParticipant();
+        lessonParticipant.setLesson(lesson.get());
+        lessonParticipant.setUserId(userId);
+        lessonParticipant.setCompleted(false);
+        lessonParticipantRepository.save(lessonParticipant);
+
+        // TODO: 채팅방 입장
+
+        return new ResponseDto(HttpStatus.OK, "Success");
     }
 
     @Transactional

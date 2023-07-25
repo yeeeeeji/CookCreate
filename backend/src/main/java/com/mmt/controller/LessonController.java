@@ -76,6 +76,32 @@ public class LessonController {
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 
+    @Operation(summary = "과외 신청하기", description = "과외를 신청한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Cookiee만 이용 가능합니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+    })
+    @PostMapping("/{lessonId}")
+    public ResponseEntity<ResponseDto> apply(@PathVariable(value = "lessonId") int lessonId, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (userDetails.getUsername()));
+
+        String loginId = userDetails.getUsername(); // 현재 로그인한 아이디
+        if(!memberService.getRole(loginId).equals(Role.COOKIEE)){ // 권한 에러
+            return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "Cookiee만 이용 가능합니다."), HttpStatus.FORBIDDEN);
+        }
+
+        ResponseDto responseDto = lessonService.apply(lessonId, loginId);
+
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    }
+
     @Operation(summary = "과외 수정하기", description = "예약한 과외를 수정한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
