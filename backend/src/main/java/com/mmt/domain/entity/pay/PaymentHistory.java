@@ -33,6 +33,6 @@ public class PaymentHistory {
     private int totalAmount;
     private String cardInfo;
     private String status;
-    private LocalDateTime approved_at;
+    private LocalDateTime approvedAt;
 
 }

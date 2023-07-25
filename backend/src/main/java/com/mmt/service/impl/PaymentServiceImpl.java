@@ -6,12 +6,15 @@ import com.mmt.domain.entity.pay.PaymentHistory;
 import com.mmt.domain.request.PaymentReadyReq;
 import com.mmt.domain.response.PaymentApproveRes;
 import com.mmt.domain.response.PaymentReadyRes;
+import com.mmt.domain.response.ResponseDto;
 import com.mmt.repository.LessonRepository;
 import com.mmt.repository.MemberRepository;
 import com.mmt.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -78,7 +81,7 @@ public class PaymentServiceImpl {
         return paymentReadyRes;
     }
 
-    public PaymentApproveRes approvePay(String pg_Token, int paymentId) {
+    public ResponseDto approvePay(String pg_Token, int paymentId) {
         PaymentHistory paymentHistory = paymentRepository.findByPaymentId(paymentId);
         log.debug("userId: " + paymentHistory.getMember().getUserId());
         log.debug("tid: " + paymentHistory.getTId());
@@ -99,10 +102,14 @@ public class PaymentServiceImpl {
                 .bodyToMono(PaymentApproveRes.class)
                 .block();
 
-        paymentHistory.setApproved_at(paymentApproveRes.getApproved_at());
+        paymentHistory.setApprovedAt(paymentApproveRes.getApproved_at());
         paymentRepository.save(paymentHistory);
 
-        return paymentApproveRes;
+        if(paymentHistory.getApprovedAt() == null) {
+            return new ResponseDto(HttpStatus.BAD_REQUEST, "결제에 실패했습니다.");
+        }
+
+        return new ResponseDto(HttpStatus.OK, "success");
     }
 
     private HttpHeaders setHeaders() {
