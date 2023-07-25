@@ -1,6 +1,6 @@
 package com.mmt.domain.entity.Auth;
 
-import com.mmt.domain.Role;
+import com.mmt.domain.entity.Role;
 import com.mmt.domain.entity.BaseTimeEntity;
 import com.mmt.domain.request.UserSignUpReq;
 import com.mmt.domain.request.UserUpdateReq;
@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Getter

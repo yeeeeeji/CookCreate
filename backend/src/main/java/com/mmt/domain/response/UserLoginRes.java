@@ -1,6 +1,6 @@
 package com.mmt.domain.response;
 
-import com.mmt.domain.Role;
+import com.mmt.domain.entity.Role;
 import lombok.Data;
 
 @Data
