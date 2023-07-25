@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
+@Setter
 @NoArgsConstructor
 public class ResponseDto {
     private HttpStatus statusCode;

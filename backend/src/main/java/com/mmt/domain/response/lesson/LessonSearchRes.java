@@ -1,0 +1,46 @@
+package com.mmt.domain.response.lesson;
+
+import com.mmt.domain.entity.lesson.Lesson;
+import com.mmt.domain.response.ResponseDto;
+import lombok.Data;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+
+@Data
+public class LessonSearchRes extends ResponseDto {
+    private int lessonId;
+    private String lessonTitle;
+    private String cookyerId;
+    private String cookyerName;
+    private int categoryId;
+    private int remaining;
+    private int maximum;
+    private int price;
+    private List<String> materials;
+    private String lessonDate;
+    private float reviewAvg;
+    private String thumbnailUrl;
+    private int jjimCount;
+    private String createdDate;
+    private String modifiedDate;
+    private Long toDeadline;
+
+    public LessonSearchRes(Lesson lesson){
+        this.lessonId = lesson.getLessonId();
+        this.lessonTitle = lesson.getLessonTitle();
+        this.cookyerId = lesson.getCookyerId();
+        this.cookyerName = lesson.getCookyerName();
+        this.categoryId = lesson.getLessonCategory().getCategoryId();
+        this.maximum = lesson.getMaximum();
+        this.price = lesson.getPrice();
+        this.materials = Arrays.asList(lesson.getMaterials().split(","));
+        this.lessonDate = lesson.getLessonDate();
+        this.thumbnailUrl = lesson.getThumbnailUrl();
+        this.jjimCount = lesson.getJjimCount();
+        this.createdDate = lesson.getCreatedDate().toString();
+        this.modifiedDate = lesson.getModifiedDate().toString();
+    }
+}
