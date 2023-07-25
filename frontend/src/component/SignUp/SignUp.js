@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { loginAction } from '../../actions/actions_auth'
+import { login } from '../../store/auth/auth'
+// import { loginAction } from '../../actions/actions_auth';
+
 import FoodList from './FoodList';
 function Signup() {
   const navigate = useNavigate();
@@ -146,7 +147,7 @@ function Signup() {
     })
   }
   // 쿠키 / 쿠커 구현 로직
-  const role = useSelector((state) => state.userType).userType;
+  const role = useSelector((state) => state.auth.userType);
   
   // 음식 선택 로직. props로 소통
   const handleSelectedFood = (selectedFood) => {
@@ -172,7 +173,7 @@ function Signup() {
         userPw
       })
       .then((res)=>{
-        dispatch(loginAction(res.headers.access_token, userId));
+        dispatch(login(res.headers.access_token, userId));
         navigate("/")
       })
       .catch((err) =>{

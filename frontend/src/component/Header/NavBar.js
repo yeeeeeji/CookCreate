@@ -1,16 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import '../../style/navbar.css'
+
 function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch()
-  const isLogged = useSelector((state) => state.userinfo.isLogin)
-  const nickname = useSelector((state) => state.userinfo.nickname)
-  const role = useSelector((state) => state.userType).userType;
+  const isLogin = useSelector((state) => state.auth.isLogin)
+  const nickname = useSelector((state) => state.auth.nickname)
+  const role = useSelector((state) => state.auth.userType);
 
   const Logout = () => {
     dispatch({type : "LOGOUT"})
@@ -32,7 +32,7 @@ function NavBar() {
       </Link>
 
       <SearchBar />
-      {isLogged ? (
+      {isLogin ? (
         <div>
           {role}
           {nickname}님, <span onClick={Logout}>로그아웃</span>

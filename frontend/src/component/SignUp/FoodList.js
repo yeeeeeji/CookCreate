@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import '../../style/foodlist.css';
 
 function FoodList({ selectedFood, toggleFood }) {
-  const role = useSelector((state) => state.userType).userType;
+  const role = useSelector((state) => state.auth.userType);
 
   return (
     <div>

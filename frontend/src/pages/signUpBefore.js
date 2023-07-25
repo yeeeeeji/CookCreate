@@ -1,28 +1,25 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
+import { setUserType } from '../store/auth/auth';
 
 function SignUpBefore() {
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
-  const handleCookyerClick = () => {
-    dispatch({type : "COOKYER", payload : "COOKYER"})
+  const handleUserType = ( userType ) => {
+    dispatch(setUserType({ userType }))
     navigate("/signup")
   }
-
-  const handelCookieeClick = () => {
-    dispatch({type : "COOKIEE", payload : "COOKIEE"})
-    navigate("/signup")
-  }
+  
   return (
     <div>
-      <button onClick={handleCookyerClick}>
+      <button onClick={() => handleUserType("COOKYER")}>
         Cookyer
         <br />
         회원가입
       </button>
-      <button onClick={handelCookieeClick}>
+      <button onClick={() => handleUserType("COOKIEE")}>
         Cookiee
         <br />
         회원가입
