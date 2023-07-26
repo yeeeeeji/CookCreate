@@ -1,10 +1,7 @@
 package com.mmt.domain.entity.pay;
 
-import com.mmt.domain.entity.Auth.Member;
+import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.lesson.Lesson;
-import com.mmt.domain.request.PaymentReadyReq;
-import com.mmt.domain.response.PaymentApproveRes;
-import com.mmt.domain.response.PaymentReadyRes;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +29,7 @@ public class PaymentHistory {
     private String tId;
     private int totalAmount;
     private String cardInfo;
-    private String status;
+    private PayStatus payStatus;
     private LocalDateTime approvedAt;
 
 }

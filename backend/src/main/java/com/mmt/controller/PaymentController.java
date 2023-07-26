@@ -1,9 +1,8 @@
 package com.mmt.controller;
 
-import com.mmt.domain.entity.Auth.UserDetailsImpl;
+import com.mmt.domain.entity.auth.UserDetailsImpl;
 import com.mmt.domain.request.PaymentReadyReq;
-import com.mmt.domain.response.PaymentApproveRes;
-import com.mmt.domain.response.PaymentReadyRes;
+import com.mmt.domain.response.pay.PaymentReadyRes;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.service.impl.PaymentServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,14 +12,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "결제 API", description = "결제 관련 API입니다.")
@@ -50,12 +46,9 @@ public class PaymentController {
             return new ResponseEntity<>(new ResponseDto(HttpStatus.UNAUTHORIZED, "로그인 후 이용해주세요."), HttpStatus.UNAUTHORIZED);
         }
 
-        // 취소 처리
-        // db 상태값 변환 수정
-        // erd 수정
-        // api 문서 수정
-
         PaymentReadyRes paymentReadyRes = paymentService.readyPay(paymentReadyReq);
+        paymentReadyRes.setStatusCode(HttpStatus.OK);
+        paymentReadyRes.setMessage("success");
 
         return new ResponseEntity<>(paymentReadyRes, HttpStatus.OK);
     }
@@ -69,14 +62,17 @@ public class PaymentController {
 
     @Parameter(hidden = true)
     @GetMapping("/fail")
-    public ResponseEntity<ResponseDto> failPay() {
-        return ResponseEntity.status(400).body(new ResponseDto(HttpStatus.BAD_REQUEST, "결제에 실패했습니다."));
+    public ResponseEntity<ResponseDto> failPay(int paymentId) {
+        ResponseDto responseDto = paymentService.failPay(paymentId);
+        return ResponseEntity.status(400).body(responseDto);
     }
 
     @Parameter(hidden = true)
     @GetMapping("/cancel")
-    public ResponseEntity<ResponseDto> cancelPay() {
-        return ResponseEntity.status(400).body(new ResponseDto(HttpStatus.BAD_REQUEST, "결제 진행 중 취소되었습니다."));
+    public ResponseEntity<ResponseDto> cancelPay(int paymentId) {
+        // TODO: 취소 처리
+        ResponseDto responseDto = paymentService.cancelPay(paymentId);
+        return ResponseEntity.status(400).body(responseDto);
     }
 
 }

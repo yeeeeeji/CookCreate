@@ -1,20 +1,20 @@
 package com.mmt.service.impl;
 
-import com.mmt.domain.entity.Auth.Member;
+import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.lesson.Lesson;
+import com.mmt.domain.entity.pay.PayStatus;
 import com.mmt.domain.entity.pay.PaymentHistory;
 import com.mmt.domain.request.PaymentReadyReq;
-import com.mmt.domain.response.PaymentApproveRes;
-import com.mmt.domain.response.PaymentReadyRes;
+import com.mmt.domain.response.pay.PaymentApproveRes;
+import com.mmt.domain.response.pay.PaymentReadyRes;
 import com.mmt.domain.response.ResponseDto;
-import com.mmt.repository.LessonRepository;
 import com.mmt.repository.MemberRepository;
 import com.mmt.repository.PaymentRepository;
+import com.mmt.repository.lesson.LessonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -63,8 +63,8 @@ public class PaymentServiceImpl {
         parameter.add("total_amount", String.valueOf(paymentHistory.getTotalAmount()));
         parameter.add("tax_free_amount", "0");
         parameter.add("approval_url", "http://localhost:8080/api/v1/pay/completed?paymentId=" + paymentHistory.getPaymentId());
-        parameter.add("cancel_url", "http://localhost:8080/api/v1/pay/cancel");
-        parameter.add("fail_url", "http://localhost:8080/api/v1/pay/fail");
+        parameter.add("cancel_url", "http://localhost:8080/api/v1/pay/cancel?paymentId=" + paymentHistory.getPaymentId());
+        parameter.add("fail_url", "http://localhost:8080/api/v1/pay/fail?paymentId=" + paymentHistory.getPaymentId());
 
         log.debug("use webClient before");
 
@@ -76,13 +76,16 @@ public class PaymentServiceImpl {
                 .block();
 
         paymentHistory.setTId(paymentReadyRes.getTid());
+        paymentHistory.setPayStatus(PayStatus.READY);
         paymentRepository.save(paymentHistory);
+
+        paymentReadyRes.setTid(null);
 
         return paymentReadyRes;
     }
 
     public ResponseDto approvePay(String pg_Token, int paymentId) {
-        PaymentHistory paymentHistory = paymentRepository.findByPaymentId(paymentId);
+        PaymentHistory paymentHistory = paymentRepository.findByPaymentId(paymentId).get();
         log.debug("userId: " + paymentHistory.getMember().getUserId());
         log.debug("tid: " + paymentHistory.getTId());
         log.debug("pg_token: " + pg_Token);
@@ -103,6 +106,7 @@ public class PaymentServiceImpl {
                 .block();
 
         paymentHistory.setApprovedAt(paymentApproveRes.getApproved_at());
+        paymentHistory.setPayStatus(PayStatus.COMPLETED);
         paymentRepository.save(paymentHistory);
 
         if(paymentHistory.getApprovedAt() == null) {
@@ -110,6 +114,22 @@ public class PaymentServiceImpl {
         }
 
         return new ResponseDto(HttpStatus.OK, "success");
+    }
+
+    public ResponseDto failPay(int paymentId) {
+        PaymentHistory paymentHistory = paymentRepository.findByPaymentId(paymentId).get();
+        paymentHistory.setPayStatus(PayStatus.FAIL);
+        paymentRepository.save(paymentHistory);
+
+        return new ResponseDto(HttpStatus.BAD_REQUEST, "결제에 실패했습니다.");
+    }
+
+    public ResponseDto cancelPay(int paymentId) {
+        PaymentHistory paymentHistory = paymentRepository.findByPaymentId(paymentId).get();
+        paymentHistory.setPayStatus(PayStatus.CANCEL);
+        paymentRepository.save(paymentHistory);
+
+        return new ResponseDto(HttpStatus.BAD_REQUEST, "결제 진행 중 취소되었습니다.");
     }
 
     private HttpHeaders setHeaders() {
