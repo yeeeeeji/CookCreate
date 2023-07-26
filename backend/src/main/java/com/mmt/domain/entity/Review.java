@@ -2,8 +2,8 @@ package com.mmt.domain.entity;
 
 import com.mmt.domain.entity.Auth.Member;
 import com.mmt.domain.entity.lesson.Lesson;
-import com.mmt.domain.request.ReviewPostReq;
-import com.mmt.domain.request.lesson.LessonPutReq;
+import com.mmt.domain.request.review.ReviewPostReq;
+import com.mmt.domain.request.review.ReviewPutReq;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,5 +37,11 @@ public class Review extends BaseTimeEntity{
     public Review(ReviewPostReq reviewPostReq){
         this.rating = reviewPostReq.getRating();
         this.reviewContents = reviewPostReq.getReviewContents();
+    }
+
+    public void modify(ReviewPutReq reviewPutReq){
+        this.reviewId = reviewPutReq.getReviewId();
+        this.rating = reviewPutReq.getRating();
+        this.reviewContents = reviewPutReq.getReviewContents();
     }
 }

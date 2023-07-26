@@ -4,7 +4,8 @@ import com.mmt.domain.entity.Auth.Member;
 import com.mmt.domain.entity.Review;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonParticipant;
-import com.mmt.domain.request.ReviewPostReq;
+import com.mmt.domain.request.review.ReviewPostReq;
+import com.mmt.domain.request.review.ReviewPutReq;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.repository.MemberRepository;
 import com.mmt.repository.ReviewRepository;
@@ -15,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,5 +49,25 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.save(review);
 
         return new ResponseDto(HttpStatus.CREATED, "Success");
+    }
+
+    @Override
+    public ResponseDto modify(ReviewPutReq reviewPutReq) {
+        // 존재하는 리뷰인지 확인
+        Optional<Review> review = reviewRepository.findById(reviewPutReq.getReviewId());
+        if(review.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 리뷰입니다.");
+        }
+
+        // 리뷰 작성자와 로그인한 사람이 동일한지 확인
+        if(!review.get().getMember().getUserId().equals(reviewPutReq.getUserId())){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "작성한 Cookiee만 이용 가능합니다.");
+        }
+
+        // 받아온 값들로 변경해서 세팅 후 저장
+        review.get().modify(reviewPutReq);
+        reviewRepository.save(review.get());
+
+        return new ResponseDto(HttpStatus.OK, "Success");
     }
 }

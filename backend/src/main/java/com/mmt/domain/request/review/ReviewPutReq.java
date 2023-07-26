@@ -1,4 +1,4 @@
-package com.mmt.domain.request;
+package com.mmt.domain.request.review;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -8,7 +8,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class ReviewPostReq {
+public class ReviewPutReq {
+    @NotNull(message = "리뷰 ID는 필수 입력값입니다.")
+    private int reviewId;
     private String userId;
     @NotNull(message = "과외 ID는 필수 입력값입니다.")
     private int lessonId;

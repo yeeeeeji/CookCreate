@@ -184,7 +184,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Role getRole(String userId){
         Optional<Member> member = memberRepository.findByUserId(userId);
-        System.out.println(member.get().getRole());
         return member.get().getRole();
     }
 
