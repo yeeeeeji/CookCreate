@@ -1,5 +1,6 @@
 package com.mmt.domain.request.lesson;
 
+import com.mmt.domain.entity.Difficulty;
 import com.mmt.domain.entity.lesson.LessonStep;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class LessonPutReq {
     @Min(value = 1, message = "유효한 카테고리를 선택해주세요.")
     @Max(value = 7, message = "유효한 카테고리를 선택해주세요.")
     private int categoryId;
+    private Difficulty difficulty;
     private String description;
     @NotEmpty(message = "준비물은 필수입력값입니다.")
     private List<String> materials;

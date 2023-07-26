@@ -1,5 +1,6 @@
 package com.mmt.domain.response.lesson;
 
+import com.mmt.domain.entity.Difficulty;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonStep;
 import com.mmt.domain.response.ResponseDto;
@@ -16,6 +17,7 @@ public class LessonLatestRes extends ResponseDto {
     private String lessonTitle;
     private String cookyerId;
     private int categoryId;
+    private Difficulty difficulty;
     private String description;
     private int maximum;
     private int price;
@@ -28,6 +30,7 @@ public class LessonLatestRes extends ResponseDto {
         this.lessonTitle = lesson.getLessonTitle();
         this.cookyerId = lesson.getCookyerId();
         this.categoryId = lesson.getLessonCategory().getCategoryId();
+        this.difficulty = lesson.getDifficulty();
         this.description = lesson.getDescription();
         this.maximum = lesson.getMaximum();
         this.price = lesson.getPrice();

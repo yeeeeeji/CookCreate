@@ -1,6 +1,7 @@
 package com.mmt.domain.entity.lesson;
 
 import com.mmt.domain.entity.BaseTimeEntity;
+import com.mmt.domain.entity.Difficulty;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import lombok.Getter;
@@ -35,6 +36,7 @@ public class Lesson extends BaseTimeEntity {
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
     private List<LessonParticipant> lessonParticipantList = new ArrayList<>();
 
+    private Difficulty difficulty;
     private String description;
     private int maximum;
     private int price;
@@ -50,6 +52,7 @@ public class Lesson extends BaseTimeEntity {
     public Lesson(LessonPostReq lessonPostReq){
         this.lessonTitle = lessonPostReq.getLessonTitle();
         this.cookyerId = lessonPostReq.getCookyerId();
+        this.difficulty = lessonPostReq.getDifficulty();
         this.description = lessonPostReq.getDescription();
         this.maximum = lessonPostReq.getMaximum();
         this.price = lessonPostReq.getPrice();
@@ -64,6 +67,7 @@ public class Lesson extends BaseTimeEntity {
         this.lessonId = lessonPutReq.getLessonId();
         this.lessonTitle = lessonPutReq.getLessonTitle();
         this.cookyerId = lessonPutReq.getCookyerId();
+        this.difficulty = lessonPutReq.getDifficulty();
         this.description = lessonPutReq.getDescription();
         this.materials = String.join(",", lessonPutReq.getMaterials());
         this.videoUrl = lessonPutReq.getVideoUrl();

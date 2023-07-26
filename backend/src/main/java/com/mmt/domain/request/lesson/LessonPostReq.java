@@ -1,5 +1,6 @@
 package com.mmt.domain.request.lesson;
 
+import com.mmt.domain.entity.Difficulty;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonStep;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class LessonPostReq {
     @Min(value = 1, message = "유효한 카테고리를 선택해주세요.")
     @Max(value = 7, message = "유효한 카테고리를 선택해주세요.")
     private int categoryId;
+    private Difficulty difficulty;
     private String description;
     @Min(value = 4, message = "최대인원은 4명 이상이여야 합니다.")
     @Max(value = 6, message = "최대인원은 6명 이하여야 합니다.")
