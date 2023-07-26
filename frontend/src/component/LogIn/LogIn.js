@@ -1,10 +1,9 @@
   import axios from 'axios';
   import React, { useState } from 'react';
-  import { useDispatch } from 'react-redux';
+  import { useDispatch, useSelector } from 'react-redux';
   import { useNavigate } from 'react-router-dom';
   
   import { login } from '../../store/auth/auth'
-  // import { loginAction } from '../../actions/actions_auth';
 
   function Login() {
 
@@ -17,11 +16,11 @@
       e.preventDefault()
       axios.post(`api/v1/auth/login`, {userId, userPw})
       .then((res)=>{
-        localStorage.setItem('access_token', res.headers.access_token);
-        localStorage.setItem('nickname', userId)
-        //닉네임이 아닌 아이디를 저장합니다. backend api  수정 후 수정해야 합니다.
-        dispatch(login(res.headers.access_token, userId));
-
+        dispatch(login({
+          token : res.headers.access_token, 
+          userId,
+          nickname: res.data.nickname,
+          role : res.data.role}));
         navigate("/")
       })
       .catch((err) =>{

@@ -4,20 +4,25 @@ import SearchBar from './SearchBar';
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import '../../style/navbar.css'
+import { logout } from '../../store/auth/auth'; // Import the logout action
 
 function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch()
   const isLogin = useSelector((state) => state.auth.isLogin)
-  const nickname = useSelector((state) => state.auth.nickname)
-  const role = useSelector((state) => state.auth.userType);
+  const nickname = localStorage.getItem('nickname')
+  const role = localStorage.getItem('role')
+  const emoji = localStorage.getItem('emoji')
 
   const Logout = () => {
-    dispatch({type : "LOGOUT"})
+    dispatch(logout())
     localStorage.removeItem('access_token')
     localStorage.removeItem('nickname')
-    navigate("/")
-    
+    localStorage.removeItem('role')
+    localStorage.removeItem('id')
+    localStorage.removeItem('emoji')
+    window.location.replace("/")
+  
   }
   return (
     <div style={{ display: 'flex', alignItems: 'center' }} className='navbar'>
@@ -35,8 +40,9 @@ function NavBar() {
       {isLogin ? (
         <div>
           {role}
-          {nickname}님, <span onClick={Logout}>로그아웃</span>
+          {emoji} {nickname}님, 안녕하세요! 
           <Link to='registerlesson'>과외 등록</Link>
+          <span onClick={Logout}>로그아웃</span>
       </div>
       ) : (
         <React.Fragment>
