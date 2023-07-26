@@ -1,5 +1,6 @@
 package com.mmt.domain.response.lesson;
 
+import com.mmt.domain.entity.Difficulty;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.response.ResponseDto;
 import lombok.Data;
@@ -16,6 +17,8 @@ public class LessonSearchRes extends ResponseDto {
     private String cookyerId;
     private String cookyerName;
     private int categoryId;
+    private Difficulty difficulty;
+    private int timeTaken;
     private int remaining;
     private int maximum;
     private int price;
@@ -34,6 +37,8 @@ public class LessonSearchRes extends ResponseDto {
         this.cookyerId = lesson.getCookyerId();
         this.cookyerName = lesson.getCookyerName();
         this.categoryId = lesson.getLessonCategory().getCategoryId();
+        this.difficulty = lesson.getDifficulty();
+        this.timeTaken = lesson.getTimeTaken();
         this.maximum = lesson.getMaximum();
         this.price = lesson.getPrice();
         this.materials = Arrays.asList(lesson.getMaterials().split(","));

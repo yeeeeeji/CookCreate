@@ -1,6 +1,8 @@
 package com.mmt.domain.response.lesson;
 
 import com.mmt.domain.entity.auth.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mmt.domain.entity.Difficulty;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonStep;
 import lombok.Data;
@@ -18,6 +20,8 @@ public class LessonDetailRes {
     private String cookyerName;
     private int categoryId;
     private String categoryName;
+    private Difficulty difficulty;
+    private int timeTaken;
     private String description;
     private int remaining;
     private int maximum;
@@ -39,6 +43,8 @@ public class LessonDetailRes {
         this.cookyerId = lesson.getCookyerId();
         this.cookyerName = lesson.getCookyerName();
         this.categoryId = lesson.getLessonCategory().getCategoryId();
+        this.difficulty = lesson.getDifficulty();
+        this.timeTaken = lesson.getTimeTaken();
         this.description = lesson.getDescription();
         this.maximum = lesson.getMaximum();
         this.price = lesson.getPrice();

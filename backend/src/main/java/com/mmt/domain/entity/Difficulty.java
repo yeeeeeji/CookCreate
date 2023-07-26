@@ -1,4 +1,5 @@
 package com.mmt.domain.entity;
 
-public class Difficulty {
+public enum Difficulty {
+    EASY, NORMAL, HARD;
 }

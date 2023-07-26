@@ -177,7 +177,7 @@ public class LessonController {
     @Operation(summary = "과외 검색하기", description = "과외 글 목록을 검색한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = LessonSearchRes.class))),
     })
     @GetMapping("")
     public ResponseEntity<List<LessonSearchRes>> getLessonList(@RequestBody LessonSearchReq lessonSearchReq){
@@ -187,9 +187,9 @@ public class LessonController {
     @Operation(summary = "과외 상세보기", description = "과외 내용을 상세하게 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = LessonDetailRes.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = LessonDetailRes.class))),
     })
     @GetMapping("/{lessonId}")
     public ResponseEntity<LessonDetailRes> getLessonDetail(@PathVariable(value = "lessonId") int lessonId, Authentication authentication){
@@ -202,13 +202,13 @@ public class LessonController {
     @Operation(summary = "과외 불러오기", description = "최근에 예약한 과외 내용을 불러온다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = LessonLatestRes.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = LessonLatestRes.class))),
             @ApiResponse(responseCode = "403", description = "Cookyer만 이용 가능합니다",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = LessonLatestRes.class))),
             @ApiResponse(responseCode = "404", description = "이전에 예약한 화상 과외 내역이 없습니다.",
-                    content = @Content(schema = @Schema(implementation = UserInfoRes.class))),
+                    content = @Content(schema = @Schema(implementation = LessonLatestRes.class))),
     })
     @GetMapping("/latest")
     public ResponseEntity<LessonLatestRes> getLessonLatest(Authentication authentication){
