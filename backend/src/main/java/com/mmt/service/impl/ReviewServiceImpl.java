@@ -7,6 +7,7 @@ import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.request.review.ReviewPostReq;
 import com.mmt.domain.request.review.ReviewPutReq;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.review.ReviewDetailRes;
 import com.mmt.repository.MemberRepository;
 import com.mmt.repository.ReviewRepository;
 import com.mmt.repository.lesson.LessonParticipantRepository;
@@ -51,6 +52,26 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.save(review);
 
         return new ResponseDto(HttpStatus.CREATED, "Success");
+    }
+
+    @Override
+    public ReviewDetailRes getDetailReview(int reviewId) {
+
+        // 존재하는 리뷰인지 확인
+        Optional<Review> review = reviewRepository.findById(reviewId);
+        if(review.isEmpty()){
+            ReviewDetailRes reviewDetailRes = new ReviewDetailRes();
+            reviewDetailRes.setStatusCode(HttpStatus.NOT_FOUND);
+            reviewDetailRes.setMessage("존재하지 않는 리뷰입니다.");
+            return reviewDetailRes;
+        }
+
+        ReviewDetailRes reviewDetailRes = new ReviewDetailRes(review.get());
+
+        reviewDetailRes.setStatusCode(HttpStatus.OK);
+        reviewDetailRes.setMessage("Success");
+
+        return reviewDetailRes;
     }
 
     @Transactional

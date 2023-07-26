@@ -71,6 +71,25 @@ public class ReviewController {
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 
+    @Operation(summary = "리뷰 상세보기", description = "리뷰를 상세하게 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 리뷰입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
+    @GetMapping("/{reviewId}")
+    public ResponseEntity<ResponseDto> getDetailReview(@PathVariable(value = "reviewId") int reviewId, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (userDetails.getUsername()));
+
+        ResponseDto responseDto = reviewService.getDetailReview(reviewId);
+
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    }
+
     @Operation(summary = "리뷰 수정하기", description = "리뷰를 수정한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
