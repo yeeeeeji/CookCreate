@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -27,6 +28,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final LessonParticipantRepository lessonParticipantRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional
     @Override
     public ResponseDto register(ReviewPostReq reviewPostReq) {
         // 존재하는 과외인지 확인
@@ -51,6 +53,7 @@ public class ReviewServiceImpl implements ReviewService {
         return new ResponseDto(HttpStatus.CREATED, "Success");
     }
 
+    @Transactional
     @Override
     public ResponseDto modify(ReviewPutReq reviewPutReq) {
         // 존재하는 리뷰인지 확인
@@ -68,6 +71,25 @@ public class ReviewServiceImpl implements ReviewService {
         review.get().modify(reviewPutReq);
         reviewRepository.save(review.get());
 
+        return new ResponseDto(HttpStatus.OK, "Success");
+    }
+
+
+    @Transactional
+    @Override
+    public ResponseDto delete(int reviewId, String loginId) {
+        // 존재하는 리뷰인지 확인
+        Optional<Review> review = reviewRepository.findById(reviewId);
+        if(review.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 리뷰입니다.");
+        }
+
+        // 리뷰 작성자와 로그인한 사람이 동일한지 확인
+        if(!review.get().getMember().getUserId().equals(loginId)){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "작성한 Cookiee만 이용 가능합니다.");
+        }
+
+        reviewRepository.deleteById(reviewId);
         return new ResponseDto(HttpStatus.OK, "Success");
     }
 }

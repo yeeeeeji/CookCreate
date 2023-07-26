@@ -107,4 +107,30 @@ public class ReviewController {
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
+
+    @Operation(summary = "리뷰 삭제하기", description = "리뷰를 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "작성한 Cookiee만 이용 가능합니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 리뷰입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<ResponseDto> delete(@PathVariable(value = "reviewId") int reviewId, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (userDetails.getUsername()));
+
+        String loginId = userDetails.getUsername(); // 현재 로그인한 아이디
+        if(!memberService.getRole(loginId).equals(Role.COOKIEE)){ // 권한 에러
+            return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "Cookyiee만 이용 가능합니다."), HttpStatus.FORBIDDEN);
+        }
+
+        ResponseDto responseDto = reviewService.delete(reviewId, loginId);
+
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    }
 }
