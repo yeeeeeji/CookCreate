@@ -7,6 +7,7 @@ import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.request.review.ReviewPostReq;
 import com.mmt.domain.request.review.ReviewPutReq;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.review.ReviewCookyerRes;
 import com.mmt.domain.response.review.ReviewDetailRes;
 import com.mmt.repository.MemberRepository;
 import com.mmt.repository.ReviewRepository;
@@ -18,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,8 +58,38 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewDetailRes getDetailReview(int reviewId) {
+    public List<ReviewCookyerRes> getCookyerReview(String cookyerId) {
+        List<ReviewCookyerRes> reviewCookyerResList = new ArrayList<>();
 
+        // 존재하는 cookyer인지 확인
+        Optional<Member> member = memberRepository.findByUserId(cookyerId);
+        if(member.isEmpty()){
+            ReviewCookyerRes reviewCookyerRes = new ReviewCookyerRes();
+            reviewCookyerRes.setStatusCode(HttpStatus.NOT_FOUND);
+            reviewCookyerRes.setMessage("존재하지 않는 Cookyer입니다.");
+            reviewCookyerResList.add(reviewCookyerRes);
+            return reviewCookyerResList;
+        }
+
+
+        // cookyer가 진행한 과외 목록 불러오기
+        List<Lesson> lessonList = lessonRepository.findAllByCookyerId(cookyerId);
+        for (Lesson lesson : lessonList) {
+            // 각 과외 별로 존재하는 리뷰 목록 불러오기
+            List<Review> reviewList = reviewRepository.findAllByLesson_LessonId(lesson.getLessonId());
+            for (Review review : reviewList) {
+                ReviewCookyerRes reviewCookyerRes = new ReviewCookyerRes(review);
+                reviewCookyerRes.setStatusCode(HttpStatus.OK);
+                reviewCookyerRes.setMessage("Success");
+                reviewCookyerResList.add(reviewCookyerRes);
+            }
+        }
+
+        return reviewCookyerResList;
+    }
+
+    @Override
+    public ReviewDetailRes getDetailReview(int reviewId) {
         // 존재하는 리뷰인지 확인
         Optional<Review> review = reviewRepository.findById(reviewId);
         if(review.isEmpty()){

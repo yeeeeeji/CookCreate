@@ -5,6 +5,8 @@ import com.mmt.domain.entity.Role;
 import com.mmt.domain.request.review.ReviewPostReq;
 import com.mmt.domain.request.review.ReviewPutReq;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.review.ReviewCookyerRes;
+import com.mmt.domain.response.review.ReviewDetailRes;
 import com.mmt.service.MemberService;
 import com.mmt.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +25,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Tag(name = "리뷰 API", description = "리뷰 관련 API입니다.")
 @Slf4j
@@ -71,23 +74,42 @@ public class ReviewController {
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 
-    @Operation(summary = "리뷰 상세보기", description = "리뷰를 상세하게 조회한다.")
+    @Operation(summary = "Cookyer가 받은 리뷰 목록 조회", description = "Cookyer가 받은 리뷰 목록을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 리뷰입니다.",
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 Cookyer입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @GetMapping("/{reviewId}")
-    public ResponseEntity<ResponseDto> getDetailReview(@PathVariable(value = "reviewId") int reviewId, Authentication authentication) {
+    @GetMapping("/{cookyerId}")
+    public ResponseEntity<List<ReviewCookyerRes>> getDetailReview(@PathVariable(value = "cookyerId") String cookyerId, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication: " + (userDetails.getUsername()));
 
-        ResponseDto responseDto = reviewService.getDetailReview(reviewId);
+        List<ReviewCookyerRes> reviewCookyerRes = reviewService.getCookyerReview(cookyerId);
 
-        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+        return new ResponseEntity<>(reviewCookyerRes, reviewCookyerRes.get(0).getStatusCode());
+    }
+
+    @Operation(summary = "리뷰 상세보기", description = "리뷰를 상세하게 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(schema = @Schema(implementation = ReviewDetailRes.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
+                    content = @Content(schema = @Schema(implementation = ReviewDetailRes.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 리뷰입니다.",
+                    content = @Content(schema = @Schema(implementation = ReviewDetailRes.class)))
+    })
+    @GetMapping("/detail/{reviewId}")
+    public ResponseEntity<ReviewDetailRes> getDetailReview(@PathVariable(value = "reviewId") int reviewId, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (userDetails.getUsername()));
+
+        ReviewDetailRes reviewDetailRes = reviewService.getDetailReview(reviewId);
+
+        return new ResponseEntity<>(reviewDetailRes, reviewDetailRes.getStatusCode());
     }
 
     @Operation(summary = "리뷰 수정하기", description = "리뷰를 수정한다.")

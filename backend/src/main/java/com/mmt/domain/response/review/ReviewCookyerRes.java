@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ReviewDetailRes extends ResponseDto {
+public class ReviewCookyerRes extends ResponseDto {
     private int reviewId;
     private String userId;
     private String nickname;
@@ -16,11 +16,8 @@ public class ReviewDetailRes extends ResponseDto {
     private String cookyerId;
     private String cookyerName;
     private float rating;
-    private String reviewContents;
-    private String createdDate;
-    private String modifiedDate;
 
-    public ReviewDetailRes(Review review){
+    public ReviewCookyerRes(Review review){
         this.reviewId = review.getReviewId();
         this.userId = review.getMember().getUserId();
         this.nickname = review.getMember().getNickname();
@@ -29,8 +26,5 @@ public class ReviewDetailRes extends ResponseDto {
         this.cookyerId = review.getLesson().getCookyerId();
         this.cookyerName = review.getLesson().getCookyerName();
         this.rating = review.getRating();
-        this.reviewContents = review.getReviewContents();
-        this.createdDate = review.getCreatedDate().toString();
-        this.modifiedDate = review.getModifiedDate().toString();
     }
 }
