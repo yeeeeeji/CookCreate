@@ -5,6 +5,7 @@ import com.mmt.domain.entity.Role;
 import com.mmt.domain.request.ReviewPostReq;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.service.MemberService;
 import com.mmt.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,6 +35,7 @@ import javax.validation.Valid;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final MemberService memberService;
 
     @Operation(summary = "리뷰 등록하기", description = "리뷰를 등록한다.")
     @ApiResponses(value = {
@@ -60,14 +62,13 @@ public class ReviewController {
         }
 
         String loginId = userDetails.getUsername(); // 현재 로그인한 아이디
-//        if(!reviewService.getRole(loginId).equals(Role.COOKYER)){ // 권한 에러
-//            return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "Cookyer만 이용 가능합니다."), HttpStatus.FORBIDDEN);
-//        }
-//
-//        lessonPostReq.setCookyerId(loginId);
-//        ResponseDto responseDto = reviewService.reserve(lessonPostReq);
+        if(!memberService.getRole(loginId).equals(Role.COOKIEE)){ // 권한 에러
+            return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "Cookyiee만 이용 가능합니다."), HttpStatus.FORBIDDEN);
+        }
 
-//        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
-        return new ResponseEntity<>(new ResponseDto(), HttpStatus.OK);
+        reviewPostReq.setUserId(loginId);
+        ResponseDto responseDto = reviewService.register(reviewPostReq);
+
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 }
