@@ -23,6 +23,7 @@ public class LessonDetailRes {
     private int categoryId;
     private String categoryName;
     private Difficulty difficulty;
+    private int timeTaken;
     private String description;
     private int remaining;
     private int maximum;
@@ -45,6 +46,7 @@ public class LessonDetailRes {
         this.cookyerName = lesson.getCookyerName();
         this.categoryId = lesson.getLessonCategory().getCategoryId();
         this.difficulty = lesson.getDifficulty();
+        this.timeTaken = lesson.getTimeTaken();
         this.description = lesson.getDescription();
         this.maximum = lesson.getMaximum();
         this.price = lesson.getPrice();

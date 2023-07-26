@@ -19,6 +19,9 @@ public class LessonPutReq {
     @Max(value = 7, message = "유효한 카테고리를 선택해주세요.")
     private int categoryId;
     private Difficulty difficulty;
+    @Min(value = 60, message = "소요시간은 최소 60분부터입니다.")
+    @Max(value = 240, message = "소요시간은 최대 240분까지입니다.")
+    private int timeTaken;
     private String description;
     @NotEmpty(message = "준비물은 필수입력값입니다.")
     private List<String> materials;

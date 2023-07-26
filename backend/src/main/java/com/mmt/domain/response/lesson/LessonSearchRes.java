@@ -18,6 +18,7 @@ public class LessonSearchRes extends ResponseDto {
     private String cookyerName;
     private int categoryId;
     private Difficulty difficulty;
+    private int timeTaken;
     private int remaining;
     private int maximum;
     private int price;
@@ -37,6 +38,7 @@ public class LessonSearchRes extends ResponseDto {
         this.cookyerName = lesson.getCookyerName();
         this.categoryId = lesson.getLessonCategory().getCategoryId();
         this.difficulty = lesson.getDifficulty();
+        this.timeTaken = lesson.getTimeTaken();
         this.maximum = lesson.getMaximum();
         this.price = lesson.getPrice();
         this.materials = Arrays.asList(lesson.getMaterials().split(","));

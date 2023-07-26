@@ -18,6 +18,7 @@ public class LessonLatestRes extends ResponseDto {
     private String cookyerId;
     private int categoryId;
     private Difficulty difficulty;
+    private int timeTaken;
     private String description;
     private int maximum;
     private int price;
@@ -31,6 +32,7 @@ public class LessonLatestRes extends ResponseDto {
         this.cookyerId = lesson.getCookyerId();
         this.categoryId = lesson.getLessonCategory().getCategoryId();
         this.difficulty = lesson.getDifficulty();
+        this.timeTaken = lesson.getTimeTaken();
         this.description = lesson.getDescription();
         this.maximum = lesson.getMaximum();
         this.price = lesson.getPrice();

@@ -37,6 +37,7 @@ public class Lesson extends BaseTimeEntity {
     private List<LessonParticipant> lessonParticipantList = new ArrayList<>();
 
     private Difficulty difficulty;
+    private int timeTaken;
     private String description;
     private int maximum;
     private int price;
@@ -53,6 +54,7 @@ public class Lesson extends BaseTimeEntity {
         this.lessonTitle = lessonPostReq.getLessonTitle();
         this.cookyerId = lessonPostReq.getCookyerId();
         this.difficulty = lessonPostReq.getDifficulty();
+        this.timeTaken = lessonPostReq.getTimeTaken();
         this.description = lessonPostReq.getDescription();
         this.maximum = lessonPostReq.getMaximum();
         this.price = lessonPostReq.getPrice();
@@ -68,6 +70,7 @@ public class Lesson extends BaseTimeEntity {
         this.lessonTitle = lessonPutReq.getLessonTitle();
         this.cookyerId = lessonPutReq.getCookyerId();
         this.difficulty = lessonPutReq.getDifficulty();
+        this.timeTaken = lessonPutReq.getTimeTaken();
         this.description = lessonPutReq.getDescription();
         this.materials = String.join(",", lessonPutReq.getMaterials());
         this.videoUrl = lessonPutReq.getVideoUrl();
