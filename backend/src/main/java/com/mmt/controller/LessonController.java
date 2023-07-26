@@ -1,6 +1,6 @@
 package com.mmt.controller;
 
-import com.mmt.domain.Role;
+import com.mmt.domain.entity.Role;
 import com.mmt.domain.entity.Auth.UserDetailsImpl;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
@@ -28,7 +28,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "과외 글 API", description = "과외 글 관련 API입니다.")

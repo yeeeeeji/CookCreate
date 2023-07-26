@@ -55,6 +55,7 @@ dependencies {
 
     //Webclient
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 }
 
 //querydsl 추가 시작

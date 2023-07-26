@@ -1,7 +1,7 @@
 package com.mmt.service.impl;
 
 import com.mmt.common.auth.JwtUtil;
-import com.mmt.domain.Role;
+import com.mmt.domain.entity.Role;
 import com.mmt.domain.TokenDto;
 import com.mmt.domain.entity.Auth.Member;
 import com.mmt.domain.entity.Auth.RefreshToken;
