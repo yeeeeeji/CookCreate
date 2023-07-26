@@ -1,6 +1,5 @@
-package com.mmt.domain.entity.Auth;
+package com.mmt.domain.entity.auth;
 
-import com.mmt.domain.entity.Role;
 import com.mmt.domain.entity.BaseTimeEntity;
 import com.mmt.domain.request.UserSignUpReq;
 import com.mmt.domain.request.UserUpdateReq;

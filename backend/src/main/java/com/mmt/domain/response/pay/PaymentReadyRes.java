@@ -1,5 +1,6 @@
-package com.mmt.domain.response;
+package com.mmt.domain.response.pay;
 
+import com.mmt.domain.response.ResponseDto;
 import lombok.Data;
 
 import java.time.LocalDateTime;

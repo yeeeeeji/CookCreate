@@ -1,7 +1,7 @@
 package com.mmt.service;
 
-import com.mmt.domain.entity.Role;
-import com.mmt.domain.entity.Auth.Member;
+import com.mmt.domain.entity.auth.Role;
+import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.request.UserLoginPostReq;
 import com.mmt.domain.request.UserSignUpReq;
 import com.mmt.domain.request.UserUpdateReq;
