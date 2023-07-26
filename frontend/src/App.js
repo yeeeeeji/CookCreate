@@ -19,8 +19,12 @@ function App() {
   useEffect(() => {
     const storedToken = localStorage.getItem('access_token');
     const storedNickname = localStorage.getItem('nickname');
+    const storedRole = localStorage.getItem('role')
     if (storedToken) {
-      dispatch(login(storedToken, storedNickname));
+      dispatch(login({
+        'token' : storedToken,
+        'nickname' : storedNickname, 
+        'role' : storedRole}));
     } else {
       dispatch(logout());
     }

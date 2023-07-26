@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import '../../style/foodlist.css';
 
 function FoodList({ selectedFood, toggleFood }) {
-  const role = useSelector((state) => state.auth.userType);
+  const role = localStorage.getItem('userType')
 
   return (
     <div>
@@ -23,103 +23,48 @@ function FoodList({ selectedFood, toggleFood }) {
 
       <div className="foodList">
         <div
-          className={`category ${selectedFood.includes('양식') ? 'selected' : ''}`}
-          onClick={() => toggleFood('양식')}
+          className={`category ${selectedFood.includes('korean') ? 'selected' : ''}`}
+          onClick={() => toggleFood('korean')}
         >
-          양식
+          한식
         </div>
 
         <div
-          className={`category ${selectedFood.includes('이탈리안') ? 'selected' : ''}`}
-          onClick={() => toggleFood('이탈리안')}
+          className={`category ${selectedFood.includes('western') ? 'selected' : ''}`}
+          onClick={() => toggleFood('western')}
         >
-          이탈리안
+          양식
         </div>
         <div
-          className={`category ${selectedFood.includes('비건') ? 'selected' : ''}`}
-          onClick={() => toggleFood('비건')}
-        >
-          비건
-        </div>
-        <div
-          className={`category ${selectedFood.includes('건강식') ? 'selected' : ''}`}
-          onClick={() => toggleFood('건강식')}
-        >
-          건강식
-        </div>
-        <div
-          className={`category ${selectedFood.includes('스페인') ? 'selected' : ''}`}
-          onClick={() => toggleFood('스페인')}
-        >
-          스페인
-        </div>
-        <div
-          className={`category ${selectedFood.includes('1인분요리') ? 'selected' : ''}`}
-          onClick={() => toggleFood('1인분요리')}
-        >
-          1인분 요리
-        </div>
-        <div
-          className={`category ${selectedFood.includes('일식') ? 'selected' : ''}`}
-          onClick={() => toggleFood('일식')}
-        >
-          일식
-        </div>
-        <div
-          className={`category ${selectedFood.includes('중식') ? 'selected' : ''}`}
-          onClick={() => toggleFood('중식')}
+          className={`category ${selectedFood.includes('chinese') ? 'selected' : ''}`}
+          onClick={() => toggleFood('chinese')}
         >
           중식
         </div>
         <div
-          className={`category ${selectedFood.includes('분식') ? 'selected' : ''}`}
-          onClick={() => toggleFood('분식')}
+          className={`category ${selectedFood.includes('japanese') ? 'selected' : ''}`}
+          onClick={() => toggleFood('japanese')}
         >
-          분식
+          일식
         </div>
         <div
-          className={`category ${selectedFood.includes('한식') ? 'selected' : ''}`}
-          onClick={() => toggleFood('한식')}
-        >
-          한식
-        </div>
-        <div
-          className={`category ${selectedFood.includes('아시안') ? 'selected' : ''}`}
-          onClick={() => toggleFood('아시안')}
+          className={`category ${selectedFood.includes('asian') ? 'selected' : ''}`}
+          onClick={() => toggleFood('asian')}
         >
           아시안
         </div>
         <div
-          className={`category ${selectedFood.includes('한그릇요리') ? 'selected' : ''}`}
-          onClick={() => toggleFood('한그릇요리')}
+          className={`category ${selectedFood.includes('healthy') ? 'selected' : ''}`}
+          onClick={() => toggleFood('healthy')}
         >
-          한 그릇 요리
+          건강식
         </div>
         <div
-          className={`category ${selectedFood.includes('주류') ? 'selected' : ''}`}
-          onClick={() => toggleFood('주류')}
+          className={`category ${selectedFood.includes('dessert') ? 'selected' : ''}`}
+          onClick={() => toggleFood('dessert')}
         >
-          주류
+          디저트
         </div>
-        <div
-          className={`category ${selectedFood.includes('베이킹') ? 'selected' : ''}`}
-          onClick={() => toggleFood('베이킹')}
-        >
-          베이킹
-        </div>
-        <div
-          className={`category ${selectedFood.includes('프랑스') ? 'selected' : ''}`}
-          onClick={() => toggleFood('프랑스')}
-        >
-          프랑스
-        </div>
-        <div
-          className={`category ${selectedFood.includes('멕시코') ? 'selected' : ''}`}
-          onClick={() => toggleFood('멕시코')}
-        >
-          멕시코
-        </div>
-        {/* 나머지 요리 카테고리들도 위와 같은 방식으로 추가 */}
       </div>
     </div>
   );
