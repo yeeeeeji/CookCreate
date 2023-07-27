@@ -28,6 +28,8 @@ public class LessonDetailRes {
     private List<String> materials;
     private String lessonDate;
     private float reviewAvg;
+    private int reviewCnt;
+    private float reviewSum;
     private List<Member> lessonParticipantList;
     private String videoUrl;
     private String thumbnailUrl;

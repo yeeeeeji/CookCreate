@@ -189,6 +189,8 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         ReviewAvgRes reviewAvgRes = new ReviewAvgRes();
+        reviewAvgRes.setSum(sum);
+        reviewAvgRes.setCount(count);
         if(count != 0){
             reviewAvgRes.setAvg(sum / count);
             reviewAvgRes.setStatusCode(HttpStatus.OK);

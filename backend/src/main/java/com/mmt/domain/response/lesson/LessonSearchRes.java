@@ -23,6 +23,8 @@ public class LessonSearchRes extends ResponseDto {
     private List<String> materials;
     private String lessonDate;
     private float reviewAvg;
+    private int reviewCnt;
+    private float reviewSum;
     private String thumbnailUrl;
     private int jjimCount;
     private String createdDate;
