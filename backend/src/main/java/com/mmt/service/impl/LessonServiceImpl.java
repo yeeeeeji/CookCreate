@@ -1,10 +1,11 @@
 package com.mmt.service.impl;
 
-import com.mmt.domain.entity.Auth.Member;
+import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.lesson.LessonStep;
+import com.mmt.domain.entity.pay.PaymentHistory;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
@@ -39,6 +40,7 @@ public class LessonServiceImpl implements LessonService {
     private final LessonParticipantRepository lessonParticipantRepository;
     private final LessonStepRepository lessonStepRepository;
     private final MemberRepository memberRepository;
+    private final PaymentRepository paymentRepository;
 
     @Transactional
     @Override
@@ -80,6 +82,9 @@ public class LessonServiceImpl implements LessonService {
         if(lesson.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
 
         // TODO: 추가하기 전 결제 완료 확인
+        if(!paymentRepository.findByLesson_LessonIdAndMember_UserId(lessonId, userId).isPresent()) {
+            return new ResponseDto(HttpStatus.FORBIDDEN, "결제 한 사용자만 신청할 수 있습니다.");
+        }
         LessonParticipant lessonParticipant = new LessonParticipant();
         lessonParticipant.setLesson(lesson.get());
         lessonParticipant.setUserId(userId);

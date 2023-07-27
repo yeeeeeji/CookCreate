@@ -9,7 +9,6 @@ import FoodList from './FoodList';
 function Signup() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const [userId, setUserId] = useState('')
   const [userPw, setUserPw] = useState('')
   const [userPwCk, setUserPwCk] = useState('')
@@ -36,7 +35,7 @@ function Signup() {
   const [isNickname, setIsNickname] = useState(false)
   const [isNicknameDupli, setIsNNdup] = useState(false)
   const [isPhoneNumber, setIsPhoneNumber] = useState(false)
-  const [isUserEmail, setIsUserEmail] = useState(false)
+  const [isUserEmail, setIsUserEmail] = useState(true)
 
   //유효성 검사 구현
   const onChangeUserId = async (e) => {
@@ -60,7 +59,10 @@ function Signup() {
       setUserPwMessage('형식이 올바른 비밀번호입니다!')
       setIsUserPw(true)
     }
-    if (value === userPwCk) {
+    if (userPwCk === '') {
+      setUserPwCkMessage('')
+      setIsUserPwCk(false)
+    } else if (value === userPwCk) {
       setUserPwCkMessage('비밀번호가 동일합니다! 😊')
       setIsUserPwCk(true)
     } else {
@@ -71,7 +73,10 @@ function Signup() {
   const onChangeUserPwCk = async (e) => {
     const value = e.target.value;
     await setUserPwCk(value)
-    if (userPw === value) {
+    if (value === '') {
+      setUserPwCkMessage('')
+      setIsUserPwCk(false)
+    } else if (userPw === value) {
       setUserPwCkMessage('비밀번호가 동일합니다! 😊')
       setIsUserPwCk(true)
     } else {
@@ -105,14 +110,12 @@ function Signup() {
 
   const onChangeUserEmail = async (e) => {
     const value = e.target.value
+    const emailRegex = /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     await setUserEmail(value)
     if (value === '') {
-      setIsUserEmail(true);
-      return;
-    }
-
-    const emailRegex = /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-    if (emailRegex.test(value)) {
+      setIsUserEmail(true)
+      setUserEmailMessage('')
+    } else if (emailRegex.test(value)) {
       setIsUserEmail(true);
       setUserEmailMessage('올바른 이메일 형식입니다!');
     } else {
@@ -147,7 +150,7 @@ function Signup() {
     })
   }
   // 쿠키 / 쿠커 구현 로직
-  const role = useSelector((state) => state.auth.userType);
+  const role = localStorage.getItem('userType')
   
   // 음식 선택 로직. props로 소통
   const handleSelectedFood = (selectedFood) => {
@@ -166,14 +169,20 @@ function Signup() {
     axios
     .post(`api/v1/auth/signup`, 
     {userId, userPw, userPwCk, nickname, phoneNumber, userEmail, role, food:foodString})
-    .then((res) => {
+    .then(() => {
+      console.log(role) 
       navigate("/")
       axios.post(`api/v1/auth/login`, {
         userId,
         userPw
       })
       .then((res)=>{
-        dispatch(login(res.headers.access_token, userId));
+        localStorage.removeItem('userType')
+        dispatch(login({
+          token : res.headers.access_token, 
+          userId,
+          nickname : res.data.nickname,
+          role : res.data.role}));
         navigate("/")
       })
       .catch((err) =>{
@@ -288,8 +297,8 @@ function Signup() {
               isUserPwCk &&
               isNickname &&
               isNicknameDupli &&
-              isPhoneNumber
-              // isUserEmail // 이메일 유효성 검사 상태 추가
+              isPhoneNumber &&
+              isUserEmail
             )
           }>
           회원가입

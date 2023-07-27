@@ -1,7 +1,7 @@
 package com.mmt.domain.response;
 
-import com.mmt.domain.entity.Role;
-import com.mmt.domain.entity.Auth.Member;
+import com.mmt.domain.entity.auth.Role;
+import com.mmt.domain.entity.auth.Member;
 import lombok.Getter;
 import lombok.Setter;
 

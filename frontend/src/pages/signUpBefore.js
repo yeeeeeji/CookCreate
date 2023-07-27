@@ -1,14 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from "react-redux";
-import { setUserType } from '../store/auth/auth';
+// import { useDispatch } from "react-redux";
+// import { setUserType } from '../store/auth/auth';
 
 function SignUpBefore() {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
   const handleUserType = ( userType ) => {
-    dispatch(setUserType({ userType }))
+    // dispatch(setUserType({ userType }))
+    localStorage.setItem('userType', userType);
+
     navigate("/signup")
   }
   

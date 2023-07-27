@@ -1,14 +1,12 @@
 package com.mmt.domain.response.lesson;
 
+import com.mmt.domain.entity.auth.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mmt.domain.entity.Auth.Member;
 import com.mmt.domain.entity.Difficulty;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonStep;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.Arrays;
 import java.util.List;
