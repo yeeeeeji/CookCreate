@@ -151,7 +151,7 @@ public class LessonServiceImpl implements LessonService {
             LessonSearchRes lessonSearchRes = new LessonSearchRes(lesson);
 
             // remaining 세팅
-            List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findByLesson_LessonId(lesson.getLessonId());
+            List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(lesson.getLessonId());
             lessonSearchRes.setRemaining(lesson.getMaximum() - lessonParticipantList.size() + 1);
 
             // reviewAvg 세팅
@@ -238,7 +238,7 @@ public class LessonServiceImpl implements LessonService {
             if(lessonCategory.isPresent()) result.setCategoryName(lessonCategory.get().getCategoryTitle());
 
             // lessonParticipantList 세팅
-            List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findByLesson_LessonId(lessonId);
+            List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(lessonId);
             List<Member> memberList = new ArrayList<>();
             for (LessonParticipant lp : lessonParticipantList){
                 Member member = new Member();

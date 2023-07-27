@@ -32,8 +32,6 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    private final PasswordEncoder passwordEncoder;
-
     @Operation(summary = "회원 정보 조회", description = "<b>로그인한 회원 정보를 조회</b>한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",

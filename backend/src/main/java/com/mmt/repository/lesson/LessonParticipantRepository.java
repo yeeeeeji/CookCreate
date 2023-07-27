@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LessonParticipantRepository extends JpaRepository<LessonParticipant, Integer> {
-    List<LessonParticipant> findByLesson_LessonId(int lessonId);
+    List<LessonParticipant> findAllByLesson_LessonId(int lessonId);
+    List<LessonParticipant> findAllByUserId(String userId);
     Optional<LessonParticipant> findByLesson_LessonIdAndUserId(int lessonId, String userId);
 }
