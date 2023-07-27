@@ -5,6 +5,7 @@ import com.mmt.domain.entity.Role;
 import com.mmt.domain.request.review.ReviewPostReq;
 import com.mmt.domain.request.review.ReviewPutReq;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.review.ReviewAvgRes;
 import com.mmt.domain.response.review.ReviewCookyerRes;
 import com.mmt.domain.response.review.ReviewDetailRes;
 import com.mmt.service.MemberService;
@@ -173,5 +174,24 @@ public class ReviewController {
         ResponseDto responseDto = reviewService.delete(reviewId, loginId);
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    }
+
+    @Operation(summary = "리뷰 평점 평균 가져오기", description = "선생님이 받은 평점의 평균을 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(schema = @Schema(implementation = ReviewAvgRes.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
+                    content = @Content(schema = @Schema(implementation = ReviewAvgRes.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 리뷰입니다.",
+                    content = @Content(schema = @Schema(implementation = ReviewAvgRes.class)))
+    })
+    @GetMapping("/avg/{cookyerId}")
+    public ResponseEntity<ReviewAvgRes> getReviewAvg(@PathVariable(value = "cookyerId") String cookyerId, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (userDetails.getUsername()));
+
+        ReviewAvgRes reviewAvgRes = reviewService.getReviewAvg(cookyerId);
+
+        return new ResponseEntity<>(reviewAvgRes, reviewAvgRes.getStatusCode());
     }
 }

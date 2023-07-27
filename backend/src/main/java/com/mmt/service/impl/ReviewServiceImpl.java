@@ -2,11 +2,13 @@ package com.mmt.service.impl;
 
 import com.mmt.domain.entity.Auth.Member;
 import com.mmt.domain.entity.Review;
+import com.mmt.domain.entity.Role;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.request.review.ReviewPostReq;
 import com.mmt.domain.request.review.ReviewPutReq;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.review.ReviewAvgRes;
 import com.mmt.domain.response.review.ReviewCookyerRes;
 import com.mmt.domain.response.review.ReviewDetailRes;
 import com.mmt.repository.MemberRepository;
@@ -85,6 +87,13 @@ public class ReviewServiceImpl implements ReviewService {
             }
         }
 
+        if(reviewCookyerResList.size() == 0){
+            ReviewCookyerRes reviewCookyerRes = new ReviewCookyerRes();
+            reviewCookyerRes.setStatusCode(HttpStatus.OK);
+            reviewCookyerRes.setMessage("받은 리뷰가 없습니다.");
+            reviewCookyerResList.add(reviewCookyerRes);
+        }
+
         return reviewCookyerResList;
     }
 
@@ -145,5 +154,51 @@ public class ReviewServiceImpl implements ReviewService {
 
         reviewRepository.deleteById(reviewId);
         return new ResponseDto(HttpStatus.OK, "Success");
+    }
+
+    @Override
+    public ReviewAvgRes getReviewAvg(String cookyerId) {
+        // 존재하는 cookyer인지 확인
+        Optional<Member> member = memberRepository.findByUserId(cookyerId);
+        if(member.isEmpty()){
+            ReviewAvgRes reviewAvgRes = new ReviewAvgRes();
+            reviewAvgRes.setStatusCode(HttpStatus.NOT_FOUND);
+            reviewAvgRes.setMessage("존재하지 않는 Cookyer입니다.");
+            return reviewAvgRes;
+        }
+
+        // cookyer인지 확인
+        if(!member.get().getRole().equals(Role.COOKYER)){
+            ReviewAvgRes reviewAvgRes = new ReviewAvgRes();
+            reviewAvgRes.setStatusCode(HttpStatus.BAD_REQUEST);
+            reviewAvgRes.setMessage("Cookyer가 아닙니다.");
+            return reviewAvgRes;
+        }
+
+        // cookyer가 진행한 과외 목록 불러오기
+        List<Lesson> lessonList = lessonRepository.findAllByCookyerId(cookyerId);
+        float sum = 0; // 받은 리뷰 총합
+        int count = 0; // 받은 리뷰 개수
+        for (Lesson lesson : lessonList) {
+            // 각 과외 별로 존재하는 리뷰 목록 불러오기
+            List<Review> reviewList = reviewRepository.findAllByLesson_LessonId(lesson.getLessonId());
+            for (Review review : reviewList) {
+                sum += review.getRating();
+                count++;
+            }
+        }
+
+        ReviewAvgRes reviewAvgRes = new ReviewAvgRes();
+        if(count != 0){
+            reviewAvgRes.setAvg(sum / count);
+            reviewAvgRes.setStatusCode(HttpStatus.OK);
+            reviewAvgRes.setMessage("Success");
+        }else{
+            reviewAvgRes.setAvg(0);
+            reviewAvgRes.setStatusCode(HttpStatus.OK);
+            reviewAvgRes.setMessage("받은 리뷰가 없습니다.");
+        }
+
+        return reviewAvgRes;
     }
 }
