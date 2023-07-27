@@ -1,8 +1,11 @@
 package com.mmt.controller;
 
+import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.auth.UserDetailsImpl;
+import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.my.MyLessonRes;
 import com.mmt.domain.response.my.MyRecipeRes;
+import com.mmt.service.MemberService;
 import com.mmt.service.MyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,12 +15,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "마이페이지 API", description = "마이페이지 관련 API입니다.")
@@ -28,6 +33,7 @@ import java.util.List;
 public class MyController {
 
     private final MyService myService;
+    private final MemberService memberService;
 
     @Operation(summary = "신청한 과외 목록 조회", description = "신청한 과외 목록을 조회한다.")
     @ApiResponses(value = {
@@ -68,6 +74,8 @@ public class MyController {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = @Content(schema = @Schema(implementation = MyLessonRes.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                    content = @Content(schema = @Schema(implementation = MyLessonRes.class))),
+            @ApiResponse(responseCode = "403", description = "Cookiee만 이용할 수 있습니다.",
                     content = @Content(schema = @Schema(implementation = MyLessonRes.class)))
     })
     @GetMapping("/recipe")
@@ -75,7 +83,17 @@ public class MyController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication: " + (authentication.getPrincipal()));
 
-        List<MyRecipeRes> myRecipeResList = myService.getMyRecipe(userDetails.getUsername());
+        String loginId = userDetails.getUsername();
+        if(!memberService.getRole(loginId).equals(Role.COOKIEE)){ // 권한 에러
+            MyRecipeRes myRecipeRes = new MyRecipeRes();
+            myRecipeRes.setStatusCode(HttpStatus.FORBIDDEN);
+            myRecipeRes.setMessage("Cookiee만 이용할 수 있습니다.");
+            List<MyRecipeRes> myRecipeResList = new ArrayList<>();
+            myRecipeResList.add(myRecipeRes);
+            return new ResponseEntity<>(myRecipeResList, HttpStatus.FORBIDDEN);
+        }
+
+        List<MyRecipeRes> myRecipeResList = myService.getMyRecipe(loginId);
 
         return new ResponseEntity<>(myRecipeResList, myRecipeResList.get(0).getStatusCode());
     }
