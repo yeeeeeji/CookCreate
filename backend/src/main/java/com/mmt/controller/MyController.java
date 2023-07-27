@@ -1,7 +1,7 @@
 package com.mmt.controller;
 
 import com.mmt.domain.entity.auth.UserDetailsImpl;
-import com.mmt.domain.response.lesson.MyLessonAppliedRes;
+import com.mmt.domain.response.lesson.MyLessonRes;
 import com.mmt.service.MyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,17 +31,34 @@ public class MyController {
     @Operation(summary = "신청한 과외 목록 조회", description = "신청한 과외 목록을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
-                    content = @Content(schema = @Schema(implementation = MyLessonAppliedRes.class))),
+                    content = @Content(schema = @Schema(implementation = MyLessonRes.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
-                    content = @Content(schema = @Schema(implementation = MyLessonAppliedRes.class)))
+                    content = @Content(schema = @Schema(implementation = MyLessonRes.class)))
     })
     @GetMapping("/applied")
-    public ResponseEntity<List<MyLessonAppliedRes>> getLessonApplied(Authentication authentication) {
+    public ResponseEntity<List<MyLessonRes>> getLessonApplied(Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication: " + (authentication.getPrincipal()));
 
-        List<MyLessonAppliedRes> myLessonAppliedResList = myService.getLessonApplied(userDetails.getUsername());
+        List<MyLessonRes> myLessonAppliedList = myService.getMyLesson(userDetails.getUsername(), false);
 
-        return new ResponseEntity<>(myLessonAppliedResList, myLessonAppliedResList.get(0).getStatusCode());
+        return new ResponseEntity<>(myLessonAppliedList, myLessonAppliedList.get(0).getStatusCode());
+    }
+
+    @Operation(summary = "완료한 과외 목록 조회", description = "완료한 과외 목록을 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(schema = @Schema(implementation = MyLessonRes.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                    content = @Content(schema = @Schema(implementation = MyLessonRes.class)))
+    })
+    @GetMapping("/completed")
+    public ResponseEntity<List<MyLessonRes>> getLessonCompleted(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (authentication.getPrincipal()));
+
+        List<MyLessonRes> myLessonCompletedList = myService.getMyLesson(userDetails.getUsername(), true);
+
+        return new ResponseEntity<>(myLessonCompletedList, myLessonCompletedList.get(0).getStatusCode());
     }
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class MyLessonAppliedRes extends ResponseDto {
+public class MyLessonRes extends ResponseDto {
     private int lessonId;
     private String lessonTitle;
     private String cookyerId;
@@ -25,7 +25,7 @@ public class MyLessonAppliedRes extends ResponseDto {
     private String createdDate;
     private String modifiedDate;
 
-    public MyLessonAppliedRes(Lesson lesson){
+    public MyLessonRes(Lesson lesson){
         this.lessonId = lesson.getLessonId();
         this.lessonTitle = lesson.getLessonTitle();
         this.cookyerId = lesson.getCookyerId();

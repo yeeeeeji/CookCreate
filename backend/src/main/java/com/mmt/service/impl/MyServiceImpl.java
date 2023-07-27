@@ -1,8 +1,7 @@
 package com.mmt.service.impl;
 
-import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonParticipant;
-import com.mmt.domain.response.lesson.MyLessonAppliedRes;
+import com.mmt.domain.response.lesson.MyLessonRes;
 import com.mmt.repository.lesson.LessonParticipantRepository;
 import com.mmt.repository.lesson.LessonRepository;
 import com.mmt.service.MyService;
@@ -23,13 +22,13 @@ public class MyServiceImpl implements MyService {
     private final LessonParticipantRepository lessonParticipantRepository;
 
     @Override
-    public List<MyLessonAppliedRes> getLessonApplied(String userId) {
-        List<MyLessonAppliedRes> result = new ArrayList<>();
+    public List<MyLessonRes> getMyLesson(String userId, boolean isCompleted) {
+        List<MyLessonRes> result = new ArrayList<>();
 
         // 신청한 과외가 있는지 확인
         List<LessonParticipant> lessonParticipantList = getParticipant(userId);
         if(lessonParticipantList.size() == 0){
-            MyLessonAppliedRes myLessonAppliedRes = new MyLessonAppliedRes();
+            MyLessonRes myLessonAppliedRes = new MyLessonRes();
             myLessonAppliedRes.setStatusCode(HttpStatus.OK);
             myLessonAppliedRes.setMessage("신청한 과외가 없습니다.");
             result.add(myLessonAppliedRes);
@@ -37,40 +36,46 @@ public class MyServiceImpl implements MyService {
         }
 
         // 신청한 과외 중 이미 시작한 과외가 있는지 확인
-        for(int i=lessonParticipantList.size()-1; i>=0; i--){
-            if(lessonParticipantList.get(i).isCompleted()){
-                lessonParticipantList.remove(i);
-            }
-        }
-        if(lessonParticipantList.size() == 0){
-            MyLessonAppliedRes myLessonAppliedRes = new MyLessonAppliedRes();
-            myLessonAppliedRes.setStatusCode(HttpStatus.OK);
-            myLessonAppliedRes.setMessage("신청한 과외가 없습니다.");
-            result.add(myLessonAppliedRes);
+        List<LessonParticipant> list = getParticipant(lessonParticipantList, isCompleted);
+        if(list.size() == 0){
+            MyLessonRes myLessonRes = new MyLessonRes();
+            myLessonRes.setStatusCode(HttpStatus.OK);
+            myLessonRes.setMessage("신청한 과외가 없습니다.");
+            result.add(myLessonRes);
             return result;
         }
 
         // 하나씩 세팅해서 결과값에 추가하기
         for(LessonParticipant lessonParticipant : lessonParticipantList){
-            MyLessonAppliedRes myLessonAppliedRes = new MyLessonAppliedRes(lessonParticipant.getLesson());
+            MyLessonRes myLessonRes = new MyLessonRes(lessonParticipant.getLesson());
 
             // 참여 신청한 날짜와 마지막 수정 날짜 세팅
-            myLessonAppliedRes.setCreatedDate(lessonParticipant.getCreatedDate().toString());
-            myLessonAppliedRes.setModifiedDate(lessonParticipant.getModifiedDate().toString());
+            myLessonRes.setCreatedDate(lessonParticipant.getCreatedDate().toString());
+            myLessonRes.setModifiedDate(lessonParticipant.getModifiedDate().toString());
 
             // 해당 과외의 참여자 수를 불러와서 remaining 세팅
             int lessonId = lessonParticipant.getLesson().getLessonId();
             int cnt = getParticipant(lessonId);
-            myLessonAppliedRes.setRemaining(lessonParticipant.getLesson().getMaximum() - cnt + 1);
+            myLessonRes.setRemaining(lessonParticipant.getLesson().getMaximum() - cnt + 1);
 
             // status 세팅
-            myLessonAppliedRes.setStatusCode(HttpStatus.OK);
-            myLessonAppliedRes.setMessage("Success");
+            myLessonRes.setStatusCode(HttpStatus.OK);
+            myLessonRes.setMessage("Success");
 
-            result.add(myLessonAppliedRes);
+            result.add(myLessonRes);
         }
 
         return result;
+    }
+
+    private List<LessonParticipant> getParticipant(List<LessonParticipant> list, boolean isCompleted){
+        // 파라미터와 동일한 상태의 참여자 목록 반환
+        for(int i=list.size()-1; i>=0; i--){
+            if(list.get(i).isCompleted() != isCompleted){
+                list.remove(i);
+            }
+        }
+        return list;
     }
 
     private List<LessonParticipant> getParticipant(String userId){
