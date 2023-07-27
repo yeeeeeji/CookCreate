@@ -1,7 +1,8 @@
 package com.mmt.controller;
 
 import com.mmt.domain.entity.auth.UserDetailsImpl;
-import com.mmt.domain.response.lesson.MyLessonRes;
+import com.mmt.domain.response.my.MyLessonRes;
+import com.mmt.domain.response.my.MyRecipeRes;
 import com.mmt.service.MyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -60,5 +61,22 @@ public class MyController {
         List<MyLessonRes> myLessonCompletedList = myService.getMyLesson(userDetails.getUsername(), true);
 
         return new ResponseEntity<>(myLessonCompletedList, myLessonCompletedList.get(0).getStatusCode());
+    }
+
+    @Operation(summary = "획득한 레시피북 조회", description = "획득한 레시피북을 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(schema = @Schema(implementation = MyLessonRes.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                    content = @Content(schema = @Schema(implementation = MyLessonRes.class)))
+    })
+    @GetMapping("/recipe")
+    public ResponseEntity<List<MyRecipeRes>> getMyRecipe(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (authentication.getPrincipal()));
+
+        List<MyRecipeRes> myRecipeResList = myService.getMyRecipe(userDetails.getUsername());
+
+        return new ResponseEntity<>(myRecipeResList, myRecipeResList.get(0).getStatusCode());
     }
 }

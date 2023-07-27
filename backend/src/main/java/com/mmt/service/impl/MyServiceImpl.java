@@ -1,7 +1,8 @@
 package com.mmt.service.impl;
 
 import com.mmt.domain.entity.lesson.LessonParticipant;
-import com.mmt.domain.response.lesson.MyLessonRes;
+import com.mmt.domain.response.my.MyLessonRes;
+import com.mmt.domain.response.my.MyRecipeRes;
 import com.mmt.repository.lesson.LessonParticipantRepository;
 import com.mmt.repository.lesson.LessonRepository;
 import com.mmt.service.MyService;
@@ -35,7 +36,7 @@ public class MyServiceImpl implements MyService {
             return result;
         }
 
-        // 신청한 과외 중 이미 시작한 과외가 있는지 확인
+        // 신청한 과외 중 이미 시작한/시작하지 않은 과외가 있는지 확인
         List<LessonParticipant> list = getParticipant(lessonParticipantList, isCompleted);
         if(list.size() == 0){
             MyLessonRes myLessonRes = new MyLessonRes();
@@ -46,7 +47,7 @@ public class MyServiceImpl implements MyService {
         }
 
         // 하나씩 세팅해서 결과값에 추가하기
-        for(LessonParticipant lessonParticipant : lessonParticipantList){
+        for(LessonParticipant lessonParticipant : list){
             MyLessonRes myLessonRes = new MyLessonRes(lessonParticipant.getLesson());
 
             // 참여 신청한 날짜와 마지막 수정 날짜 세팅
@@ -63,6 +64,44 @@ public class MyServiceImpl implements MyService {
             myLessonRes.setMessage("Success");
 
             result.add(myLessonRes);
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<MyRecipeRes> getMyRecipe(String userId) {
+        List<MyRecipeRes> result = new ArrayList<>();
+
+        // 신청한 과외가 있는지 확인
+        List<LessonParticipant> lessonParticipantList = getParticipant(userId);
+        if(lessonParticipantList.size() == 0){
+            MyRecipeRes myRecipeRes = new MyRecipeRes();
+            myRecipeRes.setStatusCode(HttpStatus.OK);
+            myRecipeRes.setMessage("신청한 과외가 없습니다.");
+            result.add(myRecipeRes);
+            return result;
+        }
+
+        // 완료한 과외 가져오기
+        List<LessonParticipant> list = getParticipant(lessonParticipantList, true);
+        if(list.size() == 0){
+            MyRecipeRes myRecipeRes = new MyRecipeRes();
+            myRecipeRes.setStatusCode(HttpStatus.OK);
+            myRecipeRes.setMessage("신청한 과외가 없습니다.");
+            result.add(myRecipeRes);
+            return result;
+        }
+
+        // lesson 정보 받아와서 세팅
+        for(LessonParticipant lessonParticipant : list){
+            MyRecipeRes myRecipeRes = new MyRecipeRes(lessonParticipant.getLesson());
+
+            // status 세팅
+            myRecipeRes.setStatusCode(HttpStatus.OK);
+            myRecipeRes.setMessage("Success");
+
+            result.add(myRecipeRes);
         }
 
         return result;
