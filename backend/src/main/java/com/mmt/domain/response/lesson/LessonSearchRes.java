@@ -1,12 +1,10 @@
 package com.mmt.domain.response.lesson;
 
-import com.mmt.domain.entity.Difficulty;
+import com.mmt.domain.entity.lesson.Difficulty;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.response.ResponseDto;
 import lombok.Data;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
