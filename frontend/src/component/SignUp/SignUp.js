@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../store/auth/auth'
-// import { loginAction } from '../../actions/actions_auth';
 
 import FoodList from './FoodList';
 function Signup() {
@@ -151,7 +150,7 @@ function Signup() {
   }
   // 쿠키 / 쿠커 구현 로직
   const role = localStorage.getItem('userType')
-  
+
   // 음식 선택 로직. props로 소통
   const handleSelectedFood = (selectedFood) => {
     if (food.includes(selectedFood)) {
