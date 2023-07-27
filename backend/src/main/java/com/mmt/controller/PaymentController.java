@@ -1,7 +1,7 @@
 package com.mmt.controller;
 
 import com.mmt.domain.entity.auth.UserDetailsImpl;
-import com.mmt.domain.request.PaymentReadyReq;
+import com.mmt.domain.request.pay.PaymentReadyReq;
 import com.mmt.domain.response.pay.PaymentReadyRes;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.service.impl.PaymentServiceImpl;

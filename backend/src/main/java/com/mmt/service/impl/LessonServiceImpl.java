@@ -13,12 +13,14 @@ import com.mmt.domain.response.lesson.LessonDetailRes;
 import com.mmt.domain.response.lesson.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.lesson.LessonSearchRes;
+import com.mmt.domain.response.review.ReviewAvgRes;
 import com.mmt.repository.*;
 import com.mmt.repository.lesson.LessonCategoryRepository;
 import com.mmt.repository.lesson.LessonParticipantRepository;
 import com.mmt.repository.lesson.LessonRepository;
 import com.mmt.repository.lesson.LessonStepRepository;
 import com.mmt.service.LessonService;
+import com.mmt.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
@@ -41,6 +43,8 @@ public class LessonServiceImpl implements LessonService {
     private final LessonStepRepository lessonStepRepository;
     private final MemberRepository memberRepository;
     private final PaymentRepository paymentRepository;
+
+    private final ReviewService reviewService;
 
     @Transactional
     @Override
@@ -150,7 +154,11 @@ public class LessonServiceImpl implements LessonService {
             List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findByLesson_LessonId(lesson.getLessonId());
             lessonSearchRes.setRemaining(lesson.getMaximum() - lessonParticipantList.size() + 1);
 
-            // TODO: reviewAvg 세팅
+            // reviewAvg 세팅
+            ReviewAvgRes reviewAvgRes = reviewService.getReviewAvg(lesson.getCookyerId());
+            lessonSearchRes.setReviewAvg(reviewAvgRes.getAvg());
+            lessonSearchRes.setReviewCnt(reviewAvgRes.getCount());
+            lessonSearchRes.setReviewSum(reviewAvgRes.getSum());
 
             // 카테고리 포함 여부
             if(lessonSearchReq.getCategory() != null && !lessonSearchReq.getCategory().isEmpty()){
@@ -198,10 +206,22 @@ public class LessonServiceImpl implements LessonService {
                         result.add(lessonSearchRes);
                     }
                 }
+            }else if(lessonSearchReq.getOrder().equals("avg")){ // 선생님이 받은 평점순으로 정렬
+                Collections.sort(result, new Comparator<LessonSearchRes>() {
+                    @Override
+                    public int compare(LessonSearchRes o1, LessonSearchRes o2) {
+                        return Float.compare(o2.getReviewAvg(), o1.getReviewAvg());
+                    }
+                });
+            }else if(lessonSearchReq.getOrder().equals("review")){ // 선생님이 받은 리뷰 개수순으로 정렬
+                Collections.sort(result, new Comparator<LessonSearchRes>() {
+                    @Override
+                    public int compare(LessonSearchRes o1, LessonSearchRes o2) {
+                        return Integer.compare(o2.getReviewCnt(), o1.getReviewCnt());
+                    }
+                });
             }
         }
-
-        // TODO: 평점순, 리뷰순 정렬
 
         return result;
     }
@@ -236,7 +256,11 @@ public class LessonServiceImpl implements LessonService {
             List<LessonStep> lessonStepList = lessonStepRepository.findByLesson_LessonId(lessonId);
             result.setLessonStepList(lessonStepList);
 
-            // TODO: reviewAvg 세팅 -> review 기능 구현 후
+            // reviewAvg 세팅
+            ReviewAvgRes reviewAvgRes = reviewService.getReviewAvg(lesson.get().getCookyerId());
+            result.setReviewAvg(reviewAvgRes.getAvg());
+            result.setReviewCnt(reviewAvgRes.getCount());
+            result.setReviewSum(reviewAvgRes.getSum());
 
             return result;
         }else{

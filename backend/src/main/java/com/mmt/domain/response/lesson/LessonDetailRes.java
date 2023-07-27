@@ -1,8 +1,7 @@
 package com.mmt.domain.response.lesson;
 
 import com.mmt.domain.entity.auth.Member;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mmt.domain.entity.Difficulty;
+import com.mmt.domain.entity.lesson.Difficulty;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonStep;
 import lombok.Data;
@@ -29,6 +28,8 @@ public class LessonDetailRes {
     private List<String> materials;
     private String lessonDate;
     private float reviewAvg;
+    private int reviewCnt;
+    private float reviewSum;
     private List<Member> lessonParticipantList;
     private String videoUrl;
     private String thumbnailUrl;

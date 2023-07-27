@@ -1,13 +1,22 @@
 import React from 'react';
 import LessonStep from '../component/RegisterLesson/LessonStep';
-import LessonInfo from '../component/RegisterLesson/LessonInfo';
+import LessonInfoTop from '../component/RegisterLesson/LessonInfoTop';
+import LessonTime from '../component/RegisterLesson/LessonTime';
+import LessonDetail from '../component/RegisterLesson/LessonDetail';
+import RegisterForm from '../component/RegisterLesson/RegisterForm';
 function registerLesson() {
 
   return (
     <div>
-      강의 개설하기
-      <LessonInfo/>
+      <h2>
+        강의 개설하기
+      </h2>
+      <LessonInfoTop/>
+      <LessonTime/>
+      <LessonDetail/>
       <LessonStep/>
+      <br />
+      <RegisterForm/>
     </div>
   );
 }

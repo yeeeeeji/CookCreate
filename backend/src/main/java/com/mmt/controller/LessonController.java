@@ -8,7 +8,6 @@ import com.mmt.domain.request.lesson.LessonSearchReq;
 import com.mmt.domain.response.lesson.LessonDetailRes;
 import com.mmt.domain.response.lesson.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
-import com.mmt.domain.response.UserInfoRes;
 import com.mmt.domain.response.lesson.LessonSearchRes;
 import com.mmt.service.LessonService;
 import com.mmt.service.MemberService;

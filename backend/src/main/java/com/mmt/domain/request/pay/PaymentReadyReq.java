@@ -1,4 +1,4 @@
-package com.mmt.domain.request;
+package com.mmt.domain.request.pay;
 
 import lombok.Data;
 

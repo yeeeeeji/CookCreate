@@ -1,7 +1,7 @@
 package com.mmt.domain.entity.lesson;
 
 import com.mmt.domain.entity.BaseTimeEntity;
-import com.mmt.domain.entity.Difficulty;
+import com.mmt.domain.entity.lesson.Difficulty;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import lombok.Getter;
