@@ -1,4 +1,4 @@
-package com.mmt.domain.request;
+package com.mmt.domain.request.auth;
 
 import lombok.Data;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.mmt.service.impl;
 
 import com.mmt.domain.entity.auth.Member;
-import com.mmt.domain.entity.Review;
+import com.mmt.domain.entity.review.Review;
 import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonParticipant;

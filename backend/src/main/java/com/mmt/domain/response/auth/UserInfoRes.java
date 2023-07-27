@@ -1,4 +1,4 @@
-package com.mmt.domain.response;
+package com.mmt.domain.response.auth;
 
 import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.auth.Member;

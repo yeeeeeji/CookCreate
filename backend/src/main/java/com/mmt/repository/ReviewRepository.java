@@ -1,6 +1,6 @@
 package com.mmt.repository;
 
-import com.mmt.domain.entity.Review;
+import com.mmt.domain.entity.review.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -4,7 +4,7 @@ import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.pay.PayStatus;
 import com.mmt.domain.entity.pay.PaymentHistory;
-import com.mmt.domain.request.PaymentReadyReq;
+import com.mmt.domain.request.pay.PaymentReadyReq;
 import com.mmt.domain.response.pay.PaymentApproveRes;
 import com.mmt.domain.response.pay.PaymentReadyRes;
 import com.mmt.domain.response.ResponseDto;

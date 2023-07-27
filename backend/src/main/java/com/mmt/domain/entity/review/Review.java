@@ -1,5 +1,6 @@
-package com.mmt.domain.entity;
+package com.mmt.domain.entity.review;
 
+import com.mmt.domain.entity.BaseTimeEntity;
 import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.request.review.ReviewPostReq;
@@ -18,7 +19,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @ToString
 @DynamicUpdate // 변경된 컬럼만 찾아서 변경
-public class Review extends BaseTimeEntity{
+public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int reviewId;

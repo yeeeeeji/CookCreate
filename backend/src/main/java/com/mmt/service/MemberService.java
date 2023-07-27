@@ -2,11 +2,11 @@ package com.mmt.service;
 
 import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.auth.Member;
-import com.mmt.domain.request.UserLoginPostReq;
-import com.mmt.domain.request.UserSignUpReq;
-import com.mmt.domain.request.UserUpdateReq;
+import com.mmt.domain.request.auth.UserLoginPostReq;
+import com.mmt.domain.request.auth.UserSignUpReq;
+import com.mmt.domain.request.auth.UserUpdateReq;
 import com.mmt.domain.response.ResponseDto;
-import com.mmt.domain.response.UserLoginRes;
+import com.mmt.domain.response.auth.UserLoginRes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

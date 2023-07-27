@@ -1,6 +1,6 @@
 package com.mmt.domain.response.review;
 
-import com.mmt.domain.entity.Review;
+import com.mmt.domain.entity.review.Review;
 import com.mmt.domain.response.ResponseDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
