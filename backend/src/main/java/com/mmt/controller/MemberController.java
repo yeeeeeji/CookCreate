@@ -1,9 +1,9 @@
 package com.mmt.controller;
 
 import com.mmt.domain.entity.auth.UserDetailsImpl;
-import com.mmt.domain.request.UserUpdateReq;
+import com.mmt.domain.request.auth.UserUpdateReq;
 import com.mmt.domain.response.ResponseDto;
-import com.mmt.domain.response.UserInfoRes;
+import com.mmt.domain.response.auth.UserInfoRes;
 import com.mmt.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

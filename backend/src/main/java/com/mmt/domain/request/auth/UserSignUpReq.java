@@ -1,4 +1,4 @@
-package com.mmt.domain.request;
+package com.mmt.domain.request.auth;
 
 import com.mmt.domain.entity.auth.Role;
 import lombok.*;
