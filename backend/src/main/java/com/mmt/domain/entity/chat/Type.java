@@ -1,5 +1,5 @@
 package com.mmt.domain.entity.chat;
 
-public enum type {
+public enum Type {
     ENTER,TALK,OUT;
 }
