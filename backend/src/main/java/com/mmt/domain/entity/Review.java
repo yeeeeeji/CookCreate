@@ -1,6 +1,6 @@
 package com.mmt.domain.entity;
 
-import com.mmt.domain.entity.Auth.Member;
+import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.request.review.ReviewPostReq;
 import com.mmt.domain.request.review.ReviewPutReq;
