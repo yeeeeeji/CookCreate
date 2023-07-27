@@ -26,7 +26,7 @@ export const auth = createSlice({
             } else {
                 state.emoji = ""
             }
-            localStorage.setItem('access_token', payload.token);
+            localStorage.setItem('access_token', payload.token)
             localStorage.setItem('nickname', payload.nickname)
             localStorage.setItem('role', payload.role)
             localStorage.setItem('id', payload.userId)
@@ -39,6 +39,11 @@ export const auth = createSlice({
             state.role = null
             state.emoji = ""
 
+            localStorage.removeItem('access_token')
+            localStorage.removeItem('nickname')
+            localStorage.removeItem('role')
+            localStorage.removeItem('id')
+            localStorage.removeItem('emoji')
         },
     }
 })

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 function IntroduceCC() {
-  const [chooseUserType, setUserType] = useState('cookyer')
+  const [chooseUserType, setUserType] = useState('COOKYER')
 
   const handleCookyerButtonClick = () => {
     setUserType('COOKYER');
