@@ -5,6 +5,7 @@ import com.mmt.domain.entity.auth.UserDetailsImpl;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.my.MyLessonRes;
 import com.mmt.domain.response.my.MyRecipeRes;
+import com.mmt.domain.response.my.MyReviewRes;
 import com.mmt.service.MemberService;
 import com.mmt.service.MyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,11 +73,11 @@ public class MyController {
     @Operation(summary = "획득한 레시피북 조회", description = "획득한 레시피북을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
-                    content = @Content(schema = @Schema(implementation = MyLessonRes.class))),
+                    content = @Content(schema = @Schema(implementation = MyRecipeRes.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
-                    content = @Content(schema = @Schema(implementation = MyLessonRes.class))),
+                    content = @Content(schema = @Schema(implementation = MyRecipeRes.class))),
             @ApiResponse(responseCode = "403", description = "Cookiee만 이용할 수 있습니다.",
-                    content = @Content(schema = @Schema(implementation = MyLessonRes.class)))
+                    content = @Content(schema = @Schema(implementation = MyRecipeRes.class)))
     })
     @GetMapping("/recipe")
     public ResponseEntity<List<MyRecipeRes>> getMyRecipe(Authentication authentication) {
@@ -96,5 +97,34 @@ public class MyController {
         List<MyRecipeRes> myRecipeResList = myService.getMyRecipe(loginId);
 
         return new ResponseEntity<>(myRecipeResList, myRecipeResList.get(0).getStatusCode());
+    }
+
+    @Operation(summary = "작성한 리뷰 목록 조회", description = "작성한 리뷰 목록을 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(schema = @Schema(implementation = MyReviewRes.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                    content = @Content(schema = @Schema(implementation = MyReviewRes.class))),
+            @ApiResponse(responseCode = "403", description = "Cookiee만 이용할 수 있습니다.",
+                    content = @Content(schema = @Schema(implementation = MyReviewRes.class)))
+    })
+    @GetMapping("/review")
+    public ResponseEntity<List<MyReviewRes>> getMyReview(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (authentication.getPrincipal()));
+
+        String loginId = userDetails.getUsername();
+        if(!memberService.getRole(loginId).equals(Role.COOKIEE)){ // 권한 에러
+            MyReviewRes myReviewRes = new MyReviewRes();
+            myReviewRes.setStatusCode(HttpStatus.FORBIDDEN);
+            myReviewRes.setMessage("Cookiee만 이용할 수 있습니다.");
+            List<MyReviewRes> myReviewResList = new ArrayList<>();
+            myReviewResList.add(myReviewRes);
+            return new ResponseEntity<>(myReviewResList, HttpStatus.FORBIDDEN);
+        }
+
+        List<MyReviewRes> myReviewResList = myService.getMyReview(loginId);
+
+        return new ResponseEntity<>(myReviewResList, myReviewResList.get(0).getStatusCode());
     }
 }

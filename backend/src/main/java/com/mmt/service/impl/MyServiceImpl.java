@@ -1,8 +1,11 @@
 package com.mmt.service.impl;
 
 import com.mmt.domain.entity.lesson.LessonParticipant;
+import com.mmt.domain.entity.review.Review;
 import com.mmt.domain.response.my.MyLessonRes;
 import com.mmt.domain.response.my.MyRecipeRes;
+import com.mmt.domain.response.my.MyReviewRes;
+import com.mmt.repository.ReviewRepository;
 import com.mmt.repository.lesson.LessonParticipantRepository;
 import com.mmt.repository.lesson.LessonRepository;
 import com.mmt.service.MyService;
@@ -19,8 +22,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MyServiceImpl implements MyService {
 
-    private final LessonRepository lessonRepository;
     private final LessonParticipantRepository lessonParticipantRepository;
+    private final ReviewRepository reviewRepository;
 
     @Override
     public List<MyLessonRes> getMyLesson(String userId, boolean isCompleted) {
@@ -102,6 +105,30 @@ public class MyServiceImpl implements MyService {
             myRecipeRes.setMessage("Success");
 
             result.add(myRecipeRes);
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<MyReviewRes> getMyReview(String userId) {
+        List<MyReviewRes> result = new ArrayList<>();
+        List<Review> reviewList = reviewRepository.findAllByMember_UserId(userId);
+
+        // 작성한 리뷰가 있는지 확인
+        if(reviewList.size() == 0){
+            MyReviewRes myReviewRes = new MyReviewRes();
+            myReviewRes.setStatusCode(HttpStatus.OK);
+            myReviewRes.setMessage("작성한 리뷰가 없습니다.");
+            result.add(myReviewRes);
+            return result;
+        }
+
+        for(Review review : reviewList){
+            MyReviewRes myReviewRes = new MyReviewRes(review);
+            myReviewRes.setStatusCode(HttpStatus.OK);
+            myReviewRes.setMessage("Success");
+            result.add(myReviewRes);
         }
 
         return result;
