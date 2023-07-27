@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class UserInfoRes {
+public class UserInfoRes extends ResponseDto {
     String userId;
     String nickname;
     String phoneNumber;

@@ -39,7 +39,7 @@ public class Member extends BaseTimeEntity {
     }
 
     public void update(UserUpdateReq userUpdateReq){
-        this.userPw = userUpdateReq.getUserPw();
+//        this.userPw = userUpdateReq.getUserPw();
         this.nickname = userUpdateReq.getNickname();
         this.phoneNumber = userUpdateReq.getPhoneNumber();
         this.userEmail = userUpdateReq.getUserEmail();

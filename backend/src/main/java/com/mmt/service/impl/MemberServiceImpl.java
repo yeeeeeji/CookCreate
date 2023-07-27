@@ -9,6 +9,7 @@ import com.mmt.domain.request.UserLoginPostReq;
 import com.mmt.domain.request.UserSignUpReq;
 import com.mmt.domain.request.UserUpdateReq;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.UserInfoRes;
 import com.mmt.domain.response.UserLoginRes;
 import com.mmt.repository.MemberRepository;
 import com.mmt.repository.RefreshTokenRepository;
@@ -150,10 +151,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member getUserInfo(String userId) {
-        Member member = memberRepository.findByUserId(userId).orElseThrow(
-                () -> new RuntimeException("Not found Account"));
-        return member;
+    public UserInfoRes getUserInfo(String userId) {
+        Member member = memberRepository.findByUserId(userId).get();
+        return new UserInfoRes(member);
     }
 
     @Override
@@ -165,11 +165,11 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = memberRepository.findByUserId(userId).get();
         // 비밀번호 확인
-        if(!userUpdateReq.getUserPw().equals(userUpdateReq.getUserPwCk())) {
-            return new ResponseDto(HttpStatus.BAD_REQUEST, "비밀번호 확인을 다시 입력해주세요.");
-        }
+//        if(!userUpdateReq.getUserPw().equals(userUpdateReq.getUserPwCk())) {
+//            return new ResponseDto(HttpStatus.BAD_REQUEST, "비밀번호 확인을 다시 입력해주세요.");
+//        }
 
-        userUpdateReq.setEncodePw(passwordEncoder.encode(userUpdateReq.getUserPw()));
+//        userUpdateReq.setEncodePw(passwordEncoder.encode(userUpdateReq.getUserPw()));
         member.update(userUpdateReq);
         this.memberRepository.save(member);
 
