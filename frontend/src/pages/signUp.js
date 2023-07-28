@@ -1,9 +1,11 @@
 import React from 'react';
 import SignUp from '../component/SignUp/SignUp';
+import '../style/signup.css'
+
 function signUp() {
   return (
-    <div>
-      <SignUp/>
+    <div className="signup-container">   
+      <SignUp />
     </div>
   );
 }

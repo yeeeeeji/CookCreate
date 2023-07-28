@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 
 function IntroduceCC() {
-  const [chooseUserType, setUserType] = useState('cookyer')
+  const [chooseUserType, setUserType] = useState('COOKYER')
 
   const handleCookyerButtonClick = () => {
-    setUserType('cookyer');
+    setUserType('COOKYER');
   };
   const handleCookieeButtonClick = () => {
-    setUserType('cookiee');
+    setUserType('COOKIEE');
   };
 
 
@@ -20,10 +20,10 @@ function IntroduceCC() {
         </div>
         <div className='introduceType'>
           <div className='typeName'>
-            {chooseUserType === 'cookyer' ? <div>쿠커</div> : <div>쿠키</div>}
+            {chooseUserType === 'COOKYER' ? <div>쿠커</div> : <div>쿠키</div>}
           </div>
           <div className='typeStep'>
-            {chooseUserType === 'cookyer' ? 
+            {chooseUserType === 'COOKIEE' ? 
             <div>
               <div>
                 등록: 강의를 올린다

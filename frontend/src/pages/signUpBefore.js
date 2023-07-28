@@ -4,14 +4,20 @@ import { useNavigate } from 'react-router-dom';
 function SignUpBefore() {
   const navigate = useNavigate();
 
+  const handleUserType = ( userType ) => {
+    localStorage.setItem('userType', userType);
+
+    navigate("/signup")
+  }
+  
   return (
     <div>
-      <button onClick={() => navigate("/signup")}>
+      <button onClick={() => handleUserType("COOKYER")}>
         Cookyer
         <br />
         회원가입
       </button>
-      <button onClick={()=>navigate("/signup")}>
+      <button onClick={() => handleUserType("COOKIEE")}>
         Cookiee
         <br />
         회원가입
