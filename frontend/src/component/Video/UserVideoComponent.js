@@ -6,7 +6,7 @@ export default class UserVideoComponent extends Component {
 
     getNicknameTag() {
         // Gets the nickName of the user
-        return JSON.parse(this.props.streamManager.stream.connection.data).clientData;
+        return JSON.parse(this.props.streamManager.stream.connection.data).clientData.myUserName;
     }
 
     render() {
@@ -14,7 +14,10 @@ export default class UserVideoComponent extends Component {
             <div>
                 {this.props.streamManager !== undefined ? (
                     <div className="streamcomponent">
-                        <OpenViduVideoComponent streamManager={this.props.streamManager} />
+                        <OpenViduVideoComponent
+                            videoStyle={this.props.videoStyle}
+                            streamManager={this.props.streamManager}
+                        />
                         <div><p>{this.getNicknameTag()}</p></div>
                     </div>
                 ) : null}

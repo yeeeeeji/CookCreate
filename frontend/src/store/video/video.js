@@ -7,8 +7,8 @@ const initialState = {
   token: undefined,
   publisher: undefined,
   mainStreamManager: undefined,
-  mySessionId: 'SessionO',
-  myUserName: 'Yeji',
+  mySessionId: 'SessionOOOOO',
+  myUserName: 'HiHi',
   subscribers: [],
   isVideoPublished: true,
   isAudioPublished: true,
@@ -61,7 +61,7 @@ export const video = createSlice({
       state.OV = null
       state.session = undefined
       state.subscribers = []
-      state.mySessionId = 'SessionO'
+      state.mySessionId = 'SessionOO'
       state.myUserName = 'Leave'
       state.mainStreamManager = undefined
       state.publisher = undefined

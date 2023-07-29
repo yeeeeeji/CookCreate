@@ -12,6 +12,8 @@ import { Route, Routes } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login, logout } from './store/auth/auth'
 import Room from './pages/video/room';
+import CookyerScreen from './pages/video/cookyerScreen';
+import CookieeScreen from './pages/video/cookieeScreen';
 
 function App() {
   const dispatch = useDispatch();
@@ -44,6 +46,8 @@ function App() {
         <Route path='/lessonranking' element={<LessonsRanking/>}></Route>
         <Route path='/registerlesson' element={<RegisterLesson/>}></Route>
         <Route path='/video' element={<Room/>}></Route>
+        <Route path='/videoLesson/COOKYER' element={<CookyerScreen/>}></Route>
+        <Route path='/videoLesson/COOKIEE' element={<CookieeScreen/>}></Route>
       </Routes>
       <br />
       <hr />

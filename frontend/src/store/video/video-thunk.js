@@ -13,11 +13,8 @@ export const joinSession = createAsyncThunk(
 
     console.log("2")
     console.log(data)
-    // console.log(session)
     try {
       console.log("3")
-      // console.log(initialState)
-      // console.log(initialState.mySessionId)
       const token = await getToken({sessionId: mySessionId});
       console.log("getToken 이후", token)
 

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import '../../style/video.css'
+
 export default class OpenViduVideoComponent extends Component {
 
     constructor(props) {
@@ -20,7 +22,12 @@ export default class OpenViduVideoComponent extends Component {
     }
 
     render() {
-        return <video autoPlay={true} ref={this.videoRef} />;
+        return <video
+            className={this.props.videoStyle}
+            muted={true}
+            autoPlay={true}
+            ref={this.videoRef}
+        />;
     }
 
 }
