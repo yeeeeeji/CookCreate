@@ -19,7 +19,7 @@ function CookyerScreen() {
   // const myUserName = useSelector((state) => state.video.myUserName)  // 닉네임으로 바꾸기
   const myUserName = 'cookyer'
   const publisher = useSelector((state) => state.video.publisher)
-  const mainStreamManager = useSelector((state) => state.video.mainStreamManager)  // 선생님으로 고정하는 방법 찾기
+  // const mainStreamManager = useSelector((state) => state.video.mainStreamManager)  // 선생님으로 고정하는 방법 찾기
   const subscribers = useSelector((state) => state.video.subscribers)
 
   // const role = localStorage.getItem('role')

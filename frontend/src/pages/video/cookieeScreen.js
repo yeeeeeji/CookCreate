@@ -52,8 +52,8 @@ function CookieeScreen() {
       session.on('exception', handleException);
 
       console.log(4)
-      const role = 'cookiee'
-      dispatch(joinSession({OV, session, mySessionId, myUserName, role}))
+      // const role = 'cookiee'
+      dispatch(joinSession({OV, session, mySessionId, myUserName, role: 'cookiee'}))
 
       console.log(5)
 

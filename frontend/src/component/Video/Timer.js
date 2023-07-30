@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 function Timer({ role }) {
-  const streamManager = useSelector((state) => state.screenShare.streamManager)
   const publisher = useSelector((state) => state.video.publisher)
 
   const [ curHours, setCurHours ] = useState(0)
@@ -76,12 +75,17 @@ function Timer({ role }) {
   }
 
   useEffect(() => {
-    if (role === 'COOKIEE') {
+    if (role === 'COOKIEE' && publisher !== undefined) {
+      console.log("쿠키 세션에 이벤트 추가", role, publisher)
       publisher.stream.session.on('signal:timer', (e) => {
         const data = JSON.parse(e.data)
-        setCurHours(data.hours)
-        setCurMinutes(data.minutes)
-        setCurSeconds(data.seconds)
+        if (data !== undefined) {
+          setCurHours(data.hours)
+          setCurMinutes(data.minutes)
+          setCurSeconds(data.seconds)
+          console.log(data)
+          console.log("쿠커가 보낸 시간", curHours, curMinutes, curSeconds)
+        }
       })
     }
   }, [])
@@ -129,7 +133,7 @@ function Timer({ role }) {
       <button onClick={reset}>Reset</button>
       {/* 학생들에게 선생님이 설정한 타이머 값을 보내야 함.. 어떻게,,? */}
       {role === 'COOKYER' ? (
-        <button onClick={() => sendTime(streamManager)}>설정</button>
+        <button onClick={() => sendTime(publisher)}>설정</button>
       ) : (
         null
       )}
