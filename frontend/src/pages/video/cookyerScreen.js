@@ -108,7 +108,7 @@ function CookyerScreen() {
               streamManager={publisher}
             />
           </div>
-          <Timer/>
+          <Timer role='COOKYER'/>
           <LessonStepWidget/>
         </div>
       </div>

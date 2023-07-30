@@ -104,7 +104,7 @@ function CookieeScreen() {
                 streamManager={cookyerStream}
               />
             </div>
-            <Timer/>
+            <Timer role='COOKIEE'/>
             {/* 쿠키 본인 화면 */}
             <div className='cookiee-content'>
               <UserVideoComponent
