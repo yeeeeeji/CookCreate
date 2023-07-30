@@ -1,12 +1,10 @@
 package com.mmt.domain.response.lesson;
 
-import com.mmt.domain.entity.Difficulty;
+import com.mmt.domain.entity.lesson.Difficulty;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.response.ResponseDto;
 import lombok.Data;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,6 +23,8 @@ public class LessonSearchRes extends ResponseDto {
     private List<String> materials;
     private String lessonDate;
     private float reviewAvg;
+    private int reviewCnt;
+    private float reviewSum;
     private String thumbnailUrl;
     private int jjimCount;
     private String createdDate;

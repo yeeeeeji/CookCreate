@@ -1,7 +1,7 @@
 package com.mmt.domain.entity.lesson;
 
 import com.mmt.domain.entity.BaseTimeEntity;
-import com.mmt.domain.entity.Difficulty;
+import com.mmt.domain.entity.lesson.Difficulty;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import lombok.Getter;
@@ -46,7 +46,6 @@ public class Lesson extends BaseTimeEntity {
     private int jjimCount;
     private String videoUrl;
     private String thumbnailUrl;
-    private String sessionId;
 
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
     private List<LessonStep> lessonStepList = new ArrayList<>();
@@ -63,7 +62,6 @@ public class Lesson extends BaseTimeEntity {
         this.lessonDate = lessonPostReq.getLessonDate();
         this.videoUrl = lessonPostReq.getVideoUrl();
         this.thumbnailUrl = lessonPostReq.getThumbnailUrl();
-        this.sessionId = lessonPostReq.getSessionId();
         this.lessonStepList = lessonPostReq.getLessonStepList();
     }
 
