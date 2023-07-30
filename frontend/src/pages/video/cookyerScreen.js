@@ -24,6 +24,17 @@ function CookyerScreen() {
 
   // const role = localStorage.getItem('role')
 
+  // /** 화면공유 도전 */
+  // const connectionId = useSelector((state) => state.screenShare.connectionId)
+  // const audioActive = useSelector((state) => state.screenShare.audioActive)
+  // const videoActive = useSelector((state) => state.screenShare.videoActive)
+  // const screenShareActive = useSelector((state) => state.screenShare.screenShareActive)
+  // const nickname = useSelector((state) => state.screenShare.nickname)
+  // const streamManager = useSelector((state) => state.screenShare.streamManager)
+  // const type = useSelector((state) => state.screenShare.type)
+  // const [ isShared, setIsShared ] = useState(false)
+  // /** 화면공유 도전 */
+
   useEffect(() => {
     console.log(3, session)
     if (session) {
@@ -73,6 +84,69 @@ function CookyerScreen() {
     }
   }
 
+  // /** 화면공유 도전 */
+  // const handleIsShared = () => {
+  //   setIsShared((prev) => !prev)
+  // }
+
+  // useEffect(() => {
+  //   if (isShared) {
+
+  //   } else {
+  //     session.unpublish(streamManager)
+  //   }
+  // }, [isShared])
+
+
+  // const screenShare = () => {
+  //   console.log("이게 실행됐다고????")
+  //   const videoSource = navigator.userAgent.indexOf('Firefox') !== -1 ? 'window' : 'screen';
+  //   const publisher = OV.initPublisher(
+  //     undefined,
+  //     {
+  //       videoSource: videoSource,
+  //       publishAudio: true,
+  //       publishVideo: true,
+  //       mirror: false,
+  //     },
+  //     (error) => {
+  //       if (error && error.name === 'SCREEN_EXTENSION_NOT_INSTALLED') {
+  //         alert('screen extension not installed')
+  //           // this.setState({ showExtensionDialog: true });
+  //       } else if (error && error.name === 'SCREEN_SHARING_NOT_SUPPORTED') {
+  //           alert('Your browser does not support screen sharing');
+  //       } else if (error && error.name === 'SCREEN_EXTENSION_DISABLED') {
+  //           alert('You need to enable screen sharing extension');
+  //       } else if (error && error.name === 'SCREEN_CAPTURE_DENIED') {
+  //           alert('You need to choose a window or application to share');
+  //       }
+  //     },
+  //   )
+
+  //   publisher.once('accessAllowed', () => {
+  //     // session.unpublish(streamManager);
+  //     dispatch(setStreamManager({publisher}))
+  //     session.publish(streamManager).then(() => {
+  //       dispatch(setScreenShareActive(true));
+  //       sendSignalUserChanged({ isScreenShareActive: screenShareActive });
+  //     });
+  //   });
+  //   // publisher.on('streamPlaying', () => {
+  //   //     this.updateLayout();
+  //   //     publisher.videos[0].video.parentElement.classList.remove('custom-class');
+  //   // });
+  // }
+
+  // const sendSignalUserChanged = (data) => {
+  //   const signalOptions = {
+  //     data: JSON.stringify(data),
+  //     type: 'userChanged',
+  //   }
+  //   session.signal(signalOptions)
+  // }
+
+  /** 화면공유 도전 */
+
   return (
     <div className='video-page'>
       <VideoSideBar/>
@@ -82,6 +156,14 @@ function CookyerScreen() {
           <div className='cookyer-sharing'>
             <div className='cookyer-sharing-content'>
               <span>화면공유</span>
+              {/* {streamManager === null ? (
+                <span>화면공유</span>
+              ) : (
+                // <UserVideoComponent
+                //   videoStyle='cookyer-sharing-content'
+                //   streamManager={streamManager}
+                // />
+              )} */}
             </div>
           </div>
           {/* <div className='cookyer-sharing' onClick={() => handleMainVideoStream(publisher)}>
