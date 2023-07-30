@@ -1,6 +1,6 @@
 package com.mmt.domain.request.lesson;
 
-import com.mmt.domain.entity.lesson.Difficulty;
+import com.mmt.domain.entity.Difficulty;
 import com.mmt.domain.entity.lesson.LessonStep;
 import lombok.Data;
 

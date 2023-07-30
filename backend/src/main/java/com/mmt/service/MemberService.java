@@ -1,13 +1,12 @@
 package com.mmt.service;
 
-import com.mmt.domain.entity.auth.Role;
-import com.mmt.domain.entity.auth.Member;
-import com.mmt.domain.request.auth.UserLoginPostReq;
-import com.mmt.domain.request.auth.UserSignUpReq;
-import com.mmt.domain.request.auth.UserUpdateReq;
+import com.mmt.domain.entity.Role;
+import com.mmt.domain.entity.Auth.Member;
+import com.mmt.domain.request.UserLoginPostReq;
+import com.mmt.domain.request.UserSignUpReq;
+import com.mmt.domain.request.UserUpdateReq;
 import com.mmt.domain.response.ResponseDto;
-import com.mmt.domain.response.auth.UserInfoRes;
-import com.mmt.domain.response.auth.UserLoginRes;
+import com.mmt.domain.response.UserLoginRes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +18,7 @@ public interface MemberService {
     public UserLoginRes login(UserLoginPostReq userLoginPostReq, HttpServletResponse response);
 
     public ResponseDto logout(HttpServletRequest request, HttpServletResponse response);
-    public UserInfoRes getUserInfo(String userId);
+    public Member getUserInfo(String userId);
     public ResponseDto updateUserInfo(String userId, UserUpdateReq userUpdateReq);
     public ResponseDto deleteUser(String userId);
 

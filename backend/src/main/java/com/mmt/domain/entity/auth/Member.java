@@ -1,8 +1,9 @@
-package com.mmt.domain.entity.auth;
+package com.mmt.domain.entity.Auth;
 
+import com.mmt.domain.entity.Role;
 import com.mmt.domain.entity.BaseTimeEntity;
-import com.mmt.domain.request.auth.UserSignUpReq;
-import com.mmt.domain.request.auth.UserUpdateReq;
+import com.mmt.domain.request.UserSignUpReq;
+import com.mmt.domain.request.UserUpdateReq;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,7 +40,7 @@ public class Member extends BaseTimeEntity {
     }
 
     public void update(UserUpdateReq userUpdateReq){
-//        this.userPw = userUpdateReq.getUserPw();
+        this.userPw = userUpdateReq.getUserPw();
         this.nickname = userUpdateReq.getNickname();
         this.phoneNumber = userUpdateReq.getPhoneNumber();
         this.userEmail = userUpdateReq.getUserEmail();

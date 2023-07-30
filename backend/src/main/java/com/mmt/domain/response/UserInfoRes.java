@@ -1,8 +1,7 @@
-package com.mmt.domain.response.auth;
+package com.mmt.domain.response;
 
-import com.mmt.domain.entity.auth.Role;
-import com.mmt.domain.entity.auth.Member;
-import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.entity.Role;
+import com.mmt.domain.entity.Auth.Member;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class UserInfoRes extends ResponseDto {
+public class UserInfoRes {
     String userId;
     String nickname;
     String phoneNumber;

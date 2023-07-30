@@ -1,5 +1,6 @@
 package com.mmt.service;
 
+import com.mmt.domain.request.SessionCreateReq;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
@@ -16,6 +17,7 @@ public interface LessonService {
     ResponseDto apply(int lessonId, String userId);
     ResponseDto modifyLesson(LessonPutReq lessonPutReq);
     ResponseDto deleteLesson(int lessonId);
+    ResponseDto createSession(int lessonId, SessionCreateReq sessionCreateReq);
     List<LessonSearchRes> getLessonList(LessonSearchReq lessonSearchReq);
     LessonDetailRes getLessonDetail(int lessonId);
     LessonLatestRes getLessonLatest(String userId);

@@ -1,6 +1,6 @@
 package com.mmt.domain.response.lesson;
 
-import com.mmt.domain.entity.lesson.Difficulty;
+import com.mmt.domain.entity.Difficulty;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonStep;
 import com.mmt.domain.response.ResponseDto;

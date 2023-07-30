@@ -1,4 +1,4 @@
-package com.mmt.domain.entity.lesson;
+package com.mmt.domain.entity;
 
 public enum Difficulty {
     EASY, NORMAL, HARD;

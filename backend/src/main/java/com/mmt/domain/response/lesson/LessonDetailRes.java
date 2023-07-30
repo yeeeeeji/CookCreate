@@ -1,11 +1,14 @@
 package com.mmt.domain.response.lesson;
 
-import com.mmt.domain.entity.auth.Member;
-import com.mmt.domain.entity.lesson.Difficulty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mmt.domain.entity.Auth.Member;
+import com.mmt.domain.entity.Difficulty;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonStep;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,8 +31,6 @@ public class LessonDetailRes {
     private List<String> materials;
     private String lessonDate;
     private float reviewAvg;
-    private int reviewCnt;
-    private float reviewSum;
     private List<Member> lessonParticipantList;
     private String videoUrl;
     private String thumbnailUrl;
@@ -37,6 +38,7 @@ public class LessonDetailRes {
     private int jjimCount;
     private String createdDate;
     private String modifiedDate;
+    private String sessionId;
 
     public LessonDetailRes(Lesson lesson){
         this.lessonId = lesson.getLessonId();
@@ -56,5 +58,6 @@ public class LessonDetailRes {
         this.jjimCount = lesson.getJjimCount();
         this.createdDate = lesson.getCreatedDate().toString();
         this.modifiedDate = lesson.getModifiedDate().toString();
+        this.sessionId = lesson.getSessionId();
     }
 }

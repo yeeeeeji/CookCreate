@@ -1,4 +1,4 @@
-package com.mmt.domain.entity.auth;
+package com.mmt.domain.entity.Auth;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

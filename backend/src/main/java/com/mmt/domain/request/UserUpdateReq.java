@@ -1,4 +1,4 @@
-package com.mmt.domain.request.auth;
+package com.mmt.domain.request;
 
 import lombok.Data;
 import lombok.Getter;
@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserUpdateReq {
-//    private String userPw;
-//    private String userPwCk;
+    private String userPw;
+    private String userPwCk;
     private String nickname;
     private String phoneNumber;
     private String userEmail;
@@ -17,7 +17,7 @@ public class UserUpdateReq {
     private String profileImg;
     private String introUrl;
 
-//    public void setEncodePw(String encodePw){
-//        this.userPw = encodePw;
-//    }
+    public void setEncodePw(String encodePw){
+        this.userPw = encodePw;
+    }
 }

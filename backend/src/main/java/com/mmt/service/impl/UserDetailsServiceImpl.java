@@ -1,7 +1,7 @@
 package com.mmt.service.impl;
 
-import com.mmt.domain.entity.auth.Member;
-import com.mmt.domain.entity.auth.UserDetailsImpl;
+import com.mmt.domain.entity.Auth.Member;
+import com.mmt.domain.entity.Auth.UserDetailsImpl;
 import com.mmt.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,11 +1,13 @@
 package com.mmt.service.impl;
 
-import com.mmt.domain.entity.auth.Member;
+import com.mmt.domain.entity.Auth.Member;
+import com.mmt.domain.entity.Role;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.lesson.LessonStep;
-import com.mmt.domain.entity.pay.PaymentHistory;
+import com.mmt.domain.request.SessionCreateReq;
+import com.mmt.domain.request.UserLoginPostReq;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
@@ -13,14 +15,12 @@ import com.mmt.domain.response.lesson.LessonDetailRes;
 import com.mmt.domain.response.lesson.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.lesson.LessonSearchRes;
-import com.mmt.domain.response.review.ReviewAvgRes;
 import com.mmt.repository.*;
 import com.mmt.repository.lesson.LessonCategoryRepository;
 import com.mmt.repository.lesson.LessonParticipantRepository;
 import com.mmt.repository.lesson.LessonRepository;
 import com.mmt.repository.lesson.LessonStepRepository;
 import com.mmt.service.LessonService;
-import com.mmt.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
@@ -42,9 +42,6 @@ public class LessonServiceImpl implements LessonService {
     private final LessonParticipantRepository lessonParticipantRepository;
     private final LessonStepRepository lessonStepRepository;
     private final MemberRepository memberRepository;
-    private final PaymentRepository paymentRepository;
-
-    private final ReviewService reviewService;
 
     @Transactional
     @Override
@@ -86,9 +83,6 @@ public class LessonServiceImpl implements LessonService {
         if(lesson.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
 
         // TODO: 추가하기 전 결제 완료 확인
-        if(!paymentRepository.findByLesson_LessonIdAndMember_UserId(lessonId, userId).isPresent()) {
-            return new ResponseDto(HttpStatus.FORBIDDEN, "결제 한 사용자만 신청할 수 있습니다.");
-        }
         LessonParticipant lessonParticipant = new LessonParticipant();
         lessonParticipant.setLesson(lesson.get());
         lessonParticipant.setUserId(userId);
@@ -154,11 +148,7 @@ public class LessonServiceImpl implements LessonService {
             List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findByLesson_LessonId(lesson.getLessonId());
             lessonSearchRes.setRemaining(lesson.getMaximum() - lessonParticipantList.size() + 1);
 
-            // reviewAvg 세팅
-            ReviewAvgRes reviewAvgRes = reviewService.getReviewAvg(lesson.getCookyerId());
-            lessonSearchRes.setReviewAvg(reviewAvgRes.getAvg());
-            lessonSearchRes.setReviewCnt(reviewAvgRes.getCount());
-            lessonSearchRes.setReviewSum(reviewAvgRes.getSum());
+            // TODO: reviewAvg 세팅
 
             // 카테고리 포함 여부
             if(lessonSearchReq.getCategory() != null && !lessonSearchReq.getCategory().isEmpty()){
@@ -206,22 +196,10 @@ public class LessonServiceImpl implements LessonService {
                         result.add(lessonSearchRes);
                     }
                 }
-            }else if(lessonSearchReq.getOrder().equals("avg")){ // 선생님이 받은 평점순으로 정렬
-                Collections.sort(result, new Comparator<LessonSearchRes>() {
-                    @Override
-                    public int compare(LessonSearchRes o1, LessonSearchRes o2) {
-                        return Float.compare(o2.getReviewAvg(), o1.getReviewAvg());
-                    }
-                });
-            }else if(lessonSearchReq.getOrder().equals("review")){ // 선생님이 받은 리뷰 개수순으로 정렬
-                Collections.sort(result, new Comparator<LessonSearchRes>() {
-                    @Override
-                    public int compare(LessonSearchRes o1, LessonSearchRes o2) {
-                        return Integer.compare(o2.getReviewCnt(), o1.getReviewCnt());
-                    }
-                });
             }
         }
+
+        // TODO: 평점순, 리뷰순 정렬
 
         return result;
     }
@@ -256,11 +234,7 @@ public class LessonServiceImpl implements LessonService {
             List<LessonStep> lessonStepList = lessonStepRepository.findByLesson_LessonId(lessonId);
             result.setLessonStepList(lessonStepList);
 
-            // reviewAvg 세팅
-            ReviewAvgRes reviewAvgRes = reviewService.getReviewAvg(lesson.get().getCookyerId());
-            result.setReviewAvg(reviewAvgRes.getAvg());
-            result.setReviewCnt(reviewAvgRes.getCount());
-            result.setReviewSum(reviewAvgRes.getSum());
+            // TODO: reviewAvg 세팅 -> review 기능 구현 후
 
             return result;
         }else{
@@ -283,5 +257,21 @@ public class LessonServiceImpl implements LessonService {
         }
 
         return lessonLatestRes;
+    }
+
+
+    @Override
+    public ResponseDto createSession(int lessonId, SessionCreateReq sessionCreateReq) {
+        Optional<Lesson> find = lessonRepository.findByLessonId(lessonId);
+
+        if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+
+        // session_id 컬럼 set
+        Lesson lesson = find.get();
+        lesson.setSessionId(sessionCreateReq.getSessionId());
+
+        Lesson save = lessonRepository.save(lesson);
+
+        return new ResponseDto(HttpStatus.OK, "Success");
     }
 }

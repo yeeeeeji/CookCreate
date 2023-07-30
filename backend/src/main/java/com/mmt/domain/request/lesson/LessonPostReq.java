@@ -1,6 +1,6 @@
 package com.mmt.domain.request.lesson;
 
-import com.mmt.domain.entity.lesson.Difficulty;
+import com.mmt.domain.entity.Difficulty;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonStep;
 import lombok.Data;
@@ -32,5 +32,6 @@ public class LessonPostReq {
     private String lessonDate;
     private String videoUrl;
     private String thumbnailUrl;
+    private String sessionId;
     private List<LessonStep> lessonStepList;
 }
