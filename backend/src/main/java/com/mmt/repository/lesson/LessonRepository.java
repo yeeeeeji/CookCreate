@@ -12,4 +12,6 @@ public interface LessonRepository extends JpaRepository<Lesson, Integer>, Lesson
     List<Lesson> findAllByCookyerId(String cookyerId, Sort createdDate);
     List<Lesson> findAllByCookyerId(String cookyerId);
     void deleteByLessonId(int lessonId);
+
+    List<Lesson> findAllByIsOver(boolean isOver);
 }
