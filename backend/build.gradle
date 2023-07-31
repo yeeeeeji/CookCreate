@@ -53,10 +53,13 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
-    //Webclient
+    // Webclient
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    
     //spring-cloud-starter-aws
     compileOnly 'org.springframework.cloud:spring-cloud-starter-aws:2.0.2.RELEASE'
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.228')
