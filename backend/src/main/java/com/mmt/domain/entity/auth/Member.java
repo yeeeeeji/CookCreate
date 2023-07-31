@@ -3,6 +3,7 @@ package com.mmt.domain.entity.auth;
 import com.mmt.domain.entity.BaseTimeEntity;
 import com.mmt.domain.request.auth.UserSignUpReq;
 import com.mmt.domain.request.auth.UserUpdateReq;
+import com.mmt.domain.entity.auth.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

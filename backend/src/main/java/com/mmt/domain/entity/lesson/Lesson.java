@@ -46,6 +46,7 @@ public class Lesson extends BaseTimeEntity {
     private int jjimCount;
     private String videoUrl;
     private String thumbnailUrl;
+    private String sessionId;
 
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
     private List<LessonStep> lessonStepList = new ArrayList<>();
@@ -61,8 +62,8 @@ public class Lesson extends BaseTimeEntity {
         this.materials = String.join(",", lessonPostReq.getMaterials());
         this.lessonDate = lessonPostReq.getLessonDate();
         this.videoUrl = lessonPostReq.getVideoUrl();
-        this.thumbnailUrl = lessonPostReq.getThumbnailUrl();
         this.lessonStepList = lessonPostReq.getLessonStepList();
+        this.sessionId = lessonPostReq.getSessionId();
     }
 
     public void update(LessonPutReq lessonPutReq){
@@ -74,7 +75,6 @@ public class Lesson extends BaseTimeEntity {
         this.description = lessonPutReq.getDescription();
         this.materials = String.join(",", lessonPutReq.getMaterials());
         this.videoUrl = lessonPutReq.getVideoUrl();
-        this.thumbnailUrl = lessonPutReq.getThumbnailUrl();
         this.lessonStepList = lessonPutReq.getLessonStepList();
     }
 }

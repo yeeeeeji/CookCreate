@@ -37,6 +37,7 @@ public class LessonDetailRes {
     private int jjimCount;
     private String createdDate;
     private String modifiedDate;
+    private String sessionId;
 
     public LessonDetailRes(Lesson lesson){
         this.lessonId = lesson.getLessonId();
@@ -56,5 +57,6 @@ public class LessonDetailRes {
         this.jjimCount = lesson.getJjimCount();
         this.createdDate = lesson.getCreatedDate().toString();
         this.modifiedDate = lesson.getModifiedDate().toString();
+        this.sessionId = lesson.getSessionId();
     }
 }

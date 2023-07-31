@@ -5,10 +5,10 @@ import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.lesson.LessonStep;
-import com.mmt.domain.entity.pay.PaymentHistory;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
+import com.mmt.domain.request.session.SessionCreateReq;
 import com.mmt.domain.response.lesson.LessonDetailRes;
 import com.mmt.domain.response.lesson.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
@@ -19,6 +19,7 @@ import com.mmt.repository.lesson.LessonCategoryRepository;
 import com.mmt.repository.lesson.LessonParticipantRepository;
 import com.mmt.repository.lesson.LessonRepository;
 import com.mmt.repository.lesson.LessonStepRepository;
+import com.mmt.service.AwsS3Uploader;
 import com.mmt.service.LessonService;
 import com.mmt.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -45,10 +48,11 @@ public class LessonServiceImpl implements LessonService {
     private final PaymentRepository paymentRepository;
 
     private final ReviewService reviewService;
+    private final AwsS3Uploader awsS3Uploader;
 
     @Transactional
     @Override
-    public ResponseDto reserve(LessonPostReq lessonPostReq) {
+    public ResponseDto reserve(MultipartFile multipartFile, LessonPostReq lessonPostReq) {
         Lesson lesson = new Lesson(lessonPostReq);
 
         // lesson에 카테고리 아이디 저장
@@ -59,6 +63,16 @@ public class LessonServiceImpl implements LessonService {
         // lesson에 cookyer 닉네임 저장
         Optional<Member> cookyer = memberRepository.findByUserId(lessonPostReq.getCookyerId());
         cookyer.ifPresent(member -> lesson.setCookyerName(member.getNickname()));
+
+        // s3에 썸네일 이미지 업로드 후 url을 db에 저장
+        if(multipartFile != null){
+            try {
+                String thumbnailUrl = awsS3Uploader.uploadFile(multipartFile, "lesson");
+                lesson.setThumbnailUrl(thumbnailUrl);
+            } catch (IOException e) {
+                return new ResponseDto(HttpStatus.CONFLICT, e.getMessage());
+            }
+        }
 
         Lesson save = lessonRepository.save(lesson);
 
@@ -102,7 +116,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Transactional
     @Override
-    public ResponseDto modifyLesson(LessonPutReq lessonPutReq) {
+    public ResponseDto modifyLesson(MultipartFile multipartFile, LessonPutReq lessonPutReq) {
         Optional<Lesson> find = lessonRepository.findByLessonId(lessonPutReq.getLessonId());
 
         if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
@@ -118,6 +132,16 @@ public class LessonServiceImpl implements LessonService {
         LessonCategory lessonCategory = new LessonCategory();
         lessonCategory.setCategoryId(lessonPutReq.getCategoryId());
         lesson.setLessonCategory(lessonCategory);
+
+        // s3에 썸네일 이미지 업로드 후 url을 db에 저장
+        if(multipartFile != null){
+            try {
+                String thumbnailUrl = awsS3Uploader.uploadFile(multipartFile, "lesson");
+                lesson.setThumbnailUrl(thumbnailUrl);
+            } catch (IOException e) {
+                return new ResponseDto(HttpStatus.CONFLICT, e.getMessage());
+            }
+        }
 
         Lesson save = lessonRepository.save(lesson);
 
@@ -283,5 +307,30 @@ public class LessonServiceImpl implements LessonService {
         }
 
         return lessonLatestRes;
+    }
+
+    @Override
+    public ResponseDto createSession(int lessonId, SessionCreateReq sessionCreateReq) {
+        Optional<Lesson> find = lessonRepository.findByLessonId(lessonId);
+
+        if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+
+        // session_id 컬럼 set
+        Lesson lesson = find.get();
+        lesson.setSessionId(sessionCreateReq.getSessionId());
+        lessonRepository.save(lesson);
+        return new ResponseDto(HttpStatus.OK, "Success");
+    }
+
+    @Override
+    public ResponseDto shutdownSession(int lessonId) {
+        Optional<Lesson> find = lessonRepository.findByLessonId(lessonId);
+        if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+
+        // session_id 컬럼 값을 null 로 set
+        Lesson lesson = find.get();
+        lesson.setSessionId(null);
+        lessonRepository.save(lesson);
+        return new ResponseDto(HttpStatus.OK, "Success");
     }
 }
