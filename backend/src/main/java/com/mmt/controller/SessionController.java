@@ -1,12 +1,10 @@
 package com.mmt.controller;
 
-import com.mmt.domain.entity.Auth.Member;
+import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.auth.UserDetailsImpl;
 import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.request.session.SessionCreateReq;
-import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.response.ResponseDto;
-import com.mmt.domain.response.auth.UserInfoRes;
 import com.mmt.domain.response.session.SessionJoinRes;
 import com.mmt.service.LessonService;
 import com.mmt.service.MemberService;
@@ -23,8 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 import java.util.List;
 
