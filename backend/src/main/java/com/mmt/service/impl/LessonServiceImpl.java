@@ -99,6 +99,8 @@ public class LessonServiceImpl implements LessonService {
         Optional<Lesson> lesson = lessonRepository.findByLessonId(lessonId);
         if(lesson.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
 
+        if(lesson.get().getIsOver()) return new ResponseDto(HttpStatus.BAD_REQUEST, "이미 마감된 과외입니다.");
+
         // TODO: 추가하기 전 결제 완료 확인
         if(!paymentRepository.findByLesson_LessonIdAndMember_UserId(lessonId, userId).isPresent()) {
             return new ResponseDto(HttpStatus.FORBIDDEN, "결제 한 사용자만 신청할 수 있습니다.");
@@ -108,6 +110,9 @@ public class LessonServiceImpl implements LessonService {
         lessonParticipant.setUserId(userId);
         lessonParticipant.setCompleted(false);
         lessonParticipantRepository.save(lessonParticipant);
+
+        // TODO: 만약 방금 신청한 사람이 마지막 사람이라면 lesson의 is_over = true로 세팅
+        
 
         // TODO: 채팅방 입장
 
@@ -159,6 +164,7 @@ public class LessonServiceImpl implements LessonService {
     public ResponseDto deleteLesson(int lessonId) {
         try {
             lessonRepository.deleteByLessonId(lessonId);
+            // TODO: 마감된 과외였다면 is_over = false로
         }catch (EmptyResultDataAccessException e){
             return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
         }
