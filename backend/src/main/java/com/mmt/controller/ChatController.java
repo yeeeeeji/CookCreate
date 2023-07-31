@@ -1,12 +1,12 @@
 package com.mmt.controller;
 
-import com.mmt.domain.MessageDto;
+import com.mmt.domain.ChatDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.HtmlUtils;
 
 @RestController
 @RequestMapping("/api/v1/chat")
@@ -19,9 +19,15 @@ public class ChatController {
         /pub/send       - 메세지 발행
      */
 
-    @MessageMapping("/send")
-    public void message(MessageDto message) {
-        simpMessageSendingOperations.convertAndSend("/sub/room/" + message.getLessonId(), message);
+    @MessageMapping("/chat/enter")
+    public void enter(ChatDto chat) {
+        chat.setContents(chat.getNickName() + "님이 채팅방에 입장했습니다.");
+        simpMessageSendingOperations.convertAndSend("/sub/room/" + chat.getLessonId(), chat);
+    }
+
+    @MessageMapping("/chat/message")
+    public void message(ChatDto chat) {
+        simpMessageSendingOperations.convertAndSend("/sub/room/" + chat.getLessonId(), chat);
     }
 
 }
