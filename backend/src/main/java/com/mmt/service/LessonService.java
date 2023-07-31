@@ -15,7 +15,7 @@ public interface LessonService {
 
     ResponseDto reserve(MultipartFile multipartFile, LessonPostReq lessonPostReq);
     ResponseDto apply(int lessonId, String userId);
-    ResponseDto modifyLesson(LessonPutReq lessonPutReq);
+    ResponseDto modifyLesson(MultipartFile multipartFile, LessonPutReq lessonPutReq);
     ResponseDto deleteLesson(int lessonId);
     List<LessonSearchRes> getLessonList(LessonSearchReq lessonSearchReq);
     LessonDetailRes getLessonDetail(int lessonId);

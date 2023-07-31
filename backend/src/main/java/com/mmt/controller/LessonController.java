@@ -139,7 +139,7 @@ public class LessonController {
         }
 
         lessonPutReq.setCookyerId(loginId);
-        ResponseDto responseDto = lessonService.modifyLesson(lessonPutReq);
+        ResponseDto responseDto = lessonService.modifyLesson(multipartFile, lessonPutReq);
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }

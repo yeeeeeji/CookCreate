@@ -115,7 +115,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Transactional
     @Override
-    public ResponseDto modifyLesson(LessonPutReq lessonPutReq) {
+    public ResponseDto modifyLesson(MultipartFile multipartFile, LessonPutReq lessonPutReq) {
         Optional<Lesson> find = lessonRepository.findByLessonId(lessonPutReq.getLessonId());
 
         if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
@@ -131,6 +131,16 @@ public class LessonServiceImpl implements LessonService {
         LessonCategory lessonCategory = new LessonCategory();
         lessonCategory.setCategoryId(lessonPutReq.getCategoryId());
         lesson.setLessonCategory(lessonCategory);
+
+        // s3에 썸네일 이미지 업로드 후 url을 db에 저장
+        if(multipartFile != null){
+            try {
+                String thumbnailUrl = awsS3Uploader.uploadFile(multipartFile, "lesson");
+                lesson.setThumbnailUrl(thumbnailUrl);
+            } catch (IOException e) {
+                return new ResponseDto(HttpStatus.CONFLICT, e.getMessage());
+            }
+        }
 
         Lesson save = lessonRepository.save(lesson);
 
