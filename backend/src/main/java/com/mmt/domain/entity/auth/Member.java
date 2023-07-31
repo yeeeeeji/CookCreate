@@ -1,4 +1,4 @@
-package com.mmt.domain.entity.Auth;
+package com.mmt.domain.entity.auth;
 
 import com.mmt.domain.entity.BaseTimeEntity;
 import com.mmt.domain.request.auth.UserSignUpReq;

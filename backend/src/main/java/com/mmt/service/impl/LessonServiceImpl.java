@@ -1,6 +1,6 @@
 package com.mmt.service.impl;
 
-import com.mmt.domain.entity.Auth.Member;
+import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
