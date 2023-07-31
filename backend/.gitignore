@@ -17,6 +17,10 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+### aws ###
+**/src/main/resources/application-aws.properties
+**/src/main/resources/application-credentials.properties
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
