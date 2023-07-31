@@ -5,7 +5,6 @@ import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.lesson.LessonStep;
-import com.mmt.domain.entity.pay.PaymentHistory;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
@@ -19,6 +18,7 @@ import com.mmt.repository.lesson.LessonCategoryRepository;
 import com.mmt.repository.lesson.LessonParticipantRepository;
 import com.mmt.repository.lesson.LessonRepository;
 import com.mmt.repository.lesson.LessonStepRepository;
+import com.mmt.service.AwsS3Uploader;
 import com.mmt.service.LessonService;
 import com.mmt.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -45,10 +47,11 @@ public class LessonServiceImpl implements LessonService {
     private final PaymentRepository paymentRepository;
 
     private final ReviewService reviewService;
+    private final AwsS3Uploader awsS3Uploader;
 
     @Transactional
     @Override
-    public ResponseDto reserve(LessonPostReq lessonPostReq) {
+    public ResponseDto reserve(MultipartFile multipartFile, LessonPostReq lessonPostReq) {
         Lesson lesson = new Lesson(lessonPostReq);
 
         // lesson에 카테고리 아이디 저장
@@ -59,6 +62,16 @@ public class LessonServiceImpl implements LessonService {
         // lesson에 cookyer 닉네임 저장
         Optional<Member> cookyer = memberRepository.findByUserId(lessonPostReq.getCookyerId());
         cookyer.ifPresent(member -> lesson.setCookyerName(member.getNickname()));
+
+        // s3에 썸네일 이미지 업로드 후 url을 db에 저장
+        if(multipartFile != null){
+            try {
+                String thumbnailUrl = awsS3Uploader.uploadFile(multipartFile, "lesson");
+                lesson.setThumbnailUrl(thumbnailUrl);
+            } catch (IOException e) {
+                return new ResponseDto(HttpStatus.CONFLICT, e.getMessage());
+            }
+        }
 
         Lesson save = lessonRepository.save(lesson);
 

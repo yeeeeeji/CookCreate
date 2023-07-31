@@ -5,6 +5,7 @@ import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonStep;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -24,13 +25,12 @@ public class LessonPostReq {
     @Max(value = 240, message = "소요시간은 최대 240분까지입니다.")
     private int timeTaken;
     private String description;
-    @Min(value = 4, message = "최대인원은 4명 이상이여야 합니다.")
     @Max(value = 6, message = "최대인원은 6명 이하여야 합니다.")
     private int maximum;
     private int price;
     private List<String> materials;
     private String lessonDate;
     private String videoUrl;
-    private String thumbnailUrl;
+    //private MultipartFile thumbnailUrl; -> s3 처리를 위해 따로 form-data로 받음
     private List<LessonStep> lessonStepList;
 }

@@ -20,11 +20,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -50,8 +52,8 @@ public class LessonController {
             @ApiResponse(responseCode = "403", description = "Cookyer만 이용 가능합니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @PostMapping("")
-    public ResponseEntity<ResponseDto> reserve(@RequestBody @Valid LessonPostReq lessonPostReq, BindingResult bindingResult, Authentication authentication) {
+    @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<ResponseDto> reserve(@RequestPart(value = "thumbnailUrl") MultipartFile multipartFile, @RequestPart(value = "lessonPostReq") @Valid LessonPostReq lessonPostReq, BindingResult bindingResult, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication: " + (userDetails.getUsername()));
 
@@ -69,7 +71,7 @@ public class LessonController {
         }
 
         lessonPostReq.setCookyerId(loginId);
-        ResponseDto responseDto = lessonService.reserve(lessonPostReq);
+        ResponseDto responseDto = lessonService.reserve(multipartFile, lessonPostReq);
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
@@ -113,8 +115,8 @@ public class LessonController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @PutMapping("")
-    public ResponseEntity<ResponseDto> modifyLesson(@RequestBody @Valid LessonPutReq lessonPutReq, BindingResult bindingResult, Authentication authentication) {
+    @PutMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<ResponseDto> modifyLesson(@RequestPart(value = "thumbnailUrl") MultipartFile multipartFile, @RequestPart(value = "lessonPutReq") @Valid LessonPutReq lessonPutReq, BindingResult bindingResult, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication: " + (userDetails.getUsername()));
 
