@@ -150,13 +150,13 @@ public class MyController {
     @Operation(summary = "자격증 목록", description = "등록한 자격증 목록을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
-                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+                    content = @Content(schema = @Schema(implementation = MyBadgeRes.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
-                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+                    content = @Content(schema = @Schema(implementation = MyBadgeRes.class))),
             @ApiResponse(responseCode = "403", description = "Cookyer만 확인할 수 있습니다.",
-                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+                    content = @Content(schema = @Schema(implementation = MyBadgeRes.class))),
             @ApiResponse(responseCode = "404", description = "등록한 자격증이 존재하지 않습니다.",
-                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+                    content = @Content(schema = @Schema(implementation = MyBadgeRes.class)))
     })
     @GetMapping("/badge")
     public ResponseEntity<List<MyBadgeRes>> getLicenseList(Authentication authentication) {
@@ -166,5 +166,24 @@ public class MyController {
         List<MyBadgeRes> myBadgeResList = myService.getLicenseList(userDetails.getUsername());
 
         return new ResponseEntity<>(myBadgeResList, myBadgeResList.get(0).getStatusCode());
+    }
+
+    @Operation(summary = "프로필 이미지 삭제", description = "자신의 프로필 이미지 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "등록한 프로필 사진이 존재하지 않습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
+    @DeleteMapping("/profile")
+    public ResponseEntity<ResponseDto> deleteProfileImg(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (authentication.getPrincipal()));
+
+        ResponseDto responseDto = myService.deleteProfileImg(userDetails.getUsername());
+
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 }

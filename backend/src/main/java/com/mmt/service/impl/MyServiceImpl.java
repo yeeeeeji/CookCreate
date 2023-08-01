@@ -215,6 +215,23 @@ public class MyServiceImpl implements MyService {
         return myBadgeResList;
     }
 
+    @Transactional
+    @Override
+    public ResponseDto deleteProfileImg(String userId) {
+        Optional<Member> member = memberRepository.findByUserId(userId);
+        if(member.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 계정입니다.");
+        }
+
+        if(member.get().getProfileImg().isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "등록한 프로필 사진이 존재하지 않습니다.");
+        }
+
+        member.get().setProfileImg(null);
+        memberRepository.save(member.get());
+        return new ResponseDto(HttpStatus.OK, "Success");
+    }
+
     private List<LessonParticipant> getParticipant(List<LessonParticipant> list, boolean isCompleted){
         // 파라미터와 동일한 상태의 참여자 목록 반환
         for(int i=list.size()-1; i>=0; i--){

@@ -17,4 +17,5 @@ public interface MyService {
     List<MyReviewRes> getMyReview(String userId);
     ResponseDto registerLicense(String userId, MultipartFile multipartFile);
     List<MyBadgeRes> getLicenseList(String userId);
+    ResponseDto deleteProfileImg(String userId);
 }
