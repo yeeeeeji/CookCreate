@@ -7,6 +7,7 @@ import com.mmt.domain.entity.auth.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @NoArgsConstructor
+@DynamicUpdate
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -36,9 +38,11 @@ public class Member extends BaseTimeEntity {
         this.nickname = userSignUpReq.getNickname();
         this.phoneNumber = userSignUpReq.getPhoneNumber();
         this.userEmail = userSignUpReq.getUserEmail();
-        this.food = userSignUpReq.getFood()
-                .stream().map(String::valueOf)
-                .collect(Collectors.joining(","));
+        if(userSignUpReq.getFood() != null){
+            this.food = userSignUpReq.getFood()
+                    .stream().map(String::valueOf)
+                    .collect(Collectors.joining(","));
+        }
         this.role = userSignUpReq.getRole();
     }
 
@@ -47,9 +51,12 @@ public class Member extends BaseTimeEntity {
         this.nickname = userUpdateReq.getNickname();
         this.phoneNumber = userUpdateReq.getPhoneNumber();
         this.userEmail = userUpdateReq.getUserEmail();
-        this.food = userUpdateReq.getFood()
-                .stream().map(String::valueOf)
-                .collect(Collectors.joining(","));
+        if(userUpdateReq.getFood() != null){
+            this.food = userUpdateReq.getFood()
+                    .stream().map(String::valueOf)
+                    .collect(Collectors.joining(","));
+        }
         this.introduce = userUpdateReq.getIntroduce();
+        this.introUrl = userUpdateReq.getIntroUrl();
     }
 }
