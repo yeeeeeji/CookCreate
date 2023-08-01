@@ -10,6 +10,7 @@ export const joinSession = createAsyncThunk(
     const session = data.session
     const mySessionId = data.mySessionId
     const myUserName = data.myUserName
+    const role = data.role
 
     console.log("2")
     console.log(data)
@@ -40,23 +41,21 @@ export const joinSession = createAsyncThunk(
 
         /** switchCamera 관련 추가 부분 */
         // Obtain the current video device in use
-        var devices = await OV.getDevices();
-        var videoDevices = devices.filter(device => device.kind === 'videoinput');
-        var currentVideoDeviceId = publisher.stream.getMediaStream().getVideoTracks()[0].getSettings().deviceId;
-        var currentVideoDevice = videoDevices.find(device => device.deviceId === currentVideoDeviceId);
+        // var devices = await OV.getDevices();
+        // var videoDevices = devices.filter(device => device.kind === 'videoinput');
+        // var currentVideoDeviceId = publisher.stream.getMediaStream().getVideoTracks()[0].getSettings().deviceId;
+        // var currentVideoDevice = videoDevices.find(device => device.deviceId === currentVideoDeviceId);
 
         // Set the main video in the page to display our webcam and store our Publisher
         const response = {
-          currentVideoDevice: currentVideoDevice,
+          // currentVideoDevice: currentVideoDevice,
           publisher: publisher,
         }
         /** 여기까지 */
 
-        // setCurrentVideoDevice(currentVideoDevice);
         console.log("11")
         console.log(publisher)
         return response
-        // return publisher
       }
     } catch (error) {
       console.log('There was an error connecting to the session:', error.code, error.message);
@@ -135,67 +134,3 @@ function createToken(sessionId) {
     }
   })
 }
-
-// 존재하는 방 찾아가는 로직인듯. 학생이 선생이 만든 방 들어갈때 사용?
-
-// export const findRoom = createAsyncThunk('room/findRoom', async accessToken => {
-//   try {
-//     const response = await axios.post(
-//       `${process.env.REACT_APP_API_URL}/api/v1/room/quick`,
-//       {},
-//       {
-//         headers: {
-//           Authorization: `Bearer ${accessToken}`,
-//         },
-//       },
-//     )
-//     return response.data
-//   } catch (error) {
-//     console.log(error)
-//     // console.log('방이 존재하지 않습니다!, 방을 생성합니다.')
-//   }
-// })
-
-export const switchCamera = createAsyncThunk(
-  "video/switchCamera",
-  async (data) => {
-    const OV = data.OV
-    const currentVideoDevice = data.currentVideoDevice
-    const session = data.session
-    const mainStreamManager = data.mainStreamManager
-
-    try {
-      const devices = await OV.getDevices()
-      var videoDevices = devices.filter(device => device.kind === 'videoinput');
-
-      if (videoDevices && videoDevices.length > 1) {
-
-        var newVideoDevice = videoDevices.filter(device => device.deviceId !== currentVideoDevice.deviceId)
-
-        if (newVideoDevice.length > 0) {
-          // Creating a new publisher with specific videoSource
-          // In mobile devices the default and first camera is the front one
-          var newPublisher = OV.initPublisher(undefined, {
-            videoSource: newVideoDevice[0].deviceId,
-            publishAudio: true,
-            publishVideo: true,
-            mirror: true
-          });
-
-          //newPublisher.once("accessAllowed", () => {
-          await session.unpublish(mainStreamManager)
-
-          await session.publish(newPublisher)
-          const response = {
-            currentVideoDevice: newVideoDevice[0],
-            mainStreamManager: newPublisher,
-            publisher: newPublisher,
-          }
-          return response
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-)

@@ -7,7 +7,7 @@ const initialState = {
   token: undefined,
   publisher: undefined,
   mainStreamManager: undefined,
-  mySessionId: 'SessionOOOOO',
+  mySessionId: 'MMTA',
   myUserName: 'HiHi',
   subscribers: [],
   isVideoPublished: true,
@@ -24,7 +24,6 @@ export const video = createSlice({
       console.log("initOVSession", state.OV, state.session)
     },
     setToken: (state, { payload }) => {
-      // console.log(payload.token)
       state.token = payload.token
     },
     setPublisher: (state, { payload }) => {
@@ -80,7 +79,7 @@ export const video = createSlice({
   extraReducers: {
     [joinSession.fulfilled]: (state, { payload }) => {
       console.log("joinSession fulfilled", payload)
-      state.currentVideoDevice = payload.currentVideoDevice
+      // state.currentVideoDevice = payload.currentVideoDevice
       state.mainStreamManager = payload.publisher
       state.publisher = payload.publisher
       // console.log(state.publisher)

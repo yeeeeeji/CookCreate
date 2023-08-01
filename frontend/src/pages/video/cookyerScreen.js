@@ -16,24 +16,14 @@ function CookyerScreen() {
   const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
   const mySessionId = useSelector((state) => state.video.mySessionId)
-  // const myUserName = useSelector((state) => state.video.myUserName)  // 닉네임으로 바꾸기
   const myUserName = 'cookyer'
   const publisher = useSelector((state) => state.video.publisher)
-  // const mainStreamManager = useSelector((state) => state.video.mainStreamManager)  // 선생님으로 고정하는 방법 찾기
   const subscribers = useSelector((state) => state.video.subscribers)
 
   // const role = localStorage.getItem('role')
 
-  // /** 화면공유 도전 */
-  // const connectionId = useSelector((state) => state.screenShare.connectionId)
-  // const audioActive = useSelector((state) => state.screenShare.audioActive)
-  // const videoActive = useSelector((state) => state.screenShare.videoActive)
-  // const screenShareActive = useSelector((state) => state.screenShare.screenShareActive)
-  // const nickname = useSelector((state) => state.screenShare.nickname)
-  // const streamManager = useSelector((state) => state.screenShare.streamManager)
-  // const type = useSelector((state) => state.screenShare.type)
-  // const [ isShared, setIsShared ] = useState(false)
-  // /** 화면공유 도전 */
+  /** 화면공유 */
+  const streamManager = useSelector((state) => state.screenShare.streamManager)
 
   useEffect(() => {
     console.log(3, session)
@@ -78,74 +68,11 @@ function CookyerScreen() {
     }
   }, []);
 
-  const handleMainVideoStream = (stream) => {
-    if (mainStreamManager !== stream) {
-      dispatch(setMainStreamManager({publisher: stream}))
-    }
-  }
-
-  // /** 화면공유 도전 */
-  // const handleIsShared = () => {
-  //   setIsShared((prev) => !prev)
-  // }
-
-  // useEffect(() => {
-  //   if (isShared) {
-
-  //   } else {
-  //     session.unpublish(streamManager)
+  // const handleMainVideoStream = (stream) => {
+  //   if (mainStreamManager !== stream) {
+  //     dispatch(setMainStreamManager({publisher: stream}))
   //   }
-  // }, [isShared])
-
-
-  // const screenShare = () => {
-  //   console.log("이게 실행됐다고????")
-  //   const videoSource = navigator.userAgent.indexOf('Firefox') !== -1 ? 'window' : 'screen';
-  //   const publisher = OV.initPublisher(
-  //     undefined,
-  //     {
-  //       videoSource: videoSource,
-  //       publishAudio: true,
-  //       publishVideo: true,
-  //       mirror: false,
-  //     },
-  //     (error) => {
-  //       if (error && error.name === 'SCREEN_EXTENSION_NOT_INSTALLED') {
-  //         alert('screen extension not installed')
-  //           // this.setState({ showExtensionDialog: true });
-  //       } else if (error && error.name === 'SCREEN_SHARING_NOT_SUPPORTED') {
-  //           alert('Your browser does not support screen sharing');
-  //       } else if (error && error.name === 'SCREEN_EXTENSION_DISABLED') {
-  //           alert('You need to enable screen sharing extension');
-  //       } else if (error && error.name === 'SCREEN_CAPTURE_DENIED') {
-  //           alert('You need to choose a window or application to share');
-  //       }
-  //     },
-  //   )
-
-  //   publisher.once('accessAllowed', () => {
-  //     // session.unpublish(streamManager);
-  //     dispatch(setStreamManager({publisher}))
-  //     session.publish(streamManager).then(() => {
-  //       dispatch(setScreenShareActive(true));
-  //       sendSignalUserChanged({ isScreenShareActive: screenShareActive });
-  //     });
-  //   });
-  //   // publisher.on('streamPlaying', () => {
-  //   //     this.updateLayout();
-  //   //     publisher.videos[0].video.parentElement.classList.remove('custom-class');
-  //   // });
   // }
-
-  // const sendSignalUserChanged = (data) => {
-  //   const signalOptions = {
-  //     data: JSON.stringify(data),
-  //     type: 'userChanged',
-  //   }
-  //   session.signal(signalOptions)
-  // }
-
-  /** 화면공유 도전 */
 
   return (
     <div className='video-page'>
@@ -155,15 +82,14 @@ function CookyerScreen() {
         <div>
           <div className='cookyer-sharing'>
             <div className='cookyer-sharing-content'>
-              <span>화면공유</span>
-              {/* {streamManager === null ? (
+              {streamManager === null ? (
                 <span>화면공유</span>
               ) : (
-                // <UserVideoComponent
-                //   videoStyle='cookyer-sharing-content'
-                //   streamManager={streamManager}
-                // />
-              )} */}
+                <UserVideoComponent
+                  videoStyle='cookyer-sharing-content'
+                  streamManager={streamManager}
+                />
+              )}
             </div>
           </div>
           {/* <div className='cookyer-sharing' onClick={() => handleMainVideoStream(publisher)}>
@@ -175,7 +101,7 @@ function CookyerScreen() {
           <div className='cookyer-cookiees'>
             {/* {subscribers} */}
             {subscribers.map((sub, i) => (
-              <div key={sub.id} onClick={() => handleMainVideoStream(sub)}>
+              <div key={i}>
                 {/* <span>{sub.id}</span> */}
                 <UserVideoComponent
                   videoStyle='cookyer-cookiee'

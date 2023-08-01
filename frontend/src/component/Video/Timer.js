@@ -131,7 +131,7 @@ function Timer({ role }) {
       <button onClick={start}>Start</button>
       <button onClick={stop}>Stop</button>
       <button onClick={reset}>Reset</button>
-      {/* 학생들에게 선생님이 설정한 타이머 값을 보내야 함.. 어떻게,,? */}
+      {/* 학생들에게 선생님이 설정한 타이머 값을 보냄 */}
       {role === 'COOKYER' ? (
         <button onClick={() => sendTime(publisher)}>설정</button>
       ) : (

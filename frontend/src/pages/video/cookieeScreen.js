@@ -16,16 +16,29 @@ function CookieeScreen() {
   const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
   const mySessionId = useSelector((state) => state.video.mySessionId)
-  // const myUserName = useSelector((state) => state.video.myUserName)  // 닉네임으로 바꾸기
   const myUserName = 'cookiee'
   const publisher = useSelector((state) => state.video.publisher)
-  // const mainStreamManager = useSelector((state) => state.video.mainStreamManager)  // 선생님으로 고정하는 방법 찾기
   const subscribers = useSelector((state) => state.video.subscribers)
-  const cookyerStream = subscribers.find((sub) => (
-    JSON.parse(sub.stream.connection.data).clientData.role === 'cookyer'
-  ))
+  // 항상 쿠커가 먼저 들어와있기 때문에 이 로직도 괜찮을 것 같지만, subscribers가 있을때만 실행되는 것으로 변경
+  // const cookyerStream = subscribers.find((sub) => (
+  //   JSON.parse(sub.stream.connection.data).clientData.role === 'cookyer'
+  // ))
+
+  const streamManager = useSelector((state) => state.screenShare.streamManager)
 
   // const role = localStorage.getItem('role')
+
+  /** 선생님 화면 고정하기 위해 선생님 subscriber 찾기 */
+  const [ cookyerStream, setCookyerStream ] = useState(undefined)
+
+  useEffect(() => {
+    if (subscribers) {
+      const cookyer = subscribers.find((sub) => (
+        JSON.parse(sub.stream.connection.data).clientData.role === 'cookyer'
+      ))
+      setCookyerStream(cookyer)
+    }
+  }, [subscribers, cookyerStream])
 
   useEffect(() => {
     console.log(3, session)
@@ -50,6 +63,34 @@ function CookieeScreen() {
       session.on('streamCreated', handleStreamCreated);
       session.on('streamDestroyed', handleStreamDestroyed);
       session.on('exception', handleException);
+
+      /** 화면공유 받기 */
+      // 현재 시그널이 안받아지는 상태. 하지만 이전부터 문제이므로 일단은 신경X
+      // session.on('signal:sharedScreen', handleSharedScreen)
+      session.on('signal:sharedScreen', (e) => {
+        console.log("화면공유 데이터 받았다", e)
+        let remoteUsers = subscribers
+        remoteUsers.forEach((user) => {
+          if (user.getConnectionId() === e.from.connectionId) {
+            console.log("화면공유 데이터 받았다", e.from)
+            // const data = JSON.parse(e.data)
+            // console.log("화면공유 시그널", e.data)
+            // if (data.isAudioActive !== undefined) {
+            //   user.setAudioActive(data.isAudioActive);
+            // }
+            // if (data.isVideoActive !== undefined) {
+            //     user.setVideoActive(data.isVideoActive);
+            // }
+            // if (data.nickname !== undefined) {
+            //     user.setNickname(data.nickname);
+            // }
+            // if (data.isScreenShareActive !== undefined) {
+            //     user.setScreenShareActive(data.isScreenShareActive);
+            // }
+          }
+        })
+        dispatch(setSubscribers(subscribers))
+      })
 
       console.log(4)
       // const role = 'cookiee'
@@ -94,24 +135,53 @@ function CookieeScreen() {
                 streamManager={publisher}
               />
             </div> */}
+            <div className='cookiee-sharing'>
+              {streamManager !== null ? (
+                <UserVideoComponent
+                  videoStyle='cookiee-sharing-content'
+                  streamManager={publisher}
+                />
+              ) : (
+                <span>화면공유</span>
+              )}
+            </div>
             <LessonStepWidget/>
           </div>
           <div>
             {/* 쿠커 화면 */}
             <div className='cookiee-content'>
-              <UserVideoComponent
-                videoStyle='cookiee-content-video'
-                streamManager={cookyerStream}
-              />
+              {cookyerStream ? (
+                <UserVideoComponent
+                  videoStyle='cookiee-content-video'
+                  streamManager={cookyerStream}
+                />
+              ) : null}
             </div>
             <Timer role='COOKIEE'/>
             {/* 쿠키 본인 화면 */}
             <div className='cookiee-content'>
-              <UserVideoComponent
-                videoStyle='cookiee-content-video'
-                streamManager={publisher}
-              />
+              {publisher ? (
+                <UserVideoComponent
+                  videoStyle='cookiee-content-video'
+                  streamManager={publisher}
+                />
+              ) : null}
             </div>
+
+            <div className='cookyer-cookiees'>
+              {/* {subscribers} */}
+              {subscribers ? (
+                subscribers.map((sub, i) => (
+                  <div key={i}>
+                    <UserVideoComponent
+                      videoStyle='cookyer-cookiee'
+                      streamManager={sub}
+                    />
+                  </div>
+                ))
+              ) : null}
+            </div>
+
           </div>
         </div>
       </div>
