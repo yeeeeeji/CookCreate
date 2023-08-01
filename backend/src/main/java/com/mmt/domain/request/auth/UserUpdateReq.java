@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class UserUpdateReq {
@@ -12,7 +14,7 @@ public class UserUpdateReq {
     private String nickname;
     private String phoneNumber;
     private String userEmail;
-    private String food;
+    private List<Integer> food;
     private String introduce;
     private String profileImg;
     private String introUrl;

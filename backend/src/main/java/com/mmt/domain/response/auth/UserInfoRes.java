@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -15,7 +18,7 @@ public class UserInfoRes extends ResponseDto {
     String nickname;
     String phoneNumber;
     String userEmail;
-    String food;
+    List<Integer> food;
     Role role;
     String introduce;
     String profileImg;
@@ -27,7 +30,10 @@ public class UserInfoRes extends ResponseDto {
         this.nickname = member.getNickname();
         this.phoneNumber = member.getPhoneNumber();
         this.userEmail = member.getUserEmail();
-        this.food = member.getFood();
+        this.food = Arrays.asList(member.getFood().split(","))
+                .stream()
+                .map(s -> Integer.parseInt(s))
+                .collect(Collectors.toList());
         this.role = member.getRole();
         this.introduce = member.getIntroduce();
         this.profileImg = member.getProfileImg();

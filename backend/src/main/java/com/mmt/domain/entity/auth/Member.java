@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -35,7 +36,9 @@ public class Member extends BaseTimeEntity {
         this.nickname = userSignUpReq.getNickname();
         this.phoneNumber = userSignUpReq.getPhoneNumber();
         this.userEmail = userSignUpReq.getUserEmail();
-        this.food = userSignUpReq.getFood();
+        this.food = userSignUpReq.getFood()
+                .stream().map(String::valueOf)
+                .collect(Collectors.joining(","));
         this.role = userSignUpReq.getRole();
     }
 
@@ -44,7 +47,9 @@ public class Member extends BaseTimeEntity {
         this.nickname = userUpdateReq.getNickname();
         this.phoneNumber = userUpdateReq.getPhoneNumber();
         this.userEmail = userUpdateReq.getUserEmail();
-        this.food = userUpdateReq.getFood();
+        this.food = userUpdateReq.getFood()
+                .stream().map(String::valueOf)
+                .collect(Collectors.joining(","));
         this.introduce = userUpdateReq.getIntroduce();
     }
 }
