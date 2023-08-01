@@ -3,6 +3,7 @@ package com.mmt.controller;
 import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.auth.UserDetailsImpl;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.my.MyBadgeRes;
 import com.mmt.domain.response.my.MyLessonRes;
 import com.mmt.domain.response.my.MyRecipeRes;
 import com.mmt.domain.response.my.MyReviewRes;
@@ -144,5 +145,26 @@ public class MyController {
         ResponseDto responseDto = myService.registerLicense(userDetails.getUsername(), multipartFile);
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    }
+
+    @Operation(summary = "자격증 목록", description = "등록한 자격증 목록을 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Cookyer만 확인할 수 있습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "등록한 자격증이 존재하지 않습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
+    @GetMapping("/badge")
+    public ResponseEntity<List<MyBadgeRes>> getLicenseList(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (authentication.getPrincipal()));
+
+        List<MyBadgeRes> myBadgeResList = myService.getLicenseList(userDetails.getUsername());
+
+        return new ResponseEntity<>(myBadgeResList, myBadgeResList.get(0).getStatusCode());
     }
 }

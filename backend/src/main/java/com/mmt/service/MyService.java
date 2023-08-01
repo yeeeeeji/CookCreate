@@ -2,6 +2,7 @@ package com.mmt.service;
 
 
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.my.MyBadgeRes;
 import com.mmt.domain.response.my.MyLessonRes;
 import com.mmt.domain.response.my.MyRecipeRes;
 import com.mmt.domain.response.my.MyReviewRes;
@@ -15,4 +16,5 @@ public interface MyService {
     List<MyRecipeRes> getMyRecipe(String userId);
     List<MyReviewRes> getMyReview(String userId);
     ResponseDto registerLicense(String userId, MultipartFile multipartFile);
+    List<MyBadgeRes> getLicenseList(String userId);
 }

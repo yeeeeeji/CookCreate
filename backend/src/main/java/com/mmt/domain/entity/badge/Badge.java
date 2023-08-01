@@ -21,7 +21,7 @@ public class Badge extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int badgeId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Member member;
 

@@ -6,6 +6,7 @@ import com.mmt.domain.entity.badge.Badge;
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.review.Review;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.my.MyBadgeRes;
 import com.mmt.domain.response.my.MyLessonRes;
 import com.mmt.domain.response.my.MyRecipeRes;
 import com.mmt.domain.response.my.MyReviewRes;
@@ -162,6 +163,7 @@ public class MyServiceImpl implements MyService {
 
         // s3에 자격증 이미지 업로드 후 url을 db에 저장
         Badge badge = new Badge();
+        badge.setMember(member.get());
         if(multipartFile != null){
             try {
                 String capture = awsS3Uploader.uploadFile(multipartFile, "license");
@@ -173,6 +175,44 @@ public class MyServiceImpl implements MyService {
         badgeRepository.save(badge);
 
         return new ResponseDto(HttpStatus.CREATED, "Success");
+    }
+
+    @Override
+    public List<MyBadgeRes> getLicenseList(String userId) {
+        List<MyBadgeRes> myBadgeResList = new ArrayList<>();
+        Optional<Member> member = memberRepository.findByUserId(userId);
+        if(member.isEmpty()){
+            MyBadgeRes myBadgeRes = new MyBadgeRes();
+            myBadgeRes.setStatusCode(HttpStatus.NOT_FOUND);
+            myBadgeRes.setMessage("존재하지 않는 아이디입니다.");
+            myBadgeResList.add(myBadgeRes);
+            return myBadgeResList;
+        }
+        if(!member.get().getRole().equals(Role.COOKYER)){
+            MyBadgeRes myBadgeRes = new MyBadgeRes();
+            myBadgeRes.setStatusCode(HttpStatus.FORBIDDEN);
+            myBadgeRes.setMessage("Cookyer만 확인할 수 있습니다.");
+            myBadgeResList.add(myBadgeRes);
+            return myBadgeResList;
+        }
+
+        List<Badge> badgeList = badgeRepository.findAllByMember_UserId(userId);
+        if(badgeList.size() == 0){
+            MyBadgeRes myBadgeRes = new MyBadgeRes();
+            myBadgeRes.setStatusCode(HttpStatus.NOT_FOUND);
+            myBadgeRes.setMessage("등록한 자격증이 존재하지 않습니다.");
+            myBadgeResList.add(myBadgeRes);
+            return myBadgeResList;
+        }
+
+        for (Badge badge : badgeList){
+            MyBadgeRes myBadgeRes = new MyBadgeRes(badge);
+            myBadgeRes.setStatusCode(HttpStatus.OK);
+            myBadgeRes.setMessage("Success");
+            myBadgeResList.add(myBadgeRes);
+        }
+
+        return myBadgeResList;
     }
 
     private List<LessonParticipant> getParticipant(List<LessonParticipant> list, boolean isCompleted){
