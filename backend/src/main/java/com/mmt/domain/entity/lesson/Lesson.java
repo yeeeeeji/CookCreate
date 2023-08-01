@@ -67,7 +67,6 @@ public class Lesson extends BaseTimeEntity {
         this.lessonDate = lessonPostReq.getLessonDate();
         this.videoUrl = lessonPostReq.getVideoUrl();
         this.lessonStepList = lessonPostReq.getLessonStepList();
-        this.sessionId = lessonPostReq.getSessionId();
     }
 
     public void update(LessonPutReq lessonPutReq){
