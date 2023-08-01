@@ -16,9 +16,9 @@ import java.util.List;
 
 public interface LessonService {
 
-    ResponseDto reserve(MultipartFile multipartFile, LessonPostReq lessonPostReq);
+    ResponseDto reserve(LessonPostReq lessonPostReq);
     ResponseDto apply(int lessonId, String userId);
-    ResponseDto modifyLesson(MultipartFile multipartFile, LessonPutReq lessonPutReq);
+    ResponseDto modifyLesson(LessonPutReq lessonPutReq);
     ResponseDto deleteLesson(int lessonId);
     ResponseDto cancelLesson(int lessonId, String userId);
     ResponseDto createSession(int lessonId, SessionCreateReq sessionCreateReq);

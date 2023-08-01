@@ -52,8 +52,8 @@ public class LessonController {
             @ApiResponse(responseCode = "403", description = "Cookyer만 이용 가능합니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ResponseDto> reserve(@RequestPart(value = "thumbnailUrl") MultipartFile multipartFile, @RequestPart(value = "lessonPostReq") @Valid LessonPostReq lessonPostReq, BindingResult bindingResult, Authentication authentication) {
+    @PostMapping(value = "")
+    public ResponseEntity<ResponseDto> reserve(@ModelAttribute @Valid LessonPostReq lessonPostReq, BindingResult bindingResult, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication: " + (userDetails.getUsername()));
 
@@ -71,7 +71,7 @@ public class LessonController {
         }
 
         lessonPostReq.setCookyerId(loginId);
-        ResponseDto responseDto = lessonService.reserve(multipartFile, lessonPostReq);
+        ResponseDto responseDto = lessonService.reserve(lessonPostReq);
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
@@ -115,8 +115,8 @@ public class LessonController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @PutMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ResponseDto> modifyLesson(@RequestPart(value = "thumbnailUrl") MultipartFile multipartFile, @RequestPart(value = "lessonPutReq") @Valid LessonPutReq lessonPutReq, BindingResult bindingResult, Authentication authentication) {
+    @PutMapping(value = "")
+    public ResponseEntity<ResponseDto> modifyLesson(@RequestBody @Valid LessonPutReq lessonPutReq, BindingResult bindingResult, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication: " + (userDetails.getUsername()));
 
@@ -139,7 +139,7 @@ public class LessonController {
         }
 
         lessonPutReq.setCookyerId(loginId);
-        ResponseDto responseDto = lessonService.modifyLesson(multipartFile, lessonPutReq);
+        ResponseDto responseDto = lessonService.modifyLesson(lessonPutReq);
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }

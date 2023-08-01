@@ -60,7 +60,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Transactional
     @Override
-    public ResponseDto reserve(MultipartFile multipartFile, LessonPostReq lessonPostReq) {
+    public ResponseDto reserve(LessonPostReq lessonPostReq) {
         Lesson lesson = new Lesson(lessonPostReq);
 
         // lesson에 카테고리 아이디 저장
@@ -73,9 +73,9 @@ public class LessonServiceImpl implements LessonService {
         cookyer.ifPresent(member -> lesson.setCookyerName(member.getNickname()));
 
         // s3에 썸네일 이미지 업로드 후 url을 db에 저장
-        if(multipartFile != null){
+        if(lessonPostReq.getThumbnailUrl() != null){
             try {
-                String thumbnailUrl = awsS3Uploader.uploadFile(multipartFile, "lesson");
+                String thumbnailUrl = awsS3Uploader.uploadFile(lessonPostReq.getThumbnailUrl(), "lesson");
                 lesson.setThumbnailUrl(thumbnailUrl);
             } catch (IOException e) {
                 return new ResponseDto(HttpStatus.CONFLICT, e.getMessage());
@@ -134,7 +134,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Transactional
     @Override
-    public ResponseDto modifyLesson(MultipartFile multipartFile, LessonPutReq lessonPutReq) {
+    public ResponseDto modifyLesson(LessonPutReq lessonPutReq) {
         Optional<Lesson> find = lessonRepository.findByLessonId(lessonPutReq.getLessonId());
 
         if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
@@ -152,9 +152,9 @@ public class LessonServiceImpl implements LessonService {
         lesson.setLessonCategory(lessonCategory);
 
         // s3에 썸네일 이미지 업로드 후 url을 db에 저장
-        if(multipartFile != null){
+        if(lessonPutReq.getThumbnailUrl() != null){
             try {
-                String thumbnailUrl = awsS3Uploader.uploadFile(multipartFile, "lesson");
+                String thumbnailUrl = awsS3Uploader.uploadFile(lessonPutReq.getThumbnailUrl(), "lesson");
                 lesson.setThumbnailUrl(thumbnailUrl);
             } catch (IOException e) {
                 return new ResponseDto(HttpStatus.CONFLICT, e.getMessage());
