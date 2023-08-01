@@ -15,13 +15,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @Tag(name = "멤버 API", description = "멤버 관련 API입니다.")
 @Slf4j
@@ -31,8 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 public class MemberController {
 
     private final MemberService memberService;
-
-    private final PasswordEncoder passwordEncoder;
 
     @Operation(summary = "회원 정보 조회", description = "<b>로그인한 회원 정보를 조회</b>한다.")
     @ApiResponses(value = {
@@ -72,12 +73,14 @@ public class MemberController {
             @ApiResponse(responseCode = "403", description = "권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @PutMapping()
-    public ResponseEntity<ResponseDto> updateUserInfo(@RequestBody UserUpdateReq userUpdateReq, Authentication authentication) {
+    @PutMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<ResponseDto> updateUserInfo(@RequestPart(value = "profileImg", required = false) MultipartFile multipartFile, @RequestPart(value = "userUpdateReq") UserUpdateReq userUpdateReq, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String userId = userDetails.getUsername();
 
-        ResponseDto responseDto = memberService.updateUserInfo(userId, userUpdateReq);
+        userUpdateReq.setUserId(userId);
+        ResponseDto responseDto = memberService.updateUserInfo(multipartFile, userUpdateReq);
+
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
 
     }

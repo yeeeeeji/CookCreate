@@ -13,16 +13,19 @@ import com.mmt.domain.response.auth.UserInfoRes;
 import com.mmt.domain.response.auth.UserLoginRes;
 import com.mmt.repository.MemberRepository;
 import com.mmt.repository.RefreshTokenRepository;
+import com.mmt.service.AwsS3Uploader;
 import com.mmt.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.Optional;
 
 @Slf4j
@@ -32,8 +35,11 @@ public class MemberServiceImpl implements MemberService {
 
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+
+    private final AwsS3Uploader awsS3Uploader;
 
     @Transactional
     @Override
@@ -156,22 +162,36 @@ public class MemberServiceImpl implements MemberService {
         return new UserInfoRes(member);
     }
 
+    @Transactional
     @Override
-    public ResponseDto updateUserInfo(String userId, UserUpdateReq userUpdateReq) {
+    public ResponseDto updateUserInfo(MultipartFile multipartFile, UserUpdateReq userUpdateReq) {
+        Optional<Member> member = memberRepository.findByUserId(userUpdateReq.getUserId());
 
-        if(!memberRepository.findByUserId(userId).isPresent()) {
+        if(member.isEmpty()) {
             return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 계정입니다.");
         }
 
-        Member member = memberRepository.findByUserId(userId).get();
         // 비밀번호 확인
 //        if(!userUpdateReq.getUserPw().equals(userUpdateReq.getUserPwCk())) {
 //            return new ResponseDto(HttpStatus.BAD_REQUEST, "비밀번호 확인을 다시 입력해주세요.");
 //        }
 
 //        userUpdateReq.setEncodePw(passwordEncoder.encode(userUpdateReq.getUserPw()));
-        member.update(userUpdateReq);
-        this.memberRepository.save(member);
+
+        member.get().update(userUpdateReq);
+
+        // s3에 썸네일 이미지 업로드 후 url을 db에 저장
+        if(multipartFile != null){
+            try {
+                String profileUrl = awsS3Uploader.uploadFile(multipartFile, "profile");
+                member.get().setProfileImg(profileUrl);
+                log.info(profileUrl);
+            } catch (IOException e) {
+                return new ResponseDto(HttpStatus.CONFLICT, e.getMessage());
+            }
+        }
+
+        memberRepository.save(member.get());
 
         return new ResponseDto(HttpStatus.OK, "Success");
     }
