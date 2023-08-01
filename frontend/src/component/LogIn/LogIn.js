@@ -16,8 +16,10 @@
       e.preventDefault()
       axios.post(`api/v1/auth/login`, {userId, userPw})
       .then((res)=>{
+        console.log(res)
         dispatch(login({
-          token : res.headers.access_token, 
+          access_token : res.headers.access_token, 
+          refresh_token : res.headers.refresh_token,
           userId,
           nickname: res.data.nickname,
           role : res.data.role}));

@@ -154,9 +154,9 @@ function Signup() {
   // 음식 선택 로직. props로 소통
   const handleSelectedFood = (selectedFood) => {
     if (food.includes(selectedFood)) {
-      setFood(food.filter(item => item !== selectedFood)); // 음식 제거
+      setFood(food.filter(item => item !== selectedFood))
     } else {
-      setFood([...food, selectedFood]); // 음식 추가
+      setFood([...food, selectedFood])
     }
   };
 
@@ -169,7 +169,7 @@ function Signup() {
     .post(`api/v1/auth/signup`, 
     {userId, userPw, userPwCk, nickname, phoneNumber, userEmail, role, food:foodString})
     .then(() => {
-      console.log(role) 
+      
       navigate("/")
       axios.post(`api/v1/auth/login`, {
         userId,
@@ -178,7 +178,8 @@ function Signup() {
       .then((res)=>{
         localStorage.removeItem('userType')
         dispatch(login({
-          token : res.headers.access_token, 
+          access_token : res.headers.access_token,
+          refresh_token : res.headers.refresh_token,
           userId,
           nickname : res.data.nickname,
           role : res.data.role}));
