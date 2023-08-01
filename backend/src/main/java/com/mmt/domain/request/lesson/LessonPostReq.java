@@ -31,6 +31,6 @@ public class LessonPostReq {
     private List<String> materials;
     private String lessonDate;
     private String videoUrl;
-    //private MultipartFile thumbnailUrl; -> s3 처리를 위해 따로 form-data로 받음
+    private MultipartFile thumbnailUrl; // s3 처리를 위해 따로 form-data로 받음
     private List<LessonStep> lessonStepList;
 }

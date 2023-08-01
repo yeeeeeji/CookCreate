@@ -3,6 +3,7 @@ package com.mmt.domain.request.auth;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class UserUpdateReq {
     private String userEmail;
     private List<Integer> food;
     private String introduce;
-    //private String profileImg;
+    private MultipartFile profileImg;
     private String introUrl;
 
 //    public void setEncodePw(String encodePw){

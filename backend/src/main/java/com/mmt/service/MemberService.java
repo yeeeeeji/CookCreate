@@ -21,7 +21,7 @@ public interface MemberService {
 
     public ResponseDto logout(HttpServletRequest request, HttpServletResponse response);
     public UserInfoRes getUserInfo(String userId);
-    public ResponseDto updateUserInfo(MultipartFile multipartFile, UserUpdateReq userUpdateReq);
+    public ResponseDto updateUserInfo(UserUpdateReq userUpdateReq);
     public ResponseDto deleteUser(String userId);
 
     public ResponseDto checkUserId(String userId);

@@ -164,7 +164,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public ResponseDto updateUserInfo(MultipartFile multipartFile, UserUpdateReq userUpdateReq) {
+    public ResponseDto updateUserInfo(UserUpdateReq userUpdateReq) {
         Optional<Member> member = memberRepository.findByUserId(userUpdateReq.getUserId());
 
         if(member.isEmpty()) {
@@ -181,9 +181,9 @@ public class MemberServiceImpl implements MemberService {
         member.get().update(userUpdateReq);
 
         // s3에 썸네일 이미지 업로드 후 url을 db에 저장
-        if(multipartFile != null){
+        if(userUpdateReq.getProfileImg() != null){
             try {
-                String profileUrl = awsS3Uploader.uploadFile(multipartFile, "profile");
+                String profileUrl = awsS3Uploader.uploadFile(userUpdateReq.getProfileImg(), "profile");
                 member.get().setProfileImg(profileUrl);
                 log.info(profileUrl);
             } catch (IOException e) {

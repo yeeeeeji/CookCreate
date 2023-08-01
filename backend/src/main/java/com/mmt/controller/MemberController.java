@@ -73,13 +73,13 @@ public class MemberController {
             @ApiResponse(responseCode = "403", description = "권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @PutMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<ResponseDto> updateUserInfo(@RequestPart(value = "profileImg", required = false) MultipartFile multipartFile, @RequestPart(value = "userUpdateReq") UserUpdateReq userUpdateReq, Authentication authentication) {
+    @PutMapping(value = "")
+    public ResponseEntity<ResponseDto> updateUserInfo(@ModelAttribute UserUpdateReq userUpdateReq, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String userId = userDetails.getUsername();
 
         userUpdateReq.setUserId(userId);
-        ResponseDto responseDto = memberService.updateUserInfo(multipartFile, userUpdateReq);
+        ResponseDto responseDto = memberService.updateUserInfo(userUpdateReq);
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
 
