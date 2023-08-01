@@ -6,6 +6,7 @@ import com.mmt.domain.request.auth.UserLoginPostReq;
 import com.mmt.domain.request.auth.UserSignUpReq;
 import com.mmt.domain.request.auth.UserUpdateReq;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.auth.UserInfoRes;
 import com.mmt.domain.response.auth.UserLoginRes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +19,7 @@ public interface MemberService {
     public UserLoginRes login(UserLoginPostReq userLoginPostReq, HttpServletResponse response);
 
     public ResponseDto logout(HttpServletRequest request, HttpServletResponse response);
-    public Member getUserInfo(String userId);
+    public UserInfoRes getUserInfo(String userId);
     public ResponseDto updateUserInfo(String userId, UserUpdateReq userUpdateReq);
     public ResponseDto deleteUser(String userId);
 

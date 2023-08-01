@@ -11,7 +11,6 @@ import RegisterLesson from './pages/registerLesson'
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login, logout } from './store/auth/auth'
-// import { loginAction, logoutAction } from '../../actions/actions_auth';
 
 function App() {
   const dispatch = useDispatch();
