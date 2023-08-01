@@ -29,10 +29,12 @@ public class UserInfoRes extends ResponseDto {
         this.nickname = member.getNickname();
         this.phoneNumber = member.getPhoneNumber();
         this.userEmail = member.getUserEmail();
-        this.food = Arrays.asList(member.getFood().split(","))
-                .stream()
-                .map(s -> Integer.parseInt(s))
-                .collect(Collectors.toList());
+        if(member.getFood() != null){
+            this.food = Arrays.asList(member.getFood().split(","))
+                    .stream()
+                    .map(s -> Integer.parseInt(s))
+                    .collect(Collectors.toList());
+        }
         this.role = member.getRole();
         this.introduce = member.getIntroduce();
         this.profileImg = member.getProfileImg();

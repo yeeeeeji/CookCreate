@@ -2,6 +2,8 @@ package com.mmt.service.impl;
 
 import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.auth.Role;
+import com.mmt.domain.entity.badge.Badge;
+import com.mmt.domain.entity.badge.Certificated;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
@@ -37,6 +39,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +51,7 @@ public class LessonServiceImpl implements LessonService {
     private final LessonStepRepository lessonStepRepository;
     private final MemberRepository memberRepository;
     private final PaymentRepository paymentRepository;
+    private final BadgeRepository badgeRepository;
 
     private final ReviewService reviewService;
     private final AwsS3Uploader awsS3Uploader;
@@ -329,6 +333,33 @@ public class LessonServiceImpl implements LessonService {
             result.setReviewAvg(reviewAvgRes.getAvg());
             result.setReviewCnt(reviewAvgRes.getCount());
             result.setReviewSum(reviewAvgRes.getSum());
+
+            // TODO: cookyer 정보 추가 반환
+            Optional<Member> cookyer = memberRepository.findByUserId(result.getCookyerId());
+            result.setPhoneNumber(cookyer.get().getPhoneNumber());
+            result.setUserEmail(cookyer.get().getUserEmail());
+            if(cookyer.get().getFood() != null){
+                result.setFood(Arrays.stream(cookyer.get().getFood().split(","))
+                        .map(Integer::parseInt)
+                        .collect(Collectors.toList()));
+            }
+            result.setIntroduce(cookyer.get().getIntroduce());
+            result.setProfileImg(cookyer.get().getProfileImg());
+
+            // TODO: 승인된 뱃지가 있는지 확인
+            List<Badge> badgeList = badgeRepository.findAllByMember_UserId(result.getCookyerId());
+            if(badgeList.size() == 0){
+                result.setApproved(false);
+            }else{
+                boolean isApproved = false;
+                for (Badge badge : badgeList){
+                    if(badge.getCertificated().equals(Certificated.ACCESS)){
+                        isApproved = true;
+                        break;
+                    }
+                }
+                result.setApproved(isApproved);
+            }
 
             return result;
         }else{
