@@ -1,14 +1,16 @@
 package com.mmt.service.impl;
 
 import com.mmt.common.auth.JwtUtil;
-import com.mmt.domain.Role;
+import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.TokenDto;
-import com.mmt.domain.entity.Auth.Member;
-import com.mmt.domain.entity.Auth.RefreshToken;
-import com.mmt.domain.request.UserLoginPostReq;
-import com.mmt.domain.request.UserSignUpReq;
-import com.mmt.domain.request.UserUpdateReq;
+import com.mmt.domain.entity.auth.Member;
+import com.mmt.domain.entity.auth.RefreshToken;
+import com.mmt.domain.request.auth.UserLoginPostReq;
+import com.mmt.domain.request.auth.UserSignUpReq;
+import com.mmt.domain.request.auth.UserUpdateReq;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.auth.UserInfoRes;
+import com.mmt.domain.response.auth.UserLoginRes;
 import com.mmt.repository.MemberRepository;
 import com.mmt.repository.RefreshTokenRepository;
 import com.mmt.service.MemberService;
@@ -63,14 +65,22 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public ResponseDto login(UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
+    public UserLoginRes login(UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
+        UserLoginRes userLoginRes = new UserLoginRes();
+
         // 아이디 검사
         Optional<Member> member = memberRepository.findByUserId(userLoginPostReq.getUserId());
-        if(member.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 계정입니다.");
+        if(member.isEmpty()) {
+            userLoginRes.setStatusCode(HttpStatus.NOT_FOUND);
+            userLoginRes.setMessage("존재하지 않는 계정입니다.");
+            return userLoginRes;
+        }
 
         // 비밀번호 검사
         if(!passwordEncoder.matches(userLoginPostReq.getUserPw(), member.get().getUserPw())) {
-            return new ResponseDto(HttpStatus.UNAUTHORIZED, "비밀번호를 확인해주세요.");
+            userLoginRes.setStatusCode(HttpStatus.UNAUTHORIZED);
+            userLoginRes.setMessage("비밀번호를 확인해주세요.");
+            return userLoginRes;
         }
 
         // 아이디 정보로 Token생성
@@ -91,7 +101,14 @@ public class MemberServiceImpl implements MemberService {
         // response 헤더에 Access Token / Refresh Token 넣음
         setHeader(response, tokenDto);
 
-        return new ResponseDto(HttpStatus.OK, "Success");
+        userLoginRes.setRole(member.get().getRole());
+        userLoginRes.setNickname(member.get().getNickname());
+
+        // ok 세팅
+        userLoginRes.setStatusCode(HttpStatus.OK);
+        userLoginRes.setMessage("Success");
+
+        return userLoginRes;
     }
 
     @Transactional
@@ -134,10 +151,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member getUserInfo(String userId) {
-        Member member = memberRepository.findByUserId(userId).orElseThrow(
-                () -> new RuntimeException("Not found Account"));
-        return member;
+    public UserInfoRes getUserInfo(String userId) {
+        Member member = memberRepository.findByUserId(userId).get();
+        return new UserInfoRes(member);
     }
 
     @Override
@@ -149,11 +165,11 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = memberRepository.findByUserId(userId).get();
         // 비밀번호 확인
-        if(!userUpdateReq.getUserPw().equals(userUpdateReq.getUserPwCk())) {
-            return new ResponseDto(HttpStatus.BAD_REQUEST, "비밀번호 확인을 다시 입력해주세요.");
-        }
+//        if(!userUpdateReq.getUserPw().equals(userUpdateReq.getUserPwCk())) {
+//            return new ResponseDto(HttpStatus.BAD_REQUEST, "비밀번호 확인을 다시 입력해주세요.");
+//        }
 
-        userUpdateReq.setEncodePw(passwordEncoder.encode(userUpdateReq.getUserPw()));
+//        userUpdateReq.setEncodePw(passwordEncoder.encode(userUpdateReq.getUserPw()));
         member.update(userUpdateReq);
         this.memberRepository.save(member);
 
@@ -168,7 +184,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Role getRole(String userId){
         Optional<Member> member = memberRepository.findByUserId(userId);
-        System.out.println(member.get().getRole());
         return member.get().getRole();
     }
 

@@ -1,11 +1,13 @@
+
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     isLogin: false,
-    token: null,
+    access_token: "",
+    refresh_token : "",
     id : "",
     nickname: "",
-    role : null,
+    role : "",
     emoji : ""
 }
 
@@ -15,7 +17,8 @@ export const auth = createSlice({
     reducers: {
         login: (state, { payload }) => {
             state.isLogin = true
-            state.token = payload.token
+            state.access_token = payload.access_token
+            state.refresh_token = payload.refresh_token
             state.nickname = payload.nickname
             state.role = payload.role
             state.id = payload.userId
@@ -26,7 +29,8 @@ export const auth = createSlice({
             } else {
                 state.emoji = ""
             }
-            localStorage.setItem('access_token', payload.token)
+            localStorage.setItem('access_token', payload.access_token)
+            localStorage.setItem('refresh_token', payload.refresh_token)
             localStorage.setItem('nickname', payload.nickname)
             localStorage.setItem('role', payload.role)
             localStorage.setItem('id', payload.userId)
@@ -34,12 +38,14 @@ export const auth = createSlice({
         },
         logout: (state) => {
             state.isLogin = false
-            state.token = null
+            state.access_token = ""
+            state.refresh_token = ""
             state.nickname = ""
-            state.role = null
+            state.role = ""
             state.emoji = ""
 
             localStorage.removeItem('access_token')
+            localStorage.removeItem('refresh_token')
             localStorage.removeItem('nickname')
             localStorage.removeItem('role')
             localStorage.removeItem('id')

@@ -1,6 +1,6 @@
-package com.mmt.domain.request;
+package com.mmt.domain.request.auth;
 
-import com.mmt.domain.Role;
+import com.mmt.domain.entity.auth.Role;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 

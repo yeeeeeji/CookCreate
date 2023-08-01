@@ -1,9 +1,9 @@
 package com.mmt.controller;
 
-import com.mmt.domain.entity.Auth.UserDetailsImpl;
-import com.mmt.domain.request.UserUpdateReq;
+import com.mmt.domain.entity.auth.UserDetailsImpl;
+import com.mmt.domain.request.auth.UserUpdateReq;
 import com.mmt.domain.response.ResponseDto;
-import com.mmt.domain.response.UserInfoRes;
+import com.mmt.domain.response.auth.UserInfoRes;
 import com.mmt.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -43,17 +43,24 @@ public class MemberController {
             @ApiResponse(responseCode = "403", description = "권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = UserInfoRes.class)))
     })
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserInfoRes> getUserInfo(@Parameter(description = "회원 id") @PathVariable String userId, Authentication authentication) {
-        log.debug("userId : " + userId);
+    @GetMapping()
+    public ResponseEntity<? extends ResponseDto> getUserInfo(Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        log.debug("authentication: " + (authentication.getPrincipal()));
-        if(userDetails.getUsername().equals(userId)) {
-            UserInfoRes userInfoRes = new UserInfoRes(memberService.getUserInfo(userId));
+        String userId = userDetails.getUsername();
 
-            return ResponseEntity.status(200).body(userInfoRes);
+        log.debug("userId: " + userId);
+
+        UserInfoRes userInfoRes = memberService.getUserInfo(userId);
+
+        if(userInfoRes == null) {
+            ResponseDto responseDto = new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다");
+            return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+        } else {
+            userInfoRes.setStatusCode(HttpStatus.OK);
+            userInfoRes.setMessage("success");
         }
-        return ResponseEntity.status(403).body(null);
+
+        return new ResponseEntity<>(userInfoRes, userInfoRes.getStatusCode());
     }
 
     @Operation(summary = "회원 정보 수정", description = "<b>로그인한 회원 정보를 수정</b>한다.")
@@ -65,18 +72,14 @@ public class MemberController {
             @ApiResponse(responseCode = "403", description = "권한이 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @PutMapping("/{userId}")
-    public ResponseEntity<ResponseDto> updateUserInfo(
-            @Parameter(description = "회원 id") @PathVariable String userId,
-            @RequestBody UserUpdateReq userUpdateReq, Authentication authentication) {
+    @PutMapping()
+    public ResponseEntity<ResponseDto> updateUserInfo(@RequestBody UserUpdateReq userUpdateReq, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        ResponseDto responseDto = new ResponseDto(HttpStatus.FORBIDDEN, "권한이 없습니다.");
-        if(userDetails.getUsername().equals(userId)) {
-            responseDto = memberService.updateUserInfo(userId, userUpdateReq);
-            return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
-        }
+        String userId = userDetails.getUsername();
 
+        ResponseDto responseDto = memberService.updateUserInfo(userId, userUpdateReq);
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+
     }
 
     @Operation(summary = "로그아웃", description = "<b>로그인 상태인 사용자가 로그아웃</b>한다.")

@@ -46,7 +46,7 @@ function NavBar() {
     setJoin(true)
     console.log(0)
   }
-  
+
   return (
     <div style={{ display: 'flex', alignItems: 'center' }} className='navbar'>
       <Link to='/'>
@@ -58,7 +58,14 @@ function NavBar() {
       <Link to='/totallessons'>
         수업 전체
       </Link>
-
+      
+      <SearchBar/>
+      <Link to = '/login'>
+        로그인
+      </Link> |
+      <Link to ='/signupbefore'>
+        회원가입
+      </Link>
       <SearchBar />
       {isLogin ? (
         <div>
@@ -80,7 +87,6 @@ function NavBar() {
       )} | 
       <button onClick={() => handleJoin("COOKYER")}>쿠커화면</button>
       <button onClick={() => handleJoin("COOKIEE")}>쿠키화면</button>
-      {/* <Link to='/videoLesson'>화상수업</Link> */}
     </div>
   );
 }

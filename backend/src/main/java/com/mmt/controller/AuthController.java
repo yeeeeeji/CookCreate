@@ -1,8 +1,9 @@
 package com.mmt.controller;
 
-import com.mmt.domain.request.UserLoginPostReq;
-import com.mmt.domain.request.UserSignUpReq;
+import com.mmt.domain.request.auth.UserLoginPostReq;
+import com.mmt.domain.request.auth.UserSignUpReq;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.auth.UserLoginRes;
 import com.mmt.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -66,9 +67,9 @@ public class AuthController {
                     content = @Content(schema = @Schema(implementation = UserSignUpReq.class)))
     })
     @PostMapping("/login")
-    public ResponseEntity<ResponseDto> login(@RequestBody UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
-        ResponseDto responseDto = memberService.login(userLoginPostReq, response);
-        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    public ResponseEntity<UserLoginRes> login(@RequestBody UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
+        UserLoginRes userLoginRes = memberService.login(userLoginPostReq, response);
+        return new ResponseEntity<>(userLoginRes, userLoginRes.getStatusCode());
     }
 
     @Operation(summary = "아이디 중복 체크", description = "존재하는 아이디인지 확인한다.")

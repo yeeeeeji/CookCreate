@@ -1,6 +1,6 @@
 package com.mmt.repository;
 
-import com.mmt.domain.entity.Auth.RefreshToken;
+import com.mmt.domain.entity.auth.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

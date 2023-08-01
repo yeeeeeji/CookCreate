@@ -1,56 +1,37 @@
-import React, {useState, useEffect} from 'react';
-import { useDispatch } from 'react-redux';
-import { setCategory } from "../../store/lesson/lesson";
+mport React, { useState, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCategory, setCategoryValid } from "../../store/lesson/lesson";
 
 function FoodCategory() {
   const dispatch = useDispatch();
-  const [selectedIndex, setSelectedIndex] = useState(null)
-  const [isExpanded, setIsExpanded] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const categories = ['한식', '양식', '중식', '일식', '아시안', '건강식', '디저트'];
-
-  const handleCategoryClick = () => {
-    setIsExpanded((prevExpanded) => !prevExpanded);
+  const categories = useMemo(() => ['한식', '양식', '중식', '일식', '아시안', '건강식', '디저트'], []);
+  const categoryValid = useSelector((state) => state.lesson.categoryValid)
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+    dispatch(setCategoryValid(e.target.value !== ''))
   };
 
-  const chooseCategory = (category, index) => {
-    setSelectedCategory(category);
-    setSelectedIndex(index)
-    setIsExpanded(false);
-  };
   useEffect(() => {
+    const selectedIndex = categories.indexOf(selectedCategory);
     dispatch(setCategory(selectedIndex));
-  }, [dispatch, selectedIndex])
+  }, [dispatch, selectedCategory, categories]);
+
   return (
-    <div style={{ maxWidth: '100px'}}>
-      <h3 onClick={handleCategoryClick}>
-        {selectedCategory ? selectedCategory : '카테고리'}
-      </h3>
-      {isExpanded && (
-        <div
-          style={{
-            border: '2px solid black',
-            padding: '5px',
-          }}
-        >
-          {categories.map((category, index) => (
-            <div
-              key={index}
-              onClick={() => chooseCategory(category, index)}
-              style={{
-                border: '2px solid black',
-                cursor: 'pointer',
-                marginBottom: '5px',
-                backgroundColor: selectedCategory === category ? 'lightgray' : 'white',
-                padding: '3px 5px',
-              }}
-            >
-              {category}
-            </div>
-          ))}
-        </div>
-      )}
+    <div style={{ maxWidth: '120px'}}>
+      <div style={{display : 'flex', alignItems : 'center'}}>
+        <h3>카테고리</h3>
+        <div style={{marginLeft : '5px'}}>{categoryValid ? '✅' : '🔲'}</div>
+      </div>
+      <select value={selectedCategory} onChange={handleCategoryChange}>
+        <option value="">-</option>
+        {categories.map((category, index) => (
+          <option key={index} value={category}>
+            {category}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
