@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import UserVideoComponent from '../../component/Video/UserVideoComponent';
 import { useSelector, useDispatch } from "react-redux";
 import { videoMute, audioMute, initOVSession, leaveSession, setMySessionId, setMyUserName, setMainStreamManager, deleteSubscriber, enteredSubscriber } from '../../store/video/video'
-import { joinSession, switchCamera } from '../../store/video/video-thunk';
+import { joinSession } from '../../store/video/video-thunk';
 
 
 function Room() {
@@ -181,7 +181,7 @@ function Room() {
                     onClick={handleLeaveSession}
                     value="Leave session"
                 />
-                <input
+                {/* <input
                     className="btn btn-large btn-success"
                     type="button"
                     id="buttonSwitchCamera"
@@ -189,7 +189,7 @@ function Room() {
                       OV, currentVideoDevice, session, mainStreamManager
                     }))}
                     value="Switch Camera"
-                />
+                /> */}
                 <input
                     className="btn btn-large btn-success"
                     type="button"

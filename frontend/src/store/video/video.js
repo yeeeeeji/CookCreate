@@ -7,7 +7,7 @@ const initialState = {
   token: undefined,
   publisher: undefined,
   mainStreamManager: undefined,
-  mySessionId: 'MMTA',
+  mySessionId: 'MMTA',  // 세션 생성했을 때 받아오는 세션 아이디
   myUserName: 'HiHi',
   subscribers: [],
   isVideoPublished: true,

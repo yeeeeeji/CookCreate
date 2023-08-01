@@ -2,6 +2,10 @@
   --empty-color: #D9D9D9
 }
 
+iframe {
+  display: none;
+}
+
 p {
   margin: 0px;
 }

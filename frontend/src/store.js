@@ -13,4 +13,8 @@ export const store = configureStore({
     video: videoReducer,
     screenShare: screenShareReducer
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 })

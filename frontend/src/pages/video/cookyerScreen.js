@@ -16,7 +16,6 @@ function CookyerScreen() {
   const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
   const mySessionId = useSelector((state) => state.video.mySessionId)
-  const myUserName = 'cookyer'
   const publisher = useSelector((state) => state.video.publisher)
   const subscribers = useSelector((state) => state.video.subscribers)
 
@@ -24,6 +23,9 @@ function CookyerScreen() {
 
   /** 화면공유 */
   const streamManager = useSelector((state) => state.screenShare.streamManager)
+
+  const myUserName = localStorage.getItem('nickname');
+  const role = localStorage.getItem('role')
 
   useEffect(() => {
     console.log(3, session)
@@ -50,7 +52,6 @@ function CookyerScreen() {
       session.on('exception', handleException);
 
       console.log(4)
-      const role = 'cookyer'
       dispatch(joinSession({OV, session, mySessionId, myUserName, role}))
 
       console.log(5)
@@ -116,7 +117,7 @@ function CookyerScreen() {
               streamManager={publisher}
             />
           </div>
-          <Timer role='COOKYER'/>
+          <Timer role={role}/>
           <LessonStepWidget/>
         </div>
       </div>

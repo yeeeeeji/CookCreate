@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import VideoSideBar from '../../component/Video/VideoSideBar';
 import VideoHeader from '../../component/Video/VideoHeader';
 import UserVideoComponent from '../../component/Video/UserVideoComponent';
@@ -7,7 +7,7 @@ import LessonStepWidget from '../../component/Video/LessonStepWidget';
 
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteSubscriber, enteredSubscriber, setMainStreamManager } from '../../store/video/video';
+import { deleteSubscriber, enteredSubscriber, setSubscribers } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
 
 function CookieeScreen() {
@@ -16,7 +16,6 @@ function CookieeScreen() {
   const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
   const mySessionId = useSelector((state) => state.video.mySessionId)
-  const myUserName = 'cookiee'
   const publisher = useSelector((state) => state.video.publisher)
   const subscribers = useSelector((state) => state.video.subscribers)
   // 항상 쿠커가 먼저 들어와있기 때문에 이 로직도 괜찮을 것 같지만, subscribers가 있을때만 실행되는 것으로 변경
@@ -26,7 +25,8 @@ function CookieeScreen() {
 
   const streamManager = useSelector((state) => state.screenShare.streamManager)
 
-  // const role = localStorage.getItem('role')
+  const myUserName = localStorage.getItem('nickname');
+  const role = localStorage.getItem('role')
 
   /** 선생님 화면 고정하기 위해 선생님 subscriber 찾기 */
   const [ cookyerStream, setCookyerStream ] = useState(undefined)
@@ -34,7 +34,7 @@ function CookieeScreen() {
   useEffect(() => {
     if (subscribers) {
       const cookyer = subscribers.find((sub) => (
-        JSON.parse(sub.stream.connection.data).clientData.role === 'cookyer'
+        JSON.parse(sub.stream.connection.data).clientData.role === 'COOKYER'
       ))
       setCookyerStream(cookyer)
     }
@@ -94,7 +94,7 @@ function CookieeScreen() {
 
       console.log(4)
       // const role = 'cookiee'
-      dispatch(joinSession({OV, session, mySessionId, myUserName, role: 'cookiee'}))
+      dispatch(joinSession({OV, session, mySessionId, myUserName, role}))
 
       console.log(5)
 
@@ -139,10 +139,13 @@ function CookieeScreen() {
               {streamManager !== null ? (
                 <UserVideoComponent
                   videoStyle='cookiee-sharing-content'
-                  streamManager={publisher}
+                  streamManager={streamManager}
                 />
               ) : (
-                <span>화면공유</span>
+                <UserVideoComponent
+                  videoStyle='cookiee-sharing-content'
+                  streamManager={publisher}
+                />
               )}
             </div>
             <LessonStepWidget/>
@@ -157,7 +160,7 @@ function CookieeScreen() {
                 />
               ) : null}
             </div>
-            <Timer role='COOKIEE'/>
+            <Timer role={role}/>
             {/* 쿠키 본인 화면 */}
             <div className='cookiee-content'>
               {publisher ? (

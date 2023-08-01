@@ -5,34 +5,66 @@ import { useSelector, useDispatch } from "react-redux";
 import '../../style/navbar.css'
 import { logout } from '../../store/auth/auth'; // Import the logout action
 import { OpenVidu } from 'openvidu-browser';
-import { initOVSession } from '../../store/video/video';
+import { initOVSession, setMySessionId } from '../../store/video/video';
+import axios from 'axios';
 
 function NavBar() {
   const dispatch = useDispatch()
   const isLogin = useSelector((state) => state.auth.isLogin)
+  const access_token = useSelector((state) => state.auth.access_token)
+  const refresh_token = useSelector((state) => state.auth.refresh_token)
   const nickname = localStorage.getItem('nickname')
-  // const role = localStorage.getItem('role')
+  const role = localStorage.getItem('role')
   const emoji = localStorage.getItem('emoji')
 
+  const [ myLessons, setMyLessons ] = useState(undefined)
+
   const Logout = () => {
-    dispatch(logout())
-    window.location.replace("/")
+    console.log(access_token, refresh_token)
+    axios.post(`api/v1/member/logout`, {
+      headers : {
+        access_token : access_token,
+        refresh_token : refresh_token
+      }
+    })
+    .then(() => {
+      console.log('로그아웃 api 테스트')
+      dispatch(logout())
+      window.location.replace("/")
+    })
+    .catch((err) => {
+      console.log('에러 어디서 나니')
+      console.log(access_token, refresh_token)
+      console.log(err)
+    })
   }
 
   const navigate = useNavigate()
 
   const session = useSelector((state) => state.video.session)
-  const [join, setJoin] = useState(false)
-  const [role, setRole] = useState(undefined)
 
-  useEffect(() => {
-    if (join) {
-      const OV = new OpenVidu()
-      const session = OV.initSession()
-      console.log(1, join)
-      dispatch(initOVSession({OV, session}))
-    }
-  }, [join])
+  // 수업 목록에서 생성하기 버튼을 클릭하면 세션이 생성되고 등등
+  const createRoom = ( lessonId ) => {
+    const OV = new OpenVidu()
+    const session = OV.initSession()
+    console.log(1)
+    dispatch(initOVSession({OV, session}))  // 세션 만들어서 스토어에 저장 후
+
+    axios.put(`api/v1/session/${lessonId}`,
+    { sessionId: session.sessionId },
+    {
+      headers : {
+        accessToken : access_token
+      },
+    })
+    .then((res) => {
+      console.log('db에 세션 아이디 저장 완료')
+    })
+    .catch((err) => {
+      console.log(err)
+      console.log('db에 세션 아이디 저장 실패')
+    })
+  }
 
   useEffect(() => {
     if (session && role) {
@@ -41,10 +73,45 @@ function NavBar() {
     // 쉽게 접근할 수 없게 url 세션아이디로 바꾸기??
   }, [session])
 
-  const handleJoin = (role) => {
-    setRole(role)
-    setJoin(true)
-    console.log(0)
+  useEffect(() => {  // 레슨 정보 받아오는 부분
+    if (role === 'COOKIEE') {
+      axios.get(`api/v1/my/applied`,
+      {
+        headers : {
+          accessToken : access_token
+        }
+      })
+      .then((res) => {
+        console.log(res)
+        console.log('신청한 수업 목록 받아와짐')
+        setMyLessons(res.data) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
+        // setSessionId(res.data.sessionId)
+      })
+      .catch((err) => {
+        console.log(err)
+        console.log('신청한 수업 목록 안받아와짐')
+      })
+    }
+  }, [])
+
+  // 반복문 이용해서 모달에 각각 정보 띄우고, 온클릭 이벤트를 통해 전달받는 방식
+  const joinLesson = ( lessonId ) => {
+    axios.get(`api/v1/session/${lessonId}`,
+      {
+        headers : {
+          accessToken : access_token
+        }
+      })
+      .then((res) => {
+        console.log(res)
+        console.log('세션 잘 받아와집니다')
+        dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
+        // setSessionId(res.data.sessionId)
+      })
+      .catch((err) => {
+        console.log(err)
+        console.log('세션 로드 에러가 있습니다.')
+      })
   }
 
   return (
@@ -85,8 +152,8 @@ function NavBar() {
           </Link>
         </React.Fragment>
       )} | 
-      <button onClick={() => handleJoin("COOKYER")}>쿠커화면</button>
-      <button onClick={() => handleJoin("COOKIEE")}>쿠키화면</button>
+      {role === 'COOKYER' ? <button onClick={() => createRoom(1)}>쿠커화면</button> : null}
+      {role === 'COOKIEE' ? <button onClick={() => joinLesson(1)}>쿠키화면</button> : null}
     </div>
   );
 }

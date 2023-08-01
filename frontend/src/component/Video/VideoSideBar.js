@@ -16,6 +16,8 @@ function VideoSideBar() {
   const streamManager = useSelector((state) => state.screenShare.streamManager)
   const [ isShared, setIsShared ] = useState(false)
 
+  const role = localStorage.getItem('role')
+
   const handleLeaveSession = () => {
     if (session) {
       session.disconnect()
