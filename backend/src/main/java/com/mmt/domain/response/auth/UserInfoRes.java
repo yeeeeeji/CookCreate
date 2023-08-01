@@ -22,7 +22,6 @@ public class UserInfoRes extends ResponseDto {
     Role role;
     String introduce;
     String profileImg;
-    String introUrl;
     LocalDateTime createdDate;
 
     public UserInfoRes(Member member) {
@@ -37,7 +36,6 @@ public class UserInfoRes extends ResponseDto {
         this.role = member.getRole();
         this.introduce = member.getIntroduce();
         this.profileImg = member.getProfileImg();
-        this.introUrl = member.getIntroUrl();
         this.createdDate = member.getCreatedDate();
     }
 }

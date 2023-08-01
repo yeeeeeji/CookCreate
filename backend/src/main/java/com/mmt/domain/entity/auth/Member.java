@@ -30,7 +30,6 @@ public class Member extends BaseTimeEntity {
     private Role role;
     private String introduce;
     private String profileImg;
-    private String introUrl;
 
     public Member(UserSignUpReq userSignUpReq){
         this.userId = userSignUpReq.getUserId();
@@ -57,6 +56,5 @@ public class Member extends BaseTimeEntity {
                     .collect(Collectors.joining(","));
         }
         this.introduce = userUpdateReq.getIntroduce();
-        this.introUrl = userUpdateReq.getIntroUrl();
     }
 }
