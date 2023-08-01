@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { joinSession } from './video-thunk'
+import { joinSession, publishCookiee } from './video-thunk'
 
 const initialState = {
   OV: null,
@@ -12,6 +12,7 @@ const initialState = {
   subscribers: [],
   isVideoPublished: true,
   isAudioPublished: true,
+  cookieeConnection: undefined,  // 쿠키의 커넥션. 쿠커는 저장을 안하므로 계속 undefined
 }
 
 export const video = createSlice({
@@ -41,6 +42,9 @@ export const video = createSlice({
     },
     setSubscribers: (state, {payload}) => {
       state.subscribers = payload.subscribers
+    },
+    setCookieeConnection: (state, {payload}) => {
+      state.connection = payload.cookieeConnection
     },
     videoMute: (state) => {
       state.publisher.publishVideo(!state.isVideoPublished)
@@ -86,13 +90,22 @@ export const video = createSlice({
     },
     [joinSession.rejected]: (state, { payload }) => {
       console.log("joinSession rejected")
+    },
+    [publishCookiee.fulfilled]: (state, { payload }) => {
+      console.log("publishCookiee fulfilled", payload)
+      state.OV = payload.OV
+      state.session = payload.session
+      state.publisher = payload.publisher
+    },
+    [publishCookiee.rejected]: (state, { payload }) => {
+      console.log("publishCookiee rejected")
     }
   }
 })
 
 export const {
     initOVSession, setToken, setPublisher, setMainStreamManager,
-    setMySessionId, setMyUserName, setSubscribers,
+    setMySessionId, setMyUserName, setSubscribers, setCookieeConnection,
     videoMute, audioMute, leaveSession,
     enteredSubscriber, deleteSubscriber,
 } = video.actions

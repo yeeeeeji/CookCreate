@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
+import { OpenVidu } from "openvidu-browser";
 
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
@@ -22,7 +23,7 @@ export const joinSession = createAsyncThunk(
       if (myUserName && session) {
         console.log("8")
         console.log(token, myUserName)
-        await session.connect(token, { clientData: myUserName });
+        await session.connect(token, { clientData: myUserName, role });
         console.log("9")
         const publisher = await OV.initPublisherAsync(undefined, {
           audioSource: undefined, // The source of audio. If undefined default microphone
@@ -134,3 +135,36 @@ function createToken(sessionId) {
     }
   })
 }
+
+export const publishCookiee = createAsyncThunk(
+  "video/publishCookiee",
+  async (data) => {
+    const cookieeConnection = data.cookieeConnection
+    const myUserName = data.myUserName
+
+    const cookieeOV = new OpenVidu()
+    const cookieeSession = cookieeOV.initSession()
+
+    await cookieeSession.connect(cookieeConnection.token, { clientData: myUserName })
+
+    const cookieePublisher = await cookieeOV.initPublisherAsync(undefined, {
+      audioSource: undefined, // The source of audio. If undefined default microphone
+      videoSource: undefined, // The source of video. If undefined default webcam
+      publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+      publishVideo: true, // Whether you want to start publishing with your video enabled or not
+      resolution: '640x480', // The resolution of your video
+      frameRate: 30, // The frame rate of your video
+      insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
+      mirror: false, // Whether to mirror your local video or not
+    })
+
+    console.log("쿠키 퍼블리셔 만들어졌나?", cookieePublisher)
+    await cookieeSession.publish(cookieePublisher)
+
+    const response = {
+      OV: cookieeOV,
+      session: cookieeSession,
+      publisher: cookieePublisher
+    }
+    return response
+  })

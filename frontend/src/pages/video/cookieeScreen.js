@@ -8,7 +8,7 @@ import LessonStepWidget from '../../component/Video/LessonStepWidget';
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber, setSubscribers } from '../../store/video/video';
-import { joinSession } from '../../store/video/video-thunk';
+import { joinSession, publishCookiee } from '../../store/video/video-thunk';
 
 function CookieeScreen() {
   const dispatch = useDispatch()
@@ -18,6 +18,7 @@ function CookieeScreen() {
   const mySessionId = useSelector((state) => state.video.mySessionId)
   const publisher = useSelector((state) => state.video.publisher)
   const subscribers = useSelector((state) => state.video.subscribers)
+  const cookieeConnection = useSelector((state) => state.video.cookieeConnection)
   // 항상 쿠커가 먼저 들어와있기 때문에 이 로직도 괜찮을 것 같지만, subscribers가 있을때만 실행되는 것으로 변경
   // const cookyerStream = subscribers.find((sub) => (
   //   JSON.parse(sub.stream.connection.data).clientData.role === 'cookyer'
@@ -94,7 +95,9 @@ function CookieeScreen() {
 
       console.log(4)
       // const role = 'cookiee'
-      dispatch(joinSession({OV, session, mySessionId, myUserName, role}))
+
+      /** 페이지 입장 후 세션에 연결 및 발행하기 */
+      dispatch(publishCookiee({cookieeConnection, myUserName}))
 
       console.log(5)
 
