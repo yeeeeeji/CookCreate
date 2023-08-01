@@ -114,7 +114,7 @@ public class LessonServiceImpl implements LessonService {
         lessonParticipantRepository.save(lessonParticipant);
 
         // 만약 방금 신청한 사람이 마지막 사람이라면 lesson의 is_over = true로 세팅
-        List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findByLesson_LessonId(lessonId);
+        List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(lessonId);
         int participating = lessonParticipantList.size() - 1; // 참여 중인 쿠키 수(쿠커 제외)
         if(participating == lesson.get().getMaximum()){
             lesson.get().setIsOver(true);

@@ -1,21 +1,32 @@
 package com.mmt.service.impl;
 
+import com.mmt.domain.entity.auth.Member;
+import com.mmt.domain.entity.auth.Role;
+import com.mmt.domain.entity.badge.Badge;
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.review.Review;
+import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.my.MyLessonRes;
 import com.mmt.domain.response.my.MyRecipeRes;
 import com.mmt.domain.response.my.MyReviewRes;
+import com.mmt.repository.BadgeRepository;
+import com.mmt.repository.MemberRepository;
 import com.mmt.repository.ReviewRepository;
 import com.mmt.repository.lesson.LessonParticipantRepository;
 import com.mmt.repository.lesson.LessonRepository;
+import com.mmt.service.AwsS3Uploader;
 import com.mmt.service.MyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -24,6 +35,10 @@ public class MyServiceImpl implements MyService {
 
     private final LessonParticipantRepository lessonParticipantRepository;
     private final ReviewRepository reviewRepository;
+    private final MemberRepository memberRepository;
+    private final BadgeRepository badgeRepository;
+
+    private final AwsS3Uploader awsS3Uploader;
 
     @Override
     public List<MyLessonRes> getMyLesson(String userId, boolean isCompleted) {
@@ -132,6 +147,32 @@ public class MyServiceImpl implements MyService {
         }
 
         return result;
+    }
+
+    @Transactional
+    @Override
+    public ResponseDto registerLicense(String userId, MultipartFile multipartFile) {
+        Optional<Member> member = memberRepository.findByUserId(userId);
+        if(member.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 아이디입니다.");
+        }
+        if(!member.get().getRole().equals(Role.COOKYER)){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "Cookyer만 이용할 수 있습니다.");
+        }
+
+        // s3에 자격증 이미지 업로드 후 url을 db에 저장
+        Badge badge = new Badge();
+        if(multipartFile != null){
+            try {
+                String capture = awsS3Uploader.uploadFile(multipartFile, "license");
+                badge.setCapture(capture);
+            } catch (IOException e) {
+                return new ResponseDto(HttpStatus.CONFLICT, e.getMessage());
+            }
+        }
+        badgeRepository.save(badge);
+
+        return new ResponseDto(HttpStatus.CREATED, "Success");
     }
 
     private List<LessonParticipant> getParticipant(List<LessonParticipant> list, boolean isCompleted){

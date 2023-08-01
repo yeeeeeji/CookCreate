@@ -19,9 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,5 +125,24 @@ public class MyController {
         List<MyReviewRes> myReviewResList = myService.getMyReview(loginId);
 
         return new ResponseEntity<>(myReviewResList, myReviewResList.get(0).getStatusCode());
+    }
+
+    @Operation(summary = "자격증 등록", description = "자격증을 등록한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Success",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "Cookyer만 이용할 수 있습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
+    @PostMapping("/badge")
+    public ResponseEntity<ResponseDto> registerLicense(@RequestPart(value = "capture") MultipartFile multipartFile, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (authentication.getPrincipal()));
+
+        ResponseDto responseDto = myService.registerLicense(userDetails.getUsername(), multipartFile);
+
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 }
