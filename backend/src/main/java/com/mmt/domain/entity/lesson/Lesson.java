@@ -1,6 +1,7 @@
 package com.mmt.domain.entity.lesson;
 
 import com.mmt.domain.entity.BaseTimeEntity;
+import com.mmt.domain.entity.chat.Chat;
 import com.mmt.domain.entity.lesson.Difficulty;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
@@ -51,6 +52,11 @@ public class Lesson extends BaseTimeEntity {
     private String sessionId;
     @Column(columnDefinition = "boolean default false")
     private Boolean isOver;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean isChatRoomOver;
+
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
+    private List<Chat> chatList = new ArrayList<>();
 
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
     private List<LessonStep> lessonStepList = new ArrayList<>();

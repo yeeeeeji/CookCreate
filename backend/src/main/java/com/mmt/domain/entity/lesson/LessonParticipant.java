@@ -24,4 +24,5 @@ public class LessonParticipant extends BaseTimeEntity {
 
     private String userId;
     private boolean isCompleted;
+    private boolean isLeaveChat;
 }

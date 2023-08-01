@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface LessonParticipantRepository extends JpaRepository<LessonParticipant, Integer> {
     List<LessonParticipant> findByLesson_LessonId(int lessonId);
+    List<LessonParticipant> findAllByUserIdAndIsLeaveChat(String userId, boolean isLeave);
     Optional<LessonParticipant> findByLesson_LessonIdAndUserId(int lessonId, String userId);
 }
