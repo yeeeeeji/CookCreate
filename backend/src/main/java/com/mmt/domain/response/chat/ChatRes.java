@@ -2,10 +2,12 @@ package com.mmt.domain.response.chat;
 
 import com.mmt.domain.entity.chat.Chat;
 import com.mmt.domain.entity.chat.Type;
+import com.mmt.domain.response.ResponseDto;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 
 @Data
-public class ChatRes {
+public class ChatRes extends ResponseDto {
     private String userId;
     private String nickname;
     private int lessonId;
@@ -17,5 +19,10 @@ public class ChatRes {
         this.content = chat.getContent();
         this.type = chat.getType();
         this.createTime = chat.getCreatedDate().toString();
+    }
+
+    public ChatRes(HttpStatus httpStatus, String message) {
+        this.setStatusCode(httpStatus);
+        this.setMessage(message);
     }
 }

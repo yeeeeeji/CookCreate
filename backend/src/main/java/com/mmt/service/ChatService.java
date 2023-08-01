@@ -1,6 +1,7 @@
 package com.mmt.service;
 
 import com.mmt.domain.request.chat.ChatSaveReq;
+import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.chat.ChatRes;
 import com.mmt.domain.response.chat.ChatRoomRes;
 
@@ -8,8 +9,10 @@ import java.util.List;
 
 public interface ChatService {
     void saveMessage(ChatSaveReq message);
-    void closeChatRoom(int lessonId);
-    List<ChatRes> getChatMessageList(int lessenId);
+    ResponseDto closeChatRoom(int lessonId);
+    ResponseDto leaveChatRoom(String userId, int lessonId);
+    List<ChatRes> getChatMessageList(String userId, int lessenId);
     List<ChatRoomRes> getChatRoomList(String userId);
+
 }
 
