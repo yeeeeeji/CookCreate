@@ -11,11 +11,13 @@ import com.mmt.domain.entity.lesson.LessonStep;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
+import com.mmt.domain.request.lesson.LessonStepPutReq;
 import com.mmt.domain.request.session.SessionCreateReq;
 import com.mmt.domain.response.lesson.LessonDetailRes;
 import com.mmt.domain.response.lesson.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.lesson.LessonSearchRes;
+import com.mmt.domain.response.lesson.LessonStepRes;
 import com.mmt.domain.response.review.ReviewAvgRes;
 import com.mmt.repository.*;
 import com.mmt.repository.lesson.LessonCategoryRepository;
@@ -334,7 +336,7 @@ public class LessonServiceImpl implements LessonService {
             result.setReviewCnt(reviewAvgRes.getCount());
             result.setReviewSum(reviewAvgRes.getSum());
 
-            // TODO: cookyer 정보 추가 반환
+            // cookyer 정보 추가 반환
             Optional<Member> cookyer = memberRepository.findByUserId(result.getCookyerId());
             result.setPhoneNumber(cookyer.get().getPhoneNumber());
             result.setUserEmail(cookyer.get().getUserEmail());
@@ -346,7 +348,7 @@ public class LessonServiceImpl implements LessonService {
             result.setIntroduce(cookyer.get().getIntroduce());
             result.setProfileImg(cookyer.get().getProfileImg());
 
-            // TODO: 승인된 뱃지가 있는지 확인
+            // 승인된 뱃지가 있는지 확인
             List<Badge> badgeList = badgeRepository.findAllByMember_UserId(result.getCookyerId());
             if(badgeList.size() == 0){
                 result.setApproved(false);
@@ -382,6 +384,42 @@ public class LessonServiceImpl implements LessonService {
         }
 
         return lessonLatestRes;
+    }
+
+    @Override
+    public List<LessonStepRes> getLessonStep(int lessonId) {
+        List<LessonStep> lessonStepList = lessonStepRepository.findByLesson_LessonId(lessonId);
+        List<LessonStepRes> result = new ArrayList<>();
+        for(LessonStep lessonStep : lessonStepList){
+            LessonStepRes lessonStepRes = new LessonStepRes(lessonStep);
+            result.add(lessonStepRes);
+        }
+        return result;
+    }
+
+    @Override
+    public ResponseDto modifyLessonStep(String userId, LessonStepPutReq lessonStepPutReq) {
+        Optional<Lesson> find = lessonRepository.findByLessonId(lessonStepPutReq.getLessonId());
+
+        if(find.isEmpty()) {
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        }
+        if(!find.get().getCookyerId().equals(userId)){
+            return new ResponseDto(HttpStatus.UNAUTHORIZED, "해당 과외의 Cookyer만 이용 가능합니다");
+        }
+
+        // 저장된 단계들 삭제 -> 순서, 개수, 내용 모두 바뀔 수 있음
+        lessonStepRepository.deleteAllByLesson_LessonId(lessonStepPutReq.getLessonId());
+
+        for(LessonStep ls : lessonStepPutReq.getLessonStepList()){
+            LessonStep lessonStep = new LessonStep();
+            lessonStep.setStepOrder(ls.getStepOrder());
+            lessonStep.setStepContent(ls.getStepContent());
+            lessonStep.setLesson(find.get());
+            lessonStepRepository.save(lessonStep);
+        }
+
+        return new ResponseDto(HttpStatus.OK, "Success");
     }
 
     @Override
