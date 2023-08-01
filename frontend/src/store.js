@@ -4,6 +4,8 @@ import apiReducer from './store/apiUrl/apiUrl'
 import lessonReducer from './store/lesson/lesson'
 import videoReducer from './store/video/video'
 import screenShareReducer from './store/video/screenShare'
+import cookyerVideoReducer from './store/video/cookyerVideo'
+import cookieeVideoReducer from './store/video/cookieeVideo'
 
 export const store = configureStore({
   reducer: {
@@ -11,10 +13,12 @@ export const store = configureStore({
     api: apiReducer,
     lesson: lessonReducer,
     video: videoReducer,
-    screenShare: screenShareReducer
+    screenShare: screenShareReducer,
+    cookyerVideo: cookyerVideoReducer,
+    cookieeVideo: cookieeVideoReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-    }),
+  getDefaultMiddleware({
+    serializableCheck: false,
+  }),
 })

@@ -27,6 +27,9 @@ function CookyerScreen() {
   const myUserName = localStorage.getItem('nickname');
   const role = localStorage.getItem('role')
 
+  /** 체크 도전 */
+  const checkCookieeList = useSelector((state) => state.cookyerVideo.checkCookieeList)
+
   useEffect(() => {
     console.log(3, session)
     if (session) {
@@ -108,6 +111,9 @@ function CookyerScreen() {
                   videoStyle='cookyer-cookiee'
                   streamManager={sub}
                 />
+                {checkCookieeList && checkCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
+                  <h1>손 든 사람</h1>
+                ) : null}
               </div>
             ))}
           </div>

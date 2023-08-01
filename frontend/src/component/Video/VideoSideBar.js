@@ -18,6 +18,9 @@ function VideoSideBar() {
 
   const role = localStorage.getItem('role')
 
+  /** 체크 도전 */
+  const check = useSelector((state) => state.cookieeVideo.check)
+
   const handleLeaveSession = () => {
     if (session) {
       session.disconnect()
@@ -125,6 +128,13 @@ function VideoSideBar() {
     session.signal(signalOptions);
   }
 
+  /** 체크 */
+  // 쿠키가 체크를 누르면 쿠커에게 시그널을 보내고, 쿠커가 리셋하면 쿠키에게 시그널을 보내야 함함
+  // 쿠키가 체크를 누름
+  const pressCheck = () => {
+    dispatch(setCheck())
+  }
+
   return (
     <div className='video-sidebar'>
       <button
@@ -153,10 +163,17 @@ function VideoSideBar() {
 
       { role === 'COOKIEE' ? (
         <button
+          onClick={() => pressCheck(publisher)}
+        >
+          체크
+        </button>
+      ) : null}
+      { role === 'COOKIEE' ? (
+        <button
           // onClick={sendRaiseSignal}
           // onClick={isRaised ? handleStopRaiseHand : handleRaiseHand}
         >
-          체크
+          손들기
         </button>
       ) : null}
       
