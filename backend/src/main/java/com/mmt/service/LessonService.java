@@ -18,6 +18,7 @@ public interface LessonService {
     ResponseDto apply(int lessonId, String userId);
     ResponseDto modifyLesson(MultipartFile multipartFile, LessonPutReq lessonPutReq);
     ResponseDto deleteLesson(int lessonId);
+    ResponseDto cancelLesson(int lessonId, String userId);
     ResponseDto createSession(int lessonId, SessionCreateReq sessionCreateReq);
     ResponseDto shutdownSession(int lessonId);
     List<LessonSearchRes> getLessonList(LessonSearchReq lessonSearchReq);

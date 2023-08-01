@@ -1,6 +1,7 @@
 package com.mmt.service.impl;
 
 import com.mmt.domain.entity.auth.Member;
+import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -169,12 +171,43 @@ public class LessonServiceImpl implements LessonService {
     public ResponseDto deleteLesson(int lessonId) {
         try {
             lessonRepository.deleteByLessonId(lessonId);
-            // TODO: 마감된 과외였다면 is_over = false로
         }catch (EmptyResultDataAccessException e){
             return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
         }
 
         return new ResponseDto(HttpStatus.OK, "Success");
+    }
+
+    @Transactional
+    @Override
+    public ResponseDto cancelLesson(int lessonId, String userId) {
+        Optional<Lesson> lesson = lessonRepository.findByLessonId(lessonId);
+        if(lesson.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        }
+
+        Optional<Member> member = memberRepository.findByUserId(userId);
+        if(member.isEmpty()) {
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 아이디입니다.");
+        }
+        if(!member.get().getRole().equals(Role.COOKIEE)){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "신청한 Cookiee만 이용 가능합니다.");
+        }
+
+        Optional<LessonParticipant> lessonParticipant = lessonParticipantRepository.findByLesson_LessonIdAndUserId(lessonId, userId);
+        if(lessonParticipant.isEmpty()) {
+            return new ResponseDto(HttpStatus.FORBIDDEN, "신청한 Cookiee만 이용 가능합니다.");
+        }
+
+        lessonParticipantRepository.delete(lessonParticipant.get());
+
+        // 마감된 과외였다면 is_over = false로
+        if(lesson.get().getIsOver()){
+            lesson.get().setIsOver(false);
+            lessonRepository.save(lesson.get());
+        }
+
+        return null;
     }
 
     @Override
