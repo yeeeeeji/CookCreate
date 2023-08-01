@@ -116,7 +116,7 @@ public class LessonController {
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @PutMapping(value = "")
-    public ResponseEntity<ResponseDto> modifyLesson(@RequestBody @Valid LessonPutReq lessonPutReq, BindingResult bindingResult, Authentication authentication) {
+    public ResponseEntity<ResponseDto> modifyLesson(@ModelAttribute @Valid LessonPutReq lessonPutReq, BindingResult bindingResult, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication: " + (userDetails.getUsername()));
 
