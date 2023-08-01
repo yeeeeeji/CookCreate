@@ -146,7 +146,7 @@ public class LessonController {
 
     @Operation(summary = "과외 삭제하기", description = "예약한 과외를 삭제한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "success",
+            @ApiResponse(responseCode = "200", description = "success",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
@@ -171,6 +171,28 @@ public class LessonController {
         }
 
         ResponseDto responseDto = lessonService.deleteLesson(lessonId);
+
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    }
+
+    @Operation(summary = "과외 신청 취소하기", description = "신청한 과외를 취소한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "신청한 Cookiee만 이용 가능합니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
+    @DeleteMapping("/cancel/{lessonId}")
+    public ResponseEntity<ResponseDto> cancelLesson(@PathVariable(value = "lessonId") int lessonId, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (userDetails.getUsername()));
+
+        String loginId = userDetails.getUsername(); // 현재 로그인한 아이디
+        ResponseDto responseDto = lessonService.cancelLesson(lessonId, loginId);
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }

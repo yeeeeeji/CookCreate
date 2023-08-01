@@ -1,6 +1,7 @@
 package com.mmt.service.impl;
 
 import com.mmt.domain.entity.auth.Member;
+import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -99,7 +101,9 @@ public class LessonServiceImpl implements LessonService {
         Optional<Lesson> lesson = lessonRepository.findByLessonId(lessonId);
         if(lesson.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
 
-        // TODO: 추가하기 전 결제 완료 확인
+        if(lesson.get().getIsOver()) return new ResponseDto(HttpStatus.BAD_REQUEST, "이미 마감된 과외입니다.");
+
+        // 추가하기 전 결제 완료 확인
         if(!paymentRepository.findByLesson_LessonIdAndMember_UserId(lessonId, userId).isPresent()) {
             return new ResponseDto(HttpStatus.FORBIDDEN, "결제 한 사용자만 신청할 수 있습니다.");
         }
@@ -108,6 +112,14 @@ public class LessonServiceImpl implements LessonService {
         lessonParticipant.setUserId(userId);
         lessonParticipant.setCompleted(false);
         lessonParticipantRepository.save(lessonParticipant);
+
+        // 만약 방금 신청한 사람이 마지막 사람이라면 lesson의 is_over = true로 세팅
+        List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findByLesson_LessonId(lessonId);
+        int participating = lessonParticipantList.size() - 1; // 참여 중인 쿠키 수(쿠커 제외)
+        if(participating == lesson.get().getMaximum()){
+            lesson.get().setIsOver(true);
+            lessonRepository.save(lesson.get());
+        }
 
         // TODO: 채팅방 입장
 
@@ -164,6 +176,38 @@ public class LessonServiceImpl implements LessonService {
         }
 
         return new ResponseDto(HttpStatus.OK, "Success");
+    }
+
+    @Transactional
+    @Override
+    public ResponseDto cancelLesson(int lessonId, String userId) {
+        Optional<Lesson> lesson = lessonRepository.findByLessonId(lessonId);
+        if(lesson.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        }
+
+        Optional<Member> member = memberRepository.findByUserId(userId);
+        if(member.isEmpty()) {
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 아이디입니다.");
+        }
+        if(!member.get().getRole().equals(Role.COOKIEE)){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "신청한 Cookiee만 이용 가능합니다.");
+        }
+
+        Optional<LessonParticipant> lessonParticipant = lessonParticipantRepository.findByLesson_LessonIdAndUserId(lessonId, userId);
+        if(lessonParticipant.isEmpty()) {
+            return new ResponseDto(HttpStatus.FORBIDDEN, "신청한 Cookiee만 이용 가능합니다.");
+        }
+
+        lessonParticipantRepository.delete(lessonParticipant.get());
+
+        // 마감된 과외였다면 is_over = false로
+        if(lesson.get().getIsOver()){
+            lesson.get().setIsOver(false);
+            lessonRepository.save(lesson.get());
+        }
+
+        return null;
     }
 
     @Override

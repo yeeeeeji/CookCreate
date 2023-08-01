@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @DynamicUpdate // 변경된 컬럼만 찾아서 변경
+@DynamicInsert
 public class Lesson extends BaseTimeEntity {
 
     @Id
@@ -47,6 +49,8 @@ public class Lesson extends BaseTimeEntity {
     private String videoUrl;
     private String thumbnailUrl;
     private String sessionId;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean isOver;
 
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
     private List<LessonStep> lessonStepList = new ArrayList<>();
