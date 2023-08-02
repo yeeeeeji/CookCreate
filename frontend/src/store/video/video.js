@@ -49,14 +49,14 @@ export const video = createSlice({
       if (mySession) {
         mySession.disconnect()
       }
-      state.OV = null,
-      state.session = undefined,
-      state.OvToken = undefined,
-      state.publisher = undefined,
-      state.mainStreamManager = undefined,
-      state.subscribers = [],
-      state.isVideoPublished = true,
-      state.isAudioPublished = true,
+      state.OV = null
+      state.session = undefined
+      state.OvToken = undefined
+      state.publisher = undefined
+      state.mainStreamManager = undefined
+      state.subscribers = []
+      state.isVideoPublished = true
+      state.isAudioPublished = true
     },
     enteredSubscriber: (state, action) => {
       // console.log("여기가 문제라고??", action.payload)

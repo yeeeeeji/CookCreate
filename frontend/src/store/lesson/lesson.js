@@ -14,7 +14,7 @@ const initialState = {
   dateValid : false,
   difficulty: "",
   difficultyValid : false,
-  timeTaken: "",
+  timeTaken: 60,
   timeTakenValid : false,
   description: "",
   descriptionValid : false,

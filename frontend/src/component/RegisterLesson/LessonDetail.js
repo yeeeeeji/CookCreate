@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPrice, setPriceValid, setMaximum, setMaximumValid, setDifficulty, setDescription, 
-  setVideoUrl, setMaterials, setThumbnail, setDifficultyValid, setDescriptionValid, setMaterialsValid } from '../../store/lesson/lesson';
+  setVideoUrl, setMaterials, setDifficultyValid, setDescriptionValid, setMaterialsValid } from '../../store/lesson/lesson';
 
 function LessonDetail() {
   const dispatch = useDispatch();
@@ -13,7 +13,6 @@ function LessonDetail() {
   const [lessonVideoUrl, setLessonVideoUrl] = useState('')
   const [lessonMaterialList, setLessonMaterialList] = useState([])
   const [lessonMaterial, setLessonMaterial] = useState('')
-  const [lessonThumbnailUrl, setLessonThumbnailUrl] = useState('')
   //유효성
   const priceValid = useSelector((state) => state.lesson.priceValid)
   const [errorMsg, setErrorMsg] = useState('');
@@ -65,35 +64,8 @@ function LessonDetail() {
     dispatch(setMaterialsValid(lessonDescription.trim() !== '' || newList.length > 0));
 
   }
-  const handleThumbnailUrl = (e) => {
-    const imageInput = document.getElementById('imageInput')
-    imageInput.addEventListener('change', (event) => {
-      const selectedFile = event.target.files[0]; // 첫 번째 파일만 선택
-    
-      if (selectedFile) {
-        console.log('File name:', selectedFile.name);
-        console.log('File type:', selectedFile.type);
-        console.log('File size:', selectedFile.size, 'bytes');
-        console.log('Last modified date:', selectedFile.lastModifiedDate);
-      }
-    });
-    console.log(imageInput)
-    // if (imageInput) {
-    //   console.log(imageInput.files)
 
-    // } else {
-    //   console.log("파일 첨부 안됨")
-    // }
-    console.log(typeof(e.target.value), e.target.value)
-    setLessonThumbnailUrl(e.target.value)
-  }
-  // const submitThumbnailUrl = (e) => {
-  //   e.preventDefault()
-  //   console.log("submit")
-  //   // console.log(typeof(lessonThumbnailUrl), lessonThumbnailUrl)
-  //   // setLessonThumbnailUrl(e.target.value)
-  //   // setLessonThumbnailUrl(lessonThumbnailUrl)
-  // }
+
   useEffect(() => {
     dispatch(setPrice(lessonPrice));
     dispatch(setMaximum(maximum));
@@ -101,9 +73,8 @@ function LessonDetail() {
     dispatch(setDescription(lessonDescription))
     dispatch(setVideoUrl(lessonVideoUrl))
     dispatch(setMaterials(lessonMaterialList))
-    dispatch(setThumbnail(lessonThumbnailUrl))
   }, [dispatch, lessonPrice, maximum, lessonDifficulty, lessonDescription,
-      lessonVideoUrl, lessonMaterialList, lessonThumbnailUrl]);
+      lessonVideoUrl, lessonMaterialList]);
 
   return (
     <div>
@@ -207,32 +178,6 @@ function LessonDetail() {
             />
         </div>
       </div>
-
-      {/* 썸네일 */}
-      <div>
-        <h3>과외 썸네일</h3>
-        <div>
-          <input type="file"
-            name = "filename"
-            value={lessonThumbnailUrl}
-            onChange={(e) => handleThumbnailUrl(e)}
-            id='imageInput'
-            // onChange={handleThumbnailUrl}
-          />
-        </div>
-      </div>
-      {/* <form method="post" entype="multipart/form-data" onSubmit={submitThumbnailUrl}>
-        <h3>과외 썸네일</h3>
-        <div>
-          <input type="file"
-            value={lessonThumbnailUrl}
-            // onChange={handleThumbnailUrl}
-            onChange={(e) => handleThumbnailUrl(e)}
-            // onChange={handleThumbnailUrl}
-          />
-        </div>
-        <button type='submit'>첨부하기</button>
-      </form> */}
       
       <div style={{display : 'flex', alignItems : 'center'}}>
       <h3>준비물 입력</h3>

@@ -23,7 +23,7 @@ function Signup() {
   const [userPwCkMessage, setUserPwCkMessage] = useState('')
   const [userNicknameMessage, setUserNicknameMessage] = useState('')
   const [userNNDupMessage, setUserNNDupMessage] = useState('')
-  const [userCanSignUp, serUserCanSignUp] = useState('')
+  const [userCanSignUp, setUserCanSignUp] = useState('')
   const [userPhoneNumberMessage, setUserPhoneNumberMessage] = useState('')
   const [userEmailMessage, setUserEmailMessage] = useState('')
   //유효성 검사
@@ -47,6 +47,7 @@ function Signup() {
       setUserIdMessage('적합한 아이디 형식입니다! 🤗')
       setIsUserId(true)
     }
+    setUserIdDupMessage('')
   }
   const onChangeUserPw = async (e) => {
     const value = e.target.value;
@@ -93,6 +94,7 @@ function Signup() {
       setUserNicknameMessage('적합한 닉네임 형식입니다! 🤗')
       setIsNickname(true)
     }
+    setUserNNDupMessage('')
   }
   const onChangeUserPhonenumber = async (e) => {
     const value = e.target.value
@@ -170,30 +172,14 @@ function Signup() {
     .post(`api/v1/auth/signup`, 
     {userId, userPw, userPwCk, nickname, phoneNumber, userEmail, role, food})
     .then(() => {
-      console.log(role) 
-      navigate("/")
-      axios.post(`api/v1/auth/login`, {
-        userId,
-        userPw
-      })
-      .then((res)=>{
-        localStorage.removeItem('userType')
-        dispatch(login({
-          access_token : res.headers.access_token,
-          refresh_token : res.headers.refresh_token,
-          userId,
-          nickname : res.data.nickname,
-          role : res.data.role}));
-        navigate("/")
-      })
-      .catch((err) =>{
-        console.log(err.response.data.message)
-      })
+      alert('회원가입 성공! Cook Create를 즐겨보세요!')
+      localStorage.removeItem('userType')
+      navigate('/')
     })
-    .catch((err) =>{
-      serUserCanSignUp(err.response.data.message)
+    .catch((err) => {
+      setUserCanSignUp(err.response.data.message)
     })
-    }
+  }
     return (
     <div className='page'>
       <div className='titleWrap'>
