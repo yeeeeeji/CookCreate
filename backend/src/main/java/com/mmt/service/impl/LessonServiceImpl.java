@@ -138,12 +138,12 @@ public class LessonServiceImpl implements LessonService {
     @Transactional
     @Override
     public ResponseDto modifyLesson(LessonPutReq lessonPutReq) {
-        Optional<Lesson> find = lessonRepository.findByLessonId(lessonPutReq.getLessonId());
+        Optional<Lesson> find = lessonRepository.findByLessonId(Integer.parseInt(lessonPutReq.getLessonId()));
 
         if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
 
         // 저장된 단계들 삭제 -> 순서, 개수, 내용 모두 바뀔 수 있음
-        lessonStepRepository.deleteAllByLesson_LessonId(lessonPutReq.getLessonId());
+        lessonStepRepository.deleteAllByLesson_LessonId(Integer.parseInt(lessonPutReq.getLessonId()));
 
         // 변경된 값만 저장
         Lesson lesson = find.get();
@@ -151,7 +151,7 @@ public class LessonServiceImpl implements LessonService {
 
         // lesson에 카테고리 아이디 저장
         LessonCategory lessonCategory = new LessonCategory();
-        lessonCategory.setCategoryId(lessonPutReq.getCategoryId());
+        lessonCategory.setCategoryId(Integer.parseInt(lessonPutReq.getCategoryId()));
         lesson.setLessonCategory(lessonCategory);
 
         // s3에 썸네일 이미지 업로드 후 url을 db에 저장
