@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers("/api/v1/pay/**").permitAll()
                 .antMatchers("/api/v1/chat/**").permitAll()
+                .antMatchers("/api/v1/message/**").permitAll()
                 .antMatchers("/api/v1/lesson").permitAll()
                 .antMatchers("/api/v1/lesson/**").authenticated()
                 .antMatchers("/api/v1/review").permitAll()

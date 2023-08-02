@@ -11,10 +11,12 @@ public class ChatRoomRes extends ResponseDto {
     private String lessonTitle;
     private String leastContent;
     private String lestCreateTime;
+    private boolean isChatRoomOver;
 
     public ChatRoomRes(Lesson lesson) {
         this.lessonId = lesson.getLessonId();
         this.lessonTitle = lesson.getLessonTitle();
+        this.isChatRoomOver = lesson.getIsChatRoomOver();
     }
 
     public ChatRoomRes(HttpStatus httpStatus, String message) {
