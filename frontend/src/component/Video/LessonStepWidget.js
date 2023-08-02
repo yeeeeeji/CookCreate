@@ -8,7 +8,7 @@ function LessonStepWidget() {
   const [ checkCount, setCheckCount ] = useState(0)
   const publisher = useSelector((state) => state.video.publisher)
 
-  const resetCheck = (publisher) => {
+  const resetCheckCookiee = (publisher) => {
     dispatch(setCheckCookieeList({checkCookieeList: []}))
     setCheckCount(0)
     dispatch(setCheckCookiee({checkCookiee: ''}))
@@ -38,7 +38,7 @@ function LessonStepWidget() {
         </div>
         <div>
           <h1>체크 {checkCount}명</h1>
-          <button onClick={() => resetCheck(publisher)}>리셋</button>
+          <button onClick={() => resetCheckCookiee(publisher)}>리셋</button>
         </div>
       </div>
       <div>
