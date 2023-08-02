@@ -12,7 +12,7 @@ import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
 import com.mmt.domain.request.lesson.LessonStepPutReq;
-import com.mmt.domain.request.session.SessionCreateReq;
+import com.mmt.domain.request.session.SessionPostReq;
 import com.mmt.domain.response.lesson.LessonDetailRes;
 import com.mmt.domain.response.lesson.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
@@ -28,11 +28,13 @@ import com.mmt.service.AwsS3Uploader;
 import com.mmt.service.LessonService;
 import com.mmt.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.Duration;
@@ -43,6 +45,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LessonServiceImpl implements LessonService {
 
     private final LessonRepository lessonRepository;
@@ -55,6 +58,8 @@ public class LessonServiceImpl implements LessonService {
 
     private final ReviewService reviewService;
     private final AwsS3Uploader awsS3Uploader;
+
+    private final EntityManager entityManager;
 
     @Transactional
     @Override
@@ -133,12 +138,12 @@ public class LessonServiceImpl implements LessonService {
     @Transactional
     @Override
     public ResponseDto modifyLesson(LessonPutReq lessonPutReq) {
-        Optional<Lesson> find = lessonRepository.findByLessonId(lessonPutReq.getLessonId());
+        Optional<Lesson> find = lessonRepository.findByLessonId(Integer.parseInt(lessonPutReq.getLessonId()));
 
         if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
 
         // 저장된 단계들 삭제 -> 순서, 개수, 내용 모두 바뀔 수 있음
-        lessonStepRepository.deleteAllByLesson_LessonId(lessonPutReq.getLessonId());
+        lessonStepRepository.deleteAllByLesson_LessonId(Integer.parseInt(lessonPutReq.getLessonId()));
 
         // 변경된 값만 저장
         Lesson lesson = find.get();
@@ -146,7 +151,7 @@ public class LessonServiceImpl implements LessonService {
 
         // lesson에 카테고리 아이디 저장
         LessonCategory lessonCategory = new LessonCategory();
-        lessonCategory.setCategoryId(lessonPutReq.getCategoryId());
+        lessonCategory.setCategoryId(Integer.parseInt(lessonPutReq.getCategoryId()));
         lesson.setLessonCategory(lessonCategory);
 
         // s3에 썸네일 이미지 업로드 후 url을 db에 저장
@@ -420,28 +425,91 @@ public class LessonServiceImpl implements LessonService {
         return new ResponseDto(HttpStatus.OK, "Success");
     }
 
+    @Transactional
     @Override
-    public ResponseDto createSession(int lessonId, SessionCreateReq sessionCreateReq) {
-        Optional<Lesson> find = lessonRepository.findByLessonId(lessonId);
+    public ResponseDto createSession(SessionPostReq sessionPostReq) {
+        Optional<Lesson> lesson = lessonRepository.findByLessonId(sessionPostReq.getLessonId());
+        if(lesson.isEmpty()) {
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        }
 
-        if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        Optional<Member> member = memberRepository.findByUserId(sessionPostReq.getUserId());
+        if(member.isEmpty()) {
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 아이디입니다.");
+        }
 
-        // session_id 컬럼 set
-        Lesson lesson = find.get();
-        lesson.setSessionId(sessionCreateReq.getSessionId());
-        lessonRepository.save(lesson);
+        if(!member.get().getRole().equals(Role.COOKYER)){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "Cookyer만 세션을 생성할 수 있습니다.");
+        }
+        if(!lesson.get().getCookyerId().equals(member.get().getUserId())){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "과외를 예약한 Cookyer만 세션을 생성할 수 있습니다.");
+        }
+
+        if(lesson.get().getIsEnd()){
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 종료된 과외입니다.");
+        }
+        if(lesson.get().getSessionId() != null){
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 세션이 생성되어 있습니다.");
+        }
+
+        lesson.get().setSessionId(sessionPostReq.getSessionId());
+        lessonRepository.save(lesson.get());
+
         return new ResponseDto(HttpStatus.OK, "Success");
     }
 
     @Override
-    public ResponseDto shutdownSession(int lessonId) {
-        Optional<Lesson> find = lessonRepository.findByLessonId(lessonId);
-        if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+    public ResponseDto createConnection(SessionPostReq sessionPostReq) {
+        List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(sessionPostReq.getLessonId());
 
-        // session_id 컬럼 값을 null 로 set
-        Lesson lesson = find.get();
-        lesson.setSessionId(null);
-        lessonRepository.save(lesson);
+        // 과외를 신청했는지 확인
+        boolean isApplied = false;
+        for(LessonParticipant lessonParticipant : lessonParticipantList){
+            if(lessonParticipant.getUserId().equals(sessionPostReq.getUserId())){
+                isApplied = true;
+                break;
+            }
+        }
+        if(!isApplied){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "해당 과외를 신청한 사람만 입장할 수 있습니다.");
+        }
+
+        // 과외가 존재하는지 확인
+        Optional<Lesson> lesson = lessonRepository.findByLessonId(sessionPostReq.getLessonId());
+        if(lesson.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        }
+        if(lesson.get().getIsEnd()){
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 종료된 과외입니다.");
+        }
+
+        return new ResponseDto(HttpStatus.OK, "Success");
+    }
+
+    @Override
+    public String getSessionId(int lessonId) {
+        return lessonRepository.findByLessonId(lessonId).get().getSessionId();
+    }
+
+    @Transactional
+    @Override
+    public ResponseDto deleteSession(SessionPostReq sessionPostReq) {
+        Optional<Lesson> find= lessonRepository.findByLessonId(sessionPostReq.getLessonId());
+        if(find.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        }
+        if(!find.get().getCookyerId().equals(sessionPostReq.getUserId())){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "과외를 예약한 Cookyer만 닫을 수 있습니다.");
+        }
+        if(find.get().getSessionId() == null){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "생성된 세션이 없습니다.");
+        }
+        if(find.get().getIsEnd()){
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 종료된 과외입니다.");
+        }
+
+        lessonRepository.updateIsEnd(true, sessionPostReq.getLessonId());
+
         return new ResponseDto(HttpStatus.OK, "Success");
     }
 }

@@ -20,13 +20,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -128,7 +126,7 @@ public class LessonController {
             return new ResponseEntity<>(new ResponseDto(HttpStatus.BAD_REQUEST, stringBuilder.toString()), HttpStatus.BAD_REQUEST);
         }
 
-        LessonDetailRes lessonDetailRes = lessonService.getLessonDetail(lessonPutReq.getLessonId());
+        LessonDetailRes lessonDetailRes = lessonService.getLessonDetail(Integer.parseInt(lessonPutReq.getLessonId()));
         if(lessonDetailRes == null){ // 존재 유무 확인
             return new ResponseEntity<>(new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다."), HttpStatus.NOT_FOUND);
         }

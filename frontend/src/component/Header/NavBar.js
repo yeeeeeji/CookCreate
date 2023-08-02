@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import { useSelector, useDispatch } from "react-redux";
 import '../../style/navbar.css'
-import { logout } from '../../store/auth/auth'; // Import the logout action
+// import { logout } from '../../store/auth/auth'; // Import the logout action
 import { setOvToken, setRoomPresent, setVideoLessonId } from '../../store/video/video';
 import axios from 'axios';
 
@@ -11,8 +11,9 @@ function NavBar() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const isLogin = useSelector((state) => state.auth.isLogin)
-  const access_token = useSelector((state) => state.auth.access_token)
-  const refresh_token = useSelector((state) => state.auth.refresh_token)
+  const refresh_token = localStorage.getItem('refresh_token')
+  const access_token = localStorage.getItem('access_token')
+
   const nickname = localStorage.getItem('nickname')
   const role = localStorage.getItem('role')
   const emoji = localStorage.getItem('emoji')
@@ -24,22 +25,21 @@ function NavBar() {
   const [ myLessons, setMyLessons ] = useState(undefined)  // 학생 모달창에 불러서 쓸 레슨 정보
 
   const Logout = () => {
+
     console.log(access_token, refresh_token)
-    axios.post(`api/v1/member/logout`, {
+    axios.post(`api/v1/member/logout`, {}, {
       headers : {
         access_token : access_token,
         refresh_token : refresh_token
       }
     })
     .then(() => {
-      console.log('로그아웃 api 테스트')
-      dispatch(logout())
-      window.location.replace("/")
+      localStorage.clear()
+      window.location.replace("/");
     })
     .catch((err) => {
-      console.log('에러 어디서 나니')
-      console.log(access_token, refresh_token)
       console.log(err)
+      alert('access_token이 만료되었습니다. 개발 시에는 local의 토큰을 모두 지워 주고 새로고침을 해주세요.')
     })
   }
 
@@ -204,13 +204,6 @@ function NavBar() {
         수업 전체
       </Link>
       
-      <SearchBar/>
-      <Link to = '/login'>
-        로그인
-      </Link> |
-      <Link to ='/signupbefore'>
-        회원가입
-      </Link>
       <SearchBar />
       {isLogin ? (
         <div>

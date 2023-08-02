@@ -54,6 +54,8 @@ public class Lesson extends BaseTimeEntity {
     private Boolean isOver;
     @Column(columnDefinition = "boolean default false")
     private Boolean isChatRoomOver;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean isEnd;
 
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
     private List<Chat> chatList = new ArrayList<>();
@@ -76,11 +78,11 @@ public class Lesson extends BaseTimeEntity {
     }
 
     public void update(LessonPutReq lessonPutReq){
-        this.lessonId = lessonPutReq.getLessonId();
+        this.lessonId = Integer.parseInt(lessonPutReq.getLessonId());
         this.lessonTitle = lessonPutReq.getLessonTitle();
         this.cookyerId = lessonPutReq.getCookyerId();
         this.difficulty = lessonPutReq.getDifficulty();
-        this.timeTaken = lessonPutReq.getTimeTaken();
+        this.timeTaken = Integer.parseInt(lessonPutReq.getTimeTaken());
         this.description = lessonPutReq.getDescription();
         this.materials = String.join(",", lessonPutReq.getMaterials());
         this.videoUrl = lessonPutReq.getVideoUrl();
