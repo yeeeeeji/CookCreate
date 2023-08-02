@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import { useSelector, useDispatch } from "react-redux";
 import '../../style/navbar.css'
-import { logout } from '../../store/auth/auth'; // Import the logout action
+import axios from 'axios';
 
 function NavBar() {
   const dispatch = useDispatch()
@@ -11,20 +11,29 @@ function NavBar() {
   const nickname = localStorage.getItem('nickname')
   const role = localStorage.getItem('role')
   const emoji = localStorage.getItem('emoji')
-
+  const refreshToken = localStorage.getItem('refresh_token')
+  const accessToken = localStorage.getItem('access_token')
   const Logout = () => {
-    dispatch(logout())
-
-    window.location.replace("/")
-  
+    // dispatch(logout())
+    axios.post(`api/v1/member/logout`, {}, {
+      headers: {
+        access_token : accessToken,
+        refresh_token : refreshToken
+      },
+    })
+    .then(() => {
+      localStorage.clear()
+      window.location.replace("/");
+    })
+    .catch((err) => {
+      console.log(err)
+      alert('로그아웃에 실패했습니다')
+    });  
   }
   return (
     <div style={{ display: 'flex', alignItems: 'center' }} className='navbar'>
       <Link to='/'>
         로고
-      </Link> |
-      <Link to='/lessonranking'>
-        수업 랭킹
       </Link> |
       <Link to='/totallessons'>
         수업 전체

@@ -1,22 +1,23 @@
 import React from 'react';
-import FoodCategory from '../component/TotalLessons/FoodCategory';
-import TotalLessons from '../component/TotalLessons/TotalLessons';
-import EndLessons from '../component/TotalLessons/EndLessons';
+import SearchBar from '../component/TotalLessons/SearchBar';
+import LessonListFliter from '../component/TotalLessons/LessonListFliter';
 import LessonList from '../component/TotalLessons/LessonList';
+import LessonFoodCategory from '../component/TotalLessons/LessonFoodCategory';
 function totalLessons() {
   return (
     <div>
       <div>
-        수업 전체 보기
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <FoodCategory/> |
-          <TotalLessons/>
-          <EndLessons/>
+        <h3>
+          수업 전체
+        </h3>
+        <div>
+          실력 있는 선생님들과 직접 나만의 요리를 완성해보세요!
         </div>
       </div>
-      <div>
-        <LessonList/>
-      </div>
+      <SearchBar/>
+      <LessonFoodCategory/>
+      <LessonListFliter/>
+      <LessonList/>
     </div>
   );
 }

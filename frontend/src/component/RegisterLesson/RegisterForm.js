@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 function RegisterForm() {
-  const accessToken = useSelector((state) => state.auth.token)
+  const accessToken = useSelector((state) => state.auth.access_token)
   const lessonTitle = useSelector((state) => state.lesson.lessonTitle)
   const categoryId = useSelector((state) =>  parseInt(state.lesson.categoryId))+1
   const maximum = useSelector((state) => parseInt(state.lesson.maximum))
@@ -28,43 +28,143 @@ function RegisterForm() {
   const descriptionValid = useSelector((state) => state.lesson.descriptionValid)
   const isAllValid = [categoryValid, titleValid, maxValid, priceValid, dateValid, difficultyValid, timeTakenValid, materialsValid, stepValid, descriptionValid].every((isValid) => isValid);
 
+  // const lessonPostReq = {
+    //   lessonTitle,
+    //   categoryId,
+  //   maximum,
+  //   price,
+  //   lessonDate,
+  //   difficulty,
+  //   timeTaken,
+  //   description,
+  //   materials,
+  //   videoUrl,
+  //   lessonStepList,
+  // };
+
+  // const register = (e) => {
+  //   e.preventDefault()
+  //   const lessonPostReq  = {
+  //     lessonTitle, 
+  //     categoryId, 
+  //     maximum,
+  //     price, 
+  //     lessonDate, 
+  //     difficulty,
+  //     timeTaken, 
+  //     description, 
+  //     materials,
+  //     videoUrl, 
+  //     lessonStepList
+  //   }
+  //   const formData = new FormData();
+  //   formData.append('thumbnailUrl', thumbnailUrl);
+  //   formData.append('lessonPostReq', JSON.stringify(lessonPostReq));
+
+  //   axios
+  //   .post(`api/v1/lesson`, formData,
+  //   {
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Access_Token: accessToken,
+  //     },
+  //   })
+  //   .then((res) =>{
+  //     console.log(res)
+  //   })
+  //   .catch((err) =>{
+  //     console.log(formData)
+  //     console.log(err)
+  //   })
+  // }
+  // const register = (e) => {
+  //   e.preventDefault()
+  //   formData.append('thumbnailUrl', thumbnailUrl)
+
+
+  //   const blob = new Blob(
+  //     [JSON.stringify(lessonPostReq)], 
+  //     { type: "application/json" }
+  //   )
+
+  //   formData.append('lessonPostReq', blob)
+      
+  //     for (let value of formData.values()) {
+  //       console.log(value);
+  //     }
+  //   axios
+  //     .post(`api/v1/lesson`, formData, {
+  //       headers: {
+  //         Access_Token: accessToken,
+  //         // 'Content-Type': 'multipart/form-data'
+  //       },
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(formData);
+  //       console.log(lessonPostReq)
+  //       console.log(err);
+  //     });
+  // };
   const register = (e) => {
-    e.preventDefault()
-    const lessonPostReq  = {
-      lessonTitle, 
-      categoryId, 
+    e.preventDefault();
+    const formData = new FormData();
+
+    const formDataObj = {
+      lessonTitle,
+      categoryId,
       maximum,
-      price, 
-      lessonDate, 
+      price,
+      lessonDate,
       difficulty,
-      timeTaken, 
-      description, 
+      timeTaken,
+      description,
       materials,
-      videoUrl, 
-      lessonStepList
+      videoUrl,
+      lessonStepList : JSON.stringify(lessonStepList),
+    };
+    console.log("formDataObj", formDataObj)
+    console.log("thubmnailUrl", thumbnailUrl, typeof(thumbnailUrl))
+    const formBlob = new Blob([JSON.stringify(formDataObj)], { type: "application/json" });
+    formData.append('thumbnailUrl', thumbnailUrl);
+    // formData.append('lessonPostReq', JSON.stringify(formDataObj));
+    // formData.append('lessonPostReq', formDataObj);
+    formData.append('lessonPostReq', formBlob);
+
+    // formData.append("formDataObj", {
+    //   uri: thumbnailUrl,
+    //   name: 'a',
+    //   type: 'image/png'
+    // })
+  
+    for (let value of formData.values()) {
+      console.log("formData 밸류 꺼내보기", value, typeof(value));
     }
-    // const formData = new FormData();
-    // formData.append('thumbnailUrl', File); 
-    
+  
     axios
-    .post(`api/v1/lesson`,
-    lessonPostReq,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Access_Token: accessToken,
-      },
-    })
-    .then((res) =>{
-      console.log(res)
-    })
-    .catch((err) =>{
-      console.log(err)
-    })
-  }
+      .post(`api/v1/lesson`, formData, {
+        headers: {
+          accessToken: accessToken,
+          "Content-type": "multipart/form-data",
+          // Accept: "application/json"
+          // "Content-type": "application/json" // 주석 풀면 500에러 뜬다
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        // console.log(formData);
+        // console.log(lessonPostReq);
+        console.log(err);
+      });
+  };
+  
   return (
     <div>
-      <button onClick={register} disabled={!isAllValid}>과외 등록하기</button>
+      <button onClick={register} >과외 등록하기</button>
 
     </div>
   );

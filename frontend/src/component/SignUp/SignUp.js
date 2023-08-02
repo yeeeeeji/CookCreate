@@ -159,17 +159,18 @@ function Signup() {
       setFood([...food, selectedFood])
     }
   };
+  
 
 
   const handleSignup = (e) => {
     e.preventDefault()
     const foodString = food.join(',');
-    console.log(foodString)
+    console.log(food, foodString)
     axios
     .post(`api/v1/auth/signup`, 
-    {userId, userPw, userPwCk, nickname, phoneNumber, userEmail, role, food:foodString})
+    {userId, userPw, userPwCk, nickname, phoneNumber, userEmail, role, food})
     .then(() => {
-      
+      console.log(role) 
       navigate("/")
       axios.post(`api/v1/auth/login`, {
         userId,
