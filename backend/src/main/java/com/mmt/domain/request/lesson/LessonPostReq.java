@@ -19,15 +19,15 @@ public class LessonPostReq {
     private String cookyerId;
     @Min(value = 1, message = "유효한 카테고리를 선택해주세요.")
     @Max(value = 7, message = "유효한 카테고리를 선택해주세요.")
-    private int categoryId;
+    private String categoryId;
     private Difficulty difficulty;
     @Min(value = 60, message = "소요시간은 최소 60분부터입니다.")
     @Max(value = 240, message = "소요시간은 최대 240분까지입니다.")
-    private int timeTaken;
+    private String timeTaken;
     private String description;
     @Max(value = 6, message = "최대인원은 6명 이하여야 합니다.")
-    private int maximum;
-    private int price;
+    private String maximum;
+    private String price;
     private List<String> materials;
     private String lessonDate;
     private String videoUrl;
