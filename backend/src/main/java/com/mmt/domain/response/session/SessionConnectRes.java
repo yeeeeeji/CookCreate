@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class SessionJoinRes extends ResponseDto {
-    private String sessionId;
+public class SessionConnectRes extends ResponseDto {
+    private String token;
 }

@@ -1,14 +1,12 @@
 package com.mmt.controller;
 
-import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.auth.UserDetailsImpl;
 import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.request.session.SessionPostReq;
 import com.mmt.domain.response.ResponseDto;
-import com.mmt.domain.response.session.SessionJoinRes;
+import com.mmt.domain.response.session.SessionConnectRes;
 import com.mmt.service.LessonService;
 import com.mmt.service.MemberService;
-import io.openvidu.java.client.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,7 +23,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
+
+
+import io.openvidu.java.client.Connection;
+import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
+import io.openvidu.java.client.Session;
 
 
 @Tag(name = "과외 세션 API", description = "과외 세션 관련 API입니다.")
@@ -86,71 +90,65 @@ public class SessionController {
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
-            @ApiResponse(responseCode = "403", description = "Cookiee만 이용 가능합니다.",
+            @ApiResponse(responseCode = "403", description = "해당 과외를 신청한 사람만 입장할 수 있습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
-            @ApiResponse(responseCode = "403", description = "강의 수강 신청을 하지 않았습니다.",
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "409", description = "이미 종료된 과외입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @GetMapping("/{lessonId}")
-    public ResponseEntity<? extends ResponseDto> join (
-            @Parameter(description = "레슨 id") @PathVariable int lessonId, Authentication authentication) {
+    @PostMapping("/connect")
+    public ResponseEntity<? extends ResponseDto> createConnection (@RequestBody SessionPostReq sessionPostReq, Authentication authentication) throws OpenViduJavaClientException, OpenViduHttpException{
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication : " + (userDetails.getUsername()));
 
         String loginId = userDetails.getUsername();
-        if(!memberService.getRole(loginId).equals(Role.COOKIEE)) {
-            return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "Cookiee만 이용 가능합니다."), HttpStatus.FORBIDDEN);
+        sessionPostReq.setUserId(loginId);
+
+        // 서비스에서는 유효성 검사만 진행
+        ResponseDto responseDto = lessonService.createConnection(sessionPostReq);
+
+        if(!responseDto.getStatusCode().equals(HttpStatus.OK)){
+            return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
         }
 
-        List<Member> participants = lessonService.getLessonDetail(lessonId).getLessonParticipantList();
-        boolean isReserved = false; // 이 쿠키가 예약했으면 true, 아니면 false
-        for (Member participant : participants) {
-            if (participant.getUserId() == loginId) {
-                isReserved = true;
-            }
+        String sessionId= lessonService.getSessionId(sessionPostReq.getLessonId());
+        log.info(sessionId);
+        Session session = openvidu.getActiveSession(sessionId);
+        if(session == null){
+            return new ResponseEntity<>(new ResponseDto(HttpStatus.NOT_FOUND, "활성화된 세션이 없습니다."), HttpStatus.NOT_FOUND);
         }
+        Connection connection = session.createConnection();
+        SessionConnectRes sessionConnectRes = new SessionConnectRes();
+        sessionConnectRes.setToken(connection.getToken());
+        sessionConnectRes.setStatusCode(responseDto.getStatusCode());
+        sessionConnectRes.setMessage(responseDto.getMessage());
 
-        if(isReserved == false) {
-            return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "강의 수강신청을 하지 않았습니다."), HttpStatus.FORBIDDEN);
-        }
-
-        SessionJoinRes sessionJoinRes = new SessionJoinRes();
-        //sessionJoinRes.setSessionId(lessonService.getLessonDetail(lessonId).getSessionId());
-
-        return new ResponseEntity<>(sessionJoinRes, sessionJoinRes.getStatusCode());
+        return new ResponseEntity<>(sessionConnectRes, sessionConnectRes.getStatusCode());
     }
 
     @Operation(summary = "과외 세션 닫기", description = "과외 세션을 종료한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "형식을 맞춰주세요.",
-                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
-            @ApiResponse(responseCode = "403", description = "과외를 개설한 선생님만 닫을 수 있습니다.",
+            @ApiResponse(responseCode = "403", description = "과외를 예약한 Cookyer만 종료할 수 있습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
-            @ApiResponse(responseCode = "409", description = "개설한 세션이 없습니다.",
+            @ApiResponse(responseCode = "404", description = "생성된 세션이 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "409", description = "이미 종료된 과외입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @PutMapping("/shutdown/{lessonId}")
-    public ResponseEntity<ResponseDto> shutdown(
-            @Parameter(description = "레슨 id") @PathVariable int lessonId, Authentication authentication) {
+    @DeleteMapping("")
+    public ResponseEntity<ResponseDto> deleteSession(@RequestBody SessionPostReq sessionPostReq, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication : " + (userDetails.getUsername()));
 
         String loginId = userDetails.getUsername();
+        sessionPostReq.setUserId(loginId);
 
-        // 역할이 Cookyer이고, 과외의 cookyer id가 userId와 같음을 동시에 충족해야함
-        if(!memberService.getRole(loginId).equals(Role.COOKYER) && loginId != lessonService.getLessonDetail(lessonId).getCookyerId()){
-            return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "과외를 개설한 cookyer만 개설한 세션을 닫을 수 있습니다."), HttpStatus.FORBIDDEN);
-        }
-
-//        if(isBlank(lessonService.getLessonDetail(lessonId).getSessionId())) {
-//            return new ResponseEntity<>(new ResponseDto(HttpStatus.CONFLICT, "개설한 세션이 없습니다."), HttpStatus.CONFLICT);
-//        }
-
-        ResponseDto responseDto = lessonService.shutdownSession(lessonId);
+        ResponseDto responseDto = lessonService.deleteSession(sessionPostReq);
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }

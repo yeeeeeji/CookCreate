@@ -28,11 +28,13 @@ import com.mmt.service.AwsS3Uploader;
 import com.mmt.service.LessonService;
 import com.mmt.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.Duration;
@@ -43,6 +45,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LessonServiceImpl implements LessonService {
 
     private final LessonRepository lessonRepository;
@@ -55,6 +58,8 @@ public class LessonServiceImpl implements LessonService {
 
     private final ReviewService reviewService;
     private final AwsS3Uploader awsS3Uploader;
+
+    private final EntityManager entityManager;
 
     @Transactional
     @Override
@@ -454,14 +459,57 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public ResponseDto shutdownSession(int lessonId) {
-        Optional<Lesson> find = lessonRepository.findByLessonId(lessonId);
-        if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+    public ResponseDto createConnection(SessionPostReq sessionPostReq) {
+        List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(sessionPostReq.getLessonId());
 
-        // session_id 컬럼 값을 null 로 set
-        Lesson lesson = find.get();
-        lesson.setSessionId(null);
-        lessonRepository.save(lesson);
+        // 과외를 신청했는지 확인
+        boolean isApplied = false;
+        for(LessonParticipant lessonParticipant : lessonParticipantList){
+            if(lessonParticipant.getUserId().equals(sessionPostReq.getUserId())){
+                isApplied = true;
+                break;
+            }
+        }
+        if(!isApplied){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "해당 과외를 신청한 사람만 입장할 수 있습니다.");
+        }
+
+        // 과외가 존재하는지 확인
+        Optional<Lesson> lesson = lessonRepository.findByLessonId(sessionPostReq.getLessonId());
+        if(lesson.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        }
+        if(lesson.get().getIsEnd()){
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 종료된 과외입니다.");
+        }
+
+        return new ResponseDto(HttpStatus.OK, "Success");
+    }
+
+    @Override
+    public String getSessionId(int lessonId) {
+        return lessonRepository.findByLessonId(lessonId).get().getSessionId();
+    }
+
+    @Transactional
+    @Override
+    public ResponseDto deleteSession(SessionPostReq sessionPostReq) {
+        Optional<Lesson> find= lessonRepository.findByLessonId(sessionPostReq.getLessonId());
+        if(find.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        }
+        if(!find.get().getCookyerId().equals(sessionPostReq.getUserId())){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "과외를 예약한 Cookyer만 닫을 수 있습니다.");
+        }
+        if(find.get().getSessionId() == null){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "생성된 세션이 없습니다.");
+        }
+        if(find.get().getIsEnd()){
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 종료된 과외입니다.");
+        }
+
+        lessonRepository.updateIsEnd(true, sessionPostReq.getLessonId());
+
         return new ResponseDto(HttpStatus.OK, "Success");
     }
 }

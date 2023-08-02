@@ -20,11 +20,14 @@ public interface LessonService {
     ResponseDto modifyLesson(LessonPutReq lessonPutReq);
     ResponseDto deleteLesson(int lessonId);
     ResponseDto cancelLesson(int lessonId, String userId);
-    ResponseDto createSession(SessionPostReq sessionPostReq);
-    ResponseDto shutdownSession(int lessonId);
     List<LessonSearchRes> getLessonList(LessonSearchReq lessonSearchReq);
     LessonDetailRes getLessonDetail(int lessonId);
     LessonLatestRes getLessonLatest(String userId);
     List<LessonStepRes> getLessonStep(int lessonId);
     ResponseDto modifyLessonStep(String userId, LessonStepPutReq lessonStepPutReq);
+
+    ResponseDto createSession(SessionPostReq sessionPostReq);
+    ResponseDto createConnection(SessionPostReq sessionPostReq);
+    String getSessionId(int lessonId);
+    ResponseDto deleteSession(SessionPostReq sessionPostReq);
 }
