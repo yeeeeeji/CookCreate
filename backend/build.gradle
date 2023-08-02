@@ -67,6 +67,21 @@ dependencies {
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation 'commons-io:commons-io:2.6'
     //commons-io 는 File을 처리하기 위함
+
+    //STOMP 웹소캣 서버 사이드 테스트를 위한 의존성 추가
+    implementation "org.springframework.boot:spring-boot-starter-mustache"
+    //STOMP 관련 프론트 라이브러리
+    implementation 'org.webjars.bower:jquery:3.3.1'
+    implementation 'org.webjars:sockjs-client:1.1.2'
+    implementation 'org.webjars:stomp-websocket:2.3.3-1'
+    implementation 'org.webjars:webjars-locator:0.30'
+    //WebRTC 클라이언트 의존성 추가
+    implementation 'org.webjars.bower:webrtc-adapter:7.4.0'
+    //Kurento (미디어서버) 관련 의존성 추가
+    implementation 'org.kurento:kurento-client:6.16.0'
+    implementation 'org.kurento:kurento-utils-js:6.15.0'
+
+    implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.18.0'
 }
 
 //querydsl 추가 시작

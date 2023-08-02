@@ -3,11 +3,12 @@ package com.mmt.controller;
 import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.auth.UserDetailsImpl;
 import com.mmt.domain.entity.auth.Role;
-import com.mmt.domain.request.session.SessionCreateReq;
+import com.mmt.domain.request.session.SessionPostReq;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.session.SessionJoinRes;
 import com.mmt.service.LessonService;
 import com.mmt.service.MemberService;
+import io.openvidu.java.client.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,14 +18,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Tag(name = "과외 세션 API", description = "과외 세션 관련 API입니다.")
 @Slf4j
@@ -32,39 +34,48 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @RequestMapping("/api/v1/session")
 @RequiredArgsConstructor
 public class SessionController {
+
+    @Value("${OPENVIDU_URL}")
+    private String OPENVIDU_URL;
+
+    @Value("${OPENVIDU_SECRET}")
+    private String OPENVIDU_SECRET;
+
     private final LessonService lessonService;
     private final MemberService memberService;
 
-    @Operation(summary = "과외 세션 생성", description = "과외 세션을 생성한다.")
+    private OpenVidu openvidu;
+
+    @PostConstruct
+    public void init() {
+        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+    }
+
+    @Operation(summary = "과외 세션 생성", description = "선생님이 과외 세션을 생성한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "success",
-                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
-            @ApiResponse(responseCode = "400", description = "형식을 맞춰주세요.",
+            @ApiResponse(responseCode = "200", description = "Success",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
-            @ApiResponse(responseCode = "403", description = "Cookyer만 이용 가능합니다.",
+            @ApiResponse(responseCode = "403", description = "Cookyer만 과외 방을 생성할 수 있습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
-            @ApiResponse(responseCode = "409", description = "이 cookyer에게는 이미 세션이 할당 되있습니다.",
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
+            content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "409", description = "이미 세션이 할당되어 있습니다./이미 종료된 과외입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @PutMapping("/{lessonId}")
-    public ResponseEntity<ResponseDto> create(
-            @Parameter(description = "레슨 id") @PathVariable int lessonId,
-            @RequestBody SessionCreateReq sessionCreateReq, Authentication authentication) {
+    @PostMapping("/create")
+    public ResponseEntity<ResponseDto> initializeSession(@RequestBody SessionPostReq sessionPostReq, Authentication authentication) throws OpenViduJavaClientException, OpenViduHttpException {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication : " + (userDetails.getUsername()));
 
         String loginId = userDetails.getUsername();
-        if(!memberService.getRole(loginId).equals(Role.COOKYER)){
-            return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "Cookyer만 이용 가능합니다."), HttpStatus.FORBIDDEN);
-        }
+        sessionPostReq.setUserId(loginId);
 
-//        if(!isBlank(lessonService.getLessonDetail(lessonId).getSessionId())) {
-//            return new ResponseEntity<>(new ResponseDto(HttpStatus.CONFLICT, "이 cookyer에게는 이미 세션이 할당 되있습니다."), HttpStatus.CONFLICT);
-//        }
+        Session session = openvidu.createSession();
+        sessionPostReq.setSessionId(session.getSessionId());
 
-        ResponseDto responseDto = lessonService.createSession(lessonId, sessionCreateReq);
+        ResponseDto responseDto = lessonService.createSession(sessionPostReq);
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }

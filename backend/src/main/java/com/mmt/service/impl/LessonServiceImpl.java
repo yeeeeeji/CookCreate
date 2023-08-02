@@ -12,7 +12,7 @@ import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
 import com.mmt.domain.request.lesson.LessonStepPutReq;
-import com.mmt.domain.request.session.SessionCreateReq;
+import com.mmt.domain.request.session.SessionPostReq;
 import com.mmt.domain.response.lesson.LessonDetailRes;
 import com.mmt.domain.response.lesson.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
@@ -31,9 +31,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -422,16 +420,36 @@ public class LessonServiceImpl implements LessonService {
         return new ResponseDto(HttpStatus.OK, "Success");
     }
 
+    @Transactional
     @Override
-    public ResponseDto createSession(int lessonId, SessionCreateReq sessionCreateReq) {
-        Optional<Lesson> find = lessonRepository.findByLessonId(lessonId);
+    public ResponseDto createSession(SessionPostReq sessionPostReq) {
+        Optional<Lesson> lesson = lessonRepository.findByLessonId(sessionPostReq.getLessonId());
+        if(lesson.isEmpty()) {
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        }
 
-        if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        Optional<Member> member = memberRepository.findByUserId(sessionPostReq.getUserId());
+        if(member.isEmpty()) {
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 아이디입니다.");
+        }
 
-        // session_id 컬럼 set
-        Lesson lesson = find.get();
-        lesson.setSessionId(sessionCreateReq.getSessionId());
-        lessonRepository.save(lesson);
+        if(!member.get().getRole().equals(Role.COOKYER)){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "Cookyer만 세션을 생성할 수 있습니다.");
+        }
+        if(!lesson.get().getCookyerId().equals(member.get().getUserId())){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "과외를 예약한 Cookyer만 세션을 생성할 수 있습니다.");
+        }
+
+        if(lesson.get().getIsEnd()){
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 종료된 과외입니다.");
+        }
+        if(lesson.get().getSessionId() != null){
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 세션이 생성되어 있습니다.");
+        }
+
+        lesson.get().setSessionId(sessionPostReq.getSessionId());
+        lessonRepository.save(lesson.get());
+
         return new ResponseDto(HttpStatus.OK, "Success");
     }
 
