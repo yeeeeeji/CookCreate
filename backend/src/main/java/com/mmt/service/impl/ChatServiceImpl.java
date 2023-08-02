@@ -73,17 +73,9 @@ public class ChatServiceImpl implements ChatService {
     public List<ChatRes> getChatMessageList(String userId, int lessonId) {
         List<ChatRes> result = new ArrayList<>();
 
-        // 예외 처리
-        Optional<LessonParticipant> isParticipant = lessonParticipantRepository.findByLesson_LessonIdAndUserId(lessonId, userId);
-        if(!isParticipant.isPresent()) {
+        if (!isUserParticipantChatRoom(userId, lessonId)) {
             result.add(new ChatRes(HttpStatus.FORBIDDEN, "접근 권한이 없는 채팅방입니다."));
             return result;
-        } else {
-            LessonParticipant lessonParticipant = isParticipant.get();
-            if (lessonParticipant.isLeaveChat()) {
-                result.add(new ChatRes(HttpStatus.FORBIDDEN, "접근 권한이 없는 채팅방입니다."));
-                return result;
-            }
         }
 
         List<Chat> messageList = lessonRepository.findByLessonId(lessonId).get().getChatList();
@@ -126,5 +118,20 @@ public class ChatServiceImpl implements ChatService {
         }
 
         return result;
+    }
+
+    @Override
+    public boolean isUserParticipantChatRoom(String userId, int lessonId) {
+        Optional<LessonParticipant> isParticipant = lessonParticipantRepository.findByLesson_LessonIdAndUserId(lessonId, userId);
+        if(!isParticipant.isPresent()) {
+           return false;
+        }
+
+        LessonParticipant lessonParticipant = isParticipant.get();
+        if (lessonParticipant.isLeaveChat()) {
+            return false;
+        }
+
+        return true;
     }
 }

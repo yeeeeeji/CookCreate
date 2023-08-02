@@ -13,6 +13,7 @@ public interface ChatService {
     ResponseDto leaveChatRoom(String userId, int lessonId);
     List<ChatRes> getChatMessageList(String userId, int lessenId);
     List<ChatRoomRes> getChatRoomList(String userId);
+    boolean isUserParticipantChatRoom(String userId, int lessonId);
 
 }
 
