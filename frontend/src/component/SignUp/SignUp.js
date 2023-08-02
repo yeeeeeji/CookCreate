@@ -169,6 +169,7 @@ function Signup() {
     .post(`api/v1/auth/signup`, 
     {userId, userPw, userPwCk, nickname, phoneNumber, userEmail, role, food:foodString})
     .then(() => {
+      console.log(food)
       console.log(role) 
       navigate("/")
       axios.post(`api/v1/auth/login`, {

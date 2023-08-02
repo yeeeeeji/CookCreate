@@ -23,6 +23,12 @@ function NavBar() {
       <Link to='/'>
         로고
       </Link> |
+      <Link to='/mypageT'>
+        마이페이지T
+      </Link> |
+      <Link to='/mypageS'>
+        마이페이지S
+      </Link> |
       <Link to='/lessonranking'>
         수업 랭킹
       </Link> |
