@@ -31,9 +31,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -65,7 +63,7 @@ public class LessonServiceImpl implements LessonService {
 
         // lesson에 카테고리 아이디 저장
         LessonCategory lessonCategory = new LessonCategory();
-        lessonCategory.setCategoryId(lessonPostReq.getCategoryId());
+        lessonCategory.setCategoryId(Integer.parseInt(lessonPostReq.getCategoryId()));
         lesson.setLessonCategory(lessonCategory);
 
         // lesson에 cookyer 닉네임 저장

@@ -65,10 +65,10 @@ public class Lesson extends BaseTimeEntity {
         this.lessonTitle = lessonPostReq.getLessonTitle();
         this.cookyerId = lessonPostReq.getCookyerId();
         this.difficulty = lessonPostReq.getDifficulty();
-        this.timeTaken = lessonPostReq.getTimeTaken();
+        this.timeTaken = Integer.parseInt(lessonPostReq.getTimeTaken());
         this.description = lessonPostReq.getDescription();
-        this.maximum = lessonPostReq.getMaximum();
-        this.price = lessonPostReq.getPrice();
+        this.maximum = Integer.parseInt(lessonPostReq.getMaximum());
+        this.price = Integer.parseInt(lessonPostReq.getPrice());
         this.materials = String.join(",", lessonPostReq.getMaterials());
         this.lessonDate = lessonPostReq.getLessonDate();
         this.videoUrl = lessonPostReq.getVideoUrl();
