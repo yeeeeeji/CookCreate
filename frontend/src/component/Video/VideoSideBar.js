@@ -52,7 +52,7 @@ function VideoSideBar() {
     }
   }
 
-  const handleDisconnectSession = () => {
+  const handleDisconnectSession = () => {  // 쿠커 역할 모더레이터?로 설정하고 테스트해보기
     if (OvToken !== undefined) {
       axios.delete(
         `api/v1/session`,

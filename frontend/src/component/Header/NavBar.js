@@ -76,7 +76,7 @@ function NavBar() {
           })
       } else if (role === 'COOKIEE') {
         // 레슨아이디가 등록되면 학생은 토큰 생성 요청
-        axios.get(
+        axios.post(
           `api/v1/session/connect`,
           { 'lessonId': videoLessonId },
           {

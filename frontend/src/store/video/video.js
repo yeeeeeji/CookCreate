@@ -54,9 +54,9 @@ export const video = createSlice({
     },
     leaveSession: (state) => {
       const mySession = state.session
-      if (mySession) {
-        mySession.disconnect()
-      }
+      // if (mySession) {
+      //   mySession.disconnect()
+      // }
       state.OV = null
       state.session = undefined
       state.OvToken = undefined
