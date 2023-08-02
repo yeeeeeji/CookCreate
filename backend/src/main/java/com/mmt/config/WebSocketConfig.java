@@ -19,7 +19,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry
-                .addEndpoint("/api/v1/chat")
+                .addEndpoint("/api/v1/message")
                 .setAllowedOrigins("*");
     }
 

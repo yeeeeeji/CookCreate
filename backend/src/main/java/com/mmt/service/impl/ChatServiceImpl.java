@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,8 +44,13 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public ResponseDto closeChatRoom(int lessonId) {
+    public ResponseDto closeChatRoom(String userId, int lessonId) {
+        // 예외 처리
         Lesson lesson = lessonRepository.findByLessonId(lessonId).get();
+        if(!lesson.getCookyerId().equals(userId)) {
+            return new ResponseDto(HttpStatus.FORBIDDEN, "해당 수업을 개설한 Cookyer만 이용 가능합니다.");
+        }
+
         lesson.setIsChatRoomOver(true);
         lessonRepository.save(lesson);
         return new ResponseDto(HttpStatus.OK, "success");
@@ -52,6 +58,11 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public ResponseDto leaveChatRoom(String userId, int lessonId) {
+        Lesson lesson = lessonRepository.findByLessonId(lessonId).get();
+        if(lesson.getCookyerId().equals(userId) && !lesson.getIsChatRoomOver()) {
+            return new ResponseDto(HttpStatus.BAD_REQUEST, "Cookyer은 채팅방을 닫은 후 나갈 수 있습니다.");
+        }
+
         LessonParticipant lessonParticipant = lessonParticipantRepository.findByLesson_LessonIdAndUserId(lessonId, userId).get();
         lessonParticipant.setLeaveChat(true);
         lessonParticipantRepository.save(lessonParticipant);
@@ -59,17 +70,23 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<ChatRes> getChatMessageList(String userId, int lessenId) {
+    public List<ChatRes> getChatMessageList(String userId, int lessonId) {
         List<ChatRes> result = new ArrayList<>();
 
-        // TODO : 예외 처리
-        LessonParticipant lessonParticipant = lessonParticipantRepository.findByLesson_LessonIdAndUserId(lessenId, userId).get();
-        if(lessonParticipant == null || lessonParticipant.isLeaveChat()) {
+        // 예외 처리
+        Optional<LessonParticipant> isParticipant = lessonParticipantRepository.findByLesson_LessonIdAndUserId(lessonId, userId);
+        if(!isParticipant.isPresent()) {
             result.add(new ChatRes(HttpStatus.FORBIDDEN, "접근 권한이 없는 채팅방입니다."));
             return result;
+        } else {
+            LessonParticipant lessonParticipant = isParticipant.get();
+            if (lessonParticipant.isLeaveChat()) {
+                result.add(new ChatRes(HttpStatus.FORBIDDEN, "접근 권한이 없는 채팅방입니다."));
+                return result;
+            }
         }
 
-        List<Chat> messageList = lessonRepository.findByLessonId(lessenId).get().getChatList();
+        List<Chat> messageList = lessonRepository.findByLessonId(lessonId).get().getChatList();
 
         for(Chat chat : messageList) {
             ChatRes chatRes = new ChatRes(chat);
