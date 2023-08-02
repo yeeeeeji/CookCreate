@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import { useSelector, useDispatch } from "react-redux";
 import '../../style/navbar.css'
-import { logout } from '../../store/auth/auth'; // Import the logout action
 import axios from 'axios';
 
 function NavBar() {
