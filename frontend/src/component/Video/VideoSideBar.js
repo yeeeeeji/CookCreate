@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { audioMute, leaveSession, videoMute } from '../../store/video/video';
 import { useNavigate } from 'react-router-dom';
 import { setScreenShareActive, setStreamManager } from '../../store/video/screenShare';
+import axios from 'axios';
 
 function VideoSideBar() {
   const dispatch = useDispatch()
-  const navigator = useNavigate()
+  const navigate = useNavigate()
 
   const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
@@ -16,17 +17,64 @@ function VideoSideBar() {
   const streamManager = useSelector((state) => state.screenShare.streamManager)
   const [ isShared, setIsShared ] = useState(false)
 
+  const OvToken = useSelector((state) => state.video.OvToken)
+  const videoLessonId = useSelector((state) => state.video.videoLessonId)
+  const access_token = useSelector((state) => state.auth.access_token)
+
   const role = localStorage.getItem('role')
 
   /** 체크 도전 */
   // const check = useSelector((state) => state.cookieeVideo.check)
 
   const handleLeaveSession = () => {
-    if (session) {
-      session.disconnect()
-      dispatch(leaveSession())
+    if (OvToken !== undefined) {
+      axios.delete(
+        `api/v1/session`,
+        { videoLessonId },
+        {
+          headers: {
+            accessToken: access_token
+          }
+        })
+        .then((res) => {
+          dispatch(leaveSession())
+          session.disconnect()
+          console.log('디비 세션 삭제 성공', res)
+          // dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
+          navigate('/')
+        })
+        .catch((err) => {
+          console.log('디비 세션 삭제 실패', err)
+        })
+    } else {
+      console.log("비정상적인 접근. 어떻게 여기에..?")
     }
-    navigator('/')
+  }
+
+  const handleDisconnectSession = () => {
+    if (OvToken !== undefined) {
+      axios.delete(
+        `api/v1/session`,
+        { videoLessonId },
+        {
+          headers: {
+            accessToken: access_token
+          }
+        })
+        .then((res) => {
+          dispatch(leaveSession())
+          session.forceDisconnect()
+          console.log("수업 강제 종료")
+          console.log('디비 세션 삭제 성공', res)
+          // dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
+          navigate('/')
+        })
+        .catch((err) => {
+          console.log('디비 세션 삭제 실패', err)
+        })
+    } else {
+      console.log("비정상적인 접근. 어떻게 여기에..?")
+    }
   }
 
   // const handleScreenShare = () => {
@@ -142,6 +190,13 @@ function VideoSideBar() {
       >
         나가기
       </button>
+      { role === 'COOKYER' ? (
+        <button
+          onClick={handleDisconnectSession}
+        >
+          수업 종료하기
+        </button>
+      ) : null}
       <button
         onClick={setAudioMute}
       >

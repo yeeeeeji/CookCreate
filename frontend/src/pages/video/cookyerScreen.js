@@ -65,10 +65,10 @@ function CookyerScreen() {
         session.off('streamCreated', handleStreamCreated);
         session.off('streamDestroyed', handleStreamDestroyed);
         session.off('exception', handleException);
-        const mySession = session;
-        if (mySession) {
-          mySession.disconnect(); // 예시에서는 disconnect()로 대체하였으나, 이는 OpenVidu에 따라 다르게 적용될 수 있음
-        }
+        // const mySession = session;
+        // if (mySession) {
+        //   mySession.disconnect(); // 예시에서는 disconnect()로 대체하였으나, 이는 OpenVidu에 따라 다르게 적용될 수 있음
+        // }
       };
     }
   }, []);
