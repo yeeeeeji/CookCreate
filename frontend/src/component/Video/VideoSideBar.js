@@ -6,6 +6,7 @@ import { audioMute, leaveSession, videoMute } from '../../store/video/video';
 import { useNavigate } from 'react-router-dom';
 import { setScreenShareActive, setStreamManager } from '../../store/video/screenShare';
 import axios from 'axios';
+import { setCheck } from '../../store/video/cookieeVideo';
 
 function VideoSideBar() {
   const dispatch = useDispatch()
@@ -24,7 +25,7 @@ function VideoSideBar() {
   const role = localStorage.getItem('role')
 
   /** 체크 도전 */
-  // const check = useSelector((state) => state.cookieeVideo.check)
+  const check = useSelector((state) => state.cookieeVideo.check)
 
   const handleLeaveSession = () => {
     if (OvToken !== undefined) {
@@ -83,9 +84,9 @@ function VideoSideBar() {
   //   // 취소를 눌렀을땐 false여야 하는데 어떻게 그렇게 하지..?
   // }
 
-  const handleStopScreenShare = () => {
-    setIsShared(false)
-  }
+  // const handleStopScreenShare = () => {
+  //   setIsShared(false)
+  // }
 
   const setVideoMute = () => {
     dispatch(videoMute())
@@ -177,11 +178,27 @@ function VideoSideBar() {
   // }
 
   /** 체크 */
-  // 쿠키가 체크를 누르면 쿠커에게 시그널을 보내고, 쿠커가 리셋하면 쿠키에게 시그널을 보내야 함함
+  // 쿠키가 체크를 누르면 쿠커에게 시그널을 보내고, 쿠커가 리셋하면 쿠키에게 시그널을 보내야 함
   // 쿠키가 체크를 누름
-  // const pressCheck = () => {
-  //   dispatch(setCheck())
-  // }
+  const pressCheck = () => {
+    dispatch(setCheck())
+  }
+
+  useEffect(() => {
+    if (check) {
+      const data = {
+        connectionId: publisher.stream.connection.connectionId
+      }
+      console.log("체크했다", data)
+      publisher.stream.session.signal({
+        data: JSON.stringify(data),
+        type: 'check'
+      })
+    } else {
+      console.log("선생님이 체크 리셋")
+      // 학생이 체크 리셋해제하면 선생님에게 또 신호를 보내야함(아직안함)
+    }
+  }, [check])
 
   return (
     <div className='video-sidebar'>
@@ -218,7 +235,7 @@ function VideoSideBar() {
 
       { role === 'COOKIEE' ? (
         <button
-          // onClick={() => pressCheck(publisher)}
+          onClick={() => pressCheck(publisher)}
         >
           체크
         </button>
