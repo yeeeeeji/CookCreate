@@ -29,12 +29,12 @@ export const auth = createSlice({
             } else {
                 state.emoji = ""
             }
-            localStorage.setItem('access_token', payload.access_token)
-            localStorage.setItem('refresh_token', payload.refresh_token)
             localStorage.setItem('nickname', payload.nickname)
             localStorage.setItem('role', payload.role)
             localStorage.setItem('id', payload.userId)
+            localStorage.setItem('access_token', payload.access_token)
             localStorage.setItem('emoji', state.emoji)
+            localStorage.setItem('refresh_token', payload.refresh_token)
         },
         logout: (state) => {
             state.isLogin = false

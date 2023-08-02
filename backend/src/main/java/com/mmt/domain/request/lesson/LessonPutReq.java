@@ -3,6 +3,7 @@ package com.mmt.domain.request.lesson;
 import com.mmt.domain.entity.lesson.Difficulty;
 import com.mmt.domain.entity.lesson.LessonStep;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
 import java.util.List;
@@ -26,8 +27,7 @@ public class LessonPutReq {
     @NotEmpty(message = "준비물은 필수입력값입니다.")
     private List<String> materials;
     private String videoUrl;
-    //private String thumbnailUrl;
-    private String sessionId;
+    private MultipartFile thumbnailUrl;
     @NotEmpty(message = "요리 단계는 필수입력값입니다.")
     private List<LessonStep> lessonStepList;
 }

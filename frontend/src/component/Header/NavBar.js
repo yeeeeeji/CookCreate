@@ -243,9 +243,6 @@ function NavBar() {
       <Link to='/'>
         로고
       </Link> |
-      <Link to='/lessonranking'>
-        수업 랭킹
-      </Link> |
       <Link to='/totallessons'>
         수업 전체
       </Link>

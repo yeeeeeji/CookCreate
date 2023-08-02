@@ -13,7 +13,7 @@ function LessonTime() {
   //유효성 검사
   const dateValid = useSelector((state) => state.lesson.dateValid)
   const timeTakenValid = useSelector((state) => state.lesson.timeTakenValid)
-
+  
   const handleDateTimeChange = (date) => {
     setSelectedDateTime(date)
   };
@@ -55,6 +55,9 @@ function LessonTime() {
           dateFormat="yyyy-MM-dd HH:mm"
           placeholderText='과외 일시'
         />
+        {selectedDateTime && dateValid === false && <p style={{ color: 'red' }}>올바른 날짜를 선택해주세요.</p>}
+
+
       </div>
       <div>
         <div style={{display : 'flex', alignItems : 'center'}}>

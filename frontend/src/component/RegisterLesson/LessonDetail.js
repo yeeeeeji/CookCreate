@@ -21,6 +21,7 @@ function LessonDetail() {
   const difficultyValid = useSelector((state) => state.lesson.difficultyValid)
   const descriptionValid = useSelector((state) => state.lesson.descriptionValid)
   const materialValid = useSelector((state) => state.lesson.materialsValid)
+
   const handleChangePrice = (e) => {
     const input = e.target.value
     if (isNaN(input)) {
@@ -65,8 +66,34 @@ function LessonDetail() {
 
   }
   const handleThumbnailUrl = (e) => {
+    const imageInput = document.getElementById('imageInput')
+    imageInput.addEventListener('change', (event) => {
+      const selectedFile = event.target.files[0]; // 첫 번째 파일만 선택
+    
+      if (selectedFile) {
+        console.log('File name:', selectedFile.name);
+        console.log('File type:', selectedFile.type);
+        console.log('File size:', selectedFile.size, 'bytes');
+        console.log('Last modified date:', selectedFile.lastModifiedDate);
+      }
+    });
+    console.log(imageInput)
+    // if (imageInput) {
+    //   console.log(imageInput.files)
+
+    // } else {
+    //   console.log("파일 첨부 안됨")
+    // }
+    console.log(typeof(e.target.value), e.target.value)
     setLessonThumbnailUrl(e.target.value)
   }
+  // const submitThumbnailUrl = (e) => {
+  //   e.preventDefault()
+  //   console.log("submit")
+  //   // console.log(typeof(lessonThumbnailUrl), lessonThumbnailUrl)
+  //   // setLessonThumbnailUrl(e.target.value)
+  //   // setLessonThumbnailUrl(lessonThumbnailUrl)
+  // }
   useEffect(() => {
     dispatch(setPrice(lessonPrice));
     dispatch(setMaximum(maximum));
@@ -183,14 +210,29 @@ function LessonDetail() {
 
       {/* 썸네일 */}
       <div>
-        <h3>과외 썸네일(선택사항)</h3>
+        <h3>과외 썸네일</h3>
         <div>
           <input type="file"
+            name = "filename"
             value={lessonThumbnailUrl}
-            onChange={handleThumbnailUrl}
+            onChange={(e) => handleThumbnailUrl(e)}
+            id='imageInput'
+            // onChange={handleThumbnailUrl}
           />
         </div>
       </div>
+      {/* <form method="post" entype="multipart/form-data" onSubmit={submitThumbnailUrl}>
+        <h3>과외 썸네일</h3>
+        <div>
+          <input type="file"
+            value={lessonThumbnailUrl}
+            // onChange={handleThumbnailUrl}
+            onChange={(e) => handleThumbnailUrl(e)}
+            // onChange={handleThumbnailUrl}
+          />
+        </div>
+        <button type='submit'>첨부하기</button>
+      </form> */}
       
       <div style={{display : 'flex', alignItems : 'center'}}>
       <h3>준비물 입력</h3>

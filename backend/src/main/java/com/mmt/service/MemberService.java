@@ -8,6 +8,7 @@ import com.mmt.domain.request.auth.UserUpdateReq;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.auth.UserInfoRes;
 import com.mmt.domain.response.auth.UserLoginRes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +21,7 @@ public interface MemberService {
 
     public ResponseDto logout(HttpServletRequest request, HttpServletResponse response);
     public UserInfoRes getUserInfo(String userId);
-    public ResponseDto updateUserInfo(String userId, UserUpdateReq userUpdateReq);
+    public ResponseDto updateUserInfo(UserUpdateReq userUpdateReq);
     public ResponseDto deleteUser(String userId);
 
     public ResponseDto checkUserId(String userId);

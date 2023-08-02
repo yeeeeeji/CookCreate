@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -26,7 +27,7 @@ public class UserSignUpReq {
     private String phoneNumber;
     @Email(message = "이메일 형식을 지켜주세요.")
     private String userEmail;
-    private String food;
+    private List<Integer> food;
     private Role role;
 
     public void setEncodePw(String encodePw){

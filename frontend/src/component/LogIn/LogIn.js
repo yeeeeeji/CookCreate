@@ -6,7 +6,6 @@
   import { login } from '../../store/auth/auth'
 
   function Login() {
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [userId, setUserId] = useState('');

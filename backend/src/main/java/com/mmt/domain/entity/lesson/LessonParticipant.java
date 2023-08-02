@@ -23,5 +23,6 @@ public class LessonParticipant extends BaseTimeEntity {
     private Lesson lesson;
 
     private String userId;
-    private boolean isCompleted;
+    private boolean isLeaveChat;
+    private boolean isCompleted; // true면 끝남, false면 아직 시작 안함
 }

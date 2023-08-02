@@ -60,9 +60,9 @@ public class SessionController {
             return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "Cookyer만 이용 가능합니다."), HttpStatus.FORBIDDEN);
         }
 
-        if(!isBlank(lessonService.getLessonDetail(lessonId).getSessionId())) {
-            return new ResponseEntity<>(new ResponseDto(HttpStatus.CONFLICT, "이 cookyer에게는 이미 세션이 할당 되있습니다."), HttpStatus.CONFLICT);
-        }
+//        if(!isBlank(lessonService.getLessonDetail(lessonId).getSessionId())) {
+//            return new ResponseEntity<>(new ResponseDto(HttpStatus.CONFLICT, "이 cookyer에게는 이미 세션이 할당 되있습니다."), HttpStatus.CONFLICT);
+//        }
 
         ResponseDto responseDto = lessonService.createSession(lessonId, sessionCreateReq);
 
@@ -104,7 +104,7 @@ public class SessionController {
         }
 
         SessionJoinRes sessionJoinRes = new SessionJoinRes();
-        sessionJoinRes.setSessionId(lessonService.getLessonDetail(lessonId).getSessionId());
+        //sessionJoinRes.setSessionId(lessonService.getLessonDetail(lessonId).getSessionId());
 
         return new ResponseEntity<>(sessionJoinRes, sessionJoinRes.getStatusCode());
     }
@@ -135,9 +135,9 @@ public class SessionController {
             return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "과외를 개설한 cookyer만 개설한 세션을 닫을 수 있습니다."), HttpStatus.FORBIDDEN);
         }
 
-        if(isBlank(lessonService.getLessonDetail(lessonId).getSessionId())) {
-            return new ResponseEntity<>(new ResponseDto(HttpStatus.CONFLICT, "개설한 세션이 없습니다."), HttpStatus.CONFLICT);
-        }
+//        if(isBlank(lessonService.getLessonDetail(lessonId).getSessionId())) {
+//            return new ResponseEntity<>(new ResponseDto(HttpStatus.CONFLICT, "개설한 세션이 없습니다."), HttpStatus.CONFLICT);
+//        }
 
         ResponseDto responseDto = lessonService.shutdownSession(lessonId);
 

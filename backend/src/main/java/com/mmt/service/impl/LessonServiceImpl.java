@@ -2,6 +2,8 @@ package com.mmt.service.impl;
 
 import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.auth.Role;
+import com.mmt.domain.entity.badge.Badge;
+import com.mmt.domain.entity.badge.Certificated;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
@@ -9,11 +11,13 @@ import com.mmt.domain.entity.lesson.LessonStep;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
+import com.mmt.domain.request.lesson.LessonStepPutReq;
 import com.mmt.domain.request.session.SessionCreateReq;
 import com.mmt.domain.response.lesson.LessonDetailRes;
 import com.mmt.domain.response.lesson.LessonLatestRes;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.lesson.LessonSearchRes;
+import com.mmt.domain.response.lesson.LessonStepRes;
 import com.mmt.domain.response.review.ReviewAvgRes;
 import com.mmt.repository.*;
 import com.mmt.repository.lesson.LessonCategoryRepository;
@@ -37,6 +41,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,13 +53,14 @@ public class LessonServiceImpl implements LessonService {
     private final LessonStepRepository lessonStepRepository;
     private final MemberRepository memberRepository;
     private final PaymentRepository paymentRepository;
+    private final BadgeRepository badgeRepository;
 
     private final ReviewService reviewService;
     private final AwsS3Uploader awsS3Uploader;
 
     @Transactional
     @Override
-    public ResponseDto reserve(MultipartFile multipartFile, LessonPostReq lessonPostReq) {
+    public ResponseDto reserve(LessonPostReq lessonPostReq) {
         Lesson lesson = new Lesson(lessonPostReq);
 
         // lesson에 카테고리 아이디 저장
@@ -67,9 +73,9 @@ public class LessonServiceImpl implements LessonService {
         cookyer.ifPresent(member -> lesson.setCookyerName(member.getNickname()));
 
         // s3에 썸네일 이미지 업로드 후 url을 db에 저장
-        if(multipartFile != null){
+        if(lessonPostReq.getThumbnailUrl() != null){
             try {
-                String thumbnailUrl = awsS3Uploader.uploadFile(multipartFile, "lesson");
+                String thumbnailUrl = awsS3Uploader.uploadFile(lessonPostReq.getThumbnailUrl(), "lesson");
                 lesson.setThumbnailUrl(thumbnailUrl);
             } catch (IOException e) {
                 return new ResponseDto(HttpStatus.CONFLICT, e.getMessage());
@@ -114,7 +120,7 @@ public class LessonServiceImpl implements LessonService {
         lessonParticipantRepository.save(lessonParticipant);
 
         // 만약 방금 신청한 사람이 마지막 사람이라면 lesson의 is_over = true로 세팅
-        List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findByLesson_LessonId(lessonId);
+        List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(lessonId);
         int participating = lessonParticipantList.size() - 1; // 참여 중인 쿠키 수(쿠커 제외)
         if(participating == lesson.get().getMaximum()){
             lesson.get().setIsOver(true);
@@ -128,7 +134,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Transactional
     @Override
-    public ResponseDto modifyLesson(MultipartFile multipartFile, LessonPutReq lessonPutReq) {
+    public ResponseDto modifyLesson(LessonPutReq lessonPutReq) {
         Optional<Lesson> find = lessonRepository.findByLessonId(lessonPutReq.getLessonId());
 
         if(find.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
@@ -146,9 +152,9 @@ public class LessonServiceImpl implements LessonService {
         lesson.setLessonCategory(lessonCategory);
 
         // s3에 썸네일 이미지 업로드 후 url을 db에 저장
-        if(multipartFile != null){
+        if(lessonPutReq.getThumbnailUrl() != null){
             try {
-                String thumbnailUrl = awsS3Uploader.uploadFile(multipartFile, "lesson");
+                String thumbnailUrl = awsS3Uploader.uploadFile(lessonPutReq.getThumbnailUrl(), "lesson");
                 lesson.setThumbnailUrl(thumbnailUrl);
             } catch (IOException e) {
                 return new ResponseDto(HttpStatus.CONFLICT, e.getMessage());
@@ -219,7 +225,7 @@ public class LessonServiceImpl implements LessonService {
             LessonSearchRes lessonSearchRes = new LessonSearchRes(lesson);
 
             // remaining 세팅
-            List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findByLesson_LessonId(lesson.getLessonId());
+            List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(lesson.getLessonId());
             lessonSearchRes.setRemaining(lesson.getMaximum() - lessonParticipantList.size() + 1);
 
             // reviewAvg 세팅
@@ -306,7 +312,7 @@ public class LessonServiceImpl implements LessonService {
             if(lessonCategory.isPresent()) result.setCategoryName(lessonCategory.get().getCategoryTitle());
 
             // lessonParticipantList 세팅
-            List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findByLesson_LessonId(lessonId);
+            List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(lessonId);
             List<Member> memberList = new ArrayList<>();
             for (LessonParticipant lp : lessonParticipantList){
                 Member member = new Member();
@@ -330,6 +336,33 @@ public class LessonServiceImpl implements LessonService {
             result.setReviewCnt(reviewAvgRes.getCount());
             result.setReviewSum(reviewAvgRes.getSum());
 
+            // cookyer 정보 추가 반환
+            Optional<Member> cookyer = memberRepository.findByUserId(result.getCookyerId());
+            result.setPhoneNumber(cookyer.get().getPhoneNumber());
+            result.setUserEmail(cookyer.get().getUserEmail());
+            if(cookyer.get().getFood() != null){
+                result.setFood(Arrays.stream(cookyer.get().getFood().split(","))
+                        .map(Integer::parseInt)
+                        .collect(Collectors.toList()));
+            }
+            result.setIntroduce(cookyer.get().getIntroduce());
+            result.setProfileImg(cookyer.get().getProfileImg());
+
+            // 승인된 뱃지가 있는지 확인
+            List<Badge> badgeList = badgeRepository.findAllByMember_UserId(result.getCookyerId());
+            if(badgeList.size() == 0){
+                result.setApproved(false);
+            }else{
+                boolean isApproved = false;
+                for (Badge badge : badgeList){
+                    if(badge.getCertificated().equals(Certificated.ACCESS)){
+                        isApproved = true;
+                        break;
+                    }
+                }
+                result.setApproved(isApproved);
+            }
+
             return result;
         }else{
             return null;
@@ -351,6 +384,42 @@ public class LessonServiceImpl implements LessonService {
         }
 
         return lessonLatestRes;
+    }
+
+    @Override
+    public List<LessonStepRes> getLessonStep(int lessonId) {
+        List<LessonStep> lessonStepList = lessonStepRepository.findByLesson_LessonId(lessonId);
+        List<LessonStepRes> result = new ArrayList<>();
+        for(LessonStep lessonStep : lessonStepList){
+            LessonStepRes lessonStepRes = new LessonStepRes(lessonStep);
+            result.add(lessonStepRes);
+        }
+        return result;
+    }
+
+    @Override
+    public ResponseDto modifyLessonStep(String userId, LessonStepPutReq lessonStepPutReq) {
+        Optional<Lesson> find = lessonRepository.findByLessonId(lessonStepPutReq.getLessonId());
+
+        if(find.isEmpty()) {
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        }
+        if(!find.get().getCookyerId().equals(userId)){
+            return new ResponseDto(HttpStatus.UNAUTHORIZED, "해당 과외의 Cookyer만 이용 가능합니다");
+        }
+
+        // 저장된 단계들 삭제 -> 순서, 개수, 내용 모두 바뀔 수 있음
+        lessonStepRepository.deleteAllByLesson_LessonId(lessonStepPutReq.getLessonId());
+
+        for(LessonStep ls : lessonStepPutReq.getLessonStepList()){
+            LessonStep lessonStep = new LessonStep();
+            lessonStep.setStepOrder(ls.getStepOrder());
+            lessonStep.setStepContent(ls.getStepContent());
+            lessonStep.setLesson(find.get());
+            lessonStepRepository.save(lessonStep);
+        }
+
+        return new ResponseDto(HttpStatus.OK, "Success");
     }
 
     @Override
