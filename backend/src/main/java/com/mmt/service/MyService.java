@@ -2,10 +2,7 @@ package com.mmt.service;
 
 
 import com.mmt.domain.response.ResponseDto;
-import com.mmt.domain.response.my.MyBadgeRes;
-import com.mmt.domain.response.my.MyLessonRes;
-import com.mmt.domain.response.my.MyRecipeRes;
-import com.mmt.domain.response.my.MyReviewRes;
+import com.mmt.domain.response.my.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -18,4 +15,6 @@ public interface MyService {
     ResponseDto registerLicense(String userId, MultipartFile multipartFile);
     List<MyBadgeRes> getLicenseList(String userId);
     ResponseDto deleteProfileImg(String userId);
+    List<MyPaymentRes> getCookieePayment(String UserId);
+    List<MyPaymentRes> getCookyerPayment(String userId);
 }
