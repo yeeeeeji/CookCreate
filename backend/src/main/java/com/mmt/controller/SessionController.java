@@ -78,6 +78,7 @@ public class SessionController {
 
         Session session = openvidu.createSession();
         sessionPostReq.setSessionId(session.getSessionId());
+        log.info(sessionPostReq.toString());
 
         ResponseDto responseDto = lessonService.createSession(sessionPostReq);
 

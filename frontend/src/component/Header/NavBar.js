@@ -49,24 +49,25 @@ function NavBar() {
   // 수업 목록에서 생성하기 버튼을 클릭하면 세션이 생성되고 등등
   const createRoom = ( lessonId ) => {
     // 0. 레슨아이디 스토어에 저장
-    dispatch(setVideoLessonId(lessonId))
+    dispatch(setVideoLessonId({videoLessonId: lessonId}))
   }
 
   
   // 1. 레슨아이디가 잘 저장되면 선생님이 해당 수업 방 만들기 요청 보내기
   useEffect(() => {
     if (videoLessonId !== undefined) {
+      console.log(videoLessonId, "레슨번호")
       if (role === 'COOKYER') {
         axios.post(
           `api/v1/session/create`,
-          { videoLessonId },
+          { 'lessonId': videoLessonId },
           {
             headers: {
-              accessToken: access_token
+              access_token: access_token
             }
           })
           .then((res) => {
-            dispatch(setRoomPresent(videoLessonId))
+            dispatch(setRoomPresent({roomPresent: true}))
             console.log('방 만들기 요청 성공', res)
             // dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
           })
@@ -77,10 +78,10 @@ function NavBar() {
         // 레슨아이디가 등록되면 학생은 토큰 생성 요청
         axios.get(
           `api/v1/session/connect`,
-          { videoLessonId },
+          { 'lessonId': videoLessonId },
           {
             headers : {
-              accessToken : access_token
+              access_token : access_token
             }
           })
           .then((res) => {
@@ -100,13 +101,13 @@ function NavBar() {
 
   // 2. 방이 만들어지면 토큰 요청하기
   useEffect(() => {
-    if (roomPresent !== null) {
+    if (roomPresent !== null && roomPresent) {
       axios.post(
         `api/v1/session/connect`,
         { lessonId: roomPresent },
         {
           headers: {
-            accessToken: access_token
+            access_token: access_token
           }
         })
         .then((res) => {
@@ -143,27 +144,27 @@ function NavBar() {
   }, [OvToken])
 
 
-  useEffect(() => {  // 레슨 정보 받아오는 부분
-    if (role === 'COOKIEE') {
-      axios.get(
-        `api/v1/my/applied`,
-        {
-          headers : {
-            accessToken : access_token
-          }
-        })
-        .then((res) => {
-          console.log(res)
-          console.log('신청한 수업 목록 받아와짐')
-          setMyLessons(res.data) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
-          // setSessionId(res.data.sessionId)
-        })
-        .catch((err) => {
-          console.log(err)
-          console.log('신청한 수업 목록 안받아와짐')
-        })
-    }
-  }, [])
+  // useEffect(() => {  // 레슨 정보 받아오는 부분
+  //   if (role === 'COOKIEE') {
+  //     axios.get(
+  //       `api/v1/my/applied`,
+  //       {
+  //         headers : {
+  //           accessToken : access_token
+  //         }
+  //       })
+  //       .then((res) => {
+  //         console.log(res)
+  //         console.log('신청한 수업 목록 받아와짐')
+  //         setMyLessons(res.data) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
+  //         // setSessionId(res.data.sessionId)
+  //       })
+  //       .catch((err) => {
+  //         console.log(err)
+  //         console.log('신청한 수업 목록 안받아와짐')
+  //       })
+  //   }
+  // }, [])
 
   /** 학생이 과외방 입장하는 코드 */
   // 반복문 이용해서 모달에 각각 정보 띄우고, 온클릭 이벤트를 통해 전달받는 방식
