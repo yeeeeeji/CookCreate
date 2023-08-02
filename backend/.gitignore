@@ -5,6 +5,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### openvidu ###
+**/src/main/resources/application-openvidu.properties
+
 ### aws ###
 **/src/main/resources/application-aws.properties
 **/src/main/resources/application-credentials.properties

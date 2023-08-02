@@ -54,6 +54,8 @@ public class Lesson extends BaseTimeEntity {
     private Boolean isOver;
     @Column(columnDefinition = "boolean default false")
     private Boolean isChatRoomOver;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean isEnd;
 
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
     private List<Chat> chatList = new ArrayList<>();
