@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import { OpenVidu } from "openvidu-browser";
 
 export const publishStream = createAsyncThunk(
-  "video/publishCookiee",
+  "video/publishStream",
   async (data) => {
     const token = data.token
     const myUserName = data.myUserName

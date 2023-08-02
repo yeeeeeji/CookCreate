@@ -19,7 +19,7 @@ function VideoSideBar() {
   const role = localStorage.getItem('role')
 
   /** 체크 도전 */
-  const check = useSelector((state) => state.cookieeVideo.check)
+  // const check = useSelector((state) => state.cookieeVideo.check)
 
   const handleLeaveSession = () => {
     if (session) {
@@ -29,11 +29,11 @@ function VideoSideBar() {
     navigator('/')
   }
 
-  const handleScreenShare = () => {
-    setIsShared(true)
-    console.log('화면공유', 'true', isShared)
-    // 취소를 눌렀을땐 false여야 하는데 어떻게 그렇게 하지..?
-  }
+  // const handleScreenShare = () => {
+  //   setIsShared(true)
+  //   console.log('화면공유', 'true', isShared)
+  //   // 취소를 눌렀을땐 false여야 하는데 어떻게 그렇게 하지..?
+  // }
 
   const handleStopScreenShare = () => {
     setIsShared(false)
@@ -58,82 +58,82 @@ function VideoSideBar() {
   }, []);
 
   const onbeforeunload = (e) => {
-    leaveSession()
+    dispatch(leaveSession())  // 수정필요
   }
 
-  /** 화면공유 */
-  useEffect(() => {
-    console.log('화면공유 할말?', isShared)
-    if (isShared) {
-      const sharedPublisher = OV.initPublisher(
-        undefined,
-        {
-          // videoSource: videoSource,
-          videoSource: 'screen',
-          publishAudio: true,
-          publishVideo: true,
-          mirror: false,
-          resolution: '640x480', // The resolution of your video
-          frameRate: 30, // The frame rate of your video
-          insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
-        },
-        (error) => {
-          if (error && error.name === 'SCREEN_EXTENSION_NOT_INSTALLED') {
-            alert('screen extension not installed')
-              // this.setState({ showExtensionDialog: true });
-          } else if (error && error.name === 'SCREEN_SHARING_NOT_SUPPORTED') {
-            alert('Your browser does not support screen sharing');
-          } else if (error && error.name === 'SCREEN_EXTENSION_DISABLED') {
-            alert('You need to enable screen sharing extension');
-          } else if (error && error.name === 'SCREEN_CAPTURE_DENIED') {
-            alert('You need to choose a window or application to share');
-          }
-        },
-      )
+  // /** 화면공유 */
+  // useEffect(() => {
+  //   console.log('화면공유 할말?', isShared)
+  //   if (isShared) {
+  //     const sharedPublisher = OV.initPublisher(
+  //       undefined,
+  //       {
+  //         // videoSource: videoSource,
+  //         videoSource: 'screen',
+  //         publishAudio: true,
+  //         publishVideo: true,
+  //         mirror: false,
+  //         resolution: '640x480', // The resolution of your video
+  //         frameRate: 30, // The frame rate of your video
+  //         insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
+  //       },
+  //       (error) => {
+  //         if (error && error.name === 'SCREEN_EXTENSION_NOT_INSTALLED') {
+  //           alert('screen extension not installed')
+  //             // this.setState({ showExtensionDialog: true });
+  //         } else if (error && error.name === 'SCREEN_SHARING_NOT_SUPPORTED') {
+  //           alert('Your browser does not support screen sharing');
+  //         } else if (error && error.name === 'SCREEN_EXTENSION_DISABLED') {
+  //           alert('You need to enable screen sharing extension');
+  //         } else if (error && error.name === 'SCREEN_CAPTURE_DENIED') {
+  //           alert('You need to choose a window or application to share');
+  //         }
+  //       },
+  //     )
 
-      console.log("initPublisher 이후")
-      sharedPublisher.once('accessAllowed', () => {
-        console.log("화면공유 여기까지 오니?", sharedPublisher.stream.connection.data)
-        session.unpublish(publisher);
-        // session.unpublish(streamManager);
-        dispatch(setStreamManager({sharedPublisher}))
-        session.publish(sharedPublisher).then(() => {
-          dispatch(setScreenShareActive(true));
-          console.log("시그널 보냈나?")
-          // sendSignalUserChanged({ isScreenShareActive: screenShareActive });
-          sendSignalUserChanged({ isScreenShareActive: true });
-        })
-      });
-      // publisher.on('streamPlaying', () => {
-      //     this.updateLayout();
-      //     publisher.videos[0].video.parentElement.classList.remove('custom-class');
-      // });
+  //     console.log("initPublisher 이후")
+  //     sharedPublisher.once('accessAllowed', () => {
+  //       console.log("화면공유 여기까지 오니?", sharedPublisher.stream.connection.data)
+  //       session.unpublish(publisher);
+  //       // session.unpublish(streamManager);
+  //       dispatch(setStreamManager({sharedPublisher}))
+  //       session.publish(sharedPublisher).then(() => {
+  //         dispatch(setScreenShareActive(true));
+  //         console.log("시그널 보냈나?")
+  //         // sendSignalUserChanged({ isScreenShareActive: screenShareActive });
+  //         sendSignalUserChanged({ isScreenShareActive: true });
+  //       })
+  //     });
+  //     // publisher.on('streamPlaying', () => {
+  //     //     this.updateLayout();
+  //     //     publisher.videos[0].video.parentElement.classList.remove('custom-class');
+  //     // });
       
-    } else {
-      dispatch(setStreamManager({sharedPublisher: null}))
+  //   } else {
+  //     dispatch(setStreamManager({sharedPublisher: null}))
 
-      session.unpublish(streamManager)
-      console.log("공유화면 unpublish")
-      session.publish(publisher)
-      console.log('웹캡화면 publish')
-    }
-  }, [isShared])
+  //     session.unpublish(streamManager)
+  //     console.log("공유화면 unpublish")
+  //     session.publish(publisher)
+  //     console.log('웹캡화면 publish')
+  //   }
+  // }, [isShared])
 
-  const sendSignalUserChanged = (data) => {
-    const signalOptions = {
-        data: JSON.stringify(data),
-        type: 'sharedScreen',
-    };
-    console.log("시그널 보냈니???")
-    session.signal(signalOptions);
-  }
+  // const sendSignalUserChanged = (data) => {
+  //   const signalOptions = {
+  //       data: JSON.stringify(data),
+  //       type: 'sharedScreen',
+  //   };
+  //   console.log("시그널 보냈니???")
+  //   session.signal(signalOptions);
+  // }
 
   /** 체크 */
   // 쿠키가 체크를 누르면 쿠커에게 시그널을 보내고, 쿠커가 리셋하면 쿠키에게 시그널을 보내야 함함
   // 쿠키가 체크를 누름
-  const pressCheck = () => {
-    dispatch(setCheck())
-  }
+  // const pressCheck = () => {
+  //   dispatch(setCheck())
+  // }
 
   return (
     <div className='video-sidebar'>
@@ -155,7 +155,7 @@ function VideoSideBar() {
       
       { role === 'COOKYER' ? (
         <button
-          onClick={isShared ? handleStopScreenShare : handleScreenShare}
+          // onClick={isShared ? handleStopScreenShare : handleScreenShare}
         >
           화면공유
         </button>
@@ -163,7 +163,7 @@ function VideoSideBar() {
 
       { role === 'COOKIEE' ? (
         <button
-          onClick={() => pressCheck(publisher)}
+          // onClick={() => pressCheck(publisher)}
         >
           체크
         </button>

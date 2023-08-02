@@ -29,8 +29,8 @@ function CookieeScreen() {
   const myUserName = localStorage.getItem('nickname');
   const role = localStorage.getItem('role')
 
-  /** 체크 기능 */
-  const check = useSelector((state) => state.cookieeVideo.check)
+  // /** 체크 기능 */
+  // const check = useSelector((state) => state.cookieeVideo.check)
 
   /** 선생님 화면 고정하기 위해 선생님 subscriber 찾기 */
   const [ cookyerStream, setCookyerStream ] = useState(undefined)
@@ -67,39 +67,39 @@ function CookieeScreen() {
       session.on('streamDestroyed', handleStreamDestroyed);
       session.on('exception', handleException);
 
-      /** 쿠커로부터 체크 리셋 시그널 받고 체크 해제 */
-      session.on('signal:resetCheck', () => {
-        console.log("리셋시그널")
-        dispatch(resetCheck())
-      })
+      // /** 쿠커로부터 체크 리셋 시그널 받고 체크 해제 */
+      // session.on('signal:resetCheck', () => {
+      //   console.log("리셋시그널")
+      //   dispatch(resetCheck())
+      // })
 
-      /** 화면공유 받기 */
-      // 현재 시그널이 안받아지는 상태. 하지만 이전부터 문제이므로 일단은 신경X
-      // session.on('signal:sharedScreen', handleSharedScreen)
-      session.on('signal:sharedScreen', (e) => {
-        console.log("화면공유 데이터 받았다", e)
-        let remoteUsers = subscribers
-        remoteUsers.forEach((user) => {
-          if (user.getConnectionId() === e.from.connectionId) {
-            console.log("화면공유 데이터 받았다", e.from)
-            // const data = JSON.parse(e.data)
-            // console.log("화면공유 시그널", e.data)
-            // if (data.isAudioActive !== undefined) {
-            //   user.setAudioActive(data.isAudioActive);
-            // }
-            // if (data.isVideoActive !== undefined) {
-            //     user.setVideoActive(data.isVideoActive);
-            // }
-            // if (data.nickname !== undefined) {
-            //     user.setNickname(data.nickname);
-            // }
-            // if (data.isScreenShareActive !== undefined) {
-            //     user.setScreenShareActive(data.isScreenShareActive);
-            // }
-          }
-        })
-        dispatch(setSubscribers(subscribers))
-      })
+      // /** 화면공유 받기 */
+      // // 현재 시그널이 안받아지는 상태. 하지만 이전부터 문제이므로 일단은 신경X
+      // // session.on('signal:sharedScreen', handleSharedScreen)
+      // session.on('signal:sharedScreen', (e) => {
+      //   console.log("화면공유 데이터 받았다", e)
+      //   let remoteUsers = subscribers
+      //   remoteUsers.forEach((user) => {
+      //     if (user.getConnectionId() === e.from.connectionId) {
+      //       console.log("화면공유 데이터 받았다", e.from)
+      //       // const data = JSON.parse(e.data)
+      //       // console.log("화면공유 시그널", e.data)
+      //       // if (data.isAudioActive !== undefined) {
+      //       //   user.setAudioActive(data.isAudioActive);
+      //       // }
+      //       // if (data.isVideoActive !== undefined) {
+      //       //     user.setVideoActive(data.isVideoActive);
+      //       // }
+      //       // if (data.nickname !== undefined) {
+      //       //     user.setNickname(data.nickname);
+      //       // }
+      //       // if (data.isScreenShareActive !== undefined) {
+      //       //     user.setScreenShareActive(data.isScreenShareActive);
+      //       // }
+      //     }
+      //   })
+      //   dispatch(setSubscribers(subscribers))
+      // })
 
       console.log(4)
 
@@ -182,9 +182,9 @@ function CookieeScreen() {
                 videoStyle='cookiee-content-video'
                 streamManager={publisher}
               />
-              {check ? (
+              {/* {check ? (
                 <h1>나 체크했다</h1>
-              ) : null}
+              ) : null} */}
             </div>
 
             {/* <div className='cookyer-cookiees'> */}
