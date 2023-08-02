@@ -1,18 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { joinSession, publishCookiee } from './video-thunk'
+import { publishStream } from './video-thunk'
 
 const initialState = {
   OV: null,
   session: undefined,
-  token: undefined,
+  OvToken: undefined,
   publisher: undefined,
   mainStreamManager: undefined,
-  mySessionId: 'MMTA',  // 세션 생성했을 때 받아오는 세션 아이디
-  myUserName: 'HiHi',
   subscribers: [],
   isVideoPublished: true,
   isAudioPublished: true,
-  cookieeConnection: undefined,  // 쿠키의 커넥션. 쿠커는 저장을 안하므로 계속 undefined
 }
 
 export const video = createSlice({
@@ -24,8 +21,8 @@ export const video = createSlice({
       state.session = payload.session
       console.log("initOVSession", state.OV, state.session)
     },
-    setToken: (state, { payload }) => {
-      state.token = payload.token
+    setOvToken: (state, { payload }) => {
+      state.OvToken = payload.token
     },
     setPublisher: (state, { payload }) => {
       console.log("13")
@@ -34,17 +31,8 @@ export const video = createSlice({
     setMainStreamManager: (state, { payload }) => {
       state.mainStreamManager = payload.publisher
     },
-    setMySessionId: (state, { payload }) => {
-      state.mySessionId = payload.mySessionId
-    },
-    setMyUserName: (state, { payload }) => {
-      state.myUserName = payload.myUserName
-    },
     setSubscribers: (state, {payload}) => {
       state.subscribers = payload.subscribers
-    },
-    setCookieeConnection: (state, {payload}) => {
-      state.connection = payload.cookieeConnection
     },
     videoMute: (state) => {
       state.publisher.publishVideo(!state.isVideoPublished)
@@ -61,13 +49,14 @@ export const video = createSlice({
       if (mySession) {
         mySession.disconnect()
       }
-      state.OV = null
-      state.session = undefined
-      state.subscribers = []
-      state.mySessionId = 'SessionOO'
-      state.myUserName = 'Leave'
-      state.mainStreamManager = undefined
-      state.publisher = undefined
+      state.OV = null,
+      state.session = undefined,
+      state.OvToken = undefined,
+      state.publisher = undefined,
+      state.mainStreamManager = undefined,
+      state.subscribers = [],
+      state.isVideoPublished = true,
+      state.isAudioPublished = true,
     },
     enteredSubscriber: (state, action) => {
       // console.log("여기가 문제라고??", action.payload)
@@ -81,31 +70,20 @@ export const video = createSlice({
     }
   },
   extraReducers: {
-    [joinSession.fulfilled]: (state, { payload }) => {
-      console.log("joinSession fulfilled", payload)
-      // state.currentVideoDevice = payload.currentVideoDevice
-      state.mainStreamManager = payload.publisher
-      state.publisher = payload.publisher
-      // console.log(state.publisher)
-    },
-    [joinSession.rejected]: (state, { payload }) => {
-      console.log("joinSession rejected")
-    },
-    [publishCookiee.fulfilled]: (state, { payload }) => {
-      console.log("publishCookiee fulfilled", payload)
+    [publishStream.fulfilled]: (state, { payload }) => {
+      console.log("publishStream fulfilled", payload)
       state.OV = payload.OV
       state.session = payload.session
       state.publisher = payload.publisher
     },
-    [publishCookiee.rejected]: (state, { payload }) => {
-      console.log("publishCookiee rejected")
+    [publishStream.rejected]: (state, { payload }) => {
+      console.log("publishStream rejected")
     }
   }
 })
 
 export const {
-    initOVSession, setToken, setPublisher, setMainStreamManager,
-    setMySessionId, setMyUserName, setSubscribers, setCookieeConnection,
+    initOVSession, setOvToken, setPublisher, setMainStreamManager, setSubscribers,
     videoMute, audioMute, leaveSession,
     enteredSubscriber, deleteSubscriber,
 } = video.actions

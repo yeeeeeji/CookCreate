@@ -8,17 +8,16 @@ import LessonStepWidget from '../../component/Video/LessonStepWidget';
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber, setSubscribers } from '../../store/video/video';
-import { joinSession, publishCookiee } from '../../store/video/video-thunk';
+import { publishStream } from '../../store/video/video-thunk';
+import { resetCheck } from '../../store/video/cookieeVideo';
 
 function CookieeScreen() {
   const dispatch = useDispatch()
   
-  const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
-  const mySessionId = useSelector((state) => state.video.mySessionId)
   const publisher = useSelector((state) => state.video.publisher)
   const subscribers = useSelector((state) => state.video.subscribers)
-  const cookieeConnection = useSelector((state) => state.video.cookieeConnection)
+  // const cookieeConnection = useSelector((state) => state.video.cookieeConnection)
   // 항상 쿠커가 먼저 들어와있기 때문에 이 로직도 괜찮을 것 같지만, subscribers가 있을때만 실행되는 것으로 변경
   // const cookyerStream = subscribers.find((sub) => (
   //   JSON.parse(sub.stream.connection.data).clientData.role === 'cookyer'
@@ -26,6 +25,7 @@ function CookieeScreen() {
 
   const streamManager = useSelector((state) => state.screenShare.streamManager)
 
+  const OvToken = useSelector((state) => state.video.OvToken)
   const myUserName = localStorage.getItem('nickname');
   const role = localStorage.getItem('role')
 
@@ -47,7 +47,6 @@ function CookieeScreen() {
   useEffect(() => {
     console.log(3, session)
     if (session) {
-      // console.log("세션 바뀜")
       // On every new Stream received...
       const handleStreamCreated = (event) => {
         const subscriber = session.subscribe(event.stream, undefined);
@@ -103,10 +102,14 @@ function CookieeScreen() {
       })
 
       console.log(4)
-      // const role = 'cookiee'
 
       /** 페이지 입장 후 세션에 연결 및 발행하기 */
-      dispatch(publishCookiee({cookieeConnection, myUserName}))
+      const data = {
+        token: OvToken,
+        myUserName: myUserName
+      }
+      dispatch(publishStream({data}))
+
 
       console.log(5)
 

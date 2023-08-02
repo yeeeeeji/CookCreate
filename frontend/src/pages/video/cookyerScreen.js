@@ -7,23 +7,20 @@ import LessonStepWidget from '../../component/Video/LessonStepWidget';
 
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteSubscriber, enteredSubscriber, setMainStreamManager } from '../../store/video/video';
-import { joinSession } from '../../store/video/video-thunk';
+import { deleteSubscriber, enteredSubscriber } from '../../store/video/video';
+import { publishStream } from '../../store/video/video-thunk';
 
 function CookyerScreen() {
   const dispatch = useDispatch()
   
-  const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
-  const mySessionId = useSelector((state) => state.video.mySessionId)
   const publisher = useSelector((state) => state.video.publisher)
   const subscribers = useSelector((state) => state.video.subscribers)
-
-  // const role = localStorage.getItem('role')
 
   /** 화면공유 */
   const streamManager = useSelector((state) => state.screenShare.streamManager)
 
+  const OvToken = useSelector((state) => state.video.OvToken)
   const myUserName = localStorage.getItem('nickname');
   const role = localStorage.getItem('role')
 
@@ -55,7 +52,11 @@ function CookyerScreen() {
       session.on('exception', handleException);
 
       console.log(4)
-      dispatch(joinSession({OV, session, mySessionId, myUserName, role}))
+      const data = {
+        token: OvToken,
+        myUserName: myUserName
+      }
+      dispatch(publishStream(data))
 
       console.log(5)
 
@@ -71,12 +72,6 @@ function CookyerScreen() {
       };
     }
   }, []);
-
-  // const handleMainVideoStream = (stream) => {
-  //   if (mainStreamManager !== stream) {
-  //     dispatch(setMainStreamManager({publisher: stream}))
-  //   }
-  // }
 
   return (
     <div className='video-page'>

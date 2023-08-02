@@ -4,8 +4,7 @@ import SearchBar from './SearchBar';
 import { useSelector, useDispatch } from "react-redux";
 import '../../style/navbar.css'
 import { logout } from '../../store/auth/auth'; // Import the logout action
-import { OpenVidu } from 'openvidu-browser';
-import { initOVSession, setCookieeConnection, setMySessionId, setPublisher } from '../../store/video/video';
+import { setOvToken } from '../../store/video/video';
 import axios from 'axios';
 
 function NavBar() {
@@ -17,8 +16,9 @@ function NavBar() {
   const nickname = localStorage.getItem('nickname')
   const role = localStorage.getItem('role')
   const emoji = localStorage.getItem('emoji')
-  const mySessionId = useSelector((state) => state.video.mySessionId)  // 학생 -> 선생님이 만든 방의 세션아이디가 저장될 곳
-  const cookieeConnection = useSelector((state) => state.video.cookieeConnection)
+
+  const OvToken = useSelector((state) => state.video.OvToken)
+  const [ roomPresent, setRoomPresent ] = useState(null) // 선생님만 사용하는 변수
 
   const [ myLessons, setMyLessons ] = useState(undefined)  // 학생 모달창에 불러서 쓸 레슨 정보
 
@@ -48,34 +48,69 @@ function NavBar() {
 
   // 수업 목록에서 생성하기 버튼을 클릭하면 세션이 생성되고 등등
   const createRoom = ( lessonId ) => {
-    const OV = new OpenVidu()
-    const session = OV.initSession()
-    console.log(1)
-    dispatch(initOVSession({OV, session}))  // 세션 만들어서 스토어에 저장 후
-
-    axios.put(
-      `api/v1/session/${lessonId}`,
-      { sessionId: session.sessionId },
+    // 1. 선생님이 해당 수업 방 만들기 요청 보내기
+    axios.post(
+      `api/v1/session/create`,
+      { lessonId },
       {
-        headers : {
-          accessToken : access_token
-        },
+        headers: {
+          accessToken: access_token
+        }
       })
       .then((res) => {
-        console.log('db에 세션 아이디 저장 완료')
+        setRoomPresent(lessonId)
+        console.log('방 만들기 요청 성공', res)
+        // dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
       })
       .catch((err) => {
-        console.log(err)
-        console.log('db에 세션 아이디 저장 실패')
+        console.log('방 만들기 요청 실패', err)
       })
   }
 
+  // 2. 방이 만들어지면 토큰 요청하기
   useEffect(() => {
-    if (role === 'COOKYER' && session) {  // 선생님은 세션이 생기면 바로 이동
+    if (roomPresent !== null) {
+      axios.post(
+        `api/v1/session/connect`,
+        { lessonId: roomPresent },
+        {
+          headers: {
+            accessToken: access_token
+          }
+        })
+        .then((res) => {
+          console.log('쿠커 토큰 생성 성공', res.data)
+          const token = res.data
+          dispatch(setOvToken(token))
+        })
+        .catch((err) => {
+          console.log('쿠커 토큰 생성 실패', err)
+        })
+    }
+  }, [roomPresent])
+
+  // // 3.  토큰이 생기면 OV와 session 객체 만들기
+  // useEffect(() => {
+  //   const OV = new OpenVidu()
+  //   const session = OV.initSession()
+  //   console.log(1)
+  //   dispatch(initOVSession({OV, session}))  // 세션 만들어서 스토어에 저장 후 -> 꼭 저장해야 하는지 확인하기
+  // }, [OvToken])
+
+  // // 4. 세션이 생기면 이동 -> OV객체, session객체(비어있음), 토큰이 있는 상태
+  // useEffect(() => {
+  //   if (session) {
+  //     navigate(`/videoLesson/${role}`)
+  //   }
+  // }, [session])
+
+  // **3. 토큰이 생기면 이동 -> 페이지 이동 후 발행 과정에서 OV, session 객체 생성
+  useEffect(() => {
+    if (OvToken) {
       navigate(`/videoLesson/${role}`)
     }
-    // 쉽게 접근할 수 없게 url 세션아이디로 바꾸기??
-  }, [session])
+  }, [OvToken])
+
 
   useEffect(() => {  // 레슨 정보 받아오는 부분
     if (role === 'COOKIEE') {
@@ -101,78 +136,83 @@ function NavBar() {
 
   /** 학생이 과외방 입장하는 코드 */
   // 반복문 이용해서 모달에 각각 정보 띄우고, 온클릭 이벤트를 통해 전달받는 방식
+
+  // 1. 입장 요청해서 토큰 받아오기
   const joinLesson = ( lessonId ) => {
     axios.get(
-      `api/v1/session/${lessonId}`,
+      `api/v1/session/connect`,
+      { lessonId },
       {
         headers : {
           accessToken : access_token
         }
       })
       .then((res) => {
-        console.log(res)
-        console.log('세션 잘 받아와집니다')
-        dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
-        // setSessionId(res.data.sessionId)
+        console.log('쿠키 토큰 생성 성공', res.data)
+        const token = res.data
+        dispatch(setOvToken(token))
       })
       .catch((err) => {
-        console.log(err)
-        console.log('세션 로드 에러가 있습니다.')
+        console.log('쿠키 토큰 생성 실패', err)
       })
   }
+  
+  // 2. 토큰이 생기면 OV와 session 객체 만들기
+  // 3. 세션이 생기면 페이지 이동하기
+  // 선생님 부분에 코드 있음
 
-  // // 서버에서 커넥션 객체를 반환한다는 가정으로, 실행하는 코드
-  // useEffect(() => {
-  //   if (role === 'COOKIEE' && mySessionId) {
-  //     const cookieeOV = new OpenVidu()
-  //     const cookieeSession = cookieeOV.initSession()
-  //     cookieeSession.connect(connection.token)
-  //       .then(() => {
-  //         console.log("선생님 세션에 학생 정상 연결")
-  //       })
-  //       .catch((err) => {
-  //         console.log("선생님 세션에 연결 실패", err)
-  //       })
+  // // // 서버에서 커넥션 객체를 반환한다는 가정으로, 실행하는 코드
+  // // useEffect(() => {
+  // //   if (role === 'COOKIEE' && mySessionId) {
+  // //     const cookieeOV = new OpenVidu()
+  // //     const cookieeSession = cookieeOV.initSession()
+  // //     cookieeSession.connect(connection.token)
+  // //       .then(() => {
+  // //         console.log("선생님 세션에 학생 정상 연결")
+  // //       })
+  // //       .catch((err) => {
+  // //         console.log("선생님 세션에 연결 실패", err)
+  // //       })
+  // //   }
+  // // }, [connection])
+
+  // // 서버에서 세션아이디 주고받기만 가능하다면
+  // const createConnection = async (mySessionId) => {  // 쿠키만 쓰는 함수
+  //   try {
+  //     const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+
+  //     const response = await axios.post(
+  //       `${APPLICATION_SERVER_URL}api/sessions/${mySessionId}/connections`,
+  //       {},
+  //       {
+  //         headers: {
+  //           // Authorization:
+  //           //   'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+  //           'Content-Type': 'application/json',
+  //         }
+  //       },
+  //     )
+  //     console.log(response.data, "쿠키 커넥션?")
+  //     dispatch(setCookieeConnection(response.data))
+  //   } catch (err) {
+  //     console.log('커넥션 얻기 실패', err)
   //   }
-  // }, [connection])
+  // }
 
-  // 서버에서 세션아이디 주고받기만 가능하다면
-  const createConnection = async (mySessionId) => {  // 쿠키만 쓰는 함수
-    try {
-      const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+  // useEffect(() => {
+  //   if (mySessionId) {
+  //     createConnection(mySessionId)
+  //   }
+  // }, [mySessionId])
 
-      const response = await axios.post(
-        `${APPLICATION_SERVER_URL}api/sessions/${mySessionId}/connections`,
-        {},
-        {
-          headers: {
-            // Authorization:
-            //   'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
-            'Content-Type': 'application/json',
-          }
-        },
-      )
-      console.log(response.data, "쿠키 커넥션?")
-      dispatch(setCookieeConnection(response.data))
-    } catch (err) {
-      console.log('커넥션 얻기 실패', err)
-    }
-  }
-
-  useEffect(() => {
-    if (mySessionId) {
-      createConnection(mySessionId)
-    }
-  }, [mySessionId])
-
-  useEffect(() => {
-    if (role === 'COOKIEE' && cookieeConnection) {  // 학생은 커넥션이 생성되면 페이지 이동
-      navigate(`/videoLesson/${role}`)
-    }
-    // if (cookieeConnection) {
-    //   publishCookiee()
-    // }
-  }, [cookieeConnection])
+  // useEffect(() => {
+  //   if (role === 'COOKIEE' && cookieeConnection) {  // 학생은 커넥션이 생성되면 페이지 이동
+  //     navigate(`/videoLesson/${role}`)
+  //   }
+  //   // if (cookieeConnection) {
+  //   //   publishCookiee()
+  //   // }
+  // }, [cookieeConnection])
 
   // // 쿠키 발행
   // const publishCookiee = async () => {
