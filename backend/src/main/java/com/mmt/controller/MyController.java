@@ -3,10 +3,7 @@ package com.mmt.controller;
 import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.auth.UserDetailsImpl;
 import com.mmt.domain.response.ResponseDto;
-import com.mmt.domain.response.my.MyBadgeRes;
-import com.mmt.domain.response.my.MyLessonRes;
-import com.mmt.domain.response.my.MyRecipeRes;
-import com.mmt.domain.response.my.MyReviewRes;
+import com.mmt.domain.response.my.*;
 import com.mmt.service.MemberService;
 import com.mmt.service.MyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -185,5 +182,43 @@ public class MyController {
         ResponseDto responseDto = myService.deleteProfileImg(userDetails.getUsername());
 
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    }
+
+    @Operation(summary = "결제 내역 보기", description = "학생 회원이 자신의 결제 내역을 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "200", description = "결제 내역이 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
+    @GetMapping("/cookiee")
+    public ResponseEntity<List<MyPaymentRes>> getCookieePaymentHistory(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        String userId = userDetails.getUsername();
+
+        List<MyPaymentRes> result = myService.getCookieePayment(userId);
+
+        return new ResponseEntity<>(result, result.get(0).getStatusCode());
+    }
+
+    @Operation(summary = "정산 내역 보기", description = "선생님 회원이 자신의 정산 내역을 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "200", description = "정산 내역이 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
+    @GetMapping("/cookyer")
+    public ResponseEntity<List<MyPaymentRes>> getCookyerPaymentHistory(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        String userId = userDetails.getUsername();
+
+        List<MyPaymentRes> result = myService.getCookyerPayment(userId);
+
+        return new ResponseEntity<>(result, result.get(0).getStatusCode());
     }
 }

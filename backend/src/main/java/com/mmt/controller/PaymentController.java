@@ -39,12 +39,12 @@ public class PaymentController {
             @ApiResponse(responseCode = "400", description = "결제에 실패했습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @GetMapping("/ready")
-    public ResponseEntity<? extends ResponseDto> readyPay(@RequestBody PaymentReadyReq paymentReadyReq, Authentication authentication) {
+    @GetMapping("/ready/{lessonId}")
+    public ResponseEntity<? extends ResponseDto> readyPay(@PathVariable int lessonId, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        if(userDetails == null) {
-            return new ResponseEntity<>(new ResponseDto(HttpStatus.UNAUTHORIZED, "로그인 후 이용해주세요."), HttpStatus.UNAUTHORIZED);
-        }
+        String userId = userDetails.getUsername();
+
+        PaymentReadyReq paymentReadyReq = new PaymentReadyReq(userId, lessonId);
 
         PaymentReadyRes paymentReadyRes = paymentService.readyPay(paymentReadyReq);
         paymentReadyRes.setStatusCode(HttpStatus.OK);
