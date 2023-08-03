@@ -35,7 +35,7 @@ function VideoSideBar() {
       console.log("레슨번호", videoLessonId)
       console.log(access_token, "삭제시도")
       axios.delete(
-        `http://localhost:4443/openvidu/api/sessions/${session.sessionId}`,
+        `http://i9c111.p.ssafy.io:5443/openvidu/api/sessions/${session.sessionId}`,
         {
           headers: {
             Authorization:
