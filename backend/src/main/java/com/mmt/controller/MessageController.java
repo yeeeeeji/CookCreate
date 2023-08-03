@@ -6,6 +6,7 @@ import com.mmt.domain.response.chat.ChatRes;
 import com.mmt.service.ChatService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/message")
 public class MessageController {
     private final SimpMessageSendingOperations simpMessageSendingOperations;
+    private final RedisTemplate<String,Object> redisTemplate;
     private final ChatService chatService;
     /*
         /sub/room/1                     - 구독(lessonId : 1)
@@ -29,7 +31,8 @@ public class MessageController {
         message.setType(Type.ENTER);
 
         ChatRes chatRes = chatService.saveMessage(message);
-        simpMessageSendingOperations.convertAndSend("/sub/room/" + message.getLessonId(),chatRes);
+        redisTemplate.convertAndSend("/sub/room/" + message.getLessonId(),chatRes);
+//        simpMessageSendingOperations.convertAndSend("/sub/room/" + message.getLessonId(),chatRes);
 
     }
 
@@ -38,6 +41,7 @@ public class MessageController {
         message.setType(Type.CHAT);
         
         ChatRes chatRes = chatService.saveMessage(message);
-        simpMessageSendingOperations.convertAndSend("/sub/room/" + message.getLessonId(),chatRes);
+        redisTemplate.convertAndSend("/sub/room/" + message.getLessonId(),chatRes);
+//        simpMessageSendingOperations.convertAndSend("/sub/room/" + message.getLessonId(),chatRes);
     }
 }

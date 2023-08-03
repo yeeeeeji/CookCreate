@@ -17,7 +17,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableRedisRepositories
 public class RedisConfig {
     @Value("${spring.redis.host}")
     private String redisHost;
@@ -31,11 +30,12 @@ public class RedisConfig {
         return new LettuceConnectionFactory(redisHost, redisPort);
     }
 
+    // redis에 publish된 메세지 처리를 위한 listener 설정
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(
-            RedisConnectionFactory connectionFactory,
+            RedisConnectionFactory connectionFactory
 //            MessageListenerAdapter listenerAdapter,
-            ChannelTopic channelTopic
+//            ChannelTopic channelTopic
     ) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
@@ -43,8 +43,9 @@ public class RedisConfig {
         return container;
     }
 
+    // 실제 메세지를 처리하는 subscriber 설정 추가
 //    @Bean
-//    public MessageListenerAdapter listenerAdapter(RedisSubscriber subscriber) {
+//    public MessageListenerAdapter listenerAdapter(RedisConfig subscriber) {
 //        return new MessageListenerAdapter(subscriber, "onMessage");
 //    }
 
@@ -57,8 +58,8 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    @Bean
-    public ChannelTopic channelTopic() {
-        return new ChannelTopic("room");
-    }
+//    @Bean
+//    public ChannelTopic channelTopic() {
+//        return new ChannelTopic("room");
+//    }
 }
