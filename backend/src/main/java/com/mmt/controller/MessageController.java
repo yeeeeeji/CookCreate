@@ -1,6 +1,8 @@
 package com.mmt.controller;
 
+import com.mmt.domain.entity.chat.Type;
 import com.mmt.domain.request.chat.ChatSaveReq;
+import com.mmt.domain.response.chat.ChatRes;
 import com.mmt.service.ChatService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +26,18 @@ public class MessageController {
     @MessageMapping("/chat/enter")
     public void enter(ChatSaveReq message) {
         message.setContent(message.getNickname() + "님이 채팅방에 입장했습니다.");
-        simpMessageSendingOperations.convertAndSend("/sub/room/" + message.getLessonId(), message);
+        message.setType(Type.ENTER);
 
-        chatService.saveMessage(message);
+        ChatRes chatRes = chatService.saveMessage(message);
+        simpMessageSendingOperations.convertAndSend("/sub/room/" + message.getLessonId(),chatRes);
+
     }
 
     @MessageMapping("/chat/message")
     public void message(ChatSaveReq message) {
-        simpMessageSendingOperations.convertAndSend("/sub/room/" + message.getLessonId(), message);
-
-        chatService.saveMessage(message);
+        message.setType(Type.CHAT);
+        
+        ChatRes chatRes = chatService.saveMessage(message);
+        simpMessageSendingOperations.convertAndSend("/sub/room/" + message.getLessonId(),chatRes);
     }
 }
