@@ -4,14 +4,13 @@ import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.badge.Badge;
 import com.mmt.domain.entity.lesson.LessonParticipant;
+import com.mmt.domain.entity.pay.PaymentHistory;
 import com.mmt.domain.entity.review.Review;
 import com.mmt.domain.response.ResponseDto;
-import com.mmt.domain.response.my.MyBadgeRes;
-import com.mmt.domain.response.my.MyLessonRes;
-import com.mmt.domain.response.my.MyRecipeRes;
-import com.mmt.domain.response.my.MyReviewRes;
+import com.mmt.domain.response.my.*;
 import com.mmt.repository.BadgeRepository;
 import com.mmt.repository.MemberRepository;
+import com.mmt.repository.PaymentRepository;
 import com.mmt.repository.ReviewRepository;
 import com.mmt.repository.lesson.LessonParticipantRepository;
 import com.mmt.repository.lesson.LessonRepository;
@@ -38,6 +37,7 @@ public class MyServiceImpl implements MyService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
     private final BadgeRepository badgeRepository;
+    private final PaymentRepository paymentRepository;
 
     private final AwsS3Uploader awsS3Uploader;
 
@@ -232,6 +232,46 @@ public class MyServiceImpl implements MyService {
         return new ResponseDto(HttpStatus.OK, "Success");
     }
 
+    @Override
+    public List<MyPaymentRes> getCookieePayment(String UserId) {
+        List<PaymentHistory> paymentList = paymentRepository.findAllByMember_UserId(UserId);
+        List<MyPaymentRes> result = new ArrayList<>();
+
+        if(paymentList.size() == 0) {
+            result.add(new MyPaymentRes(HttpStatus.OK, "결제 내역이 없습니다."));
+        }
+
+        for(PaymentHistory paymentHistory : paymentList) {
+            MyPaymentRes myPaymentRes = new MyPaymentRes(paymentHistory);
+            myPaymentRes.setStatusCode(HttpStatus.OK);
+            myPaymentRes.setMessage("success");
+
+            result.add(myPaymentRes);
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<MyPaymentRes> getCookyerPayment(String userId) {
+        List<PaymentHistory> paymentList = paymentRepository.findAllByLesson_CookyerId(userId);
+        List<MyPaymentRes> result = new ArrayList<>();
+
+        if(paymentList.size() == 0) {
+            result.add(new MyPaymentRes(HttpStatus.OK, "정산 내역이 없습니다."));
+        }
+
+        for(PaymentHistory paymentHistory : paymentList) {
+            MyPaymentRes myPaymentRes = new MyPaymentRes(paymentHistory);
+            myPaymentRes.setStatusCode(HttpStatus.OK);
+            myPaymentRes.setMessage("sucess");
+
+            result.add(myPaymentRes);
+        }
+
+        return result;
+    }
+
     private List<LessonParticipant> getParticipant(List<LessonParticipant> list, boolean isCompleted){
         // 파라미터와 동일한 상태의 참여자 목록 반환
         for(int i=list.size()-1; i>=0; i--){
@@ -251,4 +291,5 @@ public class MyServiceImpl implements MyService {
         // 해당 과외의 참여자 수 불러오기
         return lessonParticipantRepository.findAllByLesson_LessonId(lessonId).size();
     }
+
 }

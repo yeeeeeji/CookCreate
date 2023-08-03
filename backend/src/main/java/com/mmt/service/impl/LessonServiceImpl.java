@@ -471,7 +471,7 @@ public class LessonServiceImpl implements LessonService {
             }
         }
         if(!isApplied){
-            return new ResponseDto(HttpStatus.FORBIDDEN, "해당 과외를 신청한 사람만 입장할 수 있습니다.");
+            return new ResponseDto(HttpStatus.FORBIDDEN, "해당 과외를 신청한 회원만 입장할 수 있습니다.");
         }
 
         // 과외가 존재하는지 확인

@@ -30,29 +30,8 @@ import java.util.List;
 @RequestMapping("/api/v1/chat")
 @RequiredArgsConstructor
 public class ChatController {
-    private final SimpMessageSendingOperations simpMessageSendingOperations;
     private final ChatService chatService;
     private final MemberService memberService;
-
-    /*
-        /sub/room/1                     - 구독(lessonId : 1)
-        /pub/chat/(enter/message)       - 메세지 발행
-     */
-
-    @MessageMapping("/chat/enter")
-    public void enter(ChatSaveReq message) {
-        message.setContent(message.getNickname() + "님이 채팅방에 입장했습니다.");
-        simpMessageSendingOperations.convertAndSend("/sub/room/" + message.getLessonId(), message);
-
-        chatService.saveMessage(message);
-    }
-
-    @MessageMapping("/chat/message")
-    public void message(ChatSaveReq message) {
-        simpMessageSendingOperations.convertAndSend("/sub/room/" + message.getLessonId(), message);
-
-        chatService.saveMessage(message);
-    }
 
     @Operation(summary = "채팅방 목록 불러오기", description = "사용자가 참여 중인 채팅방 목록을 불러옵니다.")
     @ApiResponses(value = {
@@ -63,7 +42,7 @@ public class ChatController {
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<ChatRoomRes>> getChatRoomList(Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String userId = userDetails.getUsername();
@@ -99,38 +78,32 @@ public class ChatController {
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
-            @ApiResponse(responseCode = "403", description = "Cookyer만 이용 가능합니다.",
-                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+            @ApiResponse(responseCode = "403", description = "해당 수업을 개설한 Cookyer만 이용 가능합니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
     })
     @PutMapping("/close/{lessonId}")
     public ResponseEntity<ResponseDto> closeChatRoom(@PathVariable int lessonId, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String userId = userDetails.getUsername();
-        if(!memberService.getRole(userId).equals(Role.COOKYER)) {
-            return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "Cookyer만 이용 가능합니다."),HttpStatus.FORBIDDEN);
-        }
 
-        ResponseDto responseDto = chatService.closeChatRoom(lessonId);
+        ResponseDto responseDto = chatService.closeChatRoom(userId, lessonId);
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 
 
-    @Operation(summary = "채팅방 나가기", description = "학생이 채팅방을 나갑니다.")
+    @Operation(summary = "채팅방 나가기", description = "사용자가 채팅방을 나갑니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
-            @ApiResponse(responseCode = "403", description = "Cookyer만 이용 가능합니다.",
+            @ApiResponse(responseCode = "400", description = "Cookyer은 채팅방을 닫은 후 나갈 수 있습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @PutMapping("/{lessonId}")
     public ResponseEntity<ResponseDto> leaveChatRoom(@PathVariable int lessonId, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String userId = userDetails.getUsername();
-        if(!memberService.getRole(userId).equals(Role.COOKIEE)) {
-            return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "Cookiee만 이용 가능합니다."), HttpStatus.FORBIDDEN);
-        }
 
         ResponseDto responseDto = chatService.leaveChatRoom(userId, lessonId);
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());

@@ -46,7 +46,6 @@ public class SessionController {
     private String OPENVIDU_SECRET;
 
     private final LessonService lessonService;
-    private final MemberService memberService;
 
     private OpenVidu openvidu;
 
@@ -69,7 +68,7 @@ public class SessionController {
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @PostMapping("/create")
-    public ResponseEntity<ResponseDto> initializeSession(@RequestBody SessionPostReq sessionPostReq, Authentication authentication) throws OpenViduJavaClientException, OpenViduHttpException {
+    public ResponseEntity<? extends ResponseDto> initializeSession(@RequestBody SessionPostReq sessionPostReq, Authentication authentication) throws OpenViduJavaClientException, OpenViduHttpException {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication : " + (userDetails.getUsername()));
 
@@ -80,9 +79,17 @@ public class SessionController {
         sessionPostReq.setSessionId(session.getSessionId());
         log.info(sessionPostReq.toString());
 
+        // db에 세션아이디 저장
         ResponseDto responseDto = lessonService.createSession(sessionPostReq);
 
-        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+        // 바로 connect
+        Connection connection = session.createConnection();
+        SessionConnectRes sessionConnectRes = new SessionConnectRes();
+        sessionConnectRes.setToken(connection.getToken());
+        sessionConnectRes.setStatusCode(responseDto.getStatusCode());
+        sessionConnectRes.setMessage(responseDto.getMessage());
+
+        return new ResponseEntity<>(sessionConnectRes, sessionConnectRes.getStatusCode());
     }
 
     @Operation(summary = "과외 세션 입장", description = "과외 세션에 입장한다.")
