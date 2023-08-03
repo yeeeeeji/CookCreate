@@ -81,7 +81,7 @@ function NavBar() {
           { 'lessonId': videoLessonId },
           {
             headers : {
-              access_token : access_token
+              accessToken : access_token
             }
           })
           .then((res) => {
@@ -104,10 +104,10 @@ function NavBar() {
     if (roomPresent !== null && roomPresent) {
       axios.post(
         `api/v1/session/connect`,
-        { lessonId: roomPresent },
+        { lessonId: videoLessonId },
         {
           headers: {
-            access_token: access_token
+            Access_Token: access_token
           }
         })
         .then((res) => {
