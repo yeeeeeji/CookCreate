@@ -162,8 +162,8 @@ public class SessionController {
         log.info(sessionPostReq.toString());
 
         String sessionId = lessonService.getSessionId(sessionPostReq.getLessonId());
-        log.info(sessionId);
-        openvidu.stopBroadcast(sessionId);
+        Session session = openvidu.getActiveSession(sessionId);
+        session.close();
 
         ResponseDto responseDto = lessonService.deleteSession(sessionPostReq);
 
