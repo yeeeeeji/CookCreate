@@ -1,7 +1,10 @@
 import React, {useState} from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 function RegisterForm() {
+  const navigate = useNavigate()
+
   const [lessonThumbnailUrl, setLessonThumbnailUrl] = useState('')
   const [ThumbnailFile, setThumbnailFile] = useState(null)
   const accessToken = useSelector((state) => state.auth.access_token)
@@ -30,27 +33,18 @@ function RegisterForm() {
   const descriptionValid = useSelector((state) => state.lesson.descriptionValid)
   const isAllValid = [categoryValid, titleValid, maxValid, priceValid, dateValid, difficultyValid, timeTakenValid, materialsValid, stepValid, descriptionValid].every((isValid) => isValid);
 
-  const formData = new FormData();
+  
 
   const handleThumbnailUrl = (e) => {
     setLessonThumbnailUrl(e.target.value) // 파일명 유저들에게 보여주기
-    const temp = e.target.files[0]
-    // console.log(e.target.files[0])
-    setThumbnailFile(temp)
-    console.log(`tmp : ${temp}`, `thumbnailFile : ${ThumbnailFile}`)
-    formData.append('thumbnailUrl', temp);
-    for (let value of formData.values()) {
-      console.log(value, '썸네일 등록');
-    }
+    const file = e.target.files[0]
+    setThumbnailFile(file)
   };
 
-  console.log(formData)
   const register = (e) => {
-    console.log('test22', formData.get('thumbnailUrl'))
-    // for (let value of formData.values()) {
-    //   console.log(value, '등록 함수');
-    // }
     e.preventDefault();
+    const formData = new FormData();
+    formData.append('thumbnailUrl', ThumbnailFile);
     formData.append('lessonTitle', lessonTitle);
     formData.append('categoryId', categoryId);
     formData.append('maximum', maximum);
@@ -73,11 +67,13 @@ function RegisterForm() {
     .post(`api/v1/lesson`, formData, {
       headers: {
         Access_Token : accessToken,
-        'Content-Type': 'multipart/form-data', // multipart/form-data 설정 추가
+        'Content-Type': 'multipart/form-data'
       },
     })
     .then((res) => {
       console.log(res);
+      alert('과외 생성에 성공했습니다!')
+      navigate('/totallessons')
     })
     .catch((err) => {
       console.log(err);
@@ -97,7 +93,7 @@ function RegisterForm() {
           />
         </div>
       </div>
-    <button onClick={register} >과외 등록하기</button>
+    <button disabled={!isAllValid} onClick={register} >과외 등록하기</button>
   </div>
   );
 }
