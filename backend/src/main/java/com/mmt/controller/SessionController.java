@@ -159,9 +159,10 @@ public class SessionController {
         String loginId = userDetails.getUsername();
         sessionPostReq.setUserId(loginId);
 
-        String sessionId = lessonService.getSessionId(sessionPostReq.getLessonId());
-        Session session = openvidu.getActiveSession(sessionId);
-        session.close();
+        // front에서 처리하는 걸로 수정
+//        String sessionId = lessonService.getSessionId(sessionPostReq.getLessonId());
+//        Session session = openvidu.getActiveSession(sessionId);
+//        session.close();
 
         ResponseDto responseDto = lessonService.deleteSession(sessionPostReq);
 
