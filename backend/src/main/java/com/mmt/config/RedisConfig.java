@@ -48,7 +48,6 @@ public class RedisConfig {
 //        return new MessageListenerAdapter(subscriber, "onMessage");
 //    }
 
-    @Bean
     public RedisTemplate<String, Object> redisTemplate (RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);

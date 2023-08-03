@@ -2,6 +2,7 @@ package com.mmt.controller;
 
 import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.auth.UserDetailsImpl;
+import com.mmt.domain.request.jjim.JjimReq;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
@@ -53,19 +54,16 @@ public class JjimController {
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @PostMapping(value = "")
-    public ResponseEntity<ResponseDto> wantJjim(Authentication authentication) {
+    public ResponseEntity<ResponseDto> wantJjim(JjimReq jjimReq, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication: " + (userDetails.getUsername()));
 
-//        String loginId = userDetails.getUsername(); // 현재 로그인한 아이디
-//        if(!memberService.getRole(loginId).equals(Role.COOKYER)){ // 권한 에러
-//            return new ResponseEntity<>(new ResponseDto(HttpStatus.FORBIDDEN, "Cookyer만 이용 가능합니다."), HttpStatus.FORBIDDEN);
-//        }
-//
-//        lessonPostReq.setCookyerId(loginId);
-//        ResponseDto responseDto = lessonService.reserve(lessonPostReq);
+        String loginId = userDetails.getUsername(); // 현재 로그인한 아이디
+        jjimReq.setUserId(loginId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        ResponseDto responseDto = lessonService.wantJjim(jjimReq);
+
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 
     @Operation(summary = "찜 취소하기", description = "과외를 찜 취소한다.")
