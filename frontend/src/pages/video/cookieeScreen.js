@@ -77,6 +77,7 @@ function CookieeScreen() {
       session.of('sessionDisconnected', () => {
         dispatch(leaveSession())  // 혹시나 리뷰에서 관련 정보 필요하면 리뷰 쓴 후에 초기화로 미루기
         dispatch(setIsCompleted())
+        // 쿠커가 수업 종료와 함께 모든 쿠키들을 페이지 이동 시키려면 이곳에서 하면 됨
       })
 
       /** 쿠커로부터 체크 리셋 시그널 받고 체크 해제 */

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { publishStream } from './video-thunk'
+import { closeSession, publishStream } from './video-thunk'
 
 const initialState = {
   OV: null,
@@ -12,6 +12,7 @@ const initialState = {
   isAudioPublished: true,
   videoLessonId: undefined,
   roomPresent: false,
+  isSessionClosed: false,
 }
 
 export const video = createSlice({
@@ -89,6 +90,20 @@ export const video = createSlice({
     },
     [publishStream.rejected]: (state, { payload }) => {
       console.log("publishStream rejected")
+    },
+    [closeSession.fulfilled]: (state, { payload }) => {
+      console.log("closeSession fulfilled", payload)
+      state.OV = null
+      state.session = undefined
+      state.OvToken = undefined
+      state.publisher = undefined
+      state.mainStreamManager = undefined
+      state.subscribers = []
+      state.isVideoPublished = true
+      state.isAudioPublished = true
+      state.videoLessonId = undefined
+      state.roomPresent = false
+      state.isSessionClosed = true
     }
   }
 })

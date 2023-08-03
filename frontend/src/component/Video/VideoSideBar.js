@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { setScreenShareActive, setStreamManager } from '../../store/video/screenShare';
 import axios from 'axios';
 import { setCheck } from '../../store/video/cookieeVideo';
+import { closeSession } from '../../store/video/video-thunk';
 
 function VideoSideBar() {
   const dispatch = useDispatch()
@@ -22,6 +23,7 @@ function VideoSideBar() {
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
   // const access_token = localStorage.getItem('access_token')
   const access_token = useSelector((state) => state.auth.access_token)
+  const isSessionClosed = useSelector((state) => state.video.isSessionClosed)
 
   const role = localStorage.getItem('role')
 
@@ -33,19 +35,19 @@ function VideoSideBar() {
       console.log("레슨번호", videoLessonId)
       console.log(access_token, "삭제시도")
       axios.delete(
-        `/api/v1/session`,
+        `http://localhost:4443/openvidu/api/sessions/${session.sessionId}`,
         {
-          data: {
-            lessonId: videoLessonId
-          },
           headers: {
-            Access_Token: access_token
+            Authorization:
+              'Basic ' + btoa('OPENVIDUAPP:MMT_SECRET'),
           }
         })
         .then((res) => {
-          dispatch(leaveSession())
+          const data = {
+            access_token, lessonId: videoLessonId
+          }
+          dispatch(closeSession(data))
           console.log('세션 종료 성공', res)
-          navigate('/')
         })
         .catch((err) => {
           console.log('세션 종료 실패', err)
@@ -54,6 +56,12 @@ function VideoSideBar() {
       console.log("비정상적인 접근. 어떻게 여기에..?")
     }
   }
+
+  useEffect(() => {
+    if (role === 'COOKYER' && isSessionClosed) {
+      navigate('/')
+    }
+  }, [isSessionClosed])
 
   // unpublish 해놓고 세션 등 정보가 유지되어 있는 상태로 나가기
   const handleLeaveSession = () => {
