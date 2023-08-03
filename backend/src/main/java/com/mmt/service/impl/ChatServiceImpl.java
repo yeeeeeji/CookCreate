@@ -30,17 +30,19 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRepository chatRepository;
     private final MemberRepository memberRepository;
     @Override
-    public void saveMessage(ChatSaveReq message) {
+    public ChatRes saveMessage(ChatSaveReq message) {
         Lesson lesson = lessonRepository.findByLessonId(message.getLessonId()).get();
         Member member = memberRepository.findByUserId(message.getUserId()).get();
         Chat chat = Chat.builder()
                 .member(member)
                 .lesson(lesson)
                 .content(message.getContent())
-                .type(Type.ENTER)
+                .type(message.getType())
                 .build();
 
         chatRepository.save(chat);
+
+        return new ChatRes(chat);
     }
 
     @Override
@@ -82,9 +84,6 @@ public class ChatServiceImpl implements ChatService {
 
         for(Chat chat : messageList) {
             ChatRes chatRes = new ChatRes(chat);
-            Member member = chat.getMember();
-            chatRes.setUserId(member.getUserId());
-            chatRes.setNickname(member.getNickname());
             chatRes.setStatusCode(HttpStatus.OK);
             chatRes.setMessage("sucess");
 

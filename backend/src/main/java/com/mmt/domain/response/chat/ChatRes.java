@@ -15,6 +15,8 @@ public class ChatRes extends ResponseDto {
     private String createTime;
 
     public ChatRes(Chat chat) {
+        this.userId = chat.getMember().getUserId();
+        this.nickname = chat.getMember().getNickname();
         this.content = chat.getContent();
         this.type = chat.getType();
         this.createTime = chat.getCreatedDate().toString();
