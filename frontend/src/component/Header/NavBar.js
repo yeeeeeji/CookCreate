@@ -82,12 +82,13 @@ function NavBar() {
           })
       } else if (role === 'COOKIEE') {
         // 레슨아이디가 등록되면 학생은 토큰 생성 요청
+        console.log("쿠키 토큰 요청")
         axios.post(
           `api/v1/session/connect`,
           { 'lessonId': videoLessonId },
           {
             headers : {
-              accessToken : access_token
+              Access_Token : access_token
             }
           })
           .then((res) => {
@@ -189,7 +190,8 @@ function NavBar() {
 
   // 1. 입장 요청해서 토큰 받아오기
   const joinLesson = ( lessonId ) => {
-    dispatch(setVideoLessonId(lessonId))
+    console.log("쿠키 입장 요청")
+    dispatch(setVideoLessonId({videoLessonId: lessonId}))
     // axios.get(
     //   `api/v1/session/connect`,
     //   { lessonId },

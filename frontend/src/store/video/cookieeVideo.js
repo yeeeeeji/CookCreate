@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
   check: false,
   handsUp: false,
+  isCompleted: false,
 }
 
 export const cookyerVideo = createSlice({
@@ -20,6 +21,9 @@ export const cookyerVideo = createSlice({
     },
     resetHandsUp: (state) => {
       state.handsUp = false
+    },
+    setIsCompleted: (state) => {
+      state.isCompleted = true
     }
   },
   extraReducers: {
@@ -27,6 +31,6 @@ export const cookyerVideo = createSlice({
 })
 
 export const {
-  setCheck, resetCheck, setHandsUp, resetHandsUp
+  setCheck, resetCheck, setHandsUp, resetHandsUp, setIsCompleted
 } = cookyerVideo.actions
 export default cookyerVideo.reducer

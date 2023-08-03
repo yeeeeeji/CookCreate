@@ -7,12 +7,14 @@ import LessonStepWidget from '../../component/Video/LessonStepWidget';
 
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteSubscriber, enteredSubscriber, setSubscribers } from '../../store/video/video';
+import { deleteSubscriber, enteredSubscriber, leaveSession, setSubscribers } from '../../store/video/video';
 import { publishStream } from '../../store/video/video-thunk';
-import { resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
+import { resetCheck, resetHandsUp, setIsCompleted } from '../../store/video/cookieeVideo';
+import { useNavigate } from 'react-router-dom';
 
 function CookieeScreen() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   
   const session = useSelector((state) => state.video.session)
   const publisher = useSelector((state) => state.video.publisher)
@@ -27,6 +29,8 @@ function CookieeScreen() {
   const OvToken = useSelector((state) => state.video.OvToken)
   const myUserName = localStorage.getItem('nickname');
   const role = localStorage.getItem('role')
+
+  const isCompleted = useSelector((state) => state.cookieeVideo.isCompleted)
 
   /** 체크 기능 */
   const check = useSelector((state) => state.cookieeVideo.check)
@@ -68,6 +72,12 @@ function CookieeScreen() {
       session.on('streamCreated', handleStreamCreated);
       session.on('streamDestroyed', handleStreamDestroyed);
       session.on('exception', handleException);
+
+      /** 쿠커가 수업을 종료하면 스토어에 저장된 관련 정보 초기화 후 리뷰쓰러 */
+      session.of('sessionDisconnected', () => {
+        dispatch(leaveSession())  // 혹시나 리뷰에서 관련 정보 필요하면 리뷰 쓴 후에 초기화로 미루기
+        dispatch(setIsCompleted())
+      })
 
       /** 쿠커로부터 체크 리셋 시그널 받고 체크 해제 */
       session.on('signal:resetCheck', () => {
@@ -149,9 +159,15 @@ function CookieeScreen() {
         <div>
           <div>
             <div className='cookiee-sharing'>
-              <div className='cookiee-sharing-content'>
-                <span>화면공유</span>
-              </div>
+              { isCompleted ? (
+                <div className='cookiee-sharing-content'>
+                  <span>수업이 종료되었습니다.</span>
+                </div>
+              ) : (
+                <div className='cookiee-sharing-content'>
+                  <span>화면공유</span>
+                </div>
+              )}
             </div>
             {/* <div className='cookiee-sharing' onClick={() => handleMainVideoStream(publisher)}>
               <UserVideoComponent

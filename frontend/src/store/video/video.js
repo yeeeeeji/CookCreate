@@ -54,7 +54,7 @@ export const video = createSlice({
       console.log("오디오", state.isAudioPublished)
     },
     leaveSession: (state) => {
-      const mySession = state.session
+      // const mySession = state.session
       // if (mySession) {
       //   mySession.disconnect()
       // }

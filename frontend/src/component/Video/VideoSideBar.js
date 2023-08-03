@@ -21,14 +21,14 @@ function VideoSideBar() {
   const OvToken = useSelector((state) => state.video.OvToken)
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
   // const access_token = localStorage.getItem('access_token')
-  const access_token = localStorage.getItem('access_token')
+  const access_token = useSelector((state) => state.auth.access_token)
 
   const role = localStorage.getItem('role')
 
   /** 체크 도전 */
   const check = useSelector((state) => state.cookieeVideo.check)
 
-  const handleLeaveSession = () => {
+  const handleCloseSession = () => {
     if (OvToken !== undefined) {
       console.log("레슨번호", videoLessonId)
       console.log(access_token, "삭제시도")
@@ -44,42 +44,21 @@ function VideoSideBar() {
         })
         .then((res) => {
           dispatch(leaveSession())
-          session.disconnect()
-          console.log('디비 세션 삭제 성공', res)
+          console.log('세션 종료 성공', res)
           navigate('/')
         })
         .catch((err) => {
-          console.log('디비 세션 삭제 실패', err)
+          console.log('세션 종료 실패', err)
         })
     } else {
       console.log("비정상적인 접근. 어떻게 여기에..?")
     }
   }
 
-  const handleDisconnectSession = () => {  // 쿠커 역할 모더레이터?로 설정하고 테스트해보기
-    if (OvToken !== undefined) {
-      axios.delete(
-        `api/v1/session`,
-        { videoLessonId },
-        {
-          headers: {
-            accessToken: access_token
-          }
-        })
-        .then((res) => {
-          dispatch(leaveSession())
-          session.forceDisconnect()
-          console.log("수업 강제 종료")
-          console.log('디비 세션 삭제 성공', res)
-          // dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
-          navigate('/')
-        })
-        .catch((err) => {
-          console.log('디비 세션 삭제 실패', err)
-        })
-    } else {
-      console.log("비정상적인 접근. 어떻게 여기에..?")
-    }
+  // unpublish 해놓고 세션 등 정보가 유지되어 있는 상태로 나가기
+  const handleLeaveSession = () => {
+    
+    navigate('/')
   }
 
   // const handleScreenShare = () => {
@@ -209,13 +188,13 @@ function VideoSideBar() {
       <button
         onClick={handleLeaveSession}
       >
-        나가기
+        (잠시) 나가기
       </button>
       { role === 'COOKYER' ? (
         <button
-          onClick={handleDisconnectSession}
+          onClick={handleCloseSession}
         >
-          수업 종료하기
+          수업 끝내기
         </button>
       ) : null}
       <button
