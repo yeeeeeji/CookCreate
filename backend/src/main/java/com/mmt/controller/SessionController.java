@@ -2,6 +2,7 @@ package com.mmt.controller;
 
 import com.mmt.domain.entity.auth.UserDetailsImpl;
 import com.mmt.domain.entity.auth.Role;
+import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.request.session.SessionPostReq;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.session.SessionConnectRes;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.nullness.Opt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ import io.openvidu.java.client.OpenVidu;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.Session;
+
+import java.util.Optional;
 
 
 @Tag(name = "과외 세션 API", description = "과외 세션 관련 API입니다.")
@@ -149,13 +153,16 @@ public class SessionController {
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @DeleteMapping("")
-    public ResponseEntity<ResponseDto> deleteSession(@RequestBody SessionPostReq sessionPostReq, Authentication authentication) {
+    public ResponseEntity<ResponseDto> deleteSession(@RequestBody SessionPostReq sessionPostReq, Authentication authentication) throws OpenViduJavaClientException, OpenViduHttpException {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication : " + (userDetails.getUsername()));
 
         String loginId = userDetails.getUsername();
         sessionPostReq.setUserId(loginId);
         log.info(sessionPostReq.toString());
+
+        String sessionId = lessonService.getSessionId(sessionPostReq.getLessonId());
+        openvidu.stopBroadcast(sessionId);
 
         ResponseDto responseDto = lessonService.deleteSession(sessionPostReq);
 

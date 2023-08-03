@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSort, setDeadLine } from '../../store/lessonInfo/lessonInfo';
+import { setDeadLine, setOrder } from '../../store/lessonInfo/lessonInfo';
 
 function LessonListFliter() {
   const dispatch = useDispatch()
   const [sortBy, setSortBy] = useState('title');
-  const [deadline, setDeadline] = useState(false)
-
-
-
+  const [deadlineCheck, setDeadlineCheck] = useState(false)
 
   const handleSortChange = (event) => {
     setSortBy(event.target.value)
-    dispatch(setSort(event.target.value))
+    dispatch(setOrder(event.target.value))
   };
   const handleDeadLine = () => {
-    setDeadline(!deadline)
-    dispatch(setDeadLine(!deadline))
+    const updatedDeadlineCheck = !deadlineCheck;
+    setDeadlineCheck(updatedDeadlineCheck);
+    dispatch(setDeadLine(updatedDeadlineCheck));
   }
   return (
     <div>
@@ -30,7 +28,7 @@ function LessonListFliter() {
         </select>
       </div>
       <div>
-        <input type="checkbox" value={deadline} onClick={handleDeadLine}/>
+        <input type="checkbox" value={deadlineCheck} onClick={handleDeadLine}/>
         마감 과외 보여주기
       </div>
     </div>
