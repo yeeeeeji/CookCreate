@@ -4,7 +4,7 @@ import SearchBar from './SearchBar';
 import { useSelector, useDispatch } from "react-redux";
 import '../../style/navbar.css'
 // import { logout } from '../../store/auth/auth'; // Import the logout action
-import { initOVSession, setOvToken, setRoomPresent, setVideoLessonId } from '../../store/video/video';
+import { initOVSession, setIsSessionOpened, setOvToken, setRoomPresent, setVideoLessonId } from '../../store/video/video';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 
@@ -23,6 +23,7 @@ function NavBar() {
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
   // const roomPresent = useSelector((state) => state.video.roomPresent)
   const session = useSelector((state) => state.video.session)
+  const isSessionOpened = useSelector((state) => state.video.isSessionOpened)
 
   const [ myLessons, setMyLessons ] = useState(undefined)  // 학생 모달창에 불러서 쓸 레슨 정보
 
@@ -54,6 +55,11 @@ function NavBar() {
     dispatch(setVideoLessonId({videoLessonId: lessonId}))
   }
 
+  /** 학생이 과외방 입장하는 코드 */
+  const joinLesson = ( lessonId ) => {
+    console.log("쿠키 입장 요청")
+    dispatch(setVideoLessonId({videoLessonId: lessonId}))
+  }
   
   // 1. 레슨아이디가 잘 저장되면 선생님이 해당 수업 방 만들기 요청 보내기
   useEffect(() => {
@@ -106,43 +112,6 @@ function NavBar() {
       
   }, [videoLessonId])
 
-  // // 2. 방이 만들어지면 토큰 요청하기
-  // useEffect(() => {
-  //   if (roomPresent !== null && roomPresent) {
-  //     axios.post(
-  //       `api/v1/session/connect`,
-  //       { lessonId: videoLessonId },
-  //       {
-  //         headers: {
-  //           Access_Token: access_token
-  //         }
-  //       })
-  //       .then((res) => {
-  //         console.log('쿠커 토큰 생성 성공', res.data)
-  //         const token = res.data
-  //         dispatch(setOvToken(token))
-  //       })
-  //       .catch((err) => {
-  //         console.log('쿠커 토큰 생성 실패', err)
-  //       })
-  //   }
-  // }, [roomPresent])
-
-  // // 3.  토큰이 생기면 OV와 session 객체 만들기
-  // useEffect(() => {
-  //   const OV = new OpenVidu()
-  //   const session = OV.initSession()
-  //   console.log(1)
-  //   dispatch(initOVSession({OV, session}))  // 세션 만들어서 스토어에 저장 후 -> 꼭 저장해야 하는지 확인하기
-  // }, [OvToken])
-
-  // // 4. 세션이 생기면 이동 -> OV객체, session객체(비어있음), 토큰이 있는 상태
-  // useEffect(() => {
-  //   if (session) {
-  //     navigate(`/videoLesson/${role}`)
-  //   }
-  // }, [session])
-
   // 2. 토큰이 생기면 이동 OV, session 객체 생성
   useEffect(() => {
     const newOV = new OpenVidu()
@@ -150,15 +119,32 @@ function NavBar() {
     dispatch(initOVSession({OV: newOV, session: newSession}))
   }, [OvToken])
 
-  // **3. 세션이 생기면 이동
+  // 3. 세션이 생기면 방 열렸다 체크 / 쿠키는 바로 입장
   useEffect(() => {
     if (session) {
-      console.log(OvToken, "생성된 토큰")
+      if (role === 'COOKYER') {
+        dispatch(setIsSessionOpened({isSessionOpened: true}))
+      } else if (role === 'COOKIEE') {
+        if (OvToken) {
+          navigate(`/videoLesson/${role}`)
+        } else {
+          ("쿠키 토큰이 없어서 입장 불가")
+        }
+      } else {
+        console.log("너 누구야")
+      }
+    }
+  }, [session])
+
+  // **4.
+  useEffect(() => {
+    if (isSessionOpened && role === 'COOKYER') {
+      console.log(isSessionOpened, "방이 열렸어요")
       if (OvToken) {
         navigate(`/videoLesson/${role}`)
       }
     }
-  }, [session])
+  }, [isSessionOpened])
 
 
   // useEffect(() => {  // 레슨 정보 받아오는 부분
@@ -182,37 +168,6 @@ function NavBar() {
   //       })
   //   }
   // }, [])
-
-  /** 학생이 과외방 입장하는 코드 */
-  // 반복문 이용해서 모달에 각각 정보 띄우고, 온클릭 이벤트를 통해 전달받는 방식
-
-
-
-  // 1. 입장 요청해서 토큰 받아오기
-  const joinLesson = ( lessonId ) => {
-    console.log("쿠키 입장 요청")
-    dispatch(setVideoLessonId({videoLessonId: lessonId}))
-    // axios.get(
-    //   `api/v1/session/connect`,
-    //   { lessonId },
-    //   {
-    //     headers : {
-    //       accessToken : access_token
-    //     }
-    //   })
-    //   .then((res) => {
-    //     console.log('쿠키 토큰 생성 성공', res.data)
-    //     const token = res.data
-    //     dispatch(setOvToken(token))
-    //   })
-    //   .catch((err) => {
-    //     console.log('쿠키 토큰 생성 실패', err)
-    //   })
-  }
-  
-  // 2. 토큰이 생기면 OV와 session 객체 만들기
-  // 3. 세션이 생기면 페이지 이동하기
-  // 선생님 부분에 코드 있음
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }} className='navbar'>

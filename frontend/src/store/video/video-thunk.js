@@ -52,3 +52,50 @@ export const closeSession = createAsyncThunk(
       })
   }
 )
+
+export const shareScreen = createAsyncThunk(
+  "screenShare/shareScreen",
+  async (data) => {
+    console.log("video-thunk/shareScreen")
+    const shareScreenPublisher = await getShareScreenPublisher(data)
+    console.log(shareScreenPublisher, "스크린퍼블리셔 만들어서 여기까지 옴")
+    return shareScreenPublisher
+  }
+)
+
+function getShareScreenPublisher(data) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log("getShareScreenPublisher")
+      const OV = data.OV
+      const sharedPublisher = await OV.initPublisherAsync(
+        undefined,
+        {
+          videoSource: 'screen',
+          publishAudio: true,
+          publishVideo: true,
+          mirror: false,
+          // resolution: '640x480', // The resolution of your video
+          // frameRate: 30, // The frame rate of your video
+          // insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
+        },
+        (error) => {
+          if (error && error.name === 'SCREEN_EXTENSION_NOT_INSTALLED') {
+            alert('screen extension not installed')
+              // this.setState({ showExtensionDialog: true });
+          } else if (error && error.name === 'SCREEN_SHARING_NOT_SUPPORTED') {
+            alert('Your browser does not support screen sharing');
+          } else if (error && error.name === 'SCREEN_EXTENSION_DISABLED') {
+            alert('You need to enable screen sharing extension');
+          } else if (error && error.name === 'SCREEN_CAPTURE_DENIED') {
+            alert('You need to choose a window or application to share');
+          }
+        },
+      )
+      console.log("공유 화면 발행됐나?", sharedPublisher)
+      return resolve(sharedPublisher)
+    } catch (error) {
+      return reject(error)
+    }
+  })
+}

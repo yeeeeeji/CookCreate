@@ -93,33 +93,31 @@ function CookieeScreen() {
         dispatch(resetHandsUp())
       })
 
-      // /** 화면공유 받기 */
-      // // 현재 시그널이 안받아지는 상태. 하지만 이전부터 문제이므로 일단은 신경X
-      // // session.on('signal:sharedScreen', handleSharedScreen)
-      // session.on('signal:sharedScreen', (e) => {
-      //   console.log("화면공유 데이터 받았다", e)
-      //   let remoteUsers = subscribers
-      //   remoteUsers.forEach((user) => {
-      //     if (user.getConnectionId() === e.from.connectionId) {
-      //       console.log("화면공유 데이터 받았다", e.from)
-      //       // const data = JSON.parse(e.data)
-      //       // console.log("화면공유 시그널", e.data)
-      //       // if (data.isAudioActive !== undefined) {
-      //       //   user.setAudioActive(data.isAudioActive);
-      //       // }
-      //       // if (data.isVideoActive !== undefined) {
-      //       //     user.setVideoActive(data.isVideoActive);
-      //       // }
-      //       // if (data.nickname !== undefined) {
-      //       //     user.setNickname(data.nickname);
-      //       // }
-      //       // if (data.isScreenShareActive !== undefined) {
-      //       //     user.setScreenShareActive(data.isScreenShareActive);
-      //       // }
-      //     }
-      //   })
-      //   dispatch(setSubscribers(subscribers))
-      // })
+      /** 화면공유 받기 */
+      session.on('signal:sharedScreen', (e) => {
+        console.log("화면공유 데이터 받았다", e)  // 시그널 받는거 필요하지 않을수도?
+        // let remoteUsers = subscribers
+        // remoteUsers.forEach((user) => {
+        //   if (user.getConnectionId() === e.from.connectionId) {
+        //     console.log("화면공유 데이터 받았다", e.from)
+        //     // const data = JSON.parse(e.data)
+        //     // console.log("화면공유 시그널", e.data)
+        //     // if (data.isAudioActive !== undefined) {
+        //     //   user.setAudioActive(data.isAudioActive);
+        //     // }
+        //     // if (data.isVideoActive !== undefined) {
+        //     //     user.setVideoActive(data.isVideoActive);
+        //     // }
+        //     // if (data.nickname !== undefined) {
+        //     //     user.setNickname(data.nickname);
+        //     // }
+        //     // if (data.isScreenShareActive !== undefined) {
+        //     //     user.setScreenShareActive(data.isScreenShareActive);
+        //     // }
+        //   }
+        // })
+        // dispatch(setSubscribers(subscribers))
+      })
 
       console.log(4)
 
@@ -160,15 +158,16 @@ function CookieeScreen() {
         <div>
           <div>
             <div className='cookiee-sharing'>
-              { isCompleted ? (
-                <div className='cookiee-sharing-content'>
-                  <span>수업이 종료되었습니다.</span>
-                </div>
-              ) : (
-                <div className='cookiee-sharing-content'>
-                  <span>화면공유</span>
-                </div>
-              )}
+              <div className='cookiee-sharing-content'>
+                {isCompleted ? (
+                  <p>수업이 종료되었습니다.</p>
+                ) : (
+                  <UserVideoComponent
+                    videoStyle='cookiee-sharing-content'
+                    streamManager={cookyerStream}
+                  />
+                )}
+              </div>
             </div>
             {/* <div className='cookiee-sharing' onClick={() => handleMainVideoStream(publisher)}>
               <UserVideoComponent
@@ -176,19 +175,6 @@ function CookieeScreen() {
                 streamManager={publisher}
               />
             </div> */}
-            <div className='cookiee-sharing'>
-              {streamManager !== null ? (
-                <UserVideoComponent
-                  videoStyle='cookiee-sharing-content'
-                  streamManager={streamManager}
-                />
-              ) : (
-                <UserVideoComponent
-                  videoStyle='cookiee-sharing-content'
-                  streamManager={publisher}
-                />
-              )}
-            </div>
             <LessonStepWidget/>
           </div>
           <div>
@@ -199,15 +185,21 @@ function CookieeScreen() {
                   videoStyle='cookiee-content-video'
                   streamManager={cookyerStream}
                 />
-              ) : null}
+              ) : (
+                <h1>쿠커 화면</h1>
+              )}
             </div>
-            <Timer role={role}/>
+            <Timer role='COOKIEE'/>
             {/* 쿠키 본인 화면 */}
             <div className='cookiee-content'>
-              <UserVideoComponent
-                videoStyle='cookiee-content-video'
-                streamManager={publisher}
-              />
+              {publisher !== undefined ? (
+                <UserVideoComponent
+                  videoStyle='cookiee-content-video'
+                  streamManager={publisher}
+                />
+              ) : (
+                <h1>쿠키 화면</h1>
+              )}
               {check ? (
                 <h1>나 체크했다</h1>
               ) : null}

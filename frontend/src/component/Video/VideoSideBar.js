@@ -4,7 +4,7 @@ import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { audioMute, leaveSession, videoMute } from '../../store/video/video';
 import { useNavigate } from 'react-router-dom';
-import { setScreenShareActive, setStreamManager } from '../../store/video/screenShare';
+import { setScreenShareActive, setShareScreenPublisher, setStreamManager } from '../../store/video/screenShare';
 import axios from 'axios';
 import { setCheck } from '../../store/video/cookieeVideo';
 import { closeSession } from '../../store/video/video-thunk';
@@ -16,18 +16,23 @@ function VideoSideBar() {
   const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
   const publisher = useSelector((state) => state.video.publisher)
-  const streamManager = useSelector((state) => state.screenShare.streamManager)
+
+
+  /** 화면 공유 기능 */
+  // const streamManager = useSelector((state) => state.screenShare.streamManager)
+  const shareScreenPublisher = useSelector((state) => state.screenShare.shareScreenPublisher)
+  const screenShareActive = useSelector((state) => state.screenShare.screenShareActive)
   const [ isShared, setIsShared ] = useState(false)
 
   const OvToken = useSelector((state) => state.video.OvToken)
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
-  // const access_token = localStorage.getItem('access_token')
-  const access_token = useSelector((state) => state.auth.access_token)
-  const isSessionClosed = useSelector((state) => state.video.isSessionClosed)
+  const access_token = localStorage.getItem('access_token')
+  // const access_token = useSelector((state) => state.auth.access_token)
+  const isSessionOpened = useSelector((state) => state.video.isSessionOpened)
 
   const role = localStorage.getItem('role')
 
-  /** 체크 도전 */
+  /** 체크 기능 */
   const check = useSelector((state) => state.cookieeVideo.check)
 
   const handleCloseSession = () => {
@@ -58,27 +63,71 @@ function VideoSideBar() {
   }
 
   useEffect(() => {
-    if (role === 'COOKYER' && isSessionClosed) {
+    if (role === 'COOKYER' && !isSessionOpened) {
       navigate('/')
     }
-  }, [isSessionClosed])
+  }, [isSessionOpened])
 
-  // unpublish 해놓고 세션 등 정보가 유지되어 있는 상태로 나가기
+  // unpublish 해놓고 세션 등 정보가 유지되어 있는 상태로 나가기 -> 들어올때 버튼 따로 만들어야 함. 값이 있으면 요청 안하는 걸로?
   const handleLeaveSession = () => {
-    
     navigate('/')
   }
 
-  // const handleScreenShare = () => {
-  //   setIsShared(true)
-  //   console.log('화면공유', 'true', isShared)
-  //   // 취소를 눌렀을땐 false여야 하는데 어떻게 그렇게 하지..?
-  // }
+  /** 화면 공유 */
+  const handleScreenShare = () => {
+    console.log("handleScreenShare", shareScreenPublisher)
+    if (shareScreenPublisher === null) {
+      if (isShared) {
+        setIsShared(false)
+      } else {
+        setIsShared(true)
+        console.log("화면공유하기")
+      }
+    } else {
+      setIsShared(false)
+      console.log("화면공유 취소")
+    }
+  }
 
-  // const handleStopScreenShare = () => {
-  //   setIsShared(false)
-  // }
+  useEffect(() => {
+    if (isShared) {
+      console.log("화면공유 시작")
+      dispatch(shareScreen({OV}))
+    } else {
+      if (screenShareActive) {  // 공유된 상태일때만
+        session.unpublish(shareScreenPublisher)
+        session.publish(publisher)
+        dispatch(setShareScreenPublisher({shareScreenPublisher: null}))
+        console.log("화면공유 종료")
+      }
+    }
+  }, [isShared])
 
+  useEffect(() => {
+    if (shareScreenPublisher !== null) {
+      shareScreenPublisher.once('accessAllowed', () => {
+        console.log("화면공유 여기까지 오니?", shareScreenPublisher.stream)
+        session.unpublish(publisher);
+        dispatch(setShareScreenPublisher({shareScreenPublisher: shareScreenPublisher}))
+        session.publish(shareScreenPublisher).then(() => {
+          dispatch(setScreenShareActive({screenShareActive: true}));
+          console.log("시그널 보냈나?")
+          sendSignalUserChanged({ isScreenShareActive: true });
+        })
+      });
+    }
+  }, [shareScreenPublisher])
+
+  // 쿠커가 화면공유하면 쿠키에게 시그널보냄 -> 진짜 필요한건지 알아볼 필요 있음
+  const sendSignalUserChanged = (data) => {
+      const signalOptions = {
+          data: JSON.stringify(data),
+          type: 'sharedScreen',
+      };
+      console.log("쿠커가 쿠키에게 화면공유 시그널 보냄")
+      session.signal(signalOptions);
+  }
+  
   const setVideoMute = () => {
     dispatch(videoMute())
   }

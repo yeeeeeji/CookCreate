@@ -7,9 +7,10 @@ import LessonStepWidget from '../../component/Video/LessonStepWidget';
 
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteSubscriber, enteredSubscriber } from '../../store/video/video';
+import { deleteSubscriber, enteredSubscriber, setIsSessionOpened } from '../../store/video/video';
 import { publishStream } from '../../store/video/video-thunk';
 import { setCheckCookiee, setCheckCookieeList, setHandsUpCookiee, setHandsUpCookieeList } from '../../store/video/cookyerVideo';
+import { setIsCompleted } from '../../store/video/cookieeVideo';
 
 function CookyerScreen() {
   const dispatch = useDispatch()
@@ -156,33 +157,39 @@ function CookyerScreen() {
 
   return (
     <div className='video-page'>
-      <VideoSideBar/>
-      <div>
+      <div className='video-content'>
         <VideoHeader/>
-        <div>
-          <div className='cookyer-sharing'>
-            <div className='cookyer-sharing-content'>
-              {streamManager === null ? (
-                <span>화면공유</span>
-              ) : (
+        <div className='cookyer-components'>
+          <div className='cookyer-components-left'>
+            <div className='cookyer-sharing'>
+              <div className='cookyer-sharing-content'>
+                {shareScreenPublisher === null ? (
+                  <UserVideoComponent
+                    videoStyle='cookyer-sharing-content'
+                    streamManager={publisher}
+                  />
+                ) : (
+                  <UserVideoComponent
+                    videoStyle='cookyer-sharing-content'
+                    streamManager={shareScreenPublisher}
+                  />
+                )}
+              </div>
+            </div>
+            <div className='cookyer-components-left-bottom'>
+              <div className='cookyer'>
                 <UserVideoComponent
-                  videoStyle='cookyer-sharing-content'
-                  streamManager={streamManager}
+                  videoStyle='cookyer-video'
+                  streamManager={publisher}
                 />
-              )}
+              </div>
+              <Timer role='COOKYER'/>
             </div>
           </div>
-          {/* <div className='cookyer-sharing' onClick={() => handleMainVideoStream(publisher)}>
-            <UserVideoComponent
-              videoStyle='cookyer-sharing-content'
-              streamManager={publisher}
-            />
-          </div> */}
           <div className='cookyer-cookiees'>
-            {/* {subscribers} */}
             {subscribers.map((sub, i) => (
+              // <div key={sub.id} onClick={() => handleMainVideoStream(sub)}>
               <div key={i}>
-                {/* <span>{sub.id}</span> */}
                 <UserVideoComponent
                   videoStyle='cookyer-cookiee'
                   streamManager={sub}
@@ -201,16 +208,10 @@ function CookyerScreen() {
               </div>
             ))}
           </div>
-          <div className='cookyer'>
-            <UserVideoComponent
-              videoStyle='cookyer-video'
-              streamManager={publisher}
-            />
-          </div>
-          <Timer role={role}/>
           <LessonStepWidget/>
         </div>
       </div>
+      <VideoSideBar/>
     </div>
   );
 }
