@@ -155,6 +155,7 @@ public class SessionController {
 
         String loginId = userDetails.getUsername();
         sessionPostReq.setUserId(loginId);
+        log.info(sessionPostReq.toString());
 
         ResponseDto responseDto = lessonService.deleteSession(sessionPostReq);
 

@@ -24,6 +24,7 @@ export const video = createSlice({
       console.log("initOVSession", state.OV, state.session)
     },
     setOvToken: (state, { payload }) => {
+      console.log("리덕스 토큰 추가", payload.token)
       state.OvToken = payload.token
     },
     setPublisher: (state, { payload }) => {

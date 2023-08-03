@@ -20,7 +20,8 @@ function VideoSideBar() {
 
   const OvToken = useSelector((state) => state.video.OvToken)
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
-  const access_token = useSelector((state) => state.auth.access_token)
+  // const access_token = localStorage.getItem('access_token')
+  const access_token = localStorage.getItem('access_token')
 
   const role = localStorage.getItem('role')
 
@@ -29,19 +30,22 @@ function VideoSideBar() {
 
   const handleLeaveSession = () => {
     if (OvToken !== undefined) {
+      console.log("레슨번호", videoLessonId)
+      console.log(access_token, "삭제시도")
       axios.delete(
-        `api/v1/session`,
-        { videoLessonId },
+        `/api/v1/session`,
         {
+          data: {
+            lessonId: videoLessonId
+          },
           headers: {
-            accessToken: access_token
+            Access_Token: access_token
           }
         })
         .then((res) => {
           dispatch(leaveSession())
           session.disconnect()
           console.log('디비 세션 삭제 성공', res)
-          // dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
           navigate('/')
         })
         .catch((err) => {

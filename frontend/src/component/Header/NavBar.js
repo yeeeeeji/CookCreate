@@ -4,8 +4,9 @@ import SearchBar from './SearchBar';
 import { useSelector, useDispatch } from "react-redux";
 import '../../style/navbar.css'
 // import { logout } from '../../store/auth/auth'; // Import the logout action
-import { setOvToken, setRoomPresent, setVideoLessonId } from '../../store/video/video';
+import { initOVSession, setOvToken, setRoomPresent, setVideoLessonId } from '../../store/video/video';
 import axios from 'axios';
+import { OpenVidu } from 'openvidu-browser';
 
 function NavBar() {
   const dispatch = useDispatch()
@@ -20,7 +21,8 @@ function NavBar() {
 
   const OvToken = useSelector((state) => state.video.OvToken)
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
-  const roomPresent = useSelector((state) => state.video.roomPresent)
+  // const roomPresent = useSelector((state) => state.video.roomPresent)
+  const session = useSelector((state) => state.video.session)
 
   const [ myLessons, setMyLessons ] = useState(undefined)  // 학생 모달창에 불러서 쓸 레슨 정보
 
@@ -57,6 +59,7 @@ function NavBar() {
   useEffect(() => {
     if (videoLessonId !== undefined) {
       console.log(videoLessonId, "레슨번호")
+      console.log("토큰", access_token)
       if (role === 'COOKYER') {
         axios.post(
           `api/v1/session/create`,
@@ -67,12 +70,15 @@ function NavBar() {
             }
           })
           .then((res) => {
-            dispatch(setRoomPresent({roomPresent: true}))
-            console.log('방 만들기 요청 성공', res)
+            // dispatch(setRoomPresent({roomPresent: true}))
+            // console.log('방 만들기 요청 성공', res)
+            console.log('쿠커 토큰 생성 성공', res)
+            const token = res.data
+            dispatch(setOvToken(token))
             // dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
           })
           .catch((err) => {
-            console.log('방 만들기 요청 실패', err)
+            console.log('쿠커 토큰 생성 실패', err)
           })
       } else if (role === 'COOKIEE') {
         // 레슨아이디가 등록되면 학생은 토큰 생성 요청
@@ -99,27 +105,27 @@ function NavBar() {
       
   }, [videoLessonId])
 
-  // 2. 방이 만들어지면 토큰 요청하기
-  useEffect(() => {
-    if (roomPresent !== null && roomPresent) {
-      axios.post(
-        `api/v1/session/connect`,
-        { lessonId: videoLessonId },
-        {
-          headers: {
-            Access_Token: access_token
-          }
-        })
-        .then((res) => {
-          console.log('쿠커 토큰 생성 성공', res.data)
-          const token = res.data
-          dispatch(setOvToken(token))
-        })
-        .catch((err) => {
-          console.log('쿠커 토큰 생성 실패', err)
-        })
-    }
-  }, [roomPresent])
+  // // 2. 방이 만들어지면 토큰 요청하기
+  // useEffect(() => {
+  //   if (roomPresent !== null && roomPresent) {
+  //     axios.post(
+  //       `api/v1/session/connect`,
+  //       { lessonId: videoLessonId },
+  //       {
+  //         headers: {
+  //           Access_Token: access_token
+  //         }
+  //       })
+  //       .then((res) => {
+  //         console.log('쿠커 토큰 생성 성공', res.data)
+  //         const token = res.data
+  //         dispatch(setOvToken(token))
+  //       })
+  //       .catch((err) => {
+  //         console.log('쿠커 토큰 생성 실패', err)
+  //       })
+  //   }
+  // }, [roomPresent])
 
   // // 3.  토큰이 생기면 OV와 session 객체 만들기
   // useEffect(() => {
@@ -136,12 +142,22 @@ function NavBar() {
   //   }
   // }, [session])
 
-  // **3. 토큰이 생기면 이동 -> 페이지 이동 후 발행 과정에서 OV, session 객체 생성
+  // 2. 토큰이 생기면 이동 OV, session 객체 생성
   useEffect(() => {
-    if (OvToken) {
-      navigate(`/videoLesson/${role}`)
-    }
+    const newOV = new OpenVidu()
+    const newSession = newOV.initSession()
+    dispatch(initOVSession({OV: newOV, session: newSession}))
   }, [OvToken])
+
+  // **3. 세션이 생기면 이동
+  useEffect(() => {
+    if (session) {
+      console.log(OvToken, "생성된 토큰")
+      if (OvToken) {
+        navigate(`/videoLesson/${role}`)
+      }
+    }
+  }, [session])
 
 
   // useEffect(() => {  // 레슨 정보 받아오는 부분
@@ -224,8 +240,8 @@ function NavBar() {
           </Link>
         </React.Fragment>
       )} | 
-      {role === 'COOKYER' ? <button onClick={() => createRoom(1)}>쿠커화면</button> : null}
-      {role === 'COOKIEE' ? <button onClick={() => joinLesson(1)}>쿠키화면</button> : null}
+      {role === 'COOKYER' ? <button onClick={() => createRoom(3)}>쿠커화면</button> : null}
+      {role === 'COOKIEE' ? <button onClick={() => joinLesson(3)}>쿠키화면</button> : null}
     </div>
   );
 }

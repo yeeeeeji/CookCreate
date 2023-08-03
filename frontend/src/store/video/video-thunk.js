@@ -4,11 +4,10 @@ import { OpenVidu } from "openvidu-browser";
 export const publishStream = createAsyncThunk(
   "video/publishStream",
   async (data) => {
+    const OV = data.OV
+    const session = data.session
     const token = data.token
     const myUserName = data.myUserName
-
-    const OV = new OpenVidu()
-    const session = OV.initSession()
 
     await session.connect(token, { clientData: myUserName })
 

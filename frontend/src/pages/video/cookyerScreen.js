@@ -14,6 +14,7 @@ import { setCheckCookiee, setCheckCookieeList, setHandsUpCookiee, setHandsUpCook
 function CookyerScreen() {
   const dispatch = useDispatch()
   
+  const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
   const publisher = useSelector((state) => state.video.publisher)
   const subscribers = useSelector((state) => state.video.subscribers)
@@ -74,6 +75,8 @@ function CookyerScreen() {
 
       console.log(4)
       const data = {
+        OV,
+        session,
         token: OvToken,
         myUserName: myUserName
       }
