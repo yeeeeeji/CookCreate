@@ -5,6 +5,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### database ###
+**/src/main/resources/application-db.properties
+
 ### openvidu ###
 **/src/main/resources/application-openvidu.properties
 
