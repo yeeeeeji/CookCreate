@@ -104,7 +104,10 @@ export const video = createSlice({
       state.videoLessonId = undefined
       state.roomPresent = false
       state.isSessionClosed = true
-    }
+    },
+    [closeSession.rejected]: (state, { payload }) => {
+      console.log("closeSession rejected")
+    } 
   }
 })
 
