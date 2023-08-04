@@ -78,6 +78,8 @@ public class MemberController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String userId = userDetails.getUsername();
 
+        log.info(userUpdateReq.getFood());
+
         userUpdateReq.setUserId(userId);
         ResponseDto responseDto = memberService.updateUserInfo(userUpdateReq);
 

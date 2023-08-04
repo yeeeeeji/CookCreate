@@ -2,17 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 // import { useSelector, useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-// import { updateUserS } from "../../store/mypageS/accountS";
 import FoodList from "../../component/SignUp/FoodList";
 import SideBar from "./SideBar";
 
 function Account() {
-  const accessToken = useSelector((state) => state.auth.token);
-  // const dispatch = useDispatch();
+  const accessToken = useSelector((state) => state.auth.access_token);
 
   const [userData, setUserData] = useState({});
-  // const selectedFood = useSelector((state) => state.accountS.food);
-  // const [foodDef, setFood] = useState(userData.food);
   const [food, setFood] = useState([]);
 
   const [userIdDef, setUserId] = useState(userData.userId);
@@ -144,7 +140,6 @@ function Account() {
       .then((res) => {
         setUserData(res.data);
         console.log(res.data);
-        // dispatch(updateUserS(res.data));
       })
       .catch((err) => {
         console.log("회원정보조회못함");
@@ -153,41 +148,10 @@ function Account() {
 
   useEffect(() => {
     if (userData.food) {
-      setFood(userData.food.split(","));
+      setFood(userData.food);
       console.log("setFood", userData.food);
     }
   }, [userData]);
-
-  // 회원정보 조회
-  // axios
-  //   .get(`api/v1/member`, {
-  //     headers: {
-  //       Access_Token: accessToken,
-  //     },
-  //   })
-  //   .then((res) => {
-  //     setUserData(res.data);
-  //     console.log(userData);
-  //     // setFood(res.data.food)
-  //   })
-  //   .catch((err) => {
-  //     console.log("회원정보조회못함");
-  //   });
-
-  // axios
-  //   .get(`api/v1/member`, {
-  //     headers: {
-  //       Access_Token: accessToken,
-  //     },
-  //   })
-  //   .then((res) => {
-  //     setUserData(res.data);
-  //     console.log(userData);
-  //     dispatch(updateUserS(res.data.food));
-  //   })
-  //   .catch((err) => {
-  //     console.log('회원정보조회못함');
-  //   });
 
   //프로필 이미지 변경
   const handleFileChange = (e) => {
@@ -195,9 +159,10 @@ function Account() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImg(reader.result);
+        setProfileImg(file)
       };
       reader.readAsDataURL(file);
+      // setProfileImg(file)
     }
   };
 
@@ -205,21 +170,6 @@ function Account() {
   const handleProfile = (e) => {
     setProfileImg("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
   };
-
-  // 음식선택
-  // const handleSelectedFood = (selectedFood) => {
-  //   if (foodDef === undefined) {
-
-  //     setFood([selectedFood]);
-  //   } else {
-
-  //     if (foodDef.includes(selectedFood)) {
-  //       setFood(foodDef.filter((item) => item !== selectedFood));
-  //     } else {
-  //       setFood([...foodDef, selectedFood]);
-  //     }
-  //   }
-  // };
 
   //음식추가 제거
   const handleSelectedFood = (selectedFood) => {
@@ -229,58 +179,53 @@ function Account() {
         const newFoodList = food.filter((item) => item !== selectedFood);
         console.log(newFoodList);
         setFood(newFoodList);
-        // food.filter((item) => {
-        //   console.log(item);
-        //   return item !== selectedFood;
-        // });
       } else {
         console.log("선택한 음식", [...food, selectedFood]);
-        console.log([...food], food);
         setFood([...food, selectedFood]);
       }
       console.log(food);
-      // dispatch(updateUserS({ food: selectedFood }));
     } else {
       console.log("food 없음");
     }
   };
 
-  // const handleSelectedFood = (selectedFood) => {
-  //   setFood((prevFood) => {
-  //     if (prevFood.includes(selectedFood)) {
-  //       return prevFood.filter((item) => item !== selectedFood);
-  //     } else {
-  //       return [...prevFood, selectedFood];
-  //     }
-  //   });
-  // };
-
   //회원정보 수정
   const handleUpdate = (e) => {
     e.preventDefault();
 
-    const data = {
-      userId: userIdDef,
-      nickname: nicknameDef,
-      phoneNumber: phoneNumberDef,
-      userEmail: userEmailDef,
-      food,
-      introduce: IntroduceDef,
-      profileImg: profileImgDef,
-    };
+
+    const formData = new FormData();
+    formData.append("userId", userIdDef);
+    console.log("폼데이터id", typeof formData.get("userId"));
+    formData.append("nickname", nicknameDef);
+    console.log("폼데이터닉네임", typeof formData.get("nickname"));
+    formData.append("phoneNumber", phoneNumberDef);
+    console.log("폼데이터폰", typeof formData.get("phoneNumber"));
+    formData.append("userEmail", userEmailDef);
+    console.log("폼데이터이메일", typeof formData.get("phoneNumber"));
+
+    formData.append("food", food);
+    console.log("폼데이터푸드", formData.get("food"));
+    console.log("폼데이터푸드", typeof formData.get("food"));
+
+    formData.append("introduce", IntroduceDef);
+    formData.append("profileImg", profileImgDef);
+    console.log("폼데이터소개", formData.get("introduce"));
+    console.log("폼데이터이미지", formData.get("profileImg"));
+    //console.log("폼데이터이미지", typeof formData.get("profileImg"));
+
     axios
-      .post(`api/v1/member`, data, {
+      .put(`api/v1/member`, formData, {
         headers: {
           Access_Token: accessToken,
+          "Content-Type": "multipart/form-data",
         },
       })
       .then((res) => {
         console.log(res);
         alert("회원정보수정이 완료됐습니다.");
       })
-      .catch((err) => {
-        console.log(data);
-      });
+      .catch((err) => {});
   };
 
   return (
@@ -301,7 +246,6 @@ function Account() {
 
       <input type="file" style={{ display: "none" }} accept="image/jpg,image/png,image/jpeg" name="profile_img" onChange={handleFileChange} ref={fileInput} />
       <button onClick={handleProfile}>기본 프로필로 변경</button>
-      {/* <button onClick={handleFileChange}>프로필 변경</button> */}
 
       <div className="myinputTitle">닉네임</div>
       <div className="inputWrap">
@@ -346,7 +290,6 @@ function Account() {
         <div>{userData.food}</div> */}
 
         <FoodList selectedFood={food} toggleFood={handleSelectedFood} />
-        {/* <FoodList selectedFood={foodDef} toggleFood={handleSelectedFood} /> */}
       </div>
 
       <div>
