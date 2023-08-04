@@ -8,7 +8,7 @@ import LessonStepWidget from '../../component/Video/LessonStepWidget';
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber, leaveSession, setSubscribers } from '../../store/video/video';
-import { publishStream } from '../../store/video/video-thunk';
+import { joinSession, publishStream } from '../../store/video/video-thunk';
 import { resetCheck, resetHandsUp, setIsCompleted } from '../../store/video/cookieeVideo';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,6 +28,7 @@ function CookieeScreen() {
   const streamManager = useSelector((state) => state.screenShare.streamManager)
 
   const OvToken = useSelector((state) => state.video.OvToken)
+  const sessionId = useSelector((state) => state.video.sessionId)
   const myUserName = localStorage.getItem('nickname');
   const role = localStorage.getItem('role')
 
@@ -105,10 +106,11 @@ function CookieeScreen() {
       const data = {
         OV,
         session,
-        token: OvToken,
-        myUserName: myUserName
+        sessionId,
+        myUserName,
       }
-      dispatch(publishStream({data}))
+      dispatch(joinSession({data}))
+      // dispatch(publishStream({data}))
 
 
       console.log(5)

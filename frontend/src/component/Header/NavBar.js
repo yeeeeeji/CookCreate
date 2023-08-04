@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import { useSelector, useDispatch } from "react-redux";
 import '../../style/navbar.css'
-import { initOVSession, setIsSessionOpened, setOvToken, setRoomPresent, setVideoLessonId } from '../../store/video/video';
+import { initOVSession, setIsSessionOpened, setOvToken, setRoomPresent, setSessionId, setVideoLessonId } from '../../store/video/video';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 
@@ -19,6 +19,7 @@ function NavBar() {
   const emoji = localStorage.getItem('emoji')
 
   const OvToken = useSelector((state) => state.video.OvToken)
+  const sessionId = useSelector((state) => state.video.sessionId)
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
   // const roomPresent = useSelector((state) => state.video.roomPresent)
   const session = useSelector((state) => state.video.session)
@@ -78,8 +79,9 @@ function NavBar() {
             // dispatch(setRoomPresent({roomPresent: true}))
             // console.log('방 만들기 요청 성공', res)
             console.log('쿠커 토큰 생성 성공', res)
-            const token = res.data
-            dispatch(setOvToken(token))
+            const sessionId = res.data
+            // dispatch(setOvToken(token))
+            dispatch(setSessionId(sessionId))
             // dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
           })
           .catch((err) => {
@@ -89,7 +91,7 @@ function NavBar() {
         // 레슨아이디가 등록되면 학생은 토큰 생성 요청
         console.log("쿠키 토큰 요청")
         axios.post(
-          `api/v1/session/connect`,
+          `api/v1/session/create`,
           { 'lessonId': videoLessonId },
           {
             headers : {
@@ -98,8 +100,8 @@ function NavBar() {
           })
           .then((res) => {
             console.log('쿠키 토큰 생성 성공', res.data)
-            const token = res.data
-            dispatch(setOvToken(token))
+            const sessionId = res.data
+            dispatch(setSessionId(sessionId))
           })
           .catch((err) => {
             console.log('쿠키 토큰 생성 실패', err)
@@ -113,12 +115,12 @@ function NavBar() {
 
   // 2. 토큰이 생기면 이동 OV, session 객체 생성
   useEffect(() => {
-    if (OvToken) {
+    if (sessionId) {
       const newOV = new OpenVidu()
       const newSession = newOV.initSession()
       dispatch(initOVSession({OV: newOV, session: newSession}))
     }
-  }, [OvToken])
+  }, [sessionId])
 
   // 3. 세션이 생기면 방 열렸다 체크 / 쿠키는 바로 입장
   // useEffect(() => {
@@ -133,10 +135,10 @@ function NavBar() {
         console.log("방 생김")
         dispatch(setIsSessionOpened({isSessionOpened: true}))
       } else if (role === 'COOKIEE') {
-        if (OvToken) {
+        if (sessionId) {
           navigate(`/videoLesson/${role}`)
         } else {
-          console.log("쿠키 토큰이 없어서 입장 불가")
+          console.log("쿠키 세션아이디 없어서 입장 불가")
         }
       } else {
         console.log("너 누구야")
@@ -148,7 +150,7 @@ function NavBar() {
   useEffect(() => {
     if (isSessionOpened && role === 'COOKYER') {
       console.log(isSessionOpened, "방이 열렸어요")
-      if (OvToken) {
+      if (sessionId) {
         navigate(`/videoLesson/${role}`)
       }
     }

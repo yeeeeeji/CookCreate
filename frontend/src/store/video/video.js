@@ -5,6 +5,7 @@ const initialState = {
   OV: null,
   session: undefined,
   OvToken: undefined,
+  sessionId: undefined,
   publisher: undefined,
   mainStreamManager: undefined,
   subscribers: [],
@@ -27,6 +28,10 @@ export const video = createSlice({
     setOvToken: (state, { payload }) => {
       console.log("리덕스 토큰 추가", payload.token)
       state.OvToken = payload.token
+    },
+    setSessionId: (state, { payload }) => {
+      console.log("세션 아이디 저장 성공")
+      state.sessionId = payload.sessionId
     },
     setPublisher: (state, { payload }) => {
       console.log("13")
@@ -65,6 +70,7 @@ export const video = createSlice({
       state.OV = null
       state.session = undefined
       state.OvToken = undefined
+      state.sessionId = undefined
       state.publisher = undefined
       state.mainStreamManager = undefined
       state.subscribers = []
@@ -99,6 +105,7 @@ export const video = createSlice({
       state.OV = null
       state.session = undefined
       state.OvToken = undefined
+      state.sessionId = undefined
       state.publisher = undefined
       state.mainStreamManager = undefined
       state.subscribers = []
@@ -115,7 +122,7 @@ export const video = createSlice({
 })
 
 export const {
-    initOVSession, setOvToken, setPublisher, setMainStreamManager,
+    initOVSession, setOvToken, setPublisher, setMainStreamManager, setSessionId,
     setSubscribers, setVideoLessonId, setRoomPresent, setIsSessionOpened,
     videoMute, audioMute, leaveSession,
     enteredSubscriber, deleteSubscriber,

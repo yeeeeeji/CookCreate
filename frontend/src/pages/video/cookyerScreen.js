@@ -8,7 +8,7 @@ import LessonStepWidget from '../../component/Video/LessonStepWidget';
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber } from '../../store/video/video';
-import { publishStream } from '../../store/video/video-thunk';
+import { joinSession, publishStream } from '../../store/video/video-thunk';
 import { setCheckCookiee, setCheckCookieeList, setHandsUpCookiee, setHandsUpCookieeList } from '../../store/video/cookyerVideo';
 
 function CookyerScreen() {
@@ -23,6 +23,7 @@ function CookyerScreen() {
   const shareScreenPublisher = useSelector((state) => state.screenShare.shareScreenPublisher)
 
   const OvToken = useSelector((state) => state.video.OvToken)
+  const sessionId = useSelector((state) => state.video.sessionId)
   const myUserName = localStorage.getItem('nickname');
   const role = localStorage.getItem('role')
 
@@ -77,10 +78,11 @@ function CookyerScreen() {
       const data = {
         OV,
         session,
-        token: OvToken,
-        myUserName: myUserName
+        sessionId,
+        myUserName
       }
-      dispatch(publishStream(data))
+      dispatch(joinSession(data))
+      // dispatch(publishStream(data))
 
       console.log(5)
 
