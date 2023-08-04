@@ -24,7 +24,23 @@ function LessonDetail() {
   const [videoUrl, setVideoUrl] = useState('')
   const [timeTaken, setTimeTaken] = useState(0)
   const [lessonDate, setLessonDate] = useState('')
+  
+  const userType = localStorage.getItem('role')
+  const [disable, setDisable] = useState(false) // 날짜가 지난 경우, 제한 인원이 다 찬 경우 처리.
+
+  const maximumInt = parseInt(maximum)
+  const remainingInt = parseInt(remaining)
+  const currentInt = maximumInt - remainingInt
+
   useEffect(() => {
+    // 신청 가능 판별 로직
+    const DateTransformType = new Date(lessonDate)
+    const today = new Date()
+    if (DateTransformType > today && currentInt >= 0) {
+      setDisable(false)
+    } else {
+      setDisable(true)
+    }
     axios.get(`/api/v1/lesson/${lessonId}`, {
       headers : {
         Access_Token : accessToken
@@ -49,8 +65,10 @@ function LessonDetail() {
     })
     .catch((err) => {
       console.log(err)
+      alert(err.response.data.message)
     })
-  }, [lessonId])
+  }, [lessonDate])
+
   return (
     <div>
       <br />
@@ -78,11 +96,13 @@ function LessonDetail() {
         lessonId = {lessonId}
         jjimCount = {jjimCount}
         videoUrl = {videoUrl}
+        disable={disable || userType === 'COOKYER'}      
       />
       <LessonSchedule
         timeTaken = {timeTaken}
         lessonDate = {lessonDate}
       />
+      {disable}
     </div>
   );
 }
