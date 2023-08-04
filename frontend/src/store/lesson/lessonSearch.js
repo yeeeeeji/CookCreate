@@ -8,8 +8,8 @@ const initialState = {
   keyword : ""
 }
 
-const lessonInfo = createSlice({
-  name : 'lessonInfo',
+const lessonSearch = createSlice({
+  name : 'lessonSearch',
   initialState,
   reducers : {
     setOrder : (state, action) => {
@@ -32,5 +32,5 @@ const lessonInfo = createSlice({
 
 export const {
   setOrder, setDeadLine, setCategories, setKeyword, setType
-} = lessonInfo.actions
-export default lessonInfo.reducer
+} = lessonSearch.actions
+export default lessonSearch.reducer

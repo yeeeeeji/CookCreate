@@ -6,12 +6,12 @@ import axios from 'axios';
 
 function LessonList() {
   const [lessons, setLessons] = useState([]);
-  const type = useSelector((state) => state.lessonInfo.type);
-  const deadline = useSelector((state) => state.lessonInfo.deadline);
-  const order = useSelector((state) => state.lessonInfo.order);
-  const category = useSelector((state) => state.lessonInfo.category);
-  const keyword = useSelector((state) => state.lessonInfo.keyword);
-
+  const type = useSelector((state) => state.lessonSearch.type);
+  const deadline = useSelector((state) => state.lessonSearch.deadline);
+  const order = useSelector((state) => state.lessonSearch.order);
+  const category = useSelector((state) => state.lessonSearch.category);
+  const keyword = useSelector((state) => state.lessonSearch.keyword);
+  
   useEffect(() => {
     axios.get(`/api/v1/lesson`, {
       params: {
@@ -23,13 +23,12 @@ function LessonList() {
       }
     })
     .then((res) => {
-      console.log(res.data);
-      setLessons(res.data); // 받아온 데이터를 state에 저장
+      setLessons(res.data)
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err)
     });
-  }, [type, keyword, category, order, deadline]);
+  }, [type, keyword, category, order, deadline])
 
   return (
     <div>
@@ -52,7 +51,7 @@ function LessonList() {
               thumbnailUrl = {lesson.thumbnailUrl}
               reviewAvg = {lesson.reviewAvg}
               cookyerName = {lesson.cookyerName}
-              categoryId = {lesson.categoryId}
+              categoryId = {lesson.categoryId} 
             />
           </Link>
         </div>
