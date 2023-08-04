@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import { useSelector, useDispatch } from "react-redux";
 import '../../style/navbar.css'
-import { initOVSession, setIsSessionOpened, setOvToken, setRoomPresent, setSessionId, setVideoLessonId } from '../../store/video/video';
+import { initOVSession, setIsSessionOpened, setRoomPresent, setSessionId, setVideoLessonId } from '../../store/video/video';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 
@@ -18,7 +18,6 @@ function NavBar() {
   const role = localStorage.getItem('role')
   const emoji = localStorage.getItem('emoji')
 
-  const OvToken = useSelector((state) => state.video.OvToken)
   const sessionId = useSelector((state) => state.video.sessionId)
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
   // const roomPresent = useSelector((state) => state.video.roomPresent)
@@ -78,18 +77,17 @@ function NavBar() {
           .then((res) => {
             // dispatch(setRoomPresent({roomPresent: true}))
             // console.log('방 만들기 요청 성공', res)
-            console.log('쿠커 토큰 생성 성공', res)
+            console.log('쿠커 세션아이디 생성 성공', res)
             const sessionId = res.data.token
-            // dispatch(setOvToken(token))
             dispatch(setSessionId({sessionId}))
             // dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
           })
           .catch((err) => {
-            console.log('쿠커 토큰 생성 실패', err)
+            console.log('쿠커 세션아이디 생성 실패', err)
           })
       } else if (role === 'COOKIEE') {
         // 레슨아이디가 등록되면 학생은 토큰 생성 요청
-        console.log("쿠키 토큰 요청")
+        console.log("쿠키 세션아이디 요청")
         axios.post(
           `api/v1/session/create`,
           { 'lessonId': videoLessonId },
@@ -99,12 +97,12 @@ function NavBar() {
             }
           })
           .then((res) => {
-            console.log('쿠키 토큰 생성 성공', res.data)
+            console.log('쿠키 세션아이디 생성 성공', res.data)
             const sessionId = res.data.token
             dispatch(setSessionId({sessionId}))
           })
           .catch((err) => {
-            console.log('쿠키 토큰 생성 실패', err)
+            console.log('쿠키 세션아이디 생성 실패', err)
           })
       }
     } else {

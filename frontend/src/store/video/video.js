@@ -4,7 +4,6 @@ import { closeSession, joinSession, publishStream } from './video-thunk'
 const initialState = {
   OV: null,
   session: undefined,
-  OvToken: undefined,
   sessionId: undefined,
   publisher: undefined,
   mainStreamManager: undefined,
@@ -24,10 +23,6 @@ export const video = createSlice({
       state.OV = payload.OV
       state.session = payload.session
       console.log("initOVSession", state.OV, state.session)
-    },
-    setOvToken: (state, { payload }) => {
-      console.log("리덕스 토큰 추가", payload.token)
-      state.OvToken = payload.token
     },
     setSessionId: (state, { payload }) => {
       console.log("세션 아이디 저장 성공", payload)
@@ -69,7 +64,6 @@ export const video = createSlice({
       // }
       state.OV = null
       state.session = undefined
-      state.OvToken = undefined
       state.sessionId = undefined
       state.publisher = undefined
       state.mainStreamManager = undefined
@@ -114,7 +108,6 @@ export const video = createSlice({
       console.log("closeSession fulfilled", payload)
       state.OV = null
       state.session = undefined
-      state.OvToken = undefined
       state.sessionId = undefined
       state.publisher = undefined
       state.mainStreamManager = undefined
@@ -132,7 +125,7 @@ export const video = createSlice({
 })
 
 export const {
-    initOVSession, setOvToken, setPublisher, setMainStreamManager, setSessionId,
+    initOVSession, setPublisher, setMainStreamManager, setSessionId,
     setSubscribers, setVideoLessonId, setRoomPresent, setIsSessionOpened,
     videoMute, audioMute, leaveSession,
     enteredSubscriber, deleteSubscriber,

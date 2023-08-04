@@ -7,14 +7,12 @@ import LessonStepWidget from '../../component/Video/LessonStepWidget';
 
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteSubscriber, enteredSubscriber, leaveSession, setSubscribers } from '../../store/video/video';
-import { joinSession, publishStream } from '../../store/video/video-thunk';
-import { resetCheck, resetHandsUp, setIsCompleted } from '../../store/video/cookieeVideo';
-import { useNavigate } from 'react-router-dom';
+import { deleteSubscriber, enteredSubscriber, leaveSession } from '../../store/video/video';
+import { joinSession } from '../../store/video/video-thunk';
+import { resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
 
 function CookieeScreen() {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
   
   const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
@@ -25,14 +23,11 @@ function CookieeScreen() {
   //   JSON.parse(sub.stream.connection.data).clientData.role === 'cookyer'
   // ))
 
-  const streamManager = useSelector((state) => state.screenShare.streamManager)
-
-  const OvToken = useSelector((state) => state.video.OvToken)
   const sessionId = useSelector((state) => state.video.sessionId)
-  const myUserName = localStorage.getItem('nickname');
+  const nickname = localStorage.getItem('nickname');
   const role = localStorage.getItem('role')
 
-  const isCompleted = useSelector((state) => state.cookieeVideo.isCompleted)
+  const [ isCompleted, setIsCompleted ] = useState(false)
 
   /** 체크 기능 */
   const check = useSelector((state) => state.cookieeVideo.check)
@@ -80,7 +75,7 @@ function CookieeScreen() {
       // session.off('sessionDisconnected', () => {
       session.on('sessionDisconnected', () => {
         dispatch(leaveSession())  // 혹시나 리뷰에서 관련 정보 필요하면 리뷰 쓴 후에 초기화로 미루기
-        dispatch(setIsCompleted())
+        setIsCompleted(true)
         // 쿠커가 수업 종료와 함께 모든 쿠키들을 페이지 이동 시키려면 이곳에서 하면 됨
       })
 
@@ -109,7 +104,7 @@ function CookieeScreen() {
         OV,
         session,
         sessionId,
-        myUserName,
+        nickname,
         role
       }
       dispatch(joinSession(data))

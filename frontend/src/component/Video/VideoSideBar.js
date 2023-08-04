@@ -21,7 +21,6 @@ function VideoSideBar() {
   const [ isShared, setIsShared ] = useState(false)
   /** 세션 나가기 */
   const sessionId = useSelector((state) => state.video.sessionId)
-  const OvToken = useSelector((state) => state.video.OvToken)
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
   const access_token = localStorage.getItem('access_token')
   // const access_token = useSelector((state) => state.auth.access_token)
