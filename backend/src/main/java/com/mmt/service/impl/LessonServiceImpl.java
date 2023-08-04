@@ -459,7 +459,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public ResponseDto createConnection(SessionPostReq sessionPostReq) {
+    public ResponseDto checkSession(SessionPostReq sessionPostReq) {
         List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(sessionPostReq.getLessonId());
 
         // 과외를 신청했는지 확인
