@@ -16,6 +16,7 @@ public class ReviewCookyerRes extends ResponseDto {
     private String cookyerId;
     private String cookyerName;
     private float rating;
+    private String reviewContents;
 
     public ReviewCookyerRes(Review review){
         this.reviewId = review.getReviewId();
@@ -26,5 +27,6 @@ public class ReviewCookyerRes extends ResponseDto {
         this.cookyerId = review.getLesson().getCookyerId();
         this.cookyerName = review.getLesson().getCookyerName();
         this.rating = review.getRating();
+        this.reviewContents = review.getReviewContents();
     }
 }

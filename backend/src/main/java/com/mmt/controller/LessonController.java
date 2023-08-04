@@ -201,7 +201,7 @@ public class LessonController {
                     content = @Content(schema = @Schema(implementation = LessonSearchRes.class))),
     })
     @GetMapping("")
-    public ResponseEntity<List<LessonSearchRes>> getLessonList(@RequestBody LessonSearchReq lessonSearchReq){
+    public ResponseEntity<List<LessonSearchRes>> getLessonList(@ModelAttribute LessonSearchReq lessonSearchReq){
         return new ResponseEntity<>(lessonService.getLessonList(lessonSearchReq), HttpStatus.OK);
     }
 

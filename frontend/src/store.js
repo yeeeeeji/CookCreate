@@ -2,8 +2,9 @@ import { configureStore } from '@reduxjs/toolkit'
 import authReducer from './store/auth/auth'
 import apiReducer from './store/apiUrl/apiUrl'
 import lessonReducer from './store/lesson/lesson'
+import lessonInfoReducer from './store/lesson/lessonInfo'
 import accountSReducer from "./store/mypageS/accountS";
-import lessonInfoReducer from './store/lessonInfo/lessonInfo'
+import lessonSearchReducer from './store/lesson/lessonSearch'
 import videoReducer from './store/video/video'
 import screenShareReducer from './store/video/screenShare'
 import cookyerVideoReducer from './store/video/cookyerVideo'
@@ -14,6 +15,7 @@ export const store = configureStore({
     auth: authReducer,
     api: apiReducer,
     lesson: lessonReducer,
+    lessonSearch : lessonSearchReducer,
     lessonInfo : lessonInfoReducer,
     accountS: accountSReducer,
     video: videoReducer,
@@ -21,4 +23,8 @@ export const store = configureStore({
     cookyerVideo: cookyerVideoReducer,
     cookieeVideo: cookieeVideoReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+  getDefaultMiddleware({
+    serializableCheck: false,
+  }),
 })

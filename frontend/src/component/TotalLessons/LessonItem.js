@@ -1,30 +1,35 @@
 import React from 'react';
-
-function LessonItem() {
+import {setLessonId} from '../../store/lesson/lessonInfo'
+import { useDispatch } from 'react-redux';
+function LessonItem({id, title, date, thumbnailUrl, reviewAvg, cookyerName, categoryId}) {
+  
+  const dispatch = useDispatch()
+  const handleItemClick = () => {
+    dispatch(setLessonId(id))
+  }
+  // 날짜를 08-03(목)과 같은 형태로 변환
+  const formattedDate = new Date(date);  
+  const options = { month: '2-digit', day: '2-digit', weekday: 'short' };
+  const formattedDateString = formattedDate.toLocaleDateString('ko-KR', options);
+  
+  const convertCategoryId = ['한식', '양식', '중식', '일식', '아시안', '건강식', '디저트']
+  const category = convertCategoryId[categoryId - 1]
   return (
-    <div>
-      <div>
+    <div onClick={handleItemClick}>
+      <img src={thumbnailUrl} alt='image'/>
+      <h3>{title}</h3>
+      <div style={{ display: 'flex' }}>
         <div>
-          한식
+          ⭐{reviewAvg} | 
         </div>
-        <div>
-          쉽게 만들 수 있는 요리를 만들어드려요!
-        </div>
-      </div>
-
-      <div>
-        <h3>
-          강의 소개
-        </h3>
-        <div>
-          난이도
-        </div>
-        <div>
-          강의 소개 세부 내용
+        <div style={{ display: 'flex' }}>
+          {formattedDateString} |
+          {cookyerName}
         </div>
       </div>
-      
-
+      <div>
+        {category}
+      </div>
     </div>
   );
 }

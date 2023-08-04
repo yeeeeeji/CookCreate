@@ -50,11 +50,12 @@ public class Member extends BaseTimeEntity {
         this.nickname = userUpdateReq.getNickname();
         this.phoneNumber = userUpdateReq.getPhoneNumber();
         this.userEmail = userUpdateReq.getUserEmail();
-        if(userUpdateReq.getFood() != null){
-            this.food = userUpdateReq.getFood()
-                    .stream().map(String::valueOf)
-                    .collect(Collectors.joining(","));
-        }
+        this.food = userUpdateReq.getFood();
+//        if(userUpdateReq.getFood() != null){
+//            this.food = userUpdateReq.getFood()
+//                    .stream().map(String::valueOf)
+//                    .collect(Collectors.joining(","));
+//        }
         this.introduce = userUpdateReq.getIntroduce();
     }
 }

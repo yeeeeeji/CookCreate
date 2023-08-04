@@ -5,6 +5,7 @@ import LogIn from './pages/logIn';
 import MainPage from './pages/mainPage';
 import Footer from './component/Footer/Footer';
 import TotalLessons from './pages/totalLessons';
+import LessonDetail from './pages/lessonDetail';
 import SignUpBefore from './pages/signUpBefore';
 import RegisterLesson from './pages/registerLesson'
 import { Route, Routes } from 'react-router-dom';
@@ -12,7 +13,7 @@ import { useDispatch } from 'react-redux';
 import { login, logout } from './store/auth/auth'
 import CookyerScreen from './pages/video/cookyerScreen';
 import CookieeScreen from './pages/video/cookieeScreen';
-import LessonItem from './component/TotalLessons/LessonItem';
+import LessonItem from './pages/lessonDetail';
 import MyPageS from './pages/myPageS';
 import Calendar from './component/MyPageS/Calendar';
 import ClassList from './component/MyPageS/ClassList';
@@ -28,7 +29,6 @@ import AccountT from './component/MyPageT/Account';
 import PayrollT from './component/MyPageT/Payroll';
 import ReviewT from './component/MyPageT/Review';
 import CertifyT from './component/MyPageT/Certify';
-
 function App() {
   const dispatch = useDispatch();
 
@@ -62,12 +62,14 @@ function App() {
         <Route path='/' element={<MainPage />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/login' element={<LogIn />} />
-        <Route path='/totallessons' element={<TotalLessons />} />
+        <Route path='/lesson' element={<TotalLessons />} />
         <Route path='/signupbefore' element={<SignUpBefore/>}/>
         <Route path='/registerlesson' element={<RegisterLesson/>}></Route>
         <Route path='/videoLesson/COOKYER' element={<CookyerScreen/>}></Route>
         <Route path='/videoLesson/COOKIEE' element={<CookieeScreen/>}></Route>
         <Route path='/lesson/:id' element={<LessonItem/>}></Route>
+        <Route path="/lesson/:lessonId" element={<LessonDetail/>} />
+
         <Route path="/calendar" element={<Calendar />}/>
         <Route path="/classList" element={<ClassList />}/>
         <Route path="/likeList" element={<LikeList />}/>

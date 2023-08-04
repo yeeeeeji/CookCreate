@@ -18,7 +18,6 @@ function RegisterForm() {
   const description = useSelector((state) => state.lesson.description)
   const materials = useSelector((state) => state.lesson.materials)
   const videoUrl = useSelector((state) => state.lesson.videoUrl)
-  // const thumbnailUrl = useSelector((state) => state.lesson.thumbnailUrl)
   const lessonStepList = useSelector((state) => state.lesson.lessonStepList)
 
   const categoryValid = useSelector((state) => state.lesson.categoryValid)
@@ -31,14 +30,15 @@ function RegisterForm() {
   const materialsValid = useSelector((state) => state.lesson.materialsValid)
   const stepValid = useSelector((state) => state.lesson.stepValid)
   const descriptionValid = useSelector((state) => state.lesson.descriptionValid)
-  const isAllValid = [categoryValid, titleValid, maxValid, priceValid, dateValid, difficultyValid, timeTakenValid, materialsValid, stepValid, descriptionValid].every((isValid) => isValid);
+  const [thumbnailValid, setThumbnailValid] = useState(false);
+  const isAllValid = [categoryValid, titleValid, maxValid, priceValid, dateValid, difficultyValid, timeTakenValid, materialsValid, stepValid, descriptionValid, thumbnailValid].every((isValid) => isValid);
 
-  
 
   const handleThumbnailUrl = (e) => {
     setLessonThumbnailUrl(e.target.value) // 파일명 유저들에게 보여주기
     const file = e.target.files[0]
     setThumbnailFile(file)
+    setThumbnailValid(!!file)
   };
 
   const register = (e) => {
@@ -85,6 +85,7 @@ function RegisterForm() {
       {/* 썸네일 */}
       <div>
         <h3>과외 썸네일</h3>
+        <div>{thumbnailValid ? '✅' : '🔲'}</div>
         <div>
           <input type="file"
             name = "filename"

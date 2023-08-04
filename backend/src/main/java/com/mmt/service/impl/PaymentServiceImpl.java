@@ -5,6 +5,7 @@ import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.pay.PayStatus;
 import com.mmt.domain.entity.pay.PaymentHistory;
 import com.mmt.domain.request.pay.PaymentReadyReq;
+import com.mmt.domain.response.my.MyPaymentRes;
 import com.mmt.domain.response.pay.PaymentApproveRes;
 import com.mmt.domain.response.pay.PaymentReadyRes;
 import com.mmt.domain.response.ResponseDto;
@@ -84,7 +85,7 @@ public class PaymentServiceImpl {
         return paymentReadyRes;
     }
 
-    public ResponseDto approvePay(String pg_Token, int paymentId) {
+    public MyPaymentRes approvePay(String pg_Token, int paymentId) {
         PaymentHistory paymentHistory = paymentRepository.findByPaymentId(paymentId).get();
         log.debug("userId: " + paymentHistory.getMember().getUserId());
         log.debug("tid: " + paymentHistory.getTId());
@@ -110,10 +111,14 @@ public class PaymentServiceImpl {
         paymentRepository.save(paymentHistory);
 
         if(paymentHistory.getApprovedAt() == null) {
-            return new ResponseDto(HttpStatus.BAD_REQUEST, "결제에 실패했습니다.");
+            return new MyPaymentRes(HttpStatus.BAD_REQUEST, "결제에 실패했습니다.");
         }
 
-        return new ResponseDto(HttpStatus.OK, "success");
+        MyPaymentRes myPaymentRes = new MyPaymentRes(paymentHistory);
+        myPaymentRes.setStatusCode(HttpStatus.OK);
+        myPaymentRes.setMessage("success");
+
+        return myPaymentRes;
     }
 
     public ResponseDto failPay(int paymentId) {
