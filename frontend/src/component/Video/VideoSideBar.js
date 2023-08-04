@@ -6,7 +6,7 @@ import { audioMute, leaveSession, videoMute } from '../../store/video/video';
 import { useNavigate } from 'react-router-dom';
 import { setShareScreenPublisher, setStreamManager } from '../../store/video/screenShare';
 import axios from 'axios';
-import { setCheck } from '../../store/video/cookieeVideo';
+import { setCheck, setHandsUp } from '../../store/video/cookieeVideo';
 import { closeSession, shareScreen } from '../../store/video/video-thunk';
 
 function VideoSideBar() {
@@ -31,6 +31,9 @@ function VideoSideBar() {
 
   /** 체크 기능 */
   const check = useSelector((state) => state.cookieeVideo.check)
+
+  /** 손들기 기능 */
+  const handsUp = useSelector((state) => state.cookieeVideo.handsUp)
 
   /** 과외방 닫기 */
   const handleCloseSession = () => {
@@ -175,6 +178,23 @@ function VideoSideBar() {
     }
   }, [check])
 
+  const pressHandsUp = () => {
+    dispatch(setHandsUp())
+  }
+
+  useEffect(() => {
+    if (handsUp) {
+      const data = {
+        connectionId: publisher.stream.connection.connectionId
+      }
+      console.log("손들었다", data)
+      publisher.stream.session.signal({
+        data: JSON.stringify(data),
+        type: 'handsUp'
+      })
+    }
+  }, [handsUp])
+
   return (
     <div className='video-sidebar'>
       <button
@@ -217,7 +237,7 @@ function VideoSideBar() {
       ) : null}
       { role === 'COOKIEE' ? (
         <button
-          // onClick={sendRaiseSignal}
+          onClick={() => pressHandsUp(publisher)}
           // onClick={isRaised ? handleStopRaiseHand : handleRaiseHand}
         >
           손들기
