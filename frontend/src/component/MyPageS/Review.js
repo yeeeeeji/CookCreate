@@ -45,7 +45,7 @@ function Review() {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log("리뷰목록",res.data);
         setReviews(res.data);
       })
       .catch((err) => {

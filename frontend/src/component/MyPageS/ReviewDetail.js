@@ -1,19 +1,23 @@
 // import React from 'react'
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import axios from 'axios'
+import axios from 'axios';
+import ReviewEdit from "./ReviewEdit";
+
 
 export default function ReviewDetail({ reviewId,onClose}) {
   const accessToken = useSelector((state) => state.auth.access_token);
   const [selectedReview, setSelectedReview] = useState("");
   // const [editedReview, setEditedReview] = useState({ ...review });
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
 
   useEffect(() => {
     handleViewDetail();
   },  [reviewId] );
 
-    //리뷰상세정보 조회
+  
+  //리뷰상세정보 조회
   const handleViewDetail = () => {
     axios
       .get(`api/v1/review/detail/${reviewId}`, {
@@ -49,8 +53,15 @@ export default function ReviewDetail({ reviewId,onClose}) {
         });
     };
 
-  
+  // 수정모달 열기
+  const handleUpdateReview = () => {
+    setIsEditModalOpen(true);
+  }
 
+  // 수정모달 닫기
+  const handleCloseUpdateModal = () => {
+    setIsEditModalOpen(false);
+  }
 
   return (
     <div className="modal-content">
@@ -79,14 +90,20 @@ export default function ReviewDetail({ reviewId,onClose}) {
         <label htmlFor="reviewContents">수정날짜:{selectedReview.modifiedDate}</label>
       </div>
       <div className="review-actions">
-        {/* <button type="button" onClick={handleUpdateReview}>
+        <button type="button" onClick={handleUpdateReview}>
           수정하기
-        </button> */}
+        </button>
         <button type="button" onClick={handleDeleteReview}>
           삭제하기
         </button>
       </div>
     </div>
+    {isEditModalOpen && (
+        <ReviewEdit
+          selectedReview={selectedReview}
+          onClose={handleCloseUpdateModal}
+        />
+      )}
   </div>
 );
 }
