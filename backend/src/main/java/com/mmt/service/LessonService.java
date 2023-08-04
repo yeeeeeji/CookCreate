@@ -27,7 +27,7 @@ public interface LessonService {
     ResponseDto modifyLessonStep(String userId, LessonStepPutReq lessonStepPutReq);
 
     ResponseDto createSession(SessionPostReq sessionPostReq);
-    ResponseDto createConnection(SessionPostReq sessionPostReq);
+    ResponseDto checkSession(SessionPostReq sessionPostReq);
     String getSessionId(int lessonId);
     ResponseDto deleteSession(SessionPostReq sessionPostReq);
 }
