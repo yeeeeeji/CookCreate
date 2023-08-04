@@ -29,6 +29,7 @@ import com.mmt.service.LessonService;
 import com.mmt.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -452,6 +453,7 @@ public class LessonServiceImpl implements LessonService {
             return new ResponseDto(HttpStatus.CONFLICT, "이미 세션이 생성되어 있습니다.");
         }
 
+//        String customSessionId = RandomStringUtils.randomAlphanumeric(15);
         lesson.get().setSessionId(sessionPostReq.getSessionId());
         lessonRepository.save(lesson.get());
 

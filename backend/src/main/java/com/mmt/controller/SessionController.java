@@ -76,17 +76,18 @@ public class SessionController {
         String loginId = userDetails.getUsername();
         sessionPostReq.setUserId(loginId);
         String customSessionId = lessonService.getSessionId(sessionPostReq.getLessonId());
+        SessionConnectRes sessionConnectRes = new SessionConnectRes();
         if(userDetails.getMember().getRole().equals(Role.COOKYER)){ // 쿠커면 db 확인해서 customid 생성
             if(customSessionId == null){
                 customSessionId = RandomStringUtils.randomAlphanumeric(15);
-
                 // 생성한 customSessionId db에 저장 -> 유효성 검사 같이 진행
-                sessionPostReq.setSessionId(customSessionId);
-                ResponseDto responseDto = lessonService.createSession(sessionPostReq);
-                if(!responseDto.getStatusCode().equals(HttpStatus.OK)){
-                    return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
-                }
             }
+            sessionPostReq.setSessionId(customSessionId);
+            ResponseDto responseDto = lessonService.createSession(sessionPostReq);
+
+            sessionConnectRes.setToken(customSessionId);
+            sessionConnectRes.setStatusCode(responseDto.getStatusCode());
+            sessionConnectRes.setMessage(responseDto.getMessage());
         }else{ // 쿠키면 db 확인해서 에러 혹은 생성
             if(customSessionId == null) {
                 // 아직 방이 생성 안됨 -> 에러 반환
@@ -95,34 +96,36 @@ public class SessionController {
             // 해당 쿠키의 유효성 검사 진행
             sessionPostReq.setSessionId(customSessionId);
             ResponseDto responseDto = lessonService.checkSession(sessionPostReq);
-            if(!responseDto.getStatusCode().equals(HttpStatus.OK)){
-                return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
-            }
-        }
 
-        SessionProperties props = new SessionProperties.Builder().customSessionId(customSessionId).build();
-        Session session = null;
-        try {
-            session = this.openvidu.createSession(props);
-        } catch (OpenViduHttpException e) {
-            if ((e.getStatus() >= 500 && e.getStatus() <= 504) || e.getStatus() == 404) {
-                log.warn("The node handling the createSession operation is crashed ({}: {}). Retry", e.getStatus(),
-                        e.getMessage());
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e1) {
-                }
-                return getErrorResponse(e);
-            } else {
-                log.error("Unexpected error while creating session: {}", e.getMessage());
-                return getErrorResponse(e);
-            }
-        } catch (OpenViduJavaClientException e) {
-            log.error("Unexpected internal error while creating session. {}: {}", e.getClass().getCanonicalName(),
-                    e.getMessage());
-            return getErrorResponse(e);
+            sessionConnectRes.setToken(customSessionId);
+            sessionConnectRes.setStatusCode(responseDto.getStatusCode());
+            sessionConnectRes.setMessage(responseDto.getMessage());
         }
-        return returnToken(session);
+        return new ResponseEntity<>(sessionConnectRes, sessionConnectRes.getStatusCode());
+
+//        SessionProperties props = new SessionProperties.Builder().customSessionId(customSessionId).build();
+//        Session session = null;
+//        try {
+//            session = this.openvidu.createSession(props);
+//        } catch (OpenViduHttpException e) {
+//            if ((e.getStatus() >= 500 && e.getStatus() <= 504) || e.getStatus() == 404) {
+//                log.warn("The node handling the createSession operation is crashed ({}: {}). Retry", e.getStatus(),
+//                        e.getMessage());
+//                try {
+//                    Thread.sleep(100);
+//                } catch (InterruptedException e1) {
+//                }
+//                return getErrorResponse(e);
+//            } else {
+//                log.error("Unexpected error while creating session: {}", e.getMessage());
+//                return getErrorResponse(e);
+//            }
+//        } catch (OpenViduJavaClientException e) {
+//            log.error("Unexpected internal error while creating session. {}: {}", e.getClass().getCanonicalName(),
+//                    e.getMessage());
+//            return getErrorResponse(e);
+//        }
+//        return returnToken(session);
     }
 
     private ResponseEntity<? extends ResponseDto> returnToken (Session session){
