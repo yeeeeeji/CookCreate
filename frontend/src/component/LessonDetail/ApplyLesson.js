@@ -1,26 +1,43 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-function ApplyLesson({ price, jjimCount, lessonId, videoUrl }) {
-  const userType = localStorage.getItem('role');
+function ApplyLesson({ price, jjimCount, lessonId, videoUrl, disable }) {
+  console.log(disable)
   const access_token = useSelector((state) => state.auth.access_token)
+  const [errMsg, setErrMsg] = useState('')
+  const [payUrl, setPayUrl] = useState('')
+  const [pg_token, setPg_Token] = useState('')
+
+  const [showPopup, setShowPopup] = useState(false)
+
+
   const handleApply = () => {
-    axios.post(
-      `/api/v1/lesson/${lessonId}`, {}, {
-        headers : {
-          Access_Token : access_token
+    if (!disable) {
+      axios.get(
+        `/api/v1/pay/ready/${lessonId}`,
+        {
+          headers: {
+            Access_Token: access_token
+          }
         }
-      }
-    )
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }
+      )
+      .then((res) => {
+        setPayUrl(res.data.next_redirect_pc_url);
+        const popupWindow = window.open(payUrl, '_blank', 'width=500, height=600');
+        if (popupWindow) {
+          // 새 창이 열렸을 경우에만 데이터 전달
+          popupWindow.postMessage(res.data, window.location.origin);
+        }
+      })
+      .catch((err) => {
+        console.log(access_token);
+        setErrMsg(err.response.data.message);
+      });
+    }
+  };
+
   return (
     <div style={{
       width : '300px',
@@ -28,32 +45,45 @@ function ApplyLesson({ price, jjimCount, lessonId, videoUrl }) {
       border: '1px solid #ccc'
     }}>
       {price}원
-      <div
+      <button
         style={{
           width: '200px',
           height: '40px',
-          backgroundColor: userType === 'COOKYER' ? '#ccc' : 'orange',
+          backgroundColor: disable ? '#ccc' : 'orange',
           color: 'white',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           borderRadius: '5px',
-          cursor: userType !== 'COOKYER' ? 'pointer' : 'not-allowed',
+          cursor: disable ? 'not-allowed' : 'pointer',
         }}
-        disabled={userType === 'COOKYER'}
         onClick={handleApply}
       >
         신청하기
-      </div>
-      <div style={{ display: 'flex' }}>
-        <Link to={videoUrl}>
-          수업 맛보기 |
-        </Link>
-        <div>
-          🧡 {jjimCount}
-        </div>
+      </button>
+    {errMsg}
+
+    <div style={{ display: 'flex' }}>
+      <Link to={videoUrl}>
+        수업 맛보기 |
+      </Link>
+      <div>
+        🧡 {jjimCount}
       </div>
     </div>
+    <a href={payUrl}>
+        결제
+    </a>
+    {showPopup && (
+      <div>
+        <div>
+          <h3>팝업 제목</h3>
+          <h6>팝업 내용</h6>
+          <button onClick={() => setShowPopup(false)}>닫기</button>
+        </div>
+      </div>
+    )}
+  </div>
   );
 }
 

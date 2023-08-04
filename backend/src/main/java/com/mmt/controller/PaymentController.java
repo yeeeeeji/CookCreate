@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Tag(name = "결제 API", description = "결제 관련 API입니다.")
 @Slf4j
@@ -56,24 +57,29 @@ public class PaymentController {
 
     @Parameter(hidden = true)
     @GetMapping("/completed")
-    public ResponseEntity<? extends ResponseDto> approvePay(String pg_token, int paymentId) {
-        MyPaymentRes responseDto = paymentService.approvePay(pg_token, paymentId);
-        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    public RedirectView approvePay(String pg_token, int paymentId) {
+        MyPaymentRes myPaymentRes = paymentService.approvePay(pg_token, paymentId);
+        String redirectURL = "http://localhost:3000/payment/success?paymentId=" + paymentId + "&totalAmount=" + myPaymentRes.getTotalAmount();
+        return new RedirectView(redirectURL);
     }
 
     @Parameter(hidden = true)
     @GetMapping("/fail")
-    public ResponseEntity<ResponseDto> failPay(int paymentId) {
-        ResponseDto responseDto = paymentService.failPay(paymentId);
-        return ResponseEntity.status(400).body(responseDto);
+    public RedirectView failPay(int paymentId) {
+        paymentService.failPay(paymentId);
+
+        String redirectURL = "http://localhost:3000/payment/fail?paymentId=" + paymentId;
+        return new RedirectView(redirectURL);
     }
 
     @Parameter(hidden = true)
     @GetMapping("/cancel")
-    public ResponseEntity<ResponseDto> cancelPay(int paymentId) {
+    public RedirectView cancelPay(int paymentId) {
         // TODO: 취소 처리
-        ResponseDto responseDto = paymentService.cancelPay(paymentId);
-        return ResponseEntity.status(400).body(responseDto);
+        paymentService.cancelPay(paymentId);
+
+        String redirectURL = "http://localhost:3000/payment/cancel?paymentId=" + paymentId;
+        return new RedirectView(redirectURL);
     }
 
 }

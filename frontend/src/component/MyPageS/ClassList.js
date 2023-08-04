@@ -14,8 +14,8 @@ import Modal from 'react-modal';
 
 
 function ClassList() {
-  const accessToken = useSelector((state) => state.auth.token);
-  console.log(accessToken);
+  const accessToken = useSelector((state) => state.auth.access_token);
+  console.log("토큰",accessToken);
   // const [classData, setClassData] = useState({});
   // const [showCompletedLectures, setShowCompletedLectures] = useState(false);
 
@@ -27,7 +27,7 @@ function ClassList() {
       },
     })
     .then((res) => {
-      console.log(res.data);
+      console.log("신청한 과외",res.data);
     })
     .catch((err) => {
       console.log(err);
@@ -35,18 +35,18 @@ function ClassList() {
 
   
   //완료한 과외 조회
-  // axios
-  //   .get(`api/v1/my/completed`, {
-  //     headers: {
-  //       Access_Token: accessToken,
-  //     },
-  //   })
-  //   .then((res) => {
-  //     console.log(res);
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
+  axios
+    .get(`api/v1/my/completed`, {
+      headers: {
+        Access_Token: accessToken,
+      },
+    })
+    .then((res) => {
+      console.log("완료한 과외",res.data);
+    })
+    .catch((err) => {
+      console.log("완료한 과외",err);
+    });
   
 
     // const handleSelectChange = (e) => {
@@ -122,12 +122,12 @@ function ClassList() {
                 className="card course course_card_item"
                 data-productid="324582"
                 fxd-data='{"courseId":324582,"regPrice":0,"isInCart":false}'
-                data-gtm-vis-recent-on-screen-8964582_476="420"
-                data-gtm-vis-first-on-screen-8964582_476="420"
+                data-gtm-vis-recent-on-screen-8964582_476="200"
+                data-gtm-vis-first-on-screen-8964582_476="200"
                 data-gtm-vis-total-visible-time-8964582_476="100"
                 data-gtm-vis-has-fired-8964582_476="1"
               >
-                <a className="course_card_front e_course_click" href="/course/따라하며-배우는-노드-리액트-유튜브-만들기">
+                <a className="course_card_front e_course_click" href="ㅔㅔㅔㅔ">
                   <div className="card-image">
                     <figure className="image is_thumbnail">
                       <img
