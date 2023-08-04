@@ -88,7 +88,7 @@ function ReviewForm({onClose, onClickRating }) {
 
   return (
     <div>
-      <button type="submit" onClick={onClose}>X</button>
+      <button type="submit" onClick={onClose}>❌</button>
       <h2>리뷰 등록</h2>
       <form onSubmit={handleSubmit}>
         <div>
