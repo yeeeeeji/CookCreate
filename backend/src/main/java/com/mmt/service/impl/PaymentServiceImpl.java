@@ -137,6 +137,21 @@ public class PaymentServiceImpl {
         return new ResponseDto(HttpStatus.BAD_REQUEST, "결제 진행 중 취소되었습니다.");
     }
 
+    public ResponseDto getPaymentHistory(int paymentId, String userId) {
+        PaymentHistory paymentHistory = paymentRepository.findByPaymentId(paymentId).get();
+
+        if(!userId.equals(paymentHistory.getMember().getUserId())) {
+            return new ResponseDto(HttpStatus.FORBIDDEN, "자신의 결제 내역만 볼 수 있습니다.");
+        }
+
+        MyPaymentRes myPaymentRes = new MyPaymentRes(paymentHistory);
+
+        myPaymentRes.setStatusCode(HttpStatus.OK);
+        myPaymentRes.setMessage("success");
+
+        return myPaymentRes;
+    }
+
     private HttpHeaders setHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "KakaoAK 121971d9ee12aacfe40a56241db0cfbb");

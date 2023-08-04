@@ -1,6 +1,7 @@
 package com.mmt.controller;
 
 import com.mmt.domain.entity.auth.UserDetailsImpl;
+import com.mmt.domain.entity.pay.PayStatus;
 import com.mmt.domain.request.pay.PaymentReadyReq;
 import com.mmt.domain.response.my.MyPaymentRes;
 import com.mmt.domain.response.pay.PaymentReadyRes;
@@ -59,7 +60,8 @@ public class PaymentController {
     @GetMapping("/completed")
     public RedirectView approvePay(String pg_token, int paymentId) {
         MyPaymentRes myPaymentRes = paymentService.approvePay(pg_token, paymentId);
-        String redirectURL = "http://localhost:3000/payment/success?paymentId=" + paymentId + "&totalAmount=" + myPaymentRes.getTotalAmount();
+        String redirectURL = "http://localhost:3000/payment/success?paymentId=" + paymentId
+                +"&payStatus=" + PayStatus.COMPLETED;
         return new RedirectView(redirectURL);
     }
 
@@ -68,7 +70,8 @@ public class PaymentController {
     public RedirectView failPay(int paymentId) {
         paymentService.failPay(paymentId);
 
-        String redirectURL = "http://localhost:3000/payment/fail?paymentId=" + paymentId;
+        String redirectURL = "http://localhost:3000/payment/fail?paymentId=" + paymentId
+                +"&payStatus=" + PayStatus.FAIL;
         return new RedirectView(redirectURL);
     }
 
@@ -78,8 +81,28 @@ public class PaymentController {
         // TODO: 취소 처리
         paymentService.cancelPay(paymentId);
 
-        String redirectURL = "http://localhost:3000/payment/cancel?paymentId=" + paymentId;
+        String redirectURL = "http://localhost:3000/payment/cancel?paymentId=" + paymentId
+                +"&payStatus=" + PayStatus.CANCEL;
         return new RedirectView(redirectURL);
+    }
+
+    @Operation(summary = "결제 정보 가져오기", description = "결제 번호에 해당하는 결제 정보를 가져온다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "403", description = "자신의 결제 내역만 볼 수 있습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
+    @GetMapping("/{paymentId}")
+    public ResponseEntity<? extends ResponseDto> getPaymentHistory(@PathVariable int paymentId, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        String userId = userDetails.getUsername();
+
+        ResponseDto myPaymentRes = paymentService.getPaymentHistory(paymentId, userId);
+
+        return new ResponseEntity<>(myPaymentRes, myPaymentRes.getStatusCode());
     }
 
 }
