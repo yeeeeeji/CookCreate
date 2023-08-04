@@ -9,8 +9,9 @@ export const publishStream = createAsyncThunk(
     const session = data.session
     const token = data.token
     const myUserName = data.myUserName
-
+    console.log("커넥트 전")
     await session.connect(token, { clientData: myUserName })
+    console.log("커넥트 후")
 
     const publisher = await OV.initPublisherAsync(undefined, {
       audioSource: undefined, // The source of audio. If undefined default microphone

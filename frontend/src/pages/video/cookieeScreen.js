@@ -16,6 +16,7 @@ function CookieeScreen() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   
+  const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
   const publisher = useSelector((state) => state.video.publisher)
   const subscribers = useSelector((state) => state.video.subscribers)
@@ -94,35 +95,16 @@ function CookieeScreen() {
       })
 
       /** 화면공유 받기 */
-      session.on('signal:sharedScreen', (e) => {
-        console.log("화면공유 데이터 받았다", e)  // 시그널 받는거 필요하지 않을수도?
-        // let remoteUsers = subscribers
-        // remoteUsers.forEach((user) => {
-        //   if (user.getConnectionId() === e.from.connectionId) {
-        //     console.log("화면공유 데이터 받았다", e.from)
-        //     // const data = JSON.parse(e.data)
-        //     // console.log("화면공유 시그널", e.data)
-        //     // if (data.isAudioActive !== undefined) {
-        //     //   user.setAudioActive(data.isAudioActive);
-        //     // }
-        //     // if (data.isVideoActive !== undefined) {
-        //     //     user.setVideoActive(data.isVideoActive);
-        //     // }
-        //     // if (data.nickname !== undefined) {
-        //     //     user.setNickname(data.nickname);
-        //     // }
-        //     // if (data.isScreenShareActive !== undefined) {
-        //     //     user.setScreenShareActive(data.isScreenShareActive);
-        //     // }
-        //   }
-        // })
-        // dispatch(setSubscribers(subscribers))
-      })
+      // session.on('signal:sharedScreen', (e) => {
+      //   console.log("화면공유 데이터 받았다", e)  // 시그널 받는거 필요하지 않을수도?
+      // })
 
       console.log(4)
 
       /** 페이지 입장 후 세션에 연결 및 발행하기 */
       const data = {
+        OV,
+        session,
         token: OvToken,
         myUserName: myUserName
       }
@@ -158,6 +140,7 @@ function CookieeScreen() {
         <div>
           <div>
             <div className='cookiee-sharing'>
+            {/* <div className='cookiee-sharing' onClick={() => handleMainVideoStream(cookyerStream)}> */}
               <div className='cookiee-sharing-content'>
                 {isCompleted ? (
                   <p>수업이 종료되었습니다.</p>
@@ -169,12 +152,6 @@ function CookieeScreen() {
                 )}
               </div>
             </div>
-            {/* <div className='cookiee-sharing' onClick={() => handleMainVideoStream(publisher)}>
-              <UserVideoComponent
-                videoStyle='cookiee-sharing-content'
-                streamManager={publisher}
-              />
-            </div> */}
             <LessonStepWidget/>
           </div>
           <div>

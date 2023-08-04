@@ -87,7 +87,8 @@ public class SessionController {
         ResponseDto responseDto = lessonService.createSession(sessionPostReq);
 
         // 바로 connect
-        Connection connection = session.createConnection();
+        Session session1 = openvidu.getActiveSession(sessionPostReq.getSessionId());
+        Connection connection = session1.createConnection();
         SessionConnectRes sessionConnectRes = new SessionConnectRes();
         sessionConnectRes.setToken(connection.getToken());
         sessionConnectRes.setStatusCode(responseDto.getStatusCode());

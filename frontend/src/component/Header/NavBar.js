@@ -113,21 +113,30 @@ function NavBar() {
 
   // 2. 토큰이 생기면 이동 OV, session 객체 생성
   useEffect(() => {
-    const newOV = new OpenVidu()
-    const newSession = newOV.initSession()
-    dispatch(initOVSession({OV: newOV, session: newSession}))
+    if (OvToken) {
+      const newOV = new OpenVidu()
+      const newSession = newOV.initSession()
+      dispatch(initOVSession({OV: newOV, session: newSession}))
+    }
   }, [OvToken])
 
   // 3. 세션이 생기면 방 열렸다 체크 / 쿠키는 바로 입장
+  // useEffect(() => {
+  //   if (session !== undefined) {
+  //     navigate(`/videoLesson/${role}`)
+  //   }
+  // }, [session])
+
   useEffect(() => {
     if (session) {
       if (role === 'COOKYER') {
+        console.log("방 생김")
         dispatch(setIsSessionOpened({isSessionOpened: true}))
       } else if (role === 'COOKIEE') {
         if (OvToken) {
           navigate(`/videoLesson/${role}`)
         } else {
-          ("쿠키 토큰이 없어서 입장 불가")
+          console.log("쿠키 토큰이 없어서 입장 불가")
         }
       } else {
         console.log("너 누구야")

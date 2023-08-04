@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { shareScreen } from './video-thunk'
 
 const initialState = {
   screenShareActive: false,
   shareScreenPublisher: null,
-  streamManager: null,
 }
 
 export const screenShare = createSlice({
@@ -12,9 +12,6 @@ export const screenShare = createSlice({
   reducers: {
     setScreenShareActive: (state, { payload }) => {
       state.screenShareActive = payload.screenShareActive
-    },
-    setStreamManager: (state, { payload }) => {
-      state.streamManager = payload.streamManager
     },
     setShareScreenPublisher: (state, { payload }) => {
       state.shareScreenPublisher = payload.shareScreenPublisher
@@ -32,6 +29,6 @@ export const screenShare = createSlice({
 })
 
 export const {
-  setScreenShareActive, setStreamManager, setShareScreenPublisher
+  setScreenShareActive, setShareScreenPublisher
 } = screenShare.actions
 export default screenShare.reducer

@@ -7,10 +7,9 @@ import LessonStepWidget from '../../component/Video/LessonStepWidget';
 
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteSubscriber, enteredSubscriber, setIsSessionOpened } from '../../store/video/video';
+import { deleteSubscriber, enteredSubscriber } from '../../store/video/video';
 import { publishStream } from '../../store/video/video-thunk';
 import { setCheckCookiee, setCheckCookieeList, setHandsUpCookiee, setHandsUpCookieeList } from '../../store/video/cookyerVideo';
-import { setIsCompleted } from '../../store/video/cookieeVideo';
 
 function CookyerScreen() {
   const dispatch = useDispatch()
@@ -21,7 +20,7 @@ function CookyerScreen() {
   const subscribers = useSelector((state) => state.video.subscribers)
 
   /** 화면공유 */
-  const streamManager = useSelector((state) => state.screenShare.streamManager)
+  const shareScreenPublisher = useSelector((state) => state.screenShare.shareScreenPublisher)
 
   const OvToken = useSelector((state) => state.video.OvToken)
   const myUserName = localStorage.getItem('nickname');
