@@ -29,6 +29,10 @@ import AccountT from './component/MyPageT/Account';
 import PayrollT from './component/MyPageT/Payroll';
 import ReviewT from './component/MyPageT/Review';
 import CertifyT from './component/MyPageT/Certify';
+import PaymentFailed from './pages/paymentFailed';
+import PaymentSuccess from './pages/paymentSuccess';
+import PaymentCancelld from './pages/paymentCancelld';
+
 function App() {
   const dispatch = useDispatch();
 
@@ -57,8 +61,6 @@ function App() {
       <NavBar />
       {/* 링크 이곳에 추가 */}
       <Routes>
-        <Route path='/mypageS' element={<MyPageS />} />
-        <Route path='/mypageT' element={<MyPageT />} />
         <Route path='/' element={<MainPage />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/login' element={<LogIn />} />
@@ -69,8 +71,15 @@ function App() {
         <Route path='/videoLesson/COOKIEE' element={<CookieeScreen/>}></Route>
         <Route path='/lesson/:id' element={<LessonItem/>}></Route>
         <Route path="/lesson/:lessonId" element={<LessonDetail/>} />
+        <Route path='/payment/fail' element={<PaymentFailed/>}></Route>
+        <Route path='/payment/success' element={<PaymentSuccess/>}></Route>
+        <Route path='/payment/cancel' element={<PaymentCancelld/>}></Route>
 
+
+        <Route path='/mypageS' element={<MyPageS />} />
+        <Route path='/mypageT' element={<MyPageT />} />
         <Route path="/calendar" element={<Calendar />}/>
+        <Route path="/calendarT" element={<CalendarT />}/>
         <Route path="/classList" element={<ClassList />}/>
         <Route path="/likeList" element={<LikeList />}/>
         <Route path="/payment" element={<Payment />}/>
@@ -81,8 +90,7 @@ function App() {
         <Route path="/classlistT" element={<ClassListT />}/>
         <Route path="/payrollT" element={<PayrollT />}/>
         <Route path="/reviewT" element={<ReviewT />}/>
-        <Route path="certificationT" element={<CertifyT />}/>
-        <Route path="calendarT" element={<CalendarT />}/>
+        <Route path="/certificationT" element={<CertifyT />}/>
       </Routes>
       <br />
       <hr />

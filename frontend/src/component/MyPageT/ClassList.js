@@ -1,7 +1,41 @@
 import React from 'react';
 import SideBar from "./SideBar";
+import { useSelector } from "react-redux";
+import axios from 'axios';
 
 function ClassList() {
+  const accessToken = useSelector((state) => state.auth.access_token);
+
+
+  //신청한 과외 조회
+  axios
+    .get(`api/v1/my/applied`, {
+      headers: {
+        Access_Token: accessToken,
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  //완료한 과외 조회
+  // axios
+  //   .get(`api/v1/my/complited`, {
+  //     headers: {
+  //       Access_Token: accessToken,
+  //     },
+  //   })
+  //   .then((res) => {
+  //     console.log(res.data);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+
+
   return (
     <div>
       <SideBar />

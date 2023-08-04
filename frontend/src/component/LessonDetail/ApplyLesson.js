@@ -5,31 +5,39 @@ import { Link } from 'react-router-dom';
 
 function ApplyLesson({ price, jjimCount, lessonId, videoUrl, disable }) {
   console.log(disable)
-  const userType = localStorage.getItem('role');
   const access_token = useSelector((state) => state.auth.access_token)
   const [errMsg, setErrMsg] = useState('')
   const [payUrl, setPayUrl] = useState('')
   const [pg_token, setPg_Token] = useState('')
+
+  const [showPopup, setShowPopup] = useState(false)
+
+
   const handleApply = () => {
     if (!disable) {
       axios.get(
-        `/api/v1/pay/ready/${lessonId}`, {
-          headers : {
-            Access_Token : access_token
+        `/api/v1/pay/ready/${lessonId}`,
+        {
+          headers: {
+            Access_Token: access_token
           }
         }
       )
       .then((res) => {
-        console.log(res)
-        setPayUrl(res.data.next_redirect_pc_url)
+        setPayUrl(res.data.next_redirect_pc_url);
+        const popupWindow = window.open(payUrl, '_blank', 'width=500, height=600');
+        if (popupWindow) {
+          // 새 창이 열렸을 경우에만 데이터 전달
+          popupWindow.postMessage(res.data, window.location.origin);
+        }
       })
       .catch((err) => {
-        console.log(access_token)
-        setErrMsg(err.response.data.message)
-      })
+        console.log(access_token);
+        setErrMsg(err.response.data.message);
+      });
     }
+  };
 
-    }
   return (
     <div style={{
       width : '300px',
@@ -66,6 +74,15 @@ function ApplyLesson({ price, jjimCount, lessonId, videoUrl, disable }) {
     <a href={payUrl}>
         결제
     </a>
+    {showPopup && (
+      <div>
+        <div>
+          <h3>팝업 제목</h3>
+          <h6>팝업 내용</h6>
+          <button onClick={() => setShowPopup(false)}>닫기</button>
+        </div>
+      </div>
+    )}
   </div>
   );
 }

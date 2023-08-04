@@ -27,11 +27,10 @@ function LessonDetail() {
   
   const userType = localStorage.getItem('role')
   const [disable, setDisable] = useState(false) // 날짜가 지난 경우, 제한 인원이 다 찬 경우 처리.
-
+    
   const maximumInt = parseInt(maximum)
   const remainingInt = parseInt(remaining)
   const currentInt = maximumInt - remainingInt
-
   useEffect(() => {
     // 신청 가능 판별 로직
     const DateTransformType = new Date(lessonDate)

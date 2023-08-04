@@ -1,8 +1,25 @@
 import React from "react";
 import SideBar from "./SideBar";
-
+// import axios from "axios";
+// import { useSelector } from "react-redux";
 
 function LikeList() {
+  // const accessToken = useSelector((state) => state.auth.access_token);
+  // console.log(accessToken);
+
+  // axios
+  //   .get(`api/v1/my//jjim`, {
+  //     headers: {
+  //       Access_Token: accessToken,
+  //     },
+  //   })
+  //   .then((res) => {
+  //     console.log("찜", res.data);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+
   return (
     <div className="mypage">
       <SideBar />
@@ -39,8 +56,3 @@ function LikeList() {
 }
 
 export default LikeList;
-
-
-
-
-
