@@ -1,4 +1,4 @@
-package com.mmt.service.impl;
+package com.mmt.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mmt.domain.request.chat.ChatSaveReq;
@@ -21,6 +21,9 @@ public class RedisSubscriber implements MessageListener {
     // redis에서 메세지가 발행되면 대기하고 있던 redis subscriber가 해당 메세지를 받아 처리한다.
     @Override
     public void onMessage(Message message, byte[] pattern) {
+
+        log.debug("redis subscriber");
+
         try {
             String publishMessage = (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
 
