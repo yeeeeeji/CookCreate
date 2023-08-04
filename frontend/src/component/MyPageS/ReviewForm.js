@@ -1,58 +1,3 @@
-// import React, { useState } from 'react';
-// import { FaStar } from 'react-icons/fa';
-
-// const ReviewForm = () => {
-
-//   const [content, setContent] = useState('');
-//   const [rating, setRating] = useState(0);
-
-    
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     //api
-//     // console.log({ title: lectureName, content, rating });
-//     alert('리뷰가 등록되었습니다.');
-//   };
-
-//   const handleRatingChange = (value) => {
-//     setRating(value);
-//   };
-
-//   return (
-//     <div>
-//       <h2>리뷰 등록</h2>
-//       <form onSubmit={handleSubmit}>
-//         <div>
-//           <label htmlFor="lectureName">강의명:</label>
-//           {/* <input
-//             type="text"
-//             id="lectureName"
-//             value={lectureName}
-//             onChange={(e) => setLectureName(e.target.value)}
-//             required
-//           /> */}
-//         </div>
-//         <div>
-//           <label htmlFor="content">리뷰 내용:</label>
-//           <textarea
-//             id="content"
-//             value={content}
-//             onChange={(e) => setContent(e.target.value)}
-//             required
-//           />
-//         </div>
-//         <div>
-          
-//         </div>
-//         <button type="submit">등록</button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default ReviewForm;
-
 import styled from "@emotion/styled";
 import React, {useState,useEffect} from "react";
 // import React, {useState} from "react";
@@ -95,15 +40,16 @@ const RatingField = styled.fieldset`
 
 function ReviewForm({onClose, onClickRating }) {
 
-  const accessToken = useSelector((state) => state.auth.token);
-  const [reviewContents, setreviewContents] = useState('');
-  const  [rating, setRating] = useState(0);
-  // const lessonId = 
+  const accessToken = useSelector((state) => state.auth.access_token);
+  console.log(accessToken)
+  const [reviewContents, setreviewContents] = useState("");
+  const  [rating, setRating] = useState(0.0);
+  const lessonId = 2
 
   const data = {
-    // lessonId,
-    rating,
-    reviewContents
+    lessonId:parseInt(lessonId),
+    rating: parseFloat(rating),
+    reviewContents:reviewContents
   }
 
   const handleClickRating = (value) => {
@@ -120,7 +66,7 @@ function ReviewForm({onClose, onClickRating }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    onsubmit(reviewContents, rating)
+    // onsubmit(reviewContents, rating)
     //api
     axios
     .post(`api/v1/review`, {
@@ -132,14 +78,13 @@ function ReviewForm({onClose, onClickRating }) {
       },
     })
     .then((res) => {
-      console.log(res)
+      console.log(res.data)
       alert('리뷰가 등록되었습니다.');
     })
     .catch((err) => {
-      console.log("리뷰등록못함");
+      console.log("리뷰등록못함",err);
     });
 
-    // console.log({ content, rating });
   };
 
 
@@ -156,9 +101,9 @@ function ReviewForm({onClose, onClickRating }) {
         <Base>
             <Name>별점</Name>
             <RatingField>
-              <StarInput
+              <StarInput required
                 onClickRating={handleClickRating}
-                value={5}
+                value={5.0}
                 isHalf={false}
               />
               <StarInput
@@ -168,7 +113,7 @@ function ReviewForm({onClose, onClickRating }) {
               />
               <StarInput
                 onClickRating={handleClickRating}
-                value={4}
+                value={4.0}
                 isHalf={false}
               />
               <StarInput
@@ -178,7 +123,7 @@ function ReviewForm({onClose, onClickRating }) {
               />
               <StarInput
                 onClickRating={handleClickRating}
-                value={3}
+                value={3.0}
                 isHalf={false}
               />
               <StarInput
@@ -216,7 +161,6 @@ function ReviewForm({onClose, onClickRating }) {
             id="reviewContents"
             value={reviewContents}
             onChange={(e) => setreviewContents(e.target.value)}
-            required
           />
         </div>
         <button type="submit">등록</button>
