@@ -105,7 +105,7 @@ function Payment() {
             <span>결제내역</span>
           </div>
         </div>
-        {userPayment.length === 1 ? ( // 결제내역이 없는 경우
+        {userPayment.length === 0 ? ( // 결제내역이 없는 경우
           <div className="no_payment">결제내역이 없습니다.</div>
         ) : (
           userPayment.map((payment) => (

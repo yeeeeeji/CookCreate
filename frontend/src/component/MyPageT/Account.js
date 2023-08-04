@@ -12,7 +12,7 @@ function Account() {
   const [userData, setUserData] = useState({});
   const [food, setFood] = useState([]);
 
-  const [userIdDef, setUserId] = useState(userData.userId);
+  // const [userIdDef, setUserId] = useState(userData.userId);
   const [nicknameDef, setNickName] = useState(userData.nickname);
   const [phoneNumberDef, setPhoneNumber] = useState(userData.phoneNumber);
   const [userEmailDef, setUserEmail] = useState(userData.userEmail);
@@ -23,8 +23,8 @@ function Account() {
   const fileInput = useRef(null);
 
   //오류 메세지 저장
-  const [userIdMessage, setUserIdMessage] = useState("");
-  const [userIdDupMessage, setUserIdDupMessage] = useState("");
+  // const [userIdMessage, setUserIdMessage] = useState("");
+  // const [userIdDupMessage, setUserIdDupMessage] = useState("");
   const [userNicknameMessage, setUserNicknameMessage] = useState("");
   const [userNNDupMessage, setUserNNDupMessage] = useState("");
   const [userPhoneNumberMessage, setUserPhoneNumberMessage] = useState("");
@@ -32,8 +32,8 @@ function Account() {
   const [userIntroduceMessage, setIntroduceMessage] = useState("");
 
   //유효성 검사
-  const [isUserId, setIsUserId] = useState(false);
-  const [isIdDupli, setIsIddup] = useState(false);
+  // const [isUserId, setIsUserId] = useState(false);
+  // const [isIdDupli, setIsIddup] = useState(false);
   const [isNickname, setIsNickname] = useState(false);
   const [isNicknameDupli, setIsNNdup] = useState(false);
   const [isPhoneNumber, setIsPhoneNumber] = useState(false);
@@ -41,18 +41,18 @@ function Account() {
   const [isIntroduce, setIsIntroduce] = useState(true);
 
   //중복 체크 로직
-  const idDupliCheck = () => {
-    axios
-      .get(`api/v1/auth/checkId/${userIdDef}`)
-      .then((res) => {
-        setUserIdDupMessage(res.data.message);
-        setIsIddup(true);
-      })
-      .catch((err) => {
-        setUserIdDupMessage(err.response.data.message);
-        setIsIddup(false);
-      });
-  };
+  // const idDupliCheck = () => {
+  //   axios
+  //     .get(`api/v1/auth/checkId/${userIdDef}`)
+  //     .then((res) => {
+  //       setUserIdDupMessage(res.data.message);
+  //       setIsIddup(true);
+  //     })
+  //     .catch((err) => {
+  //       setUserIdDupMessage(err.response.data.message);
+  //       setIsIddup(false);
+  //     });
+  // };
   const nicknameDupliCheck = () => {
     axios
       .get(`api/v1/auth/checkNick/${nicknameDef}`)
@@ -85,17 +85,17 @@ function Account() {
     }
   };
 
-  const onChangeUserId = async (e) => {
-    const value = e.target.value;
-    await setUserId(value);
-    if (value.length < 4 || value.length > 10) {
-      setUserIdMessage("4글자 이상 10글자 이하로 입력해주세요");
-      setIsUserId(false);
-    } else {
-      setUserIdMessage("적합한 아이디 형식입니다! 🤗");
-      setIsUserId(true);
-    }
-  };
+  // const onChangeUserId = async (e) => {
+  //   const value = e.target.value;
+  //   await setUserId(value);
+  //   if (value.length < 4 || value.length > 10) {
+  //     setUserIdMessage("4글자 이상 10글자 이하로 입력해주세요");
+  //     setIsUserId(false);
+  //   } else {
+  //     setUserIdMessage("적합한 아이디 형식입니다! 🤗");
+  //     setIsUserId(true);
+  //   }
+  // };
 
   const onChangeUserNickName = async (e) => {
     const value = e.target.value;
@@ -220,7 +220,7 @@ function Account() {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("userId", userIdDef);
+    // formData.append("userId", userIdDef);
     formData.append("nickname", nicknameDef);
     formData.append("phoneNumber", phoneNumberDef);
     formData.append("userEmail", userEmailDef);
@@ -280,7 +280,7 @@ function Account() {
         </div>
       </div>
 
-      <div className="myinputTitle">아이디</div>
+      {/* <div className="myinputTitle">아이디</div>
       <div className="inputWrap">
         <input placeholder={userIdDef} type="text" value={userIdDef} onChange={onChangeUserId} />
         <button onClick={idDupliCheck}>중복확인</button>
@@ -288,7 +288,7 @@ function Account() {
           {userIdMessage}
           {userIdDupMessage}
         </div>
-      </div>
+      </div> */}
 
       <div className="myinputTitle">자기소개</div>
       <div>
@@ -323,7 +323,7 @@ function Account() {
         <button
           onClick={handleUpdate}
           className="bottomBtn"
-          disabled={!(isUserId && isIdDupli && isNickname && isNicknameDupli && isPhoneNumber && isUserEmail && isIntroduce)}
+          disabled={!( isNickname && isNicknameDupli && isPhoneNumber && isUserEmail && isIntroduce)}
         >
           정보수정
         </button>
