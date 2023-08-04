@@ -20,6 +20,7 @@ function VideoSideBar() {
   const shareScreenPublisher = useSelector((state) => state.screenShare.shareScreenPublisher)
   const [ isShared, setIsShared ] = useState(false)
   /** 세션 나가기 */
+  const sessionId = useSelector((state) => state.video.sessionId)
   const OvToken = useSelector((state) => state.video.OvToken)
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
   const access_token = localStorage.getItem('access_token')
@@ -33,7 +34,8 @@ function VideoSideBar() {
 
   /** 과외방 닫기 */
   const handleCloseSession = () => {
-    if (OvToken !== undefined) {
+    if (sessionId !== undefined) {
+    // if (session.sessionId) {
       console.log("레슨번호", videoLessonId)
       console.log(access_token, "삭제시도")
       axios.delete(
@@ -49,6 +51,7 @@ function VideoSideBar() {
           const data = {
             access_token, lessonId: videoLessonId
           }
+          session.disconnect()
           dispatch(closeSession(data))
           console.log('세션 종료 성공', res)
         })

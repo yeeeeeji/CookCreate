@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { closeSession, publishStream } from './video-thunk'
+import { closeSession, joinSession, publishStream } from './video-thunk'
 
 const initialState = {
   OV: null,
@@ -30,7 +30,7 @@ export const video = createSlice({
       state.OvToken = payload.token
     },
     setSessionId: (state, { payload }) => {
-      console.log("세션 아이디 저장 성공")
+      console.log("세션 아이디 저장 성공", payload)
       state.sessionId = payload.sessionId
     },
     setPublisher: (state, { payload }) => {
@@ -91,6 +91,16 @@ export const video = createSlice({
     }
   },
   extraReducers: {
+    [joinSession.fulfilled]: (state, { payload }) => {
+      console.log("joinSession fulfilled", payload)
+      // state.currentVideoDevice = payload.currentVideoDevice
+      // state.mainStreamManager = payload.publisher
+      state.publisher = payload
+      // console.log(state.publisher)
+    },
+    [joinSession.rejected]: (state, { payload }) => {
+      console.log("joinSession rejected")
+    },
     [publishStream.fulfilled]: (state, { payload }) => {
       console.log("publishStream fulfilled", payload)
       state.OV = payload.OV

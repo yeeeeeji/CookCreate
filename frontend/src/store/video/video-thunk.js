@@ -9,21 +9,22 @@ export const joinSession = createAsyncThunk(
     const session = data.session
     const sessionId = data.sessionId
     const myUserName = data.myUserName
+    const role = data.role
     // let role = data.role
     // if (role === 'COOKYER') {
     //   role = 'MODERATOR'
     // }
 
     console.log("2")
-    console.log(data)
+    console.log(data, data.OV, data.session, data.sessionId, data.myUserName)
     try {
-      console.log("3")
+      console.log("3", sessionId)
       const token = await getToken({sessionId: sessionId});
       console.log("getToken 이후", token)
 
       if (myUserName && session) {
         console.log("8", token, myUserName)
-        await session.connect(token, { clientData: { myUserName } });
+        await session.connect(token, { clientData: { myUserName, role } });
         console.log("9")
         const publisher = await OV.initPublisherAsync(undefined, {
           audioSource: undefined, // The source of audio. If undefined default microphone
@@ -67,7 +68,7 @@ export const joinSession = createAsyncThunk(
 )
 
 async function getToken(mySessionId) {
-  console.log("4")
+  console.log("4", mySessionId)
 
   const newSessionId = await createSession(mySessionId.sessionId)
   console.log("5", newSessionId)
@@ -82,9 +83,10 @@ async function getToken(mySessionId) {
 function createSession(sessionId) {
   return new Promise(async (resolve, reject) => {
     try {
+      const data = JSON.stringify({ 'customSessionId': sessionId })
       const response = await axios.post(
         `http://localhost:4443/openvidu/api/sessions`,
-        { customSessionId: sessionId },
+        data,
         {
           headers: {
             Authorization:
@@ -114,7 +116,7 @@ function createToken(sessionId) {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await axios.post(
-        `http://localhost:4443/openvidu/api/sessions/${sessionId}/connections`,
+        `http://localhost:4443/openvidu/api/sessions/${sessionId}/connection`,
         {},
         {
           headers: {
@@ -126,7 +128,7 @@ function createToken(sessionId) {
       )
       console.log("6")
       console.log(response.data)
-      return resolve(response.data)
+      return resolve(response.data.token)
     } catch (error) {
       return reject(error)
     }

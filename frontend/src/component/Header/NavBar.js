@@ -79,9 +79,9 @@ function NavBar() {
             // dispatch(setRoomPresent({roomPresent: true}))
             // console.log('방 만들기 요청 성공', res)
             console.log('쿠커 토큰 생성 성공', res)
-            const sessionId = res.data
+            const sessionId = res.data.token
             // dispatch(setOvToken(token))
-            dispatch(setSessionId(sessionId))
+            dispatch(setSessionId({sessionId}))
             // dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
           })
           .catch((err) => {
@@ -100,8 +100,8 @@ function NavBar() {
           })
           .then((res) => {
             console.log('쿠키 토큰 생성 성공', res.data)
-            const sessionId = res.data
-            dispatch(setSessionId(sessionId))
+            const sessionId = res.data.token
+            dispatch(setSessionId({sessionId}))
           })
           .catch((err) => {
             console.log('쿠키 토큰 생성 실패', err)

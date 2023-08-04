@@ -45,6 +45,7 @@ function CookieeScreen() {
 
   useEffect(() => {
     if (subscribers) {
+      console.log(subscribers)
       const cookyer = subscribers.find((sub) => (
         JSON.parse(sub.stream.connection.data).clientData.role === 'COOKYER'
       ))
@@ -76,7 +77,8 @@ function CookieeScreen() {
       session.on('exception', handleException);
 
       /** 쿠커가 수업을 종료하면 스토어에 저장된 관련 정보 초기화 후 리뷰쓰러 */
-      session.off('sessionDisconnected', () => {
+      // session.off('sessionDisconnected', () => {
+      session.on('sessionDisconnected', () => {
         dispatch(leaveSession())  // 혹시나 리뷰에서 관련 정보 필요하면 리뷰 쓴 후에 초기화로 미루기
         dispatch(setIsCompleted())
         // 쿠커가 수업 종료와 함께 모든 쿠키들을 페이지 이동 시키려면 이곳에서 하면 됨
@@ -108,8 +110,9 @@ function CookieeScreen() {
         session,
         sessionId,
         myUserName,
+        role
       }
-      dispatch(joinSession({data}))
+      dispatch(joinSession(data))
       // dispatch(publishStream({data}))
 
 

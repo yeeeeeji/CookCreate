@@ -79,7 +79,8 @@ function CookyerScreen() {
         OV,
         session,
         sessionId,
-        myUserName
+        myUserName,
+        role
       }
       dispatch(joinSession(data))
       // dispatch(publishStream(data))
