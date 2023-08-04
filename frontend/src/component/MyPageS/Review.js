@@ -51,7 +51,7 @@ function Review() {
       .catch((err) => {
         console.log(err);
       });
-  }, [accessToken]);
+  }, [accessToken,reviews]);
 
   
 

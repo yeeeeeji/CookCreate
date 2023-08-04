@@ -31,6 +31,26 @@ export default function ReviewDetail({ reviewId,onClose}) {
       });
   };
 
+    // 리뷰 삭제
+    const handleDeleteReview = () => {
+      axios
+        .delete(`api/v1/review/${reviewId}`, {
+          headers: {
+            Access_Token: accessToken,
+          },
+        })
+        .then((res) => {
+          console.log("리뷰 삭제 성공");
+          alert("리뷰가 삭제 되었습니다.");
+          onClose();
+        })
+        .catch((err) => {
+          console.log("리뷰 삭제 실패", err);
+        });
+    };
+
+  
+
 
   return (
     <div className="modal-content">
@@ -62,9 +82,9 @@ export default function ReviewDetail({ reviewId,onClose}) {
         {/* <button type="button" onClick={handleUpdateReview}>
           수정하기
         </button> */}
-        {/* <button type="button" onClick={handleDeleteReview}>
+        <button type="button" onClick={handleDeleteReview}>
           삭제하기
-        </button> */}
+        </button>
       </div>
     </div>
   </div>

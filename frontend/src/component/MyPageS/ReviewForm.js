@@ -77,6 +77,7 @@ function ReviewForm({onClose, onClickRating }) {
     .then((res) => {
       console.log(res.data);
       alert('리뷰가 등록되었습니다.');
+      onClose();
     })
     .catch((err) => {
       console.log("리뷰등록못함", err);
