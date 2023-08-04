@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setCategories } from '../../store/lessonInfo/lessonInfo';
+import { setCategories } from '../../store/lesson/lessonSearch';
 
 function LessonFoodCategory() {
   const dispatch = useDispatch();

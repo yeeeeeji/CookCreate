@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import { setKeyword, setType } from '../../store/lessonInfo/lessonInfo';
+import { setKeyword, setType } from '../../store/lesson/lessonSearch';
 import { useDispatch } from 'react-redux';
 function SearchBar() {
   const dispatch = useDispatch()
   const [inputKeyword, setInputKeyword] = useState('')
-  const [selectedType, setSelectedType] = useState('all'); // Initialize with 'all' as the default type
+  const [selectedType, setSelectedType] = useState('all')
 
   const handleSearchBar = (e) => {
     const newKeyword = e.target.value;
