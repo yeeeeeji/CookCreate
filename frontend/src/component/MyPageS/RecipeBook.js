@@ -1,25 +1,25 @@
 import React from "react";
-import '../../style/recipebook.css'
+import "../../style/recipebook.css";
 import SideBar from "./SideBar";
-// import axios from "axios";
-// import { useSelector } from "react-redux";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 function RecipeBook() {
-  // const accessToken = useSelector((state) => state.auth.token);
-  // console.log(accessToken);
+  const accessToken = useSelector((state) => state.auth.access_token);
+  console.log(accessToken);
 
-  // axios
-  //   .get(`api/v1/my/recipe`, {
-  //     headers: {
-  //       Access_Token: accessToken,
-  //     },
-  //   })
-  //   .then((res) => {
-  //     console.log(res);
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
+  axios
+    .get(`api/v1/my/recipe`, {
+      headers: {
+        Access_Token: accessToken,
+      },
+    })
+    .then((res) => {
+      console.log("레시피북", res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
   return (
     <div className="recipe_container">
@@ -37,12 +37,12 @@ function RecipeBook() {
       <div className="recipe_content">
         <div className="recipe_view">
           <div className="recipe_crop">
-            <a  href="dd" className="recipe_thumb">
+            <a href="dd" className="recipe_thumb">
               <img src="https://recipe1.ezmember.co.kr/cache/cls/2021/04/21/0bab89e16289f7e7cdf1d2fee688db0d.jpg" alt="레시피 미리보기 사진"></img>
             </a>
           </div>
           <div className="recipe_down">
-            <a  href="dd" className="recipe_logo">
+            <a href="dd" className="recipe_logo">
               <image src="https://recipe1.ezmember.co.kr/cache/rpf/2016/01/29/900013400086b533aef0411aeb3ee7d71.png" alt="로고사진"></image>
             </a>
             <span>Download</span>

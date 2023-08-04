@@ -122,12 +122,12 @@ function ClassList() {
                 className="card course course_card_item"
                 data-productid="324582"
                 fxd-data='{"courseId":324582,"regPrice":0,"isInCart":false}'
-                data-gtm-vis-recent-on-screen-8964582_476="420"
-                data-gtm-vis-first-on-screen-8964582_476="420"
+                data-gtm-vis-recent-on-screen-8964582_476="200"
+                data-gtm-vis-first-on-screen-8964582_476="200"
                 data-gtm-vis-total-visible-time-8964582_476="100"
                 data-gtm-vis-has-fired-8964582_476="1"
               >
-                <a className="course_card_front e_course_click" href="/course/따라하며-배우는-노드-리액트-유튜브-만들기">
+                <a className="course_card_front e_course_click" href="ㅔㅔㅔㅔ">
                   <div className="card-image">
                     <figure className="image is_thumbnail">
                       <img

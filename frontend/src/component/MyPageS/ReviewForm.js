@@ -43,8 +43,8 @@ function ReviewForm({onClose, onClickRating }) {
   const accessToken = useSelector((state) => state.auth.access_token);
   console.log(accessToken)
   const [reviewContents, setreviewContents] = useState("");
-  const  [rating, setRating] = useState(0.0);
-  const lessonId = 2
+  const  [rating, setRating] = useState("0");
+  const lessonId = 4
 
   const data = {
     lessonId:parseInt(lessonId),
@@ -69,20 +69,17 @@ function ReviewForm({onClose, onClickRating }) {
     // onsubmit(reviewContents, rating)
     //api
     axios
-    .post(`api/v1/review`, {
- 
-      data,
+    .post(`api/v1/review`, data, {
       headers: {
         Access_Token: accessToken,
-
       },
     })
     .then((res) => {
-      console.log(res.data)
+      console.log(res.data);
       alert('리뷰가 등록되었습니다.');
     })
     .catch((err) => {
-      console.log("리뷰등록못함",err);
+      console.log("리뷰등록못함", err);
     });
 
   };

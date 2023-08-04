@@ -1,27 +1,32 @@
-import React from "react";
+import React,{useState, useEffect} from "react";
 import '../../style/review.css'
 import SideBar from "./SideBar";
-
-// import axios from "axios";
-// import { useSelector } from "react-redux";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 
 function Review() {
-  // const accessToken = useSelector((state) => state.auth.token);
-  // console.log(accessToken);
+  const accessToken = useSelector((state) => state.auth.access_token);
+  const [reviews, setReviews] = useState([]);
 
-  // axios
-  //   .get(`api/v1/my/review`, {
-  //     headers: {
-  //       Access_Token: accessToken,
-  //     },
-  //   })
-  //   .then((res) => {
-  //     console.log(res);
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
+  console.log(accessToken);
+
+  useEffect(() => {
+    axios
+      .get(`api/v1/my/review`, {
+        headers: {
+          Access_Token: accessToken,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setReviews(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [accessToken]);
+
 
   return (
     <div>
@@ -30,7 +35,6 @@ function Review() {
         <div className="header">
           <h2 className="header_title">작성한 리뷰</h2>
         <h2 className="section_title">
-          강좌리뷰
         </h2>
         </div>
         <ul className="caution_list">
@@ -47,19 +51,22 @@ function Review() {
             </select>
           </div>
         </div>
+        {reviews.map((review, index) => (
+        <div key={index}>
         <section className="review">
           <div className="review_box">
             <div className="review_item">
               <div className="review_cont">
-                <a href="dd" className="review_link">강좌이름</a>
+                <a href="dd" className="review_link">강좌이름: {review.lessonTitle}</a>
                 <div className="review_star">
-                  ⭐️⭐️⭐️⭐️ 4.2
+                  ⭐️⭐️⭐️⭐️ {review.rating}
                 </div>
                 <div className="review_author">
                   작성자/아이디
+                  {review.userId}
                 </div>
                 <div className="review_tutor">
-                  선생님닉네임/이름
+                  {review.cookyerId}/{review.cookyerName}
                 </div>
                 <div className="review_cont">
                   리뷰내용
@@ -81,6 +88,8 @@ function Review() {
             </div>
           </div>
         </section>
+        </div>
+        ))}
       </section>
     </div>
   )
