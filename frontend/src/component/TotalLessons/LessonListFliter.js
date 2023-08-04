@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setDeadLine, setOrder } from '../../store/lessonInfo/lessonInfo';
+import { setDeadLine, setOrder } from '../../store/lesson/lessonSearch';
 
 function LessonListFliter() {
   const dispatch = useDispatch()
