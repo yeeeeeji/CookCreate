@@ -11,7 +11,6 @@ const initialState = {
   isVideoPublished: true,
   isAudioPublished: true,
   videoLessonId: undefined,
-  roomPresent: false,
   isSessionOpened: false,
 }
 
@@ -41,9 +40,6 @@ export const video = createSlice({
     setVideoLessonId: (state, {payload}) => {
       state.videoLessonId = payload.videoLessonId
     },
-    setRoomPresent: (state, {payload}) => {
-      state.roomPresent = payload.roomPresent
-    },
     setIsSessionOpened: (state, {payload}) => {
       state.isSessionOpened = payload.isSessionOpened
     },
@@ -71,7 +67,6 @@ export const video = createSlice({
       state.isVideoPublished = true
       state.isAudioPublished = true
       state.videoLessonId = undefined
-      state.roomPresent = false
       state.isSessionOpened = false
     },
     enteredSubscriber: (state, action) => {
@@ -115,7 +110,6 @@ export const video = createSlice({
       state.isVideoPublished = true
       state.isAudioPublished = true
       state.videoLessonId = undefined
-      state.roomPresent = false
       state.isSessionOpened = false
     },
     [closeSession.rejected]: (state, { payload }) => {
@@ -126,7 +120,7 @@ export const video = createSlice({
 
 export const {
     initOVSession, setPublisher, setMainStreamManager, setSessionId,
-    setSubscribers, setVideoLessonId, setRoomPresent, setIsSessionOpened,
+    setSubscribers, setVideoLessonId, setIsSessionOpened,
     videoMute, audioMute, leaveSession,
     enteredSubscriber, deleteSubscriber,
 } = video.actions

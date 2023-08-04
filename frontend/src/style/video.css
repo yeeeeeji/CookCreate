@@ -10,6 +10,23 @@ p {
   margin: 0px;
 }
 
+/* 네브바 드롭다운메뉴 나중에 옮기기 */
+.dropdown {
+  display: flex;
+  position: relative;
+}
+
+.dropdown-content {
+  /* display: none; */
+  overflow: scroll;
+  min-width: 240px;
+  height: 160px;
+  position: absolute;
+  top: 100px;
+  color: black;
+}
+/* 옮기기 */
+
 .video-page {
   background-color: #262626;
 }
