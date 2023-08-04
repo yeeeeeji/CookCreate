@@ -2,6 +2,7 @@ package com.mmt.controller;
 
 import com.mmt.domain.entity.auth.UserDetailsImpl;
 import com.mmt.domain.request.pay.PaymentReadyReq;
+import com.mmt.domain.response.my.MyPaymentRes;
 import com.mmt.domain.response.pay.PaymentReadyRes;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.service.impl.PaymentServiceImpl;
@@ -55,8 +56,8 @@ public class PaymentController {
 
     @Parameter(hidden = true)
     @GetMapping("/completed")
-    public ResponseEntity<ResponseDto> approvePay(String pg_token, int paymentId) {
-        ResponseDto responseDto = paymentService.approvePay(pg_token, paymentId);
+    public ResponseEntity<? extends ResponseDto> approvePay(String pg_token, int paymentId) {
+        MyPaymentRes responseDto = paymentService.approvePay(pg_token, paymentId);
         return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
     }
 
