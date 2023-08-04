@@ -162,6 +162,12 @@ function NavBar() {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }} className='navbar'>
+      <Link to='/mypageS'>
+        학생my
+      </Link> |
+      <Link to='/mypageT'>
+        선생my
+      </Link> |
       <Link to='/'>
         로고
       </Link> |

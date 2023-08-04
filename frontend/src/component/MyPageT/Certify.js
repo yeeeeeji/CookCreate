@@ -1,177 +1,214 @@
-// import React from 'react';
-
-// function Certify() {
-//   return (
-//     <div>
-//       <article>
-//         <div className='content_info'>
-//           <h3>자격증등록</h3>
-//         </div>
-//         <article className='content_input'>
-//           <table className='board_write'>
-//             <colgroup>
-//               <col className='width200'></col>
-//               <col className='widthauto'></col>
-//             </colgroup>
-//             <tbody>
-//               <tr>
-//                 <th scope='row'>자격구분</th>
-//                 <th>
-//                   <div className='inputRadioWrap'>
-//                     <span>
-//                       <input id="searchQulCpCd1" name="searchQulCpCd" type="radio" value="0000"></input>
-//                       <label for="searchQulCpCd1" title="전체">공인</label>
-//                       <input id="searchQulCpCd1" name="searchQulCpCd" type="radio" value="0000"></input>
-//                       <label for="searchQulCpCd1" title="전체">민간</label>
-//                       <input id="searchQulCpCd1" name="searchQulCpCd" type="radio" value="0000"></input>
-//                       <label for="searchQulCpCd1" title="전체">사업자 등록증</label>
-//                     </span>
-//                   </div>
-//                 </th>
-//               </tr>
-//               <tr>
-//                 <th scope="row">등록번호</th>
-//                 <td>
-//                   <label for="searchQulRegYy" className="hidden">등록연도 선택</label>
-//                   <select id="searchQulRegYy" name="searchQulRegYy" className="selectText width150" title="등록연도 선택">
-//                     <option value="0000" selected="selected">등록연도</option>
-//                     <option value="2023">2023</option>
-//                     <option value="2022">2022</option>
-//                     <option value="2021">2021</option>
-//                     <option value="2020">2020</option>
-//                     <option value="2019">2019</option>
-//                     <option value="2018">2018</option>
-//                     <option value="2017">2017</option>
-//                     <option value="2016">2016</option>
-//                     <option value="2015">2015</option>
-//                     <option value="2014">2014</option>
-//                     <option value="2013">2013</option>
-//                     <option value="2012">2012</option>
-//                     <option value="2011">2011</option>
-//                     <option value="2010">2010</option>
-//                     <option value="2009">2009</option>
-//                     <option value="2008">2008</option>
-//                   </select> - 
-//                   <label for="searchQulRegNum" className="hidden">등록번호 입력</label> 
-//                   <input id="searchQulRegNum" name="searchQulRegNum" className="inputText width150" title="등록번호 입력" onkeypress="only_number();" type="text" value="" maxlength="6"></input>
-//                 </td>
-//               </tr>
-//               <tr>
-// 								<th scope="row">
-//                   <label for="searchQulNm">자격명</label>
-//                 </th>
-// 								<td>
-//                   <input id="searchQulNm" name="searchQulNm" className="inputText width100p" style="ime-mode:active;" title="자격명 입력" type="text" value=""></input>
-//                 </td>
-// 							</tr>
-//             </tbody>
-//           </table>
-//         </article>
-//       </article>
-//     </div>
-//   );
-// }
-
-// export default Certify;
-
-
-
-import React from 'react';
+import React, { useState, useEffect } from "react";
+// import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import SideBar from "./SideBar";
-
+import axios from "axios";
 
 function Certify() {
+  const accessToken = useSelector((state) => state.auth.access_token);
+  const [certificates, setCertificates] = useState([])
+  const [capture, setCapture] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  // const [certificatePreview, setCertificatePreview] = useState(null);
 
-  const onlyNumber = (e) => {
-    const inputChar = String.fromCharCode(e.charCode);
-    if (!/^\d+$/.test(inputChar)) {
-      e.preventDefault();
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   setCapture(file);
+
+
+  // 파일등록
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!capture) {
+      alert("자격증 파일을 선택해주세요");
+      return;
     }
+
+    const formData = new FormData();
+    formData.append("capture", capture);
+    console.log("파일", capture);
+    console.log("캡쳐", formData.get("capture"));
+
+    setLoading(true);
+
+    axios
+      .post("/api/v1/my/badge", formData, {
+        headers: {
+          Access_Token: accessToken,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        setLoading(false);
+        setSuccess(true);
+        console.log(res);
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error, "자격증업로드불가");
+      });
   };
+  
+  
+  
+    //자격증 조회
+
+  useEffect(() => {
+    axios
+      .get(`api/v1/my/badge`, {
+        headers: {
+          Access_Token: accessToken,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setCertificates(res.data);
+        console.log("자격증목록", certificates);
+      })
+      .catch((err) => {
+        console.log("자격증 조회못함");
+      });
+  }, [capture,accessToken]);
+
+
 
   return (
     <div>
-      <SideBar/>
-      <article>
-        <div className='content_info'>
-          <h3>자격증등록</h3>
+      <SideBar />
+      <div>
+        <h2>자격증 등록</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            {/* {certificatePreview && <img src={certificatePreview} alt="자격증 프리뷰" style={{ maxWidth: "200px" }} />} */}
+            <label>자격증 파일:</label>
+            <input type="file" onChange={(e) => setCapture(e.target.files[0])} required />
+          </div>
+          <button type="submit" disabled={loading}>
+            등록하기
+          </button>
+          {loading ? " 등록 중 입니다..." : ""}
+          {success && <p>자격증 등록이 완료되었습니다!</p>}
+        </form>
+      </div>
+      <div>
+        <h2>자격증 목록</h2>
+        <div>
+        {certificates.map((certificate) => (
+        <div key={certificate.badgeId}>
+          <img src={certificate.capture} alt={`자격증 ID: ${certificate.badgeId}`} style={{ maxWidth: "200px" }} />
+          <p>자격증 ID: {certificate.badgeId}</p>
+          <p>상태: {certificate.certificated}</p>
+          <p>등록일: {certificate.createdDate}</p>
+          <hr />
         </div>
-        <article className='content_input'>
-          <table className='board_write'>
-            <colgroup>
-              <col className='width200'></col>
-              <col className='widthauto'></col>
-            </colgroup>
-            <tbody>
-              <tr>
-                <th scope='row'>자격구분</th>
-                <td>
-                  <div className='inputRadioWrap'>
-                    <span>
-                      <input id="searchQulCpCd1" name="searchQulCpCd" type="radio" value="0000" />
-                      <label htmlFor="searchQulCpCd1" title="전체">공인</label>
-                      <input id="searchQulCpCd2" name="searchQulCpCd" type="radio" value="0001" />
-                      <label htmlFor="searchQulCpCd2" title="전체">민간</label>
-                      <input id="searchQulCpCd3" name="searchQulCpCd" type="radio" value="0002" />
-                      <label htmlFor="searchQulCpCd3" title="전체">사업자 등록증</label>
-                    </span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">등록번호</th>
-                <td>
-                  <label htmlFor="searchQulRegYy" className="hidden"></label>
-                  <select id="searchQulRegYy" name="searchQulRegYy" className="selectText width150" title="등록연도 선택">
-                    <option value="0000" selected="selected">등록연도</option>
-                    <option value="2023">2023</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                    <option value="2020">2020</option>
-                    <option value="2019">2019</option>
-                    <option value="2018">2018</option>
-                    <option value="2017">2017</option>
-                    <option value="2016">2016</option>
-                    <option value="2015">2015</option>
-                    <option value="2014">2014</option>
-                    <option value="2013">2013</option>
-                    <option value="2012">2012</option>
-                    <option value="2011">2011</option>
-                    <option value="2010">2010</option>
-                    <option value="2009">2009</option>
-                    <option value="2008">2008</option>
-                  </select>{" "}
-                  -
-                  <label htmlFor="searchQulRegNum" className="hidden">등록번호 입력</label>
-                  <input id="searchQulRegNum" name="searchQulRegNum" className="inputText width150" title="등록번호 입력" onKeyPress={(e) => onlyNumber(e)} type="text" value="" maxLength="6" />
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  <label htmlFor="searchQulNm">자격명</label>
-                </th>
-                <td>
-                  <input id="searchQulNm" name="searchQulNm" className="inputText width100p" style={{ imeMode: "active" }} title="자격명 입력" type="text" value="" />
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">
-                  <label htmlFor="searchQulNm">기관명</label>
-                </th>
-                <td>
-                  <input id="searchQulNm" name="searchQulNm" className="inputText width100p" style={{ imeMode: "active" }} title="기관명 입력" type="text" value="" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </article>
-      </article>
-        <button>
-          제출
-        </button>
+        ))}
+        </div>
+      </div>
     </div>
   );
 }
 
 export default Certify;
+
+
+
+
+
+
+
+
+
+// import React, { useState, useRef } from "react";
+// import { useSelector } from "react-redux";
+// import SideBar from "./SideBar";
+// import axios from "axios";
+
+// function Certify() {
+//   const accessToken = useSelector((state) => state.auth.access_token);
+//   console.log(accessToken);
+//   const [capture, setCapture] = useState(null);
+//   const [loading, setLoading] = useState(false);
+//   const [success, setSuccess] = useState(false);
+//   const fileInputRef = useRef(null); // 추가: 파일 입력 참조
+
+//   const handleFileChange = (e) => {
+//     const file = e.target.files[0];
+//     setCapture(file);
+
+
+//     // 파일 프리뷰 설정
+//     const reader = new FileReader();
+//     reader.onloadend = () => {
+//       setCertificatePreview(reader.result);
+//     };
+//     if (file) {
+//       reader.readAsDataURL(file);
+//     } else {
+//       setCertificatePreview(null);
+//     }
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+
+//     if (!capture) {
+//       alert("자격증 파일을 선택해주세요");
+//       return;
+//     }
+
+//     const formData = new FormData();
+//     formData.append("capture", capture);
+
+//     setLoading(true);
+
+//     axios
+//       .post("/api/v1/my/badge", formData, {
+//         headers: {
+//           Authorization: `Bearer ${accessToken}`,
+//           "Content-Type": "multipart/form-data",
+//         },
+//       })
+//       .then((res) => {
+//         setLoading(false);
+//         setSuccess(true);
+//         console.log(res);
+//         fileInputRef.current.value = ""; // 추가: 성공적으로 제출 후 파일 입력 초기화
+//       })
+//       .catch((error) => {
+//         setLoading(false);
+//         console.log(error, "자격증 업로드 불가");
+//       });
+//   };
+
+//   const [certificatePreview, setCertificatePreview] = useState(null);
+
+//   return (
+//     <div>
+//       <SideBar />
+//       <div>
+//         <h2>자격증 등록</h2>
+//         <form onSubmit={handleSubmit}>
+//           <div>
+//             {certificatePreview && <img src={certificatePreview} alt="자격증 프리뷰" style={{ maxWidth: "200px" }} />}
+//             <label>자격증 파일:</label>
+//             <input ref={fileInputRef} type="file" onChange={handleFileChange} required />
+//           </div>
+//           <button type="submit" disabled={loading}>
+//             등록하기
+//           </button>
+//           {loading ? " 등록 중 입니다..." : ""}
+//           {success && <p>자격증 등록이 완료되었습니다!</p>}
+//         </form>
+//       </div>
+//       <div>
+//         <h2>자격증 목록</h2>
+//         <div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default Certify;

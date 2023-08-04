@@ -16,7 +16,7 @@ public class UserUpdateReq {
     private String nickname;
     private String phoneNumber;
     private String userEmail;
-    private List<String> food;
+    private String food;
     private String introduce;
     private MultipartFile profileImg;
     private String introUrl;
