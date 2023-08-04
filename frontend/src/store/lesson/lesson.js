@@ -23,7 +23,7 @@ const initialState = {
   lessonStepList: [],
   stepValid : false,
   videoUrl: "",
-  thumbnailUrl: ""
+  thumbnailValid: false
 };
 
 const lesson = createSlice({
@@ -90,8 +90,8 @@ const lesson = createSlice({
     setStepValid : (state, action) => {
       state.stepValid = action.payload
     },
-    setThumbnail : (state, action) => {
-      state.thumbnailUrl = action.payload
+    setThumbnailVaild : (state, action) => {
+      state.thumbnailValid = action.payload
     },
     setVideoUrl : (state, action) => {
       state.videoUrl = action.payload
@@ -110,5 +110,5 @@ export const {
   setDescription, setDescriptionValid,
   setMaterials, setMaterialsValid,
   setLessonStepList, setStepValid,
-  setVideoUrl, setThumbnail} = lesson.actions;
+  setVideoUrl, setThumbnailVaild} = lesson.actions;
 export default lesson.reducer;
