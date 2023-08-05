@@ -8,6 +8,47 @@ function LessonStepWidget() {
   const [ checkCount, setCheckCount ] = useState(0)
   const publisher = useSelector((state) => state.video.publisher)
 
+  const lessonStepList = useSelector((state) => state.videoLessonInfo.lessonStepList)
+  const [ curStep, setCurStep ] = useState(undefined)
+  const [ curIdx, setCurIdx ] = useState(0)
+  const role = localStorage.getItem('role')
+
+  useEffect(() => {
+    if (lessonStepList) {
+      console.log(lessonStepList, "요리 단계 잘 왔니?")
+      setCurIdx(1)
+    }
+  }, [lessonStepList])
+
+
+  const goPrevStep = () => {
+    setCurIdx((prev) => {
+      if (lessonStepList && prev - 1 > 0) {
+        return prev - 1
+      } else {
+        return prev
+      }
+    })
+  }
+
+  const goNextStep = () => {
+    setCurIdx((prev) => {
+      if (lessonStepList && prev + 1 <= lessonStepList.length) {
+        return prev + 1
+      } else {
+        return prev
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (lessonStepList) {
+      const newStep = lessonStepList.find((step) => step.stepOrder === curIdx)
+      setCurStep(newStep.stepContent)
+      // lessonStepList.map((step) => console.log(step))
+    }
+  }, [curIdx])
+
   const resetCheckCookiee = (publisher) => {
     dispatch(setCheckCookieeList({checkCookieeList: []}))
     setCheckCount(0)
@@ -29,12 +70,22 @@ function LessonStepWidget() {
       <div>
         <p>현재 진행 단계</p>
         <div>
-          <button>이전</button>
+          {role === 'COOKYER' ? (
+            <button onClick={goPrevStep}>이전</button>
+          ) : null}
           <div>
-            <p>강사가 미리 설정한 요리 단계</p>
-            <button>수정</button>
+            {curStep ? (
+              <p>{curStep}</p>
+            ) : (
+              <p>현재 요리 단계</p>
+            )}
+            {role === 'COOKYER' ? (
+              <button>수정</button>
+            ) : null}
           </div>
-          <button>이후</button>
+          {role === 'COOKYER' ? (
+            <button onClick={goNextStep}>이후</button>
+          ) : null}
         </div>
         <div>
           <h1>체크 {checkCount}명</h1>

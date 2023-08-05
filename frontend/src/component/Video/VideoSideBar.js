@@ -16,9 +16,11 @@ function VideoSideBar() {
   const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
   const publisher = useSelector((state) => state.video.publisher)
+  
   /** 화면 공유 기능 */
   const shareScreenPublisher = useSelector((state) => state.screenShare.shareScreenPublisher)
   const [ isShared, setIsShared ] = useState(false)
+  
   /** 세션 나가기 */
   const sessionId = useSelector((state) => state.video.sessionId)
   const videoLessonId = useSelector((state) => state.video.videoLessonId)

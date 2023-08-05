@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 function VideoHeader() {
+  const lessonTitle = useSelector((state) => state.videoLessonInfo.lessonTitle)
+  const cookyerName = useSelector((state) => state.videoLessonInfo.cookyerName)
 
   return (
     <div>
       <div>
-        <p>비건 단호박 크림 파스타</p>
-        <p>백쿡커</p>
+        {lessonTitle ? (
+          <p>{lessonTitle}</p>
+        ) : (
+          <p>수업 제목</p>
+        )}
+        {cookyerName ? (
+          <p>{cookyerName}</p>
+        ) : (
+          <p>쿠커 이름</p>
+        )}
       </div>
       <div>
         <div>

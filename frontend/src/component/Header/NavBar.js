@@ -195,7 +195,7 @@ function NavBar() {
           ) : null}
         </div>
       ) : null}
-      {role === 'COOKYER' ? <button onClick={() => createRoom(3)}>쿠커화면</button> : null}
+      {role === 'COOKYER' ? <button onClick={() => createRoom(5)}>쿠커화면</button> : null}
     </div>
   );
 }

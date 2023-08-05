@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
 import { setCheckCookiee, setCheckCookieeList, setHandsUpCookiee, setHandsUpCookieeList } from '../../store/video/cookyerVideo';
+import axios from 'axios';
+import { setLessonInfo } from '../../store/video/videoLessonInfo';
 
 function CookyerScreen() {
   const dispatch = useDispatch()
@@ -25,6 +27,10 @@ function CookyerScreen() {
   const sessionId = useSelector((state) => state.video.sessionId)
   const nickname = localStorage.getItem('nickname');
   const role = localStorage.getItem('role')
+
+  /** 레슨 정보 */
+  const access_token = localStorage.getItem('access_token')
+  const videoLessonId = useSelector((state) => state.video.videoLessonId)
 
   /** 체크 */
   const checkCookieeList = useSelector((state) => state.cookyerVideo.checkCookieeList)
@@ -98,6 +104,29 @@ function CookyerScreen() {
       };
     }
   }, []);
+
+  useEffect(() => {
+    if (videoLessonId) {
+      axios.get(
+        `/api/v1/lesson/${videoLessonId}`,
+        {
+          headers : {
+            Access_Token : access_token
+          }
+        })
+        .then((res) => {
+          console.log(res.data)
+          console.log('화상 과외 수업 정보 받아와짐')
+          // setMyLesson(res.data) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
+          dispatch(setLessonInfo(res.data))
+          // setSessionId(res.data.sessionId)
+        })
+        .catch((err) => {
+          console.log(err)
+          console.log('화상 과외 수업 정보 안받아와짐')
+        })
+    }
+  }, [videoLessonId])
 
   /** 체크한 쿠키 리스트에 추가 */
   useEffect(() => {

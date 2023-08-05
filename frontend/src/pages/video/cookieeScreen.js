@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber, leaveSession } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
 import { resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
+import axios from 'axios';
+import { setLessonInfo } from '../../store/video/videoLessonInfo';
 
 function CookieeScreen() {
   const dispatch = useDispatch()
@@ -26,6 +28,11 @@ function CookieeScreen() {
   const sessionId = useSelector((state) => state.video.sessionId)
   const nickname = localStorage.getItem('nickname');
   const role = localStorage.getItem('role')
+
+  /** 레슨 정보 */
+  const access_token = localStorage.getItem('access_token')
+  const videoLessonId = useSelector((state) => state.video.videoLessonId)
+  // const [ myLesson, setMyLesson ] = useState(undefined)  // 학생 모달창에 불러서 쓸 레슨 정보
 
   const [ isCompleted, setIsCompleted ] = useState(false)
 
@@ -125,6 +132,29 @@ function CookieeScreen() {
       };
     }
   }, []);
+
+  useEffect(() => {
+    if (videoLessonId) {
+      axios.get(
+        `/api/v1/lesson/${videoLessonId}`,
+        {
+          headers : {
+            Access_Token : access_token
+          }
+        })
+        .then((res) => {
+          console.log(res.data)
+          console.log('화상 과외 수업 정보 받아와짐')
+          // setMyLesson(res.data) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
+          dispatch(setLessonInfo(res.data))
+          // setSessionId(res.data.sessionId)
+        })
+        .catch((err) => {
+          console.log(err)
+          console.log('화상 과외 수업 정보 안받아와짐')
+        })
+    }
+  }, [videoLessonId])
 
   // const handleMainVideoStream = (stream) => {
   //   if (mainStreamManager !== stream) {

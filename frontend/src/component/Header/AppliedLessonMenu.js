@@ -30,7 +30,7 @@ function AppliedLessonMenu() {
         .then((res) => {
           console.log(res.data)
           console.log('신청한 수업 목록 받아와짐')
-          setMyLessons(res.data) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
+          setMyLessons(res.data)
           // setSessionId(res.data.sessionId)
         })
         .catch((err) => {
