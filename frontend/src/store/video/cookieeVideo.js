@@ -17,7 +17,7 @@ export const cookieeVideo = createSlice({
       state.check = false
     },
     setHandsUp: (state) => {
-      state.handsUp = true
+      state.handsUp = !state.handsUp
     },
     resetHandsUp: (state) => {
       state.handsUp = false

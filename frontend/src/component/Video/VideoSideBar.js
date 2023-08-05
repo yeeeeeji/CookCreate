@@ -16,6 +16,8 @@ function VideoSideBar() {
   const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
   const publisher = useSelector((state) => state.video.publisher)
+  // const isVideoPublished = useSelector((state) => state.video.isVideoPublished)
+  const isAudioPublished = useSelector((state) => state.video.isAudioPublished)
   
   /** 화면 공유 기능 */
   const shareScreenPublisher = useSelector((state) => state.screenShare.shareScreenPublisher)
@@ -34,6 +36,7 @@ function VideoSideBar() {
 
   /** 손들기 기능 */
   const handsUp = useSelector((state) => state.cookieeVideo.handsUp)
+  // const [ isHandsUp, setIsHandsUp ] = useState(false)
 
   /** 과외방 닫기 */
   const handleCloseSession = () => {
@@ -156,8 +159,6 @@ function VideoSideBar() {
   }
 
   /** 체크 */
-  // 쿠키가 체크를 누르면 쿠커에게 시그널을 보내고, 쿠커가 리셋하면 쿠키에게 시그널을 보내야 함
-  // 쿠키가 체크를 누름
   const pressCheck = () => {
     dispatch(setCheck())
   }
@@ -183,15 +184,26 @@ function VideoSideBar() {
   }
 
   useEffect(() => {
-    if (handsUp) {
-      const data = {
-        connectionId: publisher.stream.connection.connectionId
+    if (publisher) {
+      if (handsUp) {
+        const data = {
+          connectionId: publisher.stream.connection.connectionId
+        }
+        console.log("손들었다", data)
+        publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'handsUp'
+        })
+      } else {
+        const data = {
+          connectionId: publisher.stream.connection.connectionId
+        }
+        console.log("손내렸다", data)
+        publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'handsDown'
+        })
       }
-      console.log("손들었다", data)
-      publisher.stream.session.signal({
-        data: JSON.stringify(data),
-        type: 'handsUp'
-      })
     }
   }, [handsUp])
 
@@ -212,7 +224,7 @@ function VideoSideBar() {
       <button
         onClick={setAudioMute}
       >
-        음소거
+        {isAudioPublished ? ('소리켜짐') : ('소리꺼짐')}
       </button>
       <button
         onClick={setVideoMute}
@@ -240,7 +252,7 @@ function VideoSideBar() {
           onClick={() => pressHandsUp(publisher)}
           // onClick={isRaised ? handleStopRaiseHand : handleRaiseHand}
         >
-          손들기
+          {handsUp ? ('손 내리기') : ('손 들기')}
         </button>
       ) : null}
       

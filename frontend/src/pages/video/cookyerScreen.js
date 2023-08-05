@@ -9,7 +9,7 @@ import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
-import { setCheckCookiee, setCheckCookieeList, setHandsUpCookiee, setHandsUpCookieeList } from '../../store/video/cookyerVideo';
+import { setCheckCookiee, setCheckCookieeList, setHandsDownCookiee, setHandsUpCookiee, setHandsUpCookieeList } from '../../store/video/cookyerVideo';
 import axios from 'axios';
 import { setLessonInfo } from '../../store/video/videoLessonInfo';
 import LessonStepModal from '../../component/Video/LessonStepModal';
@@ -40,6 +40,7 @@ function CookyerScreen() {
   /** 손들기 */
   const handsUpCookieeList = useSelector((state) => state.cookyerVideo.handsUpCookieeList)
   const handsUpCookiee = useSelector((state) => state.cookyerVideo.handsUpCookiee)
+  const handsDownCookiee = useSelector((state) => state.cookyerVideo.handsDownCookiee)
 
   /** 진행 단계 관련 모달 */
   const isSessionOpened = useSelector((state) => state.video.isSessionOpened)
@@ -81,6 +82,13 @@ function CookyerScreen() {
         const connectionId = JSON.parse(e.data).connectionId
         console.log('손 든 사람', connectionId)
         dispatch(setHandsUpCookiee(connectionId))
+      })
+
+      /** 손들기 해제 이벤트 추가 */
+      session.on('signal:handsDown', (e) => {
+        const connectionId = JSON.parse(e.data).connectionId
+        console.log('손 내린 사람', connectionId)
+        dispatch(setHandsDownCookiee(connectionId))
       })
 
       console.log(4)
@@ -167,8 +175,22 @@ function CookyerScreen() {
         dispatch(setCheckCookieeList([handsUpCookiee]))
         console.log(handsUpCookieeList, "손들기리스트에 값 없음")
       }
+      dispatch(setHandsUpCookiee(''))
     }
   }, [handsUpCookiee])
+
+  /** 손 내린 쿠키 리스트에서 제거 */  // 선생님이 리셋시켰을때랑 본인이 내렸을때랑 잘 구분해서 변수처리 잘 해주기!!!!!
+  useEffect(() => {
+    console.log('손 내릴 쿠키 리스트에서 제거', handsDownCookiee)
+    if (handsUpCookieeList !== undefined && handsDownCookiee !== '') {
+      const newHandsUpCookieeList = handsUpCookieeList.filter((item) => {
+        return item !== handsDownCookiee
+      })
+      dispatch(setHandsUpCookieeList(newHandsUpCookieeList))
+      console.log(newHandsUpCookieeList, "손 내린 사람 제외 새 손들기 리스트")
+      dispatch(setHandsDownCookiee(''))
+    }
+  }, [handsDownCookiee])
 
   const resetHandsUpCookiee = (data) => {
     const cookyer = data.cookyer  // 쿠커퍼블리셔와 쿠키섭스크라이버

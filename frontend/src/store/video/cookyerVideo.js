@@ -5,6 +5,7 @@ const initialState = {
   checkCookiee: '',
   handsUpCookieeList: [],
   handsUpCookiee: '',
+  handsDownCookiee: '',
 }
 
 export const cookyerVideo = createSlice({
@@ -22,6 +23,9 @@ export const cookyerVideo = createSlice({
     },
     setHandsUpCookiee: (state, { payload }) => {
       state.handsUpCookiee = payload
+    },
+    setHandsDownCookiee: (state, { payload }) => {
+      state.handsDownCookiee = payload
     }
   },
   extraReducers: {
@@ -29,6 +33,6 @@ export const cookyerVideo = createSlice({
 })
 
 export const {
-  setCheckCookieeList, setCheckCookiee, setHandsUpCookieeList, setHandsUpCookiee
+  setCheckCookieeList, setCheckCookiee, setHandsUpCookieeList, setHandsUpCookiee, setHandsDownCookiee
 } = cookyerVideo.actions
 export default cookyerVideo.reducer
