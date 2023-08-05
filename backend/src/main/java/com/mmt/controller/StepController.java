@@ -1,37 +1,24 @@
 package com.mmt.controller;
 
-import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.auth.UserDetailsImpl;
-import com.mmt.domain.request.lesson.LessonPostReq;
-import com.mmt.domain.request.lesson.LessonPutReq;
-import com.mmt.domain.request.lesson.LessonSearchReq;
 import com.mmt.domain.request.lesson.LessonStepPutReq;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.lesson.LessonDetailRes;
-import com.mmt.domain.response.lesson.LessonLatestRes;
-import com.mmt.domain.response.lesson.LessonSearchRes;
 import com.mmt.domain.response.lesson.LessonStepRes;
 import com.mmt.service.LessonService;
-import com.mmt.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Tag(name = "과외 진행단계 API", description = "WebRTC 도중 과외 진행단계 관련 API입니다.")
@@ -42,7 +29,6 @@ import java.util.List;
 public class StepController {
 
     private final LessonService lessonService;
-    private final MemberService memberService;
 
     @Operation(summary = "과외 진행단계 불러오기", description = "과외 방을 들어갈 때 해당 과외의 요리 단계를 불러온다.")
     @ApiResponses(value = {
@@ -75,7 +61,7 @@ public class StepController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @PutMapping(value = "")
+    @PutMapping("")
     public ResponseEntity<ResponseDto> modifyLessonStep(@RequestBody LessonStepPutReq lessonStepPutReq, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("authentication: " + (userDetails.getUsername()));

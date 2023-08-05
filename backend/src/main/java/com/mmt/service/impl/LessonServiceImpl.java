@@ -1,5 +1,6 @@
 package com.mmt.service.impl;
 
+import com.mmt.config.RedisConfig;
 import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.badge.Badge;
@@ -8,6 +9,7 @@ import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.lesson.LessonStep;
+import com.mmt.domain.request.jjim.JjimReq;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
@@ -32,10 +34,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.Duration;
@@ -60,7 +66,7 @@ public class LessonServiceImpl implements LessonService {
     private final ReviewService reviewService;
     private final AwsS3Uploader awsS3Uploader;
 
-    private final EntityManager entityManager;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
     @Override
@@ -401,6 +407,7 @@ public class LessonServiceImpl implements LessonService {
         return result;
     }
 
+    @Transactional
     @Override
     public ResponseDto modifyLessonStep(String userId, LessonStepPutReq lessonStepPutReq) {
         Optional<Lesson> find = lessonRepository.findByLessonId(lessonStepPutReq.getLessonId());
@@ -514,4 +521,70 @@ public class LessonServiceImpl implements LessonService {
 
         return new ResponseDto(HttpStatus.OK, "Success");
     }
+
+    @Transactional
+    @Override
+    public ResponseDto wantJjimOrNot(JjimReq jjimReq) {
+        int lessonId = jjimReq.getLessonId();
+        Optional<Lesson> lesson = lessonRepository.findByLessonId(lessonId);
+        if(lesson.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        }
+        if(lesson.get().getIsOver() || lesson.get().getIsEnd()){
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 마감된 과외입니다.");
+        }
+
+        Optional<Member> member = memberRepository.findByUserId(jjimReq.getUserId());
+        if(!member.get().getRole().equals(Role.COOKIEE)){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "Cookiee만 이용할 수 있습니다.");
+        }
+
+        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
+
+//        예제
+//        setOperations.add("Key", chatMessage);
+//        System.out.println(setOperations.pop("Key"));       // 하나 꺼내기
+//        System.out.println(setOperations.members("Key"));  // 전체 조회
+
+        String key = "lessonId::" + jjimReq.getLessonId();
+        String value = jjimReq.getUserId();
+        if(Boolean.TRUE.equals(setOperations.isMember(key, value))){
+            setOperations.remove(key, value);
+            return new ResponseDto(HttpStatus.OK, "찜한 목록에서 제거됐습니다.");
+        }else{
+            setOperations.add(key, value);
+            return new ResponseDto(HttpStatus.OK, "찜한 목록에 추가됐습니다.");
+        }
+
+//        setOperations.pop(key);
+//        if(){
+//            setOperations.getOperations().get
+//            setOperations.put(key, hashkey, lesson.get().getJjimCount());
+//            setOperations.increment(key, hashkey,1);
+//            System.out.println(setOperations.get(key, hashkey));
+//        }else {
+//            setOperations.increment(key, hashkey,1);
+//            System.out.println(setOperations.get(key, hashkey));
+//        }
+    }
+
+//    @Scheduled(fixedDelay = 1000L*18L)
+//    @Transactional
+//    @Override
+//    public void cancelJjim(){
+//        String hashkey = "likes";
+//        Set<String> Rediskey = redisTemplate.keys("lessonId*");
+//        Iterator<String> it = Rediskey.iterator();
+//        while (it.hasNext()) {
+//            String data = it.next();
+//            int lessonId = Integer.parseInt(data.split("::")[1]);
+//            if (redisTemplate.opsForHash().get(data, hashkey) == null){
+//                break;
+//            }
+//            int jjimCnt = Integer.parseInt((String.valueOf(redisTemplate.opsForHash().get(data, hashkey))));
+//            //problemRepositoryImp.wantJjim(lessonId, jjimCnt);
+//            redisTemplate.opsForHash().delete(data, hashkey);
+//        }
+//        System.out.println("likes update complete");
+//    }
 }
