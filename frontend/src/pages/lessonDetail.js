@@ -31,6 +31,7 @@ function LessonDetail() {
   const maximumInt = parseInt(maximum)
   const remainingInt = parseInt(remaining)
   const currentInt = maximumInt - remainingInt
+  
   useEffect(() => {
     // 신청 가능 판별 로직
     const DateTransformType = new Date(lessonDate)
