@@ -103,7 +103,7 @@ public class LessonServiceImpl implements LessonService {
         // 참여자 목록에 lesson 세팅, 선생님 아이디 추가
         LessonParticipant lessonParticipant = new LessonParticipant();
         lessonParticipant.setLesson(save);
-        lessonParticipant.setUserId(lessonPostReq.getCookyerId());
+        lessonParticipant.setMember(cookyer.get());
         lessonParticipant.setCompleted(false);
         lessonParticipantRepository.save(lessonParticipant);
 
@@ -125,7 +125,8 @@ public class LessonServiceImpl implements LessonService {
         }
         LessonParticipant lessonParticipant = new LessonParticipant();
         lessonParticipant.setLesson(lesson.get());
-        lessonParticipant.setUserId(userId);
+        Optional<Member> member = memberRepository.findByUserId(userId);
+        lessonParticipant.setMember(member.get());
         lessonParticipant.setCompleted(false);
         lessonParticipantRepository.save(lessonParticipant);
 
@@ -210,7 +211,7 @@ public class LessonServiceImpl implements LessonService {
             return new ResponseDto(HttpStatus.FORBIDDEN, "신청한 Cookiee만 이용 가능합니다.");
         }
 
-        Optional<LessonParticipant> lessonParticipant = lessonParticipantRepository.findByLesson_LessonIdAndUserId(lessonId, userId);
+        Optional<LessonParticipant> lessonParticipant = lessonParticipantRepository.findByLesson_LessonIdAndMember_UserId(lessonId, userId);
         if(lessonParticipant.isEmpty()) {
             return new ResponseDto(HttpStatus.FORBIDDEN, "신청한 Cookiee만 이용 가능합니다.");
         }
@@ -325,11 +326,7 @@ public class LessonServiceImpl implements LessonService {
             List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(lessonId);
             List<Member> memberList = new ArrayList<>();
             for (LessonParticipant lp : lessonParticipantList){
-                Member member = new Member();
-                String userId = lp.getUserId();
-                member.setUserId(userId);
-                member.setNickname(memberRepository.findByUserId(userId).get().getNickname());
-                memberList.add(member);
+                memberList.add(lp.getMember());
             }
             result.setLessonParticipantList(memberList);
 
@@ -474,7 +471,7 @@ public class LessonServiceImpl implements LessonService {
         // 과외를 신청했는지 확인
         boolean isApplied = false;
         for(LessonParticipant lessonParticipant : lessonParticipantList){
-            if(lessonParticipant.getUserId().equals(sessionPostReq.getUserId())){
+            if(lessonParticipant.getMember().getUserId().equals(sessionPostReq.getUserId())){
                 isApplied = true;
                 break;
             }

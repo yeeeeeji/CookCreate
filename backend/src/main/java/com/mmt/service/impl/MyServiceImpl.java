@@ -284,7 +284,7 @@ public class MyServiceImpl implements MyService {
 
     private List<LessonParticipant> getParticipant(String userId){
         // 사용자가 참여한 과외 목록 불러오기
-        return lessonParticipantRepository.findAllByUserId(userId);
+        return lessonParticipantRepository.findAllByMember_UserId(userId);
     }
 
     private int getParticipant(int lessonId){
