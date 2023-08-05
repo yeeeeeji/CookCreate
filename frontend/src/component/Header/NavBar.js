@@ -53,7 +53,7 @@ function NavBar() {
   // 수업 목록에서 생성하기 버튼을 클릭하면 세션이 생성되고 등등
   const createRoom = ( lessonId ) => {
     // 0. 레슨아이디 스토어에 저장
-    dispatch(setVideoLessonId({videoLessonId: lessonId}))
+    dispatch(setVideoLessonId(lessonId))
   }
   
   // 1. 레슨아이디가 잘 저장되면 선생님이 해당 수업 방 만들기 요청 보내기
@@ -74,7 +74,7 @@ function NavBar() {
             // console.log('방 만들기 요청 성공', res)
             console.log('쿠커 세션아이디 생성 성공', res)
             const sessionId = res.data.token
-            dispatch(setSessionId({sessionId}))
+            dispatch(setSessionId(sessionId))
             // dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
           })
           .catch((err) => {
@@ -107,7 +107,7 @@ function NavBar() {
     if (session) {
       if (role === 'COOKYER') {
         console.log("방 생김")
-        dispatch(setIsSessionOpened({isSessionOpened: true}))
+        dispatch(setIsSessionOpened(true))
       } else {
         console.log("너 누구야")
       }
@@ -138,7 +138,6 @@ function NavBar() {
   //         console.log(res.data)
   //         console.log('신청한 수업 목록 받아와짐')
   //         setMyLessons(res.data) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
-  //         // setSessionId(res.data.sessionId)
   //       })
   //       .catch((err) => {
   //         console.log(err)

@@ -12,16 +12,16 @@ export const cookyerVideo = createSlice({
   initialState,
   reducers: {
     setCheckCookieeList: (state, { payload }) => {
-      state.checkCookieeList = payload.checkCookieeList
+      state.checkCookieeList = payload
     },
     setCheckCookiee: (state, { payload }) => {
-      state.checkCookiee = payload.checkCookiee
+      state.checkCookiee = payload
     },
     setHandsUpCookieeList: (state, { payload }) => {
-      state.handsUpCookieeList = payload.handsUpCookieeList
+      state.handsUpCookieeList = payload
     },
     setHandsUpCookiee: (state, { payload }) => {
-      state.handsUpCookiee = payload.handsUpCookiee
+      state.handsUpCookiee = payload
     }
   },
   extraReducers: {

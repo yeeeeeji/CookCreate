@@ -18,8 +18,8 @@ const videoLessonInfo = createSlice({
       state.lessonStepList = payload.lessonStepList
     },
     setLessonStepList: (state, {payload}) => {
-      console.log("진행단계 변경", payload.lessonStepList)
-      state.lessonStepList = payload.lessonStepList
+      console.log("진행단계 변경", payload)
+      state.lessonStepList = payload
     },
     setStepProgress: (state, {payload}) => {
       console.log("진행률 변경", payload)

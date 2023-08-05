@@ -11,10 +11,10 @@ export const screenShare = createSlice({
   initialState,
   reducers: {
     setScreenShareActive: (state, { payload }) => {
-      state.screenShareActive = payload.screenShareActive
+      state.screenShareActive = payload
     },
     setShareScreenPublisher: (state, { payload }) => {
-      state.shareScreenPublisher = payload.shareScreenPublisher
+      state.shareScreenPublisher = payload
     }
   },
   extraReducers: {

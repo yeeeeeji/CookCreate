@@ -25,23 +25,23 @@ export const video = createSlice({
     },
     setSessionId: (state, { payload }) => {
       console.log("세션 아이디 저장 성공", payload)
-      state.sessionId = payload.sessionId
+      state.sessionId = payload
     },
     setPublisher: (state, { payload }) => {
       console.log("13")
-      state.publisher = payload.publisher
+      state.publisher = payload
     },
     setMainStreamManager: (state, { payload }) => {
-      state.mainStreamManager = payload.publisher
+      state.mainStreamManager = payload
     },
     setSubscribers: (state, {payload}) => {
-      state.subscribers = payload.subscribers
+      state.subscribers = payload
     },
     setVideoLessonId: (state, {payload}) => {
-      state.videoLessonId = payload.videoLessonId
+      state.videoLessonId = payload
     },
     setIsSessionOpened: (state, {payload}) => {
-      state.isSessionOpened = payload.isSessionOpened
+      state.isSessionOpened = payload
     },
     videoMute: (state) => {
       state.publisher.publishVideo(!state.isVideoPublished)

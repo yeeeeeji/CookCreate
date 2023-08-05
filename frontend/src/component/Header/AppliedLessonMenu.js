@@ -31,7 +31,6 @@ function AppliedLessonMenu() {
           console.log(res.data)
           console.log('신청한 수업 목록 받아와짐')
           setMyLessons(res.data)
-          // setSessionId(res.data.sessionId)
         })
         .catch((err) => {
           console.log(err)
@@ -43,7 +42,7 @@ function AppliedLessonMenu() {
   /** 학생이 과외방 입장하는 코드 */
   const joinLesson = (lessonId) => {
     console.log("쿠키 입장 요청", lessonId)
-    dispatch(setVideoLessonId({videoLessonId: lessonId}))
+    dispatch(setVideoLessonId(lessonId))
   }
 
   // 1. 레슨아이디가 잘 저장되면 선생님이 해당 수업 방 만들기 요청 보내기
@@ -64,7 +63,7 @@ function AppliedLessonMenu() {
           .then((res) => {
             console.log('쿠키 세션아이디 생성 성공', res.data)
             const sessionId = res.data.token
-            dispatch(setSessionId({sessionId}))
+            dispatch(setSessionId(sessionId))
           })
           .catch((err) => {
             console.log('쿠키 세션아이디 생성 실패', err)
@@ -90,7 +89,7 @@ function AppliedLessonMenu() {
     if (session) {
       if (role === 'COOKYER') {
         console.log("방 생김")
-        dispatch(setIsSessionOpened({isSessionOpened: true}))
+        dispatch(setIsSessionOpened(true))
       } else if (role === 'COOKIEE') {
         if (sessionId) {
           navigate(`/videoLesson/${role}`)

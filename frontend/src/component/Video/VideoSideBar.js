@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { audioMute, leaveSession, setIsSessionOpened, videoMute } from '../../store/video/video';
+import { audioMute, leaveSession, videoMute } from '../../store/video/video';
 import { useNavigate } from 'react-router-dom';
 import { setShareScreenPublisher } from '../../store/video/screenShare';
 import axios from 'axios';
@@ -102,7 +102,7 @@ function VideoSideBar() {
       if (shareScreenPublisher) {  // 공유된 상태일때만
         session.unpublish(shareScreenPublisher)
         session.publish(publisher)
-        dispatch(setShareScreenPublisher({shareScreenPublisher: null}))
+        dispatch(setShareScreenPublisher(null))
         console.log("화면공유 종료")
       }
     }
@@ -113,7 +113,7 @@ function VideoSideBar() {
       shareScreenPublisher.once('accessAllowed', () => {
         console.log("화면공유 여기까지 오니?", shareScreenPublisher.stream)
         session.unpublish(publisher);
-        dispatch(setShareScreenPublisher({shareScreenPublisher: shareScreenPublisher}))
+        dispatch(setShareScreenPublisher(shareScreenPublisher))
         session.publish(shareScreenPublisher).then(() => {
           console.log("화면공유 퍼블리셔 발행 성공")
           // sendSignalUserChanged({ isScreenShareActive: true });

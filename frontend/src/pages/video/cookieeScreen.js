@@ -105,7 +105,7 @@ function CookieeScreen() {
         const data = JSON.parse(e.data)
         console.log(data)
         if (data !== undefined) {
-          dispatch(setCurStep({curStep: data.curStep}))
+          dispatch(setCurStep(data.curStep))
           dispatch(setStepProgress(data.stepProgress))
         }
       })
@@ -160,8 +160,7 @@ function CookieeScreen() {
           dispatch(setLessonInfo(res.data))
           const firstLessonStep = res.data.lessonStepList.find((step) => step.stepOrder === 1)
           console.log(firstLessonStep.stepContent)
-          dispatch(setCurStep({curStep: firstLessonStep.stepContent}))
-          // setSessionId(res.data.sessionId)
+          dispatch(setCurStep(firstLessonStep.stepContent))
         })
         .catch((err) => {
           console.log(err)
@@ -172,7 +171,7 @@ function CookieeScreen() {
 
   // const handleMainVideoStream = (stream) => {
   //   if (mainStreamManager !== stream) {
-  //     dispatch(setMainStreamManager({publisher: stream}))
+  //     dispatch(setMainStreamManager(stream))
   //   }
   // }
 

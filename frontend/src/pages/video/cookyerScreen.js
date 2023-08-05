@@ -72,7 +72,7 @@ function CookyerScreen() {
       session.on('signal:check', (e) => {
         const connectionId = JSON.parse(e.data).connectionId
         console.log('체크한 사람', connectionId)
-        dispatch(setCheckCookiee({checkCookiee: connectionId}))
+        dispatch(setCheckCookiee(connectionId))
         // setCheckCookiee(connectionId)
       })
 
@@ -80,7 +80,7 @@ function CookyerScreen() {
       session.on('signal:handsUp', (e) => {
         const connectionId = JSON.parse(e.data).connectionId
         console.log('손 든 사람', connectionId)
-        dispatch(setHandsUpCookiee({handsUpCookiee: connectionId}))
+        dispatch(setHandsUpCookiee(connectionId))
       })
 
       console.log(4)
@@ -123,7 +123,6 @@ function CookyerScreen() {
           console.log('화상 과외 수업 정보 받아와짐')
           // setMyLesson(res.data) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
           dispatch(setLessonInfo(res.data))
-          // setSessionId(res.data.sessionId)
         })
         .catch((err) => {
           console.log(err)
@@ -143,10 +142,10 @@ function CookyerScreen() {
           return item !== checkCookiee
         })
         newCheckCookieeList.push(checkCookiee)
-        dispatch(setCheckCookieeList({checkCookieeList: newCheckCookieeList}))
+        dispatch(setCheckCookieeList(newCheckCookieeList))
         console.log(newCheckCookieeList, "새 체크 리스트")
       } else {
-        dispatch(setCheckCookieeList({checkCookieeList: [checkCookiee]}))
+        dispatch(setCheckCookieeList([checkCookiee]))
         console.log(checkCookieeList, "체크리스트에 값 없음")
       }
     }
@@ -162,10 +161,10 @@ function CookyerScreen() {
           return item !== handsUpCookiee
         })
         newHandsUpCookieeList.push(handsUpCookiee)
-        dispatch(setHandsUpCookieeList({handsUpCookieeList: newHandsUpCookieeList}))
+        dispatch(setHandsUpCookieeList(newHandsUpCookieeList))
         console.log(newHandsUpCookieeList, "새 손들기 리스트")
       } else {
-        dispatch(setCheckCookieeList({handsUpCookieeList: [handsUpCookiee]}))
+        dispatch(setCheckCookieeList([handsUpCookiee]))
         console.log(handsUpCookieeList, "손들기리스트에 값 없음")
       }
     }
@@ -179,8 +178,8 @@ function CookyerScreen() {
     const newHandsUpCookieeList = handsUpCookieeList.filter((item) => {
       return item !== cookieeConnectionId
     }) // 되는지 확인하고 파라미터로 넣어주던지, 넣었던걸 빼던지 하기
-    dispatch(setHandsUpCookieeList({handsUpCookieeList: newHandsUpCookieeList}))
-    dispatch(setHandsUpCookiee({handsUpCookiee: ''}))
+    dispatch(setHandsUpCookieeList(newHandsUpCookieeList))
+    dispatch(setHandsUpCookiee(''))
 
     // 특정 쿠키에게만 시그널을 보내야 함
     cookyer.stream.session.signal({

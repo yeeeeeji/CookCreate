@@ -81,7 +81,7 @@ function CookyerLessonStep() {
       return step
     })
     console.log("업데이트된 진행단계들", updateLessonStepList)
-    dispatch(setLessonStepList({lessonStepList: updateLessonStepList}))
+    dispatch(setLessonStepList(updateLessonStepList))
   }
 
   const handleInputChange = (e) => {
@@ -89,9 +89,9 @@ function CookyerLessonStep() {
   }
 
   const resetCheckCookiee = (publisher) => {
-    dispatch(setCheckCookieeList({checkCookieeList: []}))
+    dispatch(setCheckCookieeList([]))
     setCheckCount(0)
-    dispatch(setCheckCookiee({checkCookiee: ''}))
+    dispatch(setCheckCookiee(''))
     // 학생들에게도 리셋 시그널 보내야 함
     publisher.stream.session.signal({
       type: 'resetCheck'

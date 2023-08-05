@@ -24,7 +24,7 @@ export const cookieeVideo = createSlice({
     },
     setCurStep: (state, { payload }) => {
       console.log("요리단계 시그널 받아 저장", payload)
-      state.curStep = payload.curStep
+      state.curStep = payload
     }
   },
   extraReducers: {
