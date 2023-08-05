@@ -65,7 +65,7 @@ public class ChatServiceImpl implements ChatService {
             return new ResponseDto(HttpStatus.BAD_REQUEST, "Cookyer은 채팅방을 닫은 후 나갈 수 있습니다.");
         }
 
-        LessonParticipant lessonParticipant = lessonParticipantRepository.findByLesson_LessonIdAndUserId(lessonId, userId).get();
+        LessonParticipant lessonParticipant = lessonParticipantRepository.findByLesson_LessonIdAndMember_UserId(lessonId, userId).get();
         lessonParticipant.setLeaveChat(true);
         lessonParticipantRepository.save(lessonParticipant);
         return new ResponseDto(HttpStatus.OK, "success");
@@ -95,7 +95,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<ChatRoomRes> getChatRoomList(String userId) {
-        List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByUserIdAndIsLeaveChat(userId, false);
+        List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByMember_UserIdAndIsLeaveChat(userId, false);
         List<ChatRoomRes> result = new ArrayList<>();
 
         for (LessonParticipant lessonParticipant : lessonParticipantList) {
@@ -121,7 +121,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public boolean isUserParticipantChatRoom(String userId, int lessonId) {
-        Optional<LessonParticipant> isParticipant = lessonParticipantRepository.findByLesson_LessonIdAndUserId(lessonId, userId);
+        Optional<LessonParticipant> isParticipant = lessonParticipantRepository.findByLesson_LessonIdAndMember_UserId(lessonId, userId);
         if(!isParticipant.isPresent()) {
            return false;
         }

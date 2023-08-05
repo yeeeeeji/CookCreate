@@ -73,7 +73,7 @@ function RegisterForm() {
     .then((res) => {
       console.log(res);
       alert('과외 생성에 성공했습니다!')
-      navigate('/totallessons')
+      navigate('/lesson')
     })
     .catch((err) => {
       console.log(err);
@@ -84,8 +84,10 @@ function RegisterForm() {
     <div>
       {/* 썸네일 */}
       <div>
-        <h3>과외 썸네일</h3>
-        <div>{thumbnailValid ? '✅' : '🔲'}</div>
+        <div style={{display : 'flex', alignItems : 'center'}}>
+          <h3>과외 썸네일</h3>
+          <div>{thumbnailValid ? '✅' : '🔲'}</div>
+        </div>
         <div>
           <input type="file"
             name = "filename"

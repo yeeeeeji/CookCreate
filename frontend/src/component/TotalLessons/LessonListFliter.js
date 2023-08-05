@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setDeadLine, setOrder } from '../../store/lesson/lessonSearch';
 
 function LessonListFliter() {
   const dispatch = useDispatch()
   const [sortBy, setSortBy] = useState('title');
-  const [deadlineCheck, setDeadlineCheck] = useState(false)
+  const [deadlineCheck, setDeadlineCheck] = useState(true)
 
   const handleSortChange = (event) => {
     setSortBy(event.target.value)
