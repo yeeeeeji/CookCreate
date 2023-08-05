@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCheckCookiee, setCheckCookieeList } from '../../store/video/cookyerVideo';
+import { setLessonStepList } from '../../store/video/videoLessonInfo';
 
 function CookyerLessonStep() {
   const dispatch = useDispatch()
@@ -11,6 +12,13 @@ function CookyerLessonStep() {
   const lessonStepList = useSelector((state) => state.videoLessonInfo.lessonStepList)
   const [ curStep, setCurStep ] = useState(undefined)
   const [ curIdx, setCurIdx ] = useState(0)
+  const [ inputStep, setInputStep ] = useState(curStep)
+
+  useEffect(() => {
+    if (curStep) {
+      setInputStep(curStep)
+    }
+  }, [curStep])
 
   useEffect(() => {
     if (lessonStepList) {
@@ -60,6 +68,23 @@ function CookyerLessonStep() {
     }
   }, [curStep, publisher])
 
+  const updateStepContent = () => {
+    setCurStep(inputStep)
+    console.log("진행단계 엽데이트")
+    const updateLessonStepList = lessonStepList.map((step) => {
+      if (step.stepOrder === curIdx) {
+        return { ...step, stepContent: inputStep}
+      }
+      return step
+    })
+    console.log("업데이트된 진행단계들", updateLessonStepList)
+    dispatch(setLessonStepList({lessonStepList: updateLessonStepList}))
+  }
+
+  const handleInputChange = (e) => {
+    setInputStep(e.target.value)
+  }
+
   const resetCheckCookiee = (publisher) => {
     dispatch(setCheckCookieeList({checkCookieeList: []}))
     setCheckCount(0)
@@ -84,11 +109,13 @@ function CookyerLessonStep() {
           <button onClick={goPrevStep}>이전</button>
           <div>
             {curStep ? (
-              <p>{curStep}</p>
+              // <input value={curStep} onChange={handleCurChange}></input>
+              <input value={inputStep} onChange={handleInputChange}></input>
+              // <p>{curStep}</p>
             ) : (
               <p>현재 요리 단계</p>
             )}
-            <button>수정</button>
+            <button onClick={updateStepContent}>수정</button>
           </div>
           <button onClick={goNextStep}>이후</button>
         </div>

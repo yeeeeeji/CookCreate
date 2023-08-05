@@ -15,11 +15,15 @@ const videoLessonInfo = createSlice({
       state.lessonTitle = payload.lessonTitle
       state.cookyerName = payload.cookyerName
       state.lessonStepList = payload.lessonStepList
+    },
+    setLessonStepList: (state, {payload}) => {
+      console.log("진행단계 변경", payload.lessonStepList)
+      state.lessonStepList = payload.lessonStepList
     }
   },
 });
 
 export const { 
-  setLessonInfo
+  setLessonInfo, setLessonStepList
 } = videoLessonInfo.actions;
 export default videoLessonInfo.reducer;
