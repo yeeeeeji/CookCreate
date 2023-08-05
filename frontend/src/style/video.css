@@ -72,6 +72,7 @@ p {
   height: 100%; */
   /* width: 1277px; */
   height: 530px;
+  object-fit: cover;
 }
 
 .cookyer {
@@ -88,6 +89,7 @@ p {
   height: 100%; */
   /* width: 576px; */
   height: 386px;
+  object-fit: cover;
 }
 
 .cookyer-cookiees { 
@@ -109,15 +111,7 @@ p {
   width: 399px;
   height: 260px;
   display: inline-block; /* inline-flex */
-}
-
-.cookyer-cookiee {
-  background-color: var(--empty-color);
-  border-radius: 5px;
-  margin: 5px;
-  width: 399px;
-  height: 260px;
-  display: inline-block; /* inline-flex */
+  object-fit: cover;
 }
 
 .cookyer-components {
@@ -168,6 +162,7 @@ p {
   background-color: var(--empty-color);
   border-radius: 5px;
   height: 799px;
+  object-fit: cover;
 }
 
 .cookiee-content {
@@ -181,6 +176,7 @@ p {
   background-color: var(--empty-color);
   border-radius: 5px;
   height: 300px;
+  object-fit: cover;
 }
 
 /* 비디오 헤더 */
