@@ -10,7 +10,7 @@ import { deleteSubscriber, enteredSubscriber, leaveSession } from '../../store/v
 import { joinSession } from '../../store/video/video-thunk';
 import { resetCheck, resetHandsUp, setCurStep } from '../../store/video/cookieeVideo';
 import axios from 'axios';
-import { setLessonInfo } from '../../store/video/videoLessonInfo';
+import { setLessonInfo, setStepProgress } from '../../store/video/videoLessonInfo';
 import CookieeLessonStep from '../../component/Video/CookieeLessonStep';
 
 function CookieeScreen() {
@@ -106,6 +106,7 @@ function CookieeScreen() {
         console.log(data)
         if (data !== undefined) {
           dispatch(setCurStep({curStep: data.curStep}))
+          dispatch(setStepProgress(data.stepProgress))
         }
       })
 

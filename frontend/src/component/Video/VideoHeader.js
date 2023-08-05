@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 function VideoHeader() {
   const lessonTitle = useSelector((state) => state.videoLessonInfo.lessonTitle)
   const cookyerName = useSelector((state) => state.videoLessonInfo.cookyerName)
+  const stepProgress = useSelector((state) => state.videoLessonInfo.stepProgress)
 
   return (
     <div>
@@ -26,7 +27,7 @@ function VideoHeader() {
         </div>
         <div>
           <p>진행률</p>
-          <p>90%</p>
+          <p>{stepProgress}%</p>
         </div>
       </div>
     </div>

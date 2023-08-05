@@ -12,6 +12,7 @@ import { joinSession } from '../../store/video/video-thunk';
 import { setCheckCookiee, setCheckCookieeList, setHandsUpCookiee, setHandsUpCookieeList } from '../../store/video/cookyerVideo';
 import axios from 'axios';
 import { setLessonInfo } from '../../store/video/videoLessonInfo';
+import LessonStepModal from '../../component/Video/LessonStepModal';
 
 function CookyerScreen() {
   const dispatch = useDispatch()
@@ -39,6 +40,9 @@ function CookyerScreen() {
   /** 손들기 */
   const handsUpCookieeList = useSelector((state) => state.cookyerVideo.handsUpCookieeList)
   const handsUpCookiee = useSelector((state) => state.cookyerVideo.handsUpCookiee)
+
+  /** 진행 단계 관련 모달 */
+  const isSessionOpened = useSelector((state) => state.video.isSessionOpened)
 
   useEffect(() => {
     console.log(3, session)
@@ -187,6 +191,9 @@ function CookyerScreen() {
 
   return (
     <div className='video-page'>
+      {isSessionOpened ? null : (
+        <LessonStepModal/>
+      )}
       <div className='video-content'>
         <VideoHeader/>
         <div className='cookyer-components'>

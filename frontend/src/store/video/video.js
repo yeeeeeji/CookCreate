@@ -11,7 +11,7 @@ const initialState = {
   isVideoPublished: true,
   isAudioPublished: true,
   videoLessonId: undefined,
-  isSessionOpened: false,
+  isSessionOpened: false,  // 들어올때 이걸로 문제가 생기면 undefined로 바꾸기
 }
 
 export const video = createSlice({
@@ -54,10 +54,6 @@ export const video = createSlice({
       console.log("오디오", state.isAudioPublished)
     },
     leaveSession: (state) => {
-      // const mySession = state.session
-      // if (mySession) {
-      //   mySession.disconnect()
-      // }
       state.OV = null
       state.session = undefined
       state.sessionId = undefined
@@ -101,15 +97,15 @@ export const video = createSlice({
     },
     [closeSession.fulfilled]: (state, { payload }) => {
       console.log("closeSession fulfilled", payload)
-      state.OV = null
-      state.session = undefined
-      state.sessionId = undefined
-      state.publisher = undefined
-      state.mainStreamManager = undefined
-      state.subscribers = []
-      state.isVideoPublished = true
-      state.isAudioPublished = true
-      state.videoLessonId = undefined
+      // state.OV = null
+      // state.session = undefined
+      // state.sessionId = undefined
+      // state.publisher = undefined
+      // state.mainStreamManager = undefined
+      // state.subscribers = []
+      // state.isVideoPublished = true
+      // state.isAudioPublished = true
+      // state.videoLessonId = undefined
       state.isSessionOpened = false
     },
     [closeSession.rejected]: (state, { payload }) => {

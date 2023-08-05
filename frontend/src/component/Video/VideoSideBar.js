@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { audioMute, leaveSession, videoMute } from '../../store/video/video';
+import { audioMute, leaveSession, setIsSessionOpened, videoMute } from '../../store/video/video';
 import { useNavigate } from 'react-router-dom';
 import { setShareScreenPublisher } from '../../store/video/screenShare';
 import axios from 'axios';
@@ -26,7 +26,6 @@ function VideoSideBar() {
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
   const access_token = localStorage.getItem('access_token')
   // const access_token = useSelector((state) => state.auth.access_token)
-  const isSessionOpened = useSelector((state) => state.video.isSessionOpened)
 
   const role = localStorage.getItem('role')
 
@@ -52,10 +51,10 @@ function VideoSideBar() {
           }
         })
         .then((res) => {
+          session.disconnect()
           const data = {
             access_token, lessonId: videoLessonId
           }
-          session.disconnect()
           dispatch(closeSession(data))
           console.log('세션 종료 성공', res)
         })

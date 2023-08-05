@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCheckCookiee, setCheckCookieeList } from '../../store/video/cookyerVideo';
-import { setLessonStepList } from '../../store/video/videoLessonInfo';
+import { setLessonStepList, setStepProgress } from '../../store/video/videoLessonInfo';
 
 function CookyerLessonStep() {
   const dispatch = useDispatch()
@@ -10,6 +10,7 @@ function CookyerLessonStep() {
   const publisher = useSelector((state) => state.video.publisher)
 
   const lessonStepList = useSelector((state) => state.videoLessonInfo.lessonStepList)
+  const stepProgress = useSelector((state) => state.videoLessonInfo.stepProgress)
   const [ curStep, setCurStep ] = useState(undefined)
   const [ curIdx, setCurIdx ] = useState(0)
   const [ inputStep, setInputStep ] = useState(curStep)
@@ -52,6 +53,8 @@ function CookyerLessonStep() {
     if (lessonStepList) {
       const newStep = lessonStepList.find((step) => step.stepOrder === curIdx)
       setCurStep(newStep.stepContent)
+      const newProgress = (curIdx / lessonStepList.length)*100
+      dispatch(setStepProgress(newProgress))
     }
   }, [curIdx])
 
@@ -59,14 +62,14 @@ function CookyerLessonStep() {
     if (curStep && publisher) {
       /** 진행단계 넘길때마다 쿠키에게 시그널 */
       const data = {
-        curStep
+        curStep, stepProgress
       }
       publisher.stream.session.signal({
         data: JSON.stringify(data),
         type: 'changeStep'
       })
     }
-  }, [curStep, publisher])
+  }, [curStep, stepProgress, publisher])
 
   const updateStepContent = () => {
     setCurStep(inputStep)
