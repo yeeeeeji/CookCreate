@@ -28,7 +28,10 @@ p {
 /* 옮기기 */
 
 .video-page {
-  /* background-color: #262626; */
+  background-color: #262626;
+  /* overflow: hidden; */
+  grid-template-columns: repeat(12, 1fr);
+  display: flex;
 }
 
 .video-sidebar {
@@ -40,6 +43,16 @@ p {
   /* transition-property: visibility; */
   width: 80px;
   background-color: white;
+}
+
+.video-nickname {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+}
+
+.stream-component {
+  position: relative;
 }
 
 /* 쿠커 화면 */
@@ -81,9 +94,12 @@ p {
   background-color: coral;
   /* display: grid; */
   /* display: flex; */
-  display: inline-block;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   width: 818px;
   height: 810px;
+  overflow: hidden;
 }
 
 .cookyer-cookiee {
@@ -93,6 +109,36 @@ p {
   width: 399px;
   height: 260px;
   display: inline-block; /* inline-flex */
+}
+
+.cookyer-cookiee {
+  background-color: var(--empty-color);
+  border-radius: 5px;
+  margin: 5px;
+  width: 399px;
+  height: 260px;
+  display: inline-block; /* inline-flex */
+}
+
+.cookyer-components {
+  display: flex;
+}
+
+.cookyer-components-left-bottom {
+  display: flex;
+}
+
+.cookyer-timer {
+  background-color: white;
+  width: 342px;
+  padding: 20px
+}
+
+.cookyer-timer input, .cookyer-timer span {
+  font-size: 50px;
+  color: rgb(33, 33, 33);
+  border: none;
+  width: 70px;
 }
 
 .cookyer-lesson-step-modal {
@@ -135,4 +181,54 @@ p {
   background-color: var(--empty-color);
   border-radius: 5px;
   height: 300px;
+}
+
+/* 비디오 헤더 */
+.video-header {
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.video-header-left,
+.video-header-right,
+.video-lesson-time,
+.video-lesson-progress {
+  display: flex;
+}
+
+.video-lesson-title {
+  font-size: 30px;
+  margin-right: 30px;
+}
+
+.video-lesson-cookyer {
+  font-size: 20px;
+  color: rgb(207, 207, 207);
+  margin: auto 0px;
+}
+
+.video-lesson-time, .video-lesson-progress {
+  margin: 5px;
+}
+
+/* 비디오 사이드바 */
+.video-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: -120px;
+  width: 80px;
+  /* grid-column: 12 / 13; */
+  background-color: white;
+  /* display: grid;
+  grid-template-columns: 1fr; */
+  /* padding: 5px; */
+}
+
+.video-exit-icon {
+  font-size: 40px;
+  color: rgb(223, 0, 0);
+  margin: auto;
 }

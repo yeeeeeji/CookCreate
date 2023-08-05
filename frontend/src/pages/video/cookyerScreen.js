@@ -233,62 +233,64 @@ function CookyerScreen() {
 
   return (
     <div className='video-page'>
-      {isSessionOpened ? null : (
-        <LessonStepModal/>
-      )}
-      <div className='video-content'>
-        <VideoHeader/>
-        <div className='cookyer-components'>
-          <div className='cookyer-components-left'>
-            <div className='cookyer-sharing'>
-              <div className='cookyer-sharing-content'>
-                {shareScreenPublisher === null ? (
+      <div className='video-page-main'>
+        {isSessionOpened ? null : (
+          <LessonStepModal/>
+        )}
+        <div className='video-content'>
+          <VideoHeader/>
+          <div className='cookyer-components'>
+            <div className='cookyer-components-left'>
+              <div className='cookyer-sharing'>
+                <div className='cookyer-sharing-content'>
+                  {shareScreenPublisher === null ? (
+                    <UserVideoComponent
+                      videoStyle='cookyer-sharing-content'
+                      streamManager={publisher}
+                    />
+                  ) : (
+                    <UserVideoComponent
+                      videoStyle='cookyer-sharing-content'
+                      streamManager={shareScreenPublisher}
+                    />
+                  )}
+                </div>
+              </div>
+              <div className='cookyer-components-left-bottom'>
+                <div className='cookyer'>
                   <UserVideoComponent
-                    videoStyle='cookyer-sharing-content'
+                    videoStyle='cookyer-video'
                     streamManager={publisher}
                   />
-                ) : (
+                </div>
+                <Timer role='COOKYER'/>
+              </div>
+            </div>
+            <div className='cookyer-cookiees'>
+              {subscribers.map((sub, i) => (
+                // <div key={sub.id} onClick={() => handleMainVideoStream(sub)}>
+                <div key={i}>
                   <UserVideoComponent
-                    videoStyle='cookyer-sharing-content'
-                    streamManager={shareScreenPublisher}
+                    videoStyle='cookyer-cookiee'
+                    streamManager={sub}
                   />
-                )}
-              </div>
-            </div>
-            <div className='cookyer-components-left-bottom'>
-              <div className='cookyer'>
-                <UserVideoComponent
-                  videoStyle='cookyer-video'
-                  streamManager={publisher}
-                />
-              </div>
-              <Timer role='COOKYER'/>
+                  {checkCookieeList && checkCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
+                    <h1>체크한 사람</h1>
+                  ) : null}
+                  {handsUpCookieeList && handsUpCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
+                    <div>
+                      <h1>
+                        {handsUpCookieeList.indexOf(sub.stream.connection.connectionId) +  1}번째로 손 든 사람
+                      </h1>
+                      <button onClick={() => resetHandsUpCookiee({cookyer: publisher, cookiee: sub})}>손들기 해제</button>
+                    </div>
+                  ) : null}
+                </div>
+              ))}
             </div>
           </div>
-          <div className='cookyer-cookiees'>
-            {subscribers.map((sub, i) => (
-              // <div key={sub.id} onClick={() => handleMainVideoStream(sub)}>
-              <div key={i}>
-                <UserVideoComponent
-                  videoStyle='cookyer-cookiee'
-                  streamManager={sub}
-                />
-                {checkCookieeList && checkCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
-                  <h1>체크한 사람</h1>
-                ) : null}
-                {handsUpCookieeList && handsUpCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
-                  <div>
-                    <h1>
-                      {handsUpCookieeList.indexOf(sub.stream.connection.connectionId) +  1}번째로 손 든 사람
-                    </h1>
-                    <button onClick={() => resetHandsUpCookiee({cookyer: publisher, cookiee: sub})}>손들기 해제</button>
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          </div>
-          <CookyerLessonStep/>
         </div>
+        <CookyerLessonStep/>
       </div>
       <VideoSideBar/>
     </div>

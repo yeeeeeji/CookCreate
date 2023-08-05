@@ -13,6 +13,7 @@ function CookyerLessonStep() {
   const stepProgress = useSelector((state) => state.videoLessonInfo.stepProgress)
   const [ curStep, setCurStep ] = useState(undefined)
   const [ curIdx, setCurIdx ] = useState(0)
+  const [ isUpdate, setIsUpdate ] = useState(false)
   const [ inputStep, setInputStep ] = useState(curStep)
 
   useEffect(() => {
@@ -53,7 +54,7 @@ function CookyerLessonStep() {
     if (lessonStepList) {
       const newStep = lessonStepList.find((step) => step.stepOrder === curIdx)
       setCurStep(newStep.stepContent)
-      const newProgress = (curIdx / lessonStepList.length)*100
+      const newProgress = Math.floor((curIdx / lessonStepList.length)*100)
       dispatch(setStepProgress(newProgress))
     }
   }, [curIdx])
@@ -71,6 +72,10 @@ function CookyerLessonStep() {
     }
   }, [curStep, stepProgress, publisher])
 
+  const handleIsUpdate = () => {
+    setIsUpdate((prev) => !prev)
+  }
+
   const updateStepContent = () => {
     setCurStep(inputStep)
     console.log("진행단계 엽데이트")
@@ -82,6 +87,7 @@ function CookyerLessonStep() {
     })
     console.log("업데이트된 진행단계들", updateLessonStepList)
     dispatch(setLessonStepList(updateLessonStepList))
+    setIsUpdate(false)
   }
 
   const handleInputChange = (e) => {
@@ -112,13 +118,23 @@ function CookyerLessonStep() {
           <button onClick={goPrevStep}>이전</button>
           <div>
             {curStep ? (
-              // <input value={curStep} onChange={handleCurChange}></input>
-              <input value={inputStep} onChange={handleInputChange}></input>
-              // <p>{curStep}</p>
+              <div>
+                {isUpdate ? (
+                  <div>
+                    <input value={inputStep} onChange={handleInputChange}></input>
+                    <button onClick={updateStepContent}>완료</button>
+                  </div>
+                ) : (
+                  <div>
+                    <p>{curStep}</p>
+                    <button onClick={handleIsUpdate}>수정</button>
+                  </div>
+                )}
+              </div>
             ) : (
               <p>현재 요리 단계</p>
             )}
-            <button onClick={updateStepContent}>수정</button>
+            {/* <button onClick={handleIsUpdate}>수정</button> */}
           </div>
           <button onClick={goNextStep}>이후</button>
         </div>

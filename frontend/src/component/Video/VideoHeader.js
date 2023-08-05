@@ -7,25 +7,25 @@ function VideoHeader() {
   const stepProgress = useSelector((state) => state.videoLessonInfo.stepProgress)
 
   return (
-    <div>
-      <div>
+    <div className='video-header'>
+      <div className='video-header-left'>
         {lessonTitle ? (
-          <p>{lessonTitle}</p>
+          <p className='video-lesson-title'>{lessonTitle}</p>
         ) : (
-          <p>수업 제목</p>
+          <p className='video-lesson-title'>수업 제목</p>
         )}
         {cookyerName ? (
-          <p>{cookyerName}</p>
+          <p className='video-lesson-cookyer'>{cookyerName}</p>
         ) : (
-          <p>쿠커 이름</p>
+          <p className='video-lesson-cookyer'>쿠커 이름</p>
         )}
       </div>
-      <div>
-        <div>
+      <div className='video-header-right'>
+        <div className='video-lesson-time'>
           <p>진행시간</p>
           <p>0:30:47</p>
         </div>
-        <div>
+        <div className='video-lesson-progress'>
           <p>진행률</p>
           <p>{stepProgress}%</p>
         </div>
