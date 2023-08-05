@@ -3,15 +3,15 @@ import VideoSideBar from '../../component/Video/VideoSideBar';
 import VideoHeader from '../../component/Video/VideoHeader';
 import UserVideoComponent from '../../component/Video/UserVideoComponent';
 import Timer from '../../component/Video/Timer';
-import LessonStepWidget from '../../component/Video/LessonStepWidget';
 
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber, leaveSession } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
-import { resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
+import { resetCheck, resetHandsUp, setCurStep } from '../../store/video/cookieeVideo';
 import axios from 'axios';
 import { setLessonInfo } from '../../store/video/videoLessonInfo';
+import CookieeLessonStep from '../../component/Video/CookieeLessonStep';
 
 function CookieeScreen() {
   const dispatch = useDispatch()
@@ -99,6 +99,16 @@ function CookieeScreen() {
         dispatch(resetHandsUp())
       })
 
+      /** 쿠커로부터 진행단계 변화 시그널 받고 진행단계 바꾸기 */
+      session.on('signal:changeStep', (e) => {
+        console.log("진행단계 시그널", e.data)
+        const data = JSON.parse(e.data)
+        console.log(data)
+        if (data !== undefined) {
+          dispatch(setCurStep({curStep: data.curStep}))
+        }
+      })
+
       /** 화면공유 받기 */
       // session.on('signal:sharedScreen', (e) => {
       //   console.log("화면공유 데이터 받았다", e)  // 시그널 받는거 필요하지 않을수도?
@@ -147,6 +157,9 @@ function CookieeScreen() {
           console.log('화상 과외 수업 정보 받아와짐')
           // setMyLesson(res.data) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
           dispatch(setLessonInfo(res.data))
+          const firstLessonStep = res.data.lessonStepList.find((step) => step.stepOrder === 1)
+          console.log(firstLessonStep.stepContent)
+          dispatch(setCurStep({curStep: firstLessonStep.stepContent}))
           // setSessionId(res.data.sessionId)
         })
         .catch((err) => {
@@ -182,7 +195,7 @@ function CookieeScreen() {
                 )}
               </div>
             </div>
-            <LessonStepWidget/>
+            <CookieeLessonStep/>
           </div>
           <div>
             {/* 쿠커 화면 */}

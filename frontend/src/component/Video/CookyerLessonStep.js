@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCheckCookiee, setCheckCookieeList } from '../../store/video/cookyerVideo';
 
-function LessonStepWidget() {
+function CookyerLessonStep() {
   const dispatch = useDispatch()
   const checkCookieeList = useSelector((state) => state.cookyerVideo.checkCookieeList)
   const [ checkCount, setCheckCount ] = useState(0)
@@ -11,7 +11,6 @@ function LessonStepWidget() {
   const lessonStepList = useSelector((state) => state.videoLessonInfo.lessonStepList)
   const [ curStep, setCurStep ] = useState(undefined)
   const [ curIdx, setCurIdx ] = useState(0)
-  const role = localStorage.getItem('role')
 
   useEffect(() => {
     if (lessonStepList) {
@@ -45,9 +44,21 @@ function LessonStepWidget() {
     if (lessonStepList) {
       const newStep = lessonStepList.find((step) => step.stepOrder === curIdx)
       setCurStep(newStep.stepContent)
-      // lessonStepList.map((step) => console.log(step))
     }
   }, [curIdx])
+
+  useEffect(() => {
+    if (curStep && publisher) {
+      /** 진행단계 넘길때마다 쿠키에게 시그널 */
+      const data = {
+        curStep
+      }
+      publisher.stream.session.signal({
+        data: JSON.stringify(data),
+        type: 'changeStep'
+      })
+    }
+  }, [curStep, publisher])
 
   const resetCheckCookiee = (publisher) => {
     dispatch(setCheckCookieeList({checkCookieeList: []}))
@@ -70,22 +81,16 @@ function LessonStepWidget() {
       <div>
         <p>현재 진행 단계</p>
         <div>
-          {role === 'COOKYER' ? (
-            <button onClick={goPrevStep}>이전</button>
-          ) : null}
+          <button onClick={goPrevStep}>이전</button>
           <div>
             {curStep ? (
               <p>{curStep}</p>
             ) : (
               <p>현재 요리 단계</p>
             )}
-            {role === 'COOKYER' ? (
-              <button>수정</button>
-            ) : null}
+            <button>수정</button>
           </div>
-          {role === 'COOKYER' ? (
-            <button onClick={goNextStep}>이후</button>
-          ) : null}
+          <button onClick={goNextStep}>이후</button>
         </div>
         <div>
           <h1>체크 {checkCount}명</h1>
@@ -98,4 +103,4 @@ function LessonStepWidget() {
   );
 }
 
-export default LessonStepWidget;
+export default CookyerLessonStep;

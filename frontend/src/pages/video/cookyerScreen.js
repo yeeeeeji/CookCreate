@@ -3,7 +3,7 @@ import VideoSideBar from '../../component/Video/VideoSideBar';
 import VideoHeader from '../../component/Video/VideoHeader';
 import UserVideoComponent from '../../component/Video/UserVideoComponent';
 import Timer from '../../component/Video/Timer';
-import LessonStepWidget from '../../component/Video/LessonStepWidget';
+import CookyerLessonStep from '../../component/Video/CookyerLessonStep';
 
 import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
@@ -238,7 +238,7 @@ function CookyerScreen() {
               </div>
             ))}
           </div>
-          <LessonStepWidget/>
+          <CookyerLessonStep/>
         </div>
       </div>
       <VideoSideBar/>
