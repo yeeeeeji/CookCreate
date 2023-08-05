@@ -4,7 +4,7 @@ import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { audioMute, leaveSession, videoMute } from '../../store/video/video';
 import { useNavigate } from 'react-router-dom';
-import { setShareScreenPublisher, setStreamManager } from '../../store/video/screenShare';
+import { setShareScreenPublisher } from '../../store/video/screenShare';
 import axios from 'axios';
 import { setCheck, setHandsUp } from '../../store/video/cookieeVideo';
 import { closeSession, shareScreen } from '../../store/video/video-thunk';
@@ -67,12 +67,12 @@ function VideoSideBar() {
     }
   }
 
-  // 쿠커이고 세션을 닫았으면 메인페이지로 이동
-  useEffect(() => {
-    if (role === 'COOKYER' && !isSessionOpened) {
-      navigate('/')
-    }
-  }, [isSessionOpened])
+  // 쿠커이고 세션을 닫았으면 메인페이지로 이동 -> 진행단계 마지막으로 확인할 수 있도록 수정!?
+  // useEffect(() => {
+  //   if (role === 'COOKYER' && !isSessionOpened) {
+  //     navigate('/')
+  //   }
+  // }, [isSessionOpened])
 
   // unpublish 해놓고 세션 등 정보가 유지되어 있는 상태로 나가기 -> 들어올때 버튼 따로 만들어야 함. 값이 있으면 요청 안하는 걸로?
   const handleLeaveSession = () => {
