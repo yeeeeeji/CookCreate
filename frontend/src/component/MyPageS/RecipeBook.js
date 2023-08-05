@@ -67,7 +67,29 @@ function RecipeBook() {
                     <div>강좌ID:{recipe.lessonId}</div>
                   </div>
                   <div>
-                    <div>카테고리:한식</div>
+                    <dt>카테고리</dt>
+                      <dd>
+                        {(() => {
+                          switch (recipe.categoryId) {
+                            case 0:
+                              return "한식";
+                            case 1:
+                              return "양식";
+                            case 2:
+                              return "중식";
+                            case 3:
+                              return "일식";
+                            case 4:
+                              return "아시안";
+                            case 5:
+                              return "건강식";
+                            case 6:
+                              return "디저트";
+                            default:
+                              return "알 수 없음";
+                          }
+                        })()}
+                      </dd>
                   </div>
                   <div>
                     <div>선생님아이디/닉네임:{recipe.cookyerId}/{recipe.cookyerName}</div>
