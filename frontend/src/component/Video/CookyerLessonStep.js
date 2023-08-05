@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCheckCookiee, setCheckCookieeList } from '../../store/video/cookyerVideo';
-import { setCurIdx, setCurStep, setLessonStepList, setStepProgress } from '../../store/video/videoLessonInfo';
+import { setCurIdx, setCurStep, setLessonStepList } from '../../store/video/videoLessonInfo';
 
 function CookyerLessonStep() {
   const dispatch = useDispatch()
@@ -13,8 +13,6 @@ function CookyerLessonStep() {
   const curStep = useSelector((state) => state.videoLessonInfo.curStep)
   const curIdx = useSelector((state) => state.videoLessonInfo.curIdx)
   const totalSteps = useSelector((state) => state.videoLessonInfo.totalSteps)
-  // const [ curStep, setCurStep ] = useState(undefined)
-  // const [ curIdx, setCurIdx ] = useState(0)
   const [ isUpdate, setIsUpdate ] = useState(false)
   const [ inputStep, setInputStep ] = useState(curStep)
 
@@ -23,14 +21,6 @@ function CookyerLessonStep() {
       setInputStep(curStep)
     }
   }, [curStep])
-
-  useEffect(() => {
-    if (lessonStepList) {
-      console.log(lessonStepList, "요리 단계 잘 왔니?")
-      dispatch(setCurIdx(1))
-    }
-  }, [lessonStepList])
-
 
   const goPrevStep = () => {
     if (lessonStepList && totalSteps && curIdx - 1 > 0) {
@@ -45,11 +35,15 @@ function CookyerLessonStep() {
   }
 
   useEffect(() => {
+    dispatch(setCurIdx(1))
+  }, [])
+
+  useEffect(() => {
     if (lessonStepList) {
       const newStep = lessonStepList.find((step) => step.stepOrder === curIdx)
       dispatch(setCurStep(newStep.stepContent))
     }
-  }, [curIdx])
+  }, [curIdx, lessonStepList])
 
   useEffect(() => {
     if (curStep && publisher) {
@@ -69,7 +63,7 @@ function CookyerLessonStep() {
   }
 
   const updateStepContent = () => {
-    setCurStep(inputStep)
+    dispatch(setCurStep(inputStep))
     console.log("진행단계 엽데이트")
     const updateLessonStepList = lessonStepList.map((step) => {
       if (step.stepOrder === curIdx) {
@@ -113,11 +107,13 @@ function CookyerLessonStep() {
               <div>
                 {isUpdate ? (
                   <div>
+                    <p>{curIdx}</p>
                     <input value={inputStep} onChange={handleInputChange}></input>
                     <button onClick={updateStepContent}>완료</button>
                   </div>
                 ) : (
                   <div>
+                    <p>{curIdx}</p>
                     <p>{curStep}</p>
                     <button onClick={handleIsUpdate}>수정</button>
                   </div>

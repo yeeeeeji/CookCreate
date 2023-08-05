@@ -3,15 +3,15 @@ import VideoSideBar from '../../component/Video/VideoSideBar';
 import VideoHeader from '../../component/Video/VideoHeader';
 import UserVideoComponent from '../../component/Video/UserVideoComponent';
 import Timer from '../../component/Video/Timer';
+import CookieeLessonStep from '../../component/Video/CookieeLessonStep';
 
-import '../../style/video.css'
+import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber, leaveSession } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
 import { resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
-import axios from 'axios';
 import { setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
-import CookieeLessonStep from '../../component/Video/CookieeLessonStep';
+import '../../style/video.css'
 
 function CookieeScreen() {
   const dispatch = useDispatch()

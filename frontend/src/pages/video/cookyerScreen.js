@@ -4,15 +4,15 @@ import VideoHeader from '../../component/Video/VideoHeader';
 import UserVideoComponent from '../../component/Video/UserVideoComponent';
 import Timer from '../../component/Video/Timer';
 import CookyerLessonStep from '../../component/Video/CookyerLessonStep';
+import LessonStepModal from '../../component/Video/LessonStepModal';
 
-import '../../style/video.css'
+import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
 import { setCheckCookiee, setCheckCookieeList, setHandsDownCookiee, setHandsUpCookiee, setHandsUpCookieeList, setUncheckCookiee } from '../../store/video/cookyerVideo';
-import axios from 'axios';
 import { setLessonInfo } from '../../store/video/videoLessonInfo';
-import LessonStepModal from '../../component/Video/LessonStepModal';
+import '../../style/video.css'
 
 function CookyerScreen() {
   const dispatch = useDispatch()
@@ -116,10 +116,10 @@ function CookyerScreen() {
         session.off('streamCreated', handleStreamCreated);
         session.off('streamDestroyed', handleStreamDestroyed);
         session.off('exception', handleException);
-        // const mySession = session;
-        // if (mySession) {
-        //   mySession.disconnect(); // 예시에서는 disconnect()로 대체하였으나, 이는 OpenVidu에 따라 다르게 적용될 수 있음
-        // }
+        const mySession = session;
+        if (mySession) {
+          mySession.disconnect(); // 예시에서는 disconnect()로 대체하였으나, 이는 OpenVidu에 따라 다르게 적용될 수 있음
+        }
       };
     }
   }, []);
