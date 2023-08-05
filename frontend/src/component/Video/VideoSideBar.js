@@ -164,18 +164,26 @@ function VideoSideBar() {
   }
 
   useEffect(() => {
-    if (check) {
-      const data = {
-        connectionId: publisher.stream.connection.connectionId
+    if (publisher) {
+      if (check) {
+        const data = {
+          connectionId: publisher.stream.connection.connectionId
+        }
+        console.log("체크했다", data)
+        publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'check'
+        })
+      } else {
+        const data = {
+          connectionId: publisher.stream.connection.connectionId
+        }
+        console.log("체크해제했다", data)
+        publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'uncheck'
+        })
       }
-      console.log("체크했다", data)
-      publisher.stream.session.signal({
-        data: JSON.stringify(data),
-        type: 'check'
-      })
-    } else {
-      console.log("선생님이 체크 리셋")
-      // 학생이 체크 리셋해제하면 선생님에게 또 신호를 보내야함(아직안함)
     }
   }, [check])
 
@@ -244,13 +252,12 @@ function VideoSideBar() {
         <button
           onClick={() => pressCheck(publisher)}
         >
-          체크
+          {check ? ('체크 해제') : ('체크하기')}
         </button>
       ) : null}
       { role === 'COOKIEE' ? (
         <button
           onClick={() => pressHandsUp(publisher)}
-          // onClick={isRaised ? handleStopRaiseHand : handleRaiseHand}
         >
           {handsUp ? ('손 내리기') : ('손 들기')}
         </button>

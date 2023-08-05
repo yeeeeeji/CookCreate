@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
   checkCookieeList: [],
   checkCookiee: '',
+  uncheckCookiee: '',
   handsUpCookieeList: [],
   handsUpCookiee: '',
   handsDownCookiee: '',
@@ -17,6 +18,9 @@ export const cookyerVideo = createSlice({
     },
     setCheckCookiee: (state, { payload }) => {
       state.checkCookiee = payload
+    },
+    setUncheckCookiee: (state, { payload }) => {
+      state.uncheckCookiee = payload
     },
     setHandsUpCookieeList: (state, { payload }) => {
       state.handsUpCookieeList = payload
@@ -33,6 +37,6 @@ export const cookyerVideo = createSlice({
 })
 
 export const {
-  setCheckCookieeList, setCheckCookiee, setHandsUpCookieeList, setHandsUpCookiee, setHandsDownCookiee
+  setCheckCookieeList, setCheckCookiee, setUncheckCookiee, setHandsUpCookieeList, setHandsUpCookiee, setHandsDownCookiee
 } = cookyerVideo.actions
 export default cookyerVideo.reducer

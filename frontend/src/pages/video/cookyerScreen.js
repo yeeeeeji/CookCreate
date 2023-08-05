@@ -9,7 +9,7 @@ import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
-import { setCheckCookiee, setCheckCookieeList, setHandsDownCookiee, setHandsUpCookiee, setHandsUpCookieeList } from '../../store/video/cookyerVideo';
+import { setCheckCookiee, setCheckCookieeList, setHandsDownCookiee, setHandsUpCookiee, setHandsUpCookieeList, setUncheckCookiee } from '../../store/video/cookyerVideo';
 import axios from 'axios';
 import { setLessonInfo } from '../../store/video/videoLessonInfo';
 import LessonStepModal from '../../component/Video/LessonStepModal';
@@ -36,6 +36,7 @@ function CookyerScreen() {
   /** 체크 */
   const checkCookieeList = useSelector((state) => state.cookyerVideo.checkCookieeList)
   const checkCookiee = useSelector((state) => state.cookyerVideo.checkCookiee)
+  const uncheckCookiee = useSelector((state) => state.cookyerVideo.uncheckCookiee)
 
   /** 손들기 */
   const handsUpCookieeList = useSelector((state) => state.cookyerVideo.handsUpCookieeList)
@@ -74,7 +75,13 @@ function CookyerScreen() {
         const connectionId = JSON.parse(e.data).connectionId
         console.log('체크한 사람', connectionId)
         dispatch(setCheckCookiee(connectionId))
-        // setCheckCookiee(connectionId)
+      })
+
+      /** 체크 해제 이벤트 추가 */
+      session.on('signal:uncheck', (e) => {
+        const connectionId = JSON.parse(e.data).connectionId
+        console.log('체크 해제한 사람', connectionId)
+        dispatch(setUncheckCookiee(connectionId))
       })
 
       /** 손들기 이벤트 추가 */
@@ -156,8 +163,22 @@ function CookyerScreen() {
         dispatch(setCheckCookieeList([checkCookiee]))
         console.log(checkCookieeList, "체크리스트에 값 없음")
       }
+      dispatch(setCheckCookiee(''))
     }
   }, [checkCookiee])
+
+  /** 체크 해제한 쿠키 리스트에서 제거 */
+  useEffect(() => {
+    console.log('체크 해제한 쿠키 리스트에서 제거', uncheckCookiee)
+    if (checkCookieeList !== undefined && uncheckCookiee !== '') {
+      const newCheckCookieeList = checkCookieeList.filter((item) => {
+        return item !== uncheckCookiee
+      })
+      dispatch(setCheckCookieeList(newCheckCookieeList))
+      console.log(newCheckCookieeList, '체크 해제한 사람 제외 새 체크 리스트')
+      dispatch(setUncheckCookiee(''))
+    }
+  }, [uncheckCookiee])
 
   /** 손 든 쿠키 리스트에 추가 */
   useEffect(() => {

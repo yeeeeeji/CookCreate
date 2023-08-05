@@ -11,7 +11,7 @@ export const cookieeVideo = createSlice({
   initialState,
   reducers: {
     setCheck: (state) => {
-      state.check = true
+      state.check = !state.check
     },
     resetCheck: (state) => {
       state.check = false
