@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import LessonItem from './LessonItem';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-
+import { setCategories } from '../../store/lesson/lessonSearch';
 function LessonList() {
   const [lessons, setLessons] = useState([]);
   const type = useSelector((state) => state.lessonSearch.type);
@@ -11,7 +11,7 @@ function LessonList() {
   const order = useSelector((state) => state.lessonSearch.order);
   const category = useSelector((state) => state.lessonSearch.category);
   const keyword = useSelector((state) => state.lessonSearch.keyword);
-  
+  const dispatch = useDispatch()
   useEffect(() => {
     axios.get(`/api/v1/lesson`, {
       params: {
@@ -29,7 +29,9 @@ function LessonList() {
       console.error(err)
     });
   }, [type, keyword, category, order, deadline])
-
+  const handleLinkClick = () => {
+    dispatch(setCategories([])); // 빈 문자열로 카테고리 초기화
+  }
   return (
     <div>
       {lessons.map((lesson) => (
@@ -43,6 +45,7 @@ function LessonList() {
           <Link
             to={`/lesson/${lesson.lessonId}`}
             style={{ textDecoration: 'none', color: 'inherit' }}
+            onClick={handleLinkClick}
           >
             <LessonItem
               id={lesson.lessonId}

@@ -7,7 +7,7 @@ function RegisterForm() {
 
   const [lessonThumbnailUrl, setLessonThumbnailUrl] = useState('')
   const [ThumbnailFile, setThumbnailFile] = useState(null)
-  const accessToken = useSelector((state) => state.auth.access_token)
+  const accessToken = localStorage.getItem('access_token')
   const lessonTitle = useSelector((state) => state.lesson.lessonTitle)
   const categoryId = useSelector((state) =>  parseInt(state.lesson.categoryId))+1
   const maximum = useSelector((state) => parseInt(state.lesson.maximum))

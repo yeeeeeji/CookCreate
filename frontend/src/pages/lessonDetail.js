@@ -9,7 +9,7 @@ import ApplyLesson from '../component/LessonDetail/ApplyLesson';
 import LessonSchedule from '../component/LessonDetail/LessonSchedule';
 function LessonDetail() {
   const lessonId = useSelector((state) => state.lessonInfo.lessonId)  
-  const accessToken = useSelector((state) => state.auth.access_token)
+  const accessToken = localStorage.getItem('access_token')
   const [categoryName, setCategoryName] = useState('')
   const [lessonTitle, setLessonTitle] = useState('')
   const [thumbnailUrl, setThumbnailUrl] = useState('')
@@ -67,7 +67,7 @@ function LessonDetail() {
       console.log(err)
       alert(err.response.data.message)
     })
-  }, [lessonDate])
+  }, [])
 
   return (
     <div>
