@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCheckCookiee, setCheckCookieeList } from '../../store/video/cookyerVideo';
-import { setLessonStepList, setStepProgress } from '../../store/video/videoLessonInfo';
+import { setCurIdx, setCurStep, setLessonStepList, setStepProgress } from '../../store/video/videoLessonInfo';
 
 function CookyerLessonStep() {
   const dispatch = useDispatch()
@@ -10,9 +10,11 @@ function CookyerLessonStep() {
   const publisher = useSelector((state) => state.video.publisher)
 
   const lessonStepList = useSelector((state) => state.videoLessonInfo.lessonStepList)
-  const stepProgress = useSelector((state) => state.videoLessonInfo.stepProgress)
-  const [ curStep, setCurStep ] = useState(undefined)
-  const [ curIdx, setCurIdx ] = useState(0)
+  const curStep = useSelector((state) => state.videoLessonInfo.curStep)
+  const curIdx = useSelector((state) => state.videoLessonInfo.curIdx)
+  const totalSteps = useSelector((state) => state.videoLessonInfo.totalSteps)
+  // const [ curStep, setCurStep ] = useState(undefined)
+  // const [ curIdx, setCurIdx ] = useState(0)
   const [ isUpdate, setIsUpdate ] = useState(false)
   const [ inputStep, setInputStep ] = useState(curStep)
 
@@ -25,37 +27,27 @@ function CookyerLessonStep() {
   useEffect(() => {
     if (lessonStepList) {
       console.log(lessonStepList, "요리 단계 잘 왔니?")
-      setCurIdx(1)
+      dispatch(setCurIdx(1))
     }
   }, [lessonStepList])
 
 
   const goPrevStep = () => {
-    setCurIdx((prev) => {
-      if (lessonStepList && prev - 1 > 0) {
-        return prev - 1
-      } else {
-        return prev
-      }
-    })
+    if (lessonStepList && totalSteps && curIdx - 1 > 0) {
+      dispatch(setCurIdx(curIdx-1))
+    }
   }
 
   const goNextStep = () => {
-    setCurIdx((prev) => {
-      if (lessonStepList && prev + 1 <= lessonStepList.length) {
-        return prev + 1
-      } else {
-        return prev
-      }
-    })
+    if (lessonStepList && totalSteps && curIdx + 1 <= totalSteps) {
+      dispatch(setCurIdx(curIdx+1))
+    }
   }
 
   useEffect(() => {
     if (lessonStepList) {
       const newStep = lessonStepList.find((step) => step.stepOrder === curIdx)
-      setCurStep(newStep.stepContent)
-      const newProgress = Math.floor((curIdx / lessonStepList.length)*100)
-      dispatch(setStepProgress(newProgress))
+      dispatch(setCurStep(newStep.stepContent))
     }
   }, [curIdx])
 
@@ -63,14 +55,14 @@ function CookyerLessonStep() {
     if (curStep && publisher) {
       /** 진행단계 넘길때마다 쿠키에게 시그널 */
       const data = {
-        curStep, stepProgress
+        curStep, curIdx
       }
       publisher.stream.session.signal({
         data: JSON.stringify(data),
         type: 'changeStep'
       })
     }
-  }, [curStep, stepProgress, publisher])
+  }, [curStep, curIdx, publisher])
 
   const handleIsUpdate = () => {
     setIsUpdate((prev) => !prev)

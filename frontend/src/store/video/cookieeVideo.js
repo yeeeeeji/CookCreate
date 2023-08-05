@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
   check: false,
   handsUp: false,
-  curStep: undefined,
 }
 
 export const cookieeVideo = createSlice({
@@ -22,16 +21,12 @@ export const cookieeVideo = createSlice({
     resetHandsUp: (state) => {
       state.handsUp = false
     },
-    setCurStep: (state, { payload }) => {
-      console.log("요리단계 시그널 받아 저장", payload)
-      state.curStep = payload
-    }
   },
   extraReducers: {
   }
 })
 
 export const {
-  setCheck, resetCheck, setHandsUp, resetHandsUp, setCurStep
+  setCheck, resetCheck, setHandsUp, resetHandsUp
 } = cookieeVideo.actions
 export default cookieeVideo.reducer

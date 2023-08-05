@@ -8,9 +8,9 @@ import '../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber, leaveSession } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
-import { resetCheck, resetHandsUp, setCurStep } from '../../store/video/cookieeVideo';
+import { resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
 import axios from 'axios';
-import { setLessonInfo, setStepProgress } from '../../store/video/videoLessonInfo';
+import { setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
 import CookieeLessonStep from '../../component/Video/CookieeLessonStep';
 
 function CookieeScreen() {
@@ -105,8 +105,7 @@ function CookieeScreen() {
         const data = JSON.parse(e.data)
         console.log(data)
         if (data !== undefined) {
-          dispatch(setCurStep(data.curStep))
-          dispatch(setStepProgress(data.stepProgress))
+          dispatch(setStepInfo(data))
         }
       })
 

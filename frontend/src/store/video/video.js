@@ -73,7 +73,7 @@ export const video = createSlice({
       if (index > -1) {
         state.subscribers.splice(index, 1)
       }
-    }
+    },
   },
   extraReducers: {
     [joinSession.fulfilled]: (state, { payload }) => {
@@ -118,6 +118,6 @@ export const {
     initOVSession, setPublisher, setMainStreamManager, setSessionId,
     setSubscribers, setVideoLessonId, setIsSessionOpened,
     videoMute, audioMute, leaveSession,
-    enteredSubscriber, deleteSubscriber,
+    enteredSubscriber, deleteSubscriber
 } = video.actions
 export default video.reducer
