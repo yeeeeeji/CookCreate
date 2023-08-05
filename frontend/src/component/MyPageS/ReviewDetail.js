@@ -56,6 +56,7 @@ export default function ReviewDetail({ reviewId,onClose}) {
   // 수정모달 열기
   const handleUpdateReview = () => {
     setIsEditModalOpen(true);
+    
   }
 
   // 수정모달 닫기
