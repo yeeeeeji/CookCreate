@@ -34,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -64,7 +65,7 @@ public class LessonServiceImpl implements LessonService {
     private final ReviewService reviewService;
     private final AwsS3Uploader awsS3Uploader;
 
-    private final StringRedisTemplate redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
     @Override
@@ -405,6 +406,7 @@ public class LessonServiceImpl implements LessonService {
         return result;
     }
 
+    @Transactional
     @Override
     public ResponseDto modifyLessonStep(String userId, LessonStepPutReq lessonStepPutReq) {
         Optional<Lesson> find = lessonRepository.findByLessonId(lessonStepPutReq.getLessonId());
@@ -527,17 +529,25 @@ public class LessonServiceImpl implements LessonService {
             return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
         }
 
-        HashOperations<String, String, Object> hashOperations = redisTemplate.opsForHash();
-        String key = "lessonId::" + jjimReq.getLessonId();
-        String hashkey = "likes";
-        if(hashOperations.get(key, hashkey) == null){
-            hashOperations.put(key, hashkey, lesson.get().getJjimCount());
-            hashOperations.increment(key, hashkey,1);
-            System.out.println(hashOperations.get(key, hashkey));
-        }else {
-            hashOperations.increment(key, hashkey,1);
-            System.out.println(hashOperations.get(key, hashkey));
-        }
+        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
+
+//        예제
+//        setOperations.add("Key", chatMessage);
+//        System.out.println(setOperations.pop("Key"));       // 하나 꺼내기
+//        System.out.println(setOperations.members("Key"));  // 전체 조회
+
+//        String key = "lessonId::" + jjimReq.getLessonId();
+//        String value = jjimReq.getUserId();
+//        setOperations.pop(key);
+//        if(){
+//            setOperations.getOperations().get
+//            setOperations.put(key, hashkey, lesson.get().getJjimCount());
+//            setOperations.increment(key, hashkey,1);
+//            System.out.println(setOperations.get(key, hashkey));
+//        }else {
+//            setOperations.increment(key, hashkey,1);
+//            System.out.println(setOperations.get(key, hashkey));
+//        }
 
         return null;
     }
