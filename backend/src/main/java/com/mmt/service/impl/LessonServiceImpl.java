@@ -522,11 +522,19 @@ public class LessonServiceImpl implements LessonService {
 
     @Transactional
     @Override
-    public ResponseDto wantJjim(JjimReq jjimReq) {
+    public ResponseDto wantJjimOrNot(JjimReq jjimReq) {
         int lessonId = jjimReq.getLessonId();
         Optional<Lesson> lesson = lessonRepository.findByLessonId(lessonId);
         if(lesson.isEmpty()){
             return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        }
+        if(lesson.get().getIsOver() || lesson.get().getIsEnd()){
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 마감된 과외입니다.");
+        }
+
+        Optional<Member> member = memberRepository.findByUserId(jjimReq.getUserId());
+        if(!member.get().getRole().equals(Role.COOKIEE)){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "Cookiee만 이용할 수 있습니다.");
         }
 
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
@@ -536,8 +544,16 @@ public class LessonServiceImpl implements LessonService {
 //        System.out.println(setOperations.pop("Key"));       // 하나 꺼내기
 //        System.out.println(setOperations.members("Key"));  // 전체 조회
 
-//        String key = "lessonId::" + jjimReq.getLessonId();
-//        String value = jjimReq.getUserId();
+        String key = "lessonId::" + jjimReq.getLessonId();
+        String value = jjimReq.getUserId();
+        if(Boolean.TRUE.equals(setOperations.isMember(key, value))){
+            setOperations.remove(key, value);
+            return new ResponseDto(HttpStatus.OK, "찜한 목록에서 제거됐습니다.");
+        }else{
+            setOperations.add(key, value);
+            return new ResponseDto(HttpStatus.OK, "찜한 목록에 추가됐습니다.");
+        }
+
 //        setOperations.pop(key);
 //        if(){
 //            setOperations.getOperations().get
@@ -548,8 +564,6 @@ public class LessonServiceImpl implements LessonService {
 //            setOperations.increment(key, hashkey,1);
 //            System.out.println(setOperations.get(key, hashkey));
 //        }
-
-        return null;
     }
 
 //    @Scheduled(fixedDelay = 1000L*18L)

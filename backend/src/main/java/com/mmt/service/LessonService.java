@@ -34,5 +34,5 @@ public interface LessonService {
     ResponseDto deleteSession(SessionPostReq sessionPostReq);
 
     // 과외 찜 관련
-    ResponseDto wantJjim(JjimReq jjimReq);
+    ResponseDto wantJjimOrNot(JjimReq jjimReq);
 }
