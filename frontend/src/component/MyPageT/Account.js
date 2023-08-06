@@ -7,7 +7,6 @@ import SideBar from "./SideBar";
 
 function Account() {
   const accessToken = useSelector((state) => state.auth.access_token);
-  console.log(accessToken);
 
   const [userData, setUserData] = useState({});
   const [food, setFood] = useState([]);
@@ -18,8 +17,10 @@ function Account() {
   const [userEmailDef, setUserEmail] = useState(userData.userEmail);
   const [IntroduceDef, setIntroduce] = useState(userData.introduce);
   const [IntroUrlDef, setIntroUrl] = useState(userData.introUrl);
-  const defaultProfileImgUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-  const [profileImgDef, setProfileImg] = useState(userData.profileImg || defaultProfileImgUrl);
+  // const defaultProfileImgUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+  const [profileImgDef, setProfileImg] = useState(userData.profileImg  );
+  const [profileImgUrl, setProfileImgUrl] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+  // const [profileImgDef, setProfileImg] = useState(userData.profileImg || defaultProfileImgUrl );
   const fileInput = useRef(null);
 
   //오류 메세지 저장
@@ -66,12 +67,6 @@ function Account() {
       });
   };
 
-  //introUrl
-  const onChangeintroUrl = async (e) => {
-    const value = e.target.value;
-    await setIntroUrl(value);
-  };
-
   //유효성 검사 구현
   const onChangeIntroduce = async (e) => {
     const value = e.target.value;
@@ -85,17 +80,6 @@ function Account() {
     }
   };
 
-  // const onChangeUserId = async (e) => {
-  //   const value = e.target.value;
-  //   await setUserId(value);
-  //   if (value.length < 4 || value.length > 10) {
-  //     setUserIdMessage("4글자 이상 10글자 이하로 입력해주세요");
-  //     setIsUserId(false);
-  //   } else {
-  //     setUserIdMessage("적합한 아이디 형식입니다! 🤗");
-  //     setIsUserId(true);
-  //   }
-  // };
 
   const onChangeUserNickName = async (e) => {
     const value = e.target.value;
@@ -137,6 +121,13 @@ function Account() {
     }
   };
 
+
+    //introUrl
+    const onChangeintroUrl = async (e) => {
+      const value = e.target.value;
+      await setIntroUrl(value);
+    };
+
   //회원정보조회
   useEffect(() => {
     axios
@@ -154,6 +145,8 @@ function Account() {
       });
   }, [accessToken]);
 
+
+
   useEffect(() => {
     if (userData.food) {
       setFood(userData.food);
@@ -161,37 +154,55 @@ function Account() {
     }
   }, [userData]);
 
-  
 
-  //프로필 이미지 변경
+
+
+  //프로필
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // const reader = new FileReader();
-      // reader.onloadend = () => {
-      //   setProfileImg(reader.result);
-      // };
-      // reader.readAsDataURL(file);
-      setProfileImg(file)
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImgUrl(reader.result);
+        setProfileImg(file)
+      };
+      reader.readAsDataURL(file);
     }
   };
-  
 
-  //기본 프로필로 변경
+
+
+  // 프로필 이미지 변경
+// const handleFileChange = (e) => {
+//   const file = e.target.files[0];
+//   if (file) {
+//     setProfileImg(file); 
+//   }
+// };
+
+
+
+  //프로필 삭제
   const handleProfile = (e) => {
-    setProfileImg("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
-    // axios
-    //   .get(`api/v1/my/profile`, {
-    //     headers: {
-    //       Access_Token: accessToken,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log("프로필삭제완료");
-    //   })
-    //   .catch((err) => {
-    //     console.log("프로필삭제못함");
-    //   });
+    if (profileImgDef) {
+
+      axios
+        .get(`api/v1/my/profile`, {
+          headers: {
+            Access_Token: accessToken,
+          },
+        })
+        .then((res) => {
+          setProfileImgUrl("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log("프로필삭제못함",err);
+        });
+    
+    }
+
   };
 
   //음식추가 제거
@@ -204,7 +215,6 @@ function Account() {
         setFood(newFoodList);
       } else {
         console.log("선택한 음식", [...food, selectedFood]);
-        console.log([...food], food);
         setFood([...food, selectedFood]);
       }
       console.log(food);
@@ -213,29 +223,29 @@ function Account() {
     }
   };
 
-
-
-  //회원정보수정2
+  //회원정보 수정
   const handleUpdate = (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    // formData.append("userId", userIdDef);
-    formData.append("nickname", nicknameDef);
-    formData.append("phoneNumber", phoneNumberDef);
-    formData.append("userEmail", userEmailDef);
-    console.log("폼데이터폰", formData.get("phoneNumber"));
 
+    const formData = new FormData();
+    formData.append("nickname", nicknameDef);
+    console.log("폼데이터닉네임", typeof formData.get("nickname"));
+    formData.append("phoneNumber", phoneNumberDef);
+    console.log("폼데이터폰", typeof formData.get("phoneNumber"));
+    formData.append("userEmail", userEmailDef);
+    console.log("폼데이터이메일", typeof formData.get("phoneNumber"));
 
     formData.append("food", food);
     console.log("폼데이터푸드", formData.get("food"));
+    console.log("폼데이터푸드", typeof formData.get("food"));
 
     formData.append("introduce", IntroduceDef);
     formData.append("profileImg", profileImgDef);
     formData.append("introUrl", IntroUrlDef);
-    console.log("폼데이터2-1", formData.get("introduce"));
-    console.log("폼데이터2-2", formData.get("profileImg"));
-    console.log("폼데이터2-3", formData.get("introUrl"));
+    console.log("폼데이터소개", formData.get("introduce"));
+    console.log("폼데이터이미지", formData.get("profileImg"));
+    console.log("폼데이터이미지타입",  typeof formData.get("profileImg"));
 
     axios
       .put(`api/v1/member`, formData, {
@@ -259,7 +269,7 @@ function Account() {
       <div className="myrole">{userData.role}</div>
       <div className="mysubtitle">프로필 변경</div>
       <img
-        src={profileImgDef}
+        src={profileImgUrl}
         alt="Profile"
         style={{ margin: "20px", width: "200px", height: "200px", objectFit: "cover" }}
         onClick={() => {
@@ -267,6 +277,7 @@ function Account() {
         }}
       />
 
+      {/* <input type="file" onChange={(e) => profileImgDef(e.target.files[0])}  ref={fileInput} required /> */}
       <input type="file" style={{ display: "none" }} accept="image/jpg,image/png,image/jpeg" name="profile_img" onChange={handleFileChange} ref={fileInput} />
       <button onClick={handleProfile}>기본 프로필로 변경</button>
 
@@ -280,21 +291,13 @@ function Account() {
         </div>
       </div>
 
-      {/* <div className="myinputTitle">아이디</div>
-      <div className="inputWrap">
-        <input placeholder={userIdDef} type="text" value={userIdDef} onChange={onChangeUserId} />
-        <button onClick={idDupliCheck}>중복확인</button>
-        <div>
-          {userIdMessage}
-          {userIdDupMessage}
-        </div>
-      </div> */}
 
       <div className="myinputTitle">자기소개</div>
       <div>
         <textarea placeholder={IntroduceDef} value={IntroduceDef} onChange={onChangeIntroduce}></textarea>
         <div>{userIntroduceMessage}</div>
       </div>
+
       <div>
         <p>소개영상url</p>
         <input placeholder={IntroUrlDef} type="text" value={IntroUrlDef} onChange={onChangeintroUrl} />

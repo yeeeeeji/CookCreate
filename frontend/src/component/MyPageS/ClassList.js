@@ -15,6 +15,7 @@ function ClassList() {
   console.log("토큰",accessToken);
   const [classData, setClassData] = useState([]);
   const [completedData, setCompletedData] = useState([]);
+  const [reviewLessonId, setReviewLessonId] = useState(null);
   // const [showCompletedLectures, setShowCompletedLectures] = useState(false);
 
   useEffect(() => {
@@ -60,8 +61,9 @@ function ClassList() {
 
     //모달
 
-    const handleOpenModal = () => {
+    const handleOpenModal = (lessonId) => {
       setIsModalOpen(true);
+      setReviewLessonId(lessonId)
     };
   
     const handleCloseModal = () => {
@@ -95,7 +97,7 @@ function ClassList() {
         {/* <button >리뷰작성</button> */}
         {/* {isModalOpen && <ReviewForm onClose={handleCloseModal} />} */}
         <Modal isOpen={isModalOpen} onRequestClose={handleCloseModal}>
-          <ReviewForm onClose={handleCloseModal} rating={rating} onClickRating={handleClickRating} />
+          <ReviewForm onClose={handleCloseModal} rating={rating} onClickRating={handleClickRating} lessonId={reviewLessonId} />
         </Modal>
         <div className="column is-10 main_container">
           <div className="header">
@@ -185,8 +187,8 @@ function ClassList() {
                         </dl>
                         <div className="info_ea">
                           <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_people.png" alt="수강아이콘" width="29" style={{ paddingRight: "5px", verticalAlign: "text-bottom" }} />
-                          <b>{lesson.remaining}/{lesson.maximum}</b>
-                          "명 남음."
+                          <b>"{lesson.remaining}"명 남음.</b>
+                            최대인원:{lesson.maximum}명
                         </div>
                       </div>
                       <div className="rating">
@@ -287,8 +289,8 @@ function ClassList() {
                         </dl>
                         <div className="info_ea">
                           <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_people.png" alt="수강아이콘" width="29" style={{ paddingRight: "5px", verticalAlign: "text-bottom" }} />
-                          <b>{lesson.remaining}/{lesson.maximum}</b>
-                          "명 남음."
+                          <b>"{lesson.remaining}"명 남음.</b>
+                            최대인원:{lesson.maximum}명
                         </div>
                       </div>
                       <div className="rating">
@@ -308,7 +310,7 @@ function ClassList() {
                   </a>
                 </div>
               </div>
-              <button onClick={handleOpenModal}>리뷰작성</button>
+              <button onClick={() => handleOpenModal(lesson.lessonId)}>리뷰작성</button>
             </div>
               ))}
             </div>

@@ -38,36 +38,38 @@ const RatingField = styled.fieldset`
 `;
 
 
-function ReviewForm({onClose, onClickRating }) {
+function ReviewForm({onClose, onClickRating, lessonId }) {
 
   const accessToken = useSelector((state) => state.auth.access_token);
   console.log(accessToken)
   const [reviewContents, setreviewContents] = useState("");
   const  [rating, setRating] = useState("0");
-  const lessonId = 4
 
+  
+  const handleClickRating = (value) => {
+    console.log("별점",value)
+    setRating(value);
+    console.log(rating)
+  };
+  
+  useEffect(() => {
+    console.log("별점 변경됨", rating);
+  }, [rating]);
+  
+  
+  
+  
   const data = {
     lessonId:parseInt(lessonId),
     rating: parseFloat(rating),
     reviewContents:reviewContents
   }
 
-  const handleClickRating = (value) => {
-    console.log("별점",value)
-    setRating(value);
-    console.log(rating)
-  };
-
-  useEffect(() => {
-    console.log("별점 변경됨", rating);
-  }, [rating]);
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // onsubmit(reviewContents, rating)
-    //api
     axios
     .post(`api/v1/review`, data, {
       headers: {
@@ -93,7 +95,7 @@ function ReviewForm({onClose, onClickRating }) {
       <h2>리뷰 등록</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="lectureName">강의명:</label>
+          <label htmlFor="lectureName">과외id:{lessonId}</label>
         </div>
         <div>
         <Base>
