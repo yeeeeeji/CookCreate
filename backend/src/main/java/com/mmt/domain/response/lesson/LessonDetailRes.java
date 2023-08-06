@@ -3,6 +3,7 @@ package com.mmt.domain.response.lesson;
 import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.lesson.Difficulty;
 import com.mmt.domain.entity.lesson.Lesson;
+import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.lesson.LessonStep;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ public class LessonDetailRes {
     private float reviewAvg;
     private int reviewCnt;
     private float reviewSum;
-    private List<Member> lessonParticipantList;
+//    private List<LessonParticipant> lessonParticipantList;
     private String videoUrl;
     private String thumbnailUrl;
     private List<LessonStep> lessonStepList;
@@ -62,5 +63,6 @@ public class LessonDetailRes {
         this.jjimCount = lesson.getJjimCount();
         this.createdDate = lesson.getCreatedDate().toString();
         this.modifiedDate = lesson.getModifiedDate().toString();
+//        this.lessonParticipantList = lesson.getLessonParticipantList();
     }
 }

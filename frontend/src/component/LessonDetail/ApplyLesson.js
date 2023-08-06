@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 function ApplyLesson({ price, jjimCount, lessonId, videoUrl, disable }) {
   console.log(disable)
-  const access_token = useSelector((state) => state.auth.access_token)
+  const access_token = localStorage.getItem('access_token')
   const [errMsg, setErrMsg] = useState('')
   const [payUrl, setPayUrl] = useState('')
   const [pg_token, setPg_Token] = useState('')

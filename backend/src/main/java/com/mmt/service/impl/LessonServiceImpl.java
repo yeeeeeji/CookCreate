@@ -322,14 +322,8 @@ public class LessonServiceImpl implements LessonService {
             Optional<LessonCategory> lessonCategory = lessonCategoryRepository.findById(lesson.get().getLessonCategory().getCategoryId());
             if(lessonCategory.isPresent()) result.setCategoryName(lessonCategory.get().getCategoryTitle());
 
-            // lessonParticipantList 세팅
             List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(lessonId);
-            List<Member> memberList = new ArrayList<>();
-            for (LessonParticipant lp : lessonParticipantList){
-                memberList.add(lp.getMember());
-            }
-            result.setLessonParticipantList(memberList);
-
+//            result.setLessonParticipantList(lessonParticipantList);
             // remaining 세팅
             result.setRemaining(result.getMaximum() - lessonParticipantList.size() + 1);
 
