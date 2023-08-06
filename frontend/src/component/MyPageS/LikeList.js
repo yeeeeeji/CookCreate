@@ -1,14 +1,14 @@
 import React from "react";
 import SideBar from "./SideBar";
 // import axios from "axios";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 function LikeList() {
-  // const accessToken = useSelector((state) => state.auth.access_token);
-  // console.log(accessToken);
+  const accessToken = useSelector((state) => state.auth.access_token);
+  console.log(accessToken);
 
   // axios
-  //   .get(`api/v1/my//jjim`, {
+  //   .get(`api/v1/my/jjim`, {
   //     headers: {
   //       Access_Token: accessToken,
   //     },

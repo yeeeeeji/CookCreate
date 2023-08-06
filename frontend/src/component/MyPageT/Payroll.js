@@ -1,42 +1,85 @@
-import React from 'react';
+// import React from 'react';
+import React, { useState, useEffect } from "react";
 import SideBar from "./SideBar";
+import { useSelector} from "react-redux";
+import axios from "axios";
+
 
 function Payroll() {
+  const accessToken = useSelector((state) => state.auth.access_token);
+  const [pays, setPays] = useState([]);
+  const payrollMessage = pays[0]?.lessonId === 0 ? "정산 내역이 없습니다." : "";
+
+
+
+  useEffect(() => {
+    axios
+      .get(`api/v1/my/cookyer`, {
+        headers: {
+          Access_Token: accessToken,
+        },
+      })
+      .then((res) => {
+        setPays(res.data);
+        console.log("정산목록",pays);
+      })
+      .catch((err) => {
+        console.log("정산에러",err);
+      });
+  }, [accessToken,pays]);
+
   return (
-    <div>
+    <div className="mypage">
       <SideBar />
-      <h2>정산내역</h2>
-        <p>쿠크를 통해 1,100,000원을 벌었어요!</p>
-        <p>미완료 정산금:150,000원</p>
-      <table>
-        <thead>
-          <tr>
-            <th>날짜</th>
-            <th>쿠키 ID</th>
-            <th>결제정보</th>
-            <th>가격</th>
-            <th>결제완료/미완료</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* {settlementData.map((item) => (
-            <tr key={item.id}>
-              <td>{item.date}</td>
-              <td>{item.transactionId}</td>
-              <td>{item.amount}</td>
-              <td>{item.status}</td>
-            </tr>
-          ))} */}
-            <tr >
-              <td>date</td>
-              <td>transactionId</td>
-              <td>amount</td>
-              <td>status</td>
-            </tr>
-        </tbody>
-      </table>
+      <section className="pay_box">
+        <div className="pay_header">
+          <div>
+            <span>결제내역</span>
+          </div>
+        </div>
+        {/* {userPayment.length === 0 ? ( // 결제내역이 없는 경우
+          <div className="no_payment">결제내역이 없습니다.</div>
+        ) : ( */}
+          {payrollMessage ? (
+          <div className="no_payment">{payrollMessage}</div>
+        ) : (
+          // 결제내역이 있는 경우
+          pays.map((pay) => (
+            <div className="pay_item" key={pay.id}>
+              <dl className="pay_list">
+                <div className="pay_label">
+                  <span className="pay_state">결제상태{pay.payStatus}</span>
+                </div>
+                <strong className="pay_info">결제정보</strong>
+                <div className="class_info">
+                  <dl className="info_details">
+                    {/* <dt>가격</dt>
+                    <dd>{payment.totalAmount} 원</dd> */}
+                    <dt>과외명</dt>
+                    <dd>{pay.lessonTitle} 원</dd>
+                    <dt>결제 수단</dt>
+                    <dd>{pay.cardInfo}</dd>
+                    <dt>결제 승인 완료 시간</dt>
+                    <dd>{pay.approvedAt}</dd>
+                  </dl>
+                  <dl className="info_price">
+                    <dt>결제 금액</dt>
+                    <dd>
+                      {pay.totalAmount} 원
+                      <button type="button" className="payback">
+                        환불 신청
+                      </button>
+                    </dd>
+                  </dl>
+                </div>
+              </dl>
+            </div>
+          ))
+        )}
+      </section>
     </div>
   );
 }
+
 
 export default Payroll;
