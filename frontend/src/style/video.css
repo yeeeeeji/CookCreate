@@ -146,6 +146,7 @@ p {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   width: 600px;
   height: 800px;
+  z-index: 2;
 }
 
 /* 쿠키 화면 */

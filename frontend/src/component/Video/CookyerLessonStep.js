@@ -122,7 +122,6 @@ function CookyerLessonStep() {
             ) : (
               <p>현재 요리 단계</p>
             )}
-            {/* <button onClick={handleIsUpdate}>수정</button> */}
           </div>
           <button onClick={goNextStep}>이후</button>
         </div>

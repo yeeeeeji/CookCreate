@@ -231,11 +231,15 @@ function CookyerScreen() {
     })
   }
 
+  const handleModalClick = (e) => {
+    e.stopPropagation()
+  }
+
   return (
     <div className='video-page'>
       <div className='video-page-main'>
         {isSessionOpened ? null : (
-          <LessonStepModal/>
+          <LessonStepModal onClick={handleModalClick}/>
         )}
         <div className='video-content'>
           <VideoHeader/>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { leaveSession } from '../../store/video/video';
+import LessonStep from './LessonStep';
 
 function LessonStepModal() {
   const navigate = useNavigate()
@@ -47,10 +48,11 @@ function LessonStepModal() {
     <div className='cookyer-lesson-step-modal'>
       <h1>진행단계 확인</h1>
       {lessonStepList.map((step) => (
-        <div>
-          <p>{step.stepOrder}</p>
-          <p>{step.stepContent}</p>
-        </div>
+        <LessonStep
+          key={step.stepOrder}
+          stepOrder={step.stepOrder}
+          stepContent={step.stepContent}
+        />
       ))}
       <button onClick={storeLessonStepList}>완료</button>
     </div>
