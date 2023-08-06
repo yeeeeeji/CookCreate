@@ -13,6 +13,10 @@ import { joinSession } from '../../store/video/video-thunk';
 import { setCheckCookiee, setCheckCookieeList, setHandsDownCookiee, setHandsUpCookiee, setHandsUpCookieeList, setUncheckCookiee } from '../../store/video/cookyerVideo';
 import { setLessonInfo } from '../../store/video/videoLessonInfo';
 import '../../style/video.css'
+import CookyerVideoSideBar from '../../component/Video/Cookyer/CookyerVideoSideBar';
+
+import { AiFillCheckCircle } from 'react-icons/ai'
+import { IoIosHand } from 'react-icons/io'
 
 function CookyerScreen() {
   const dispatch = useDispatch()
@@ -273,22 +277,27 @@ function CookyerScreen() {
             <div className='cookyer-cookiees'>
               {subscribers.map((sub, i) => (
                 // <div key={sub.id} onClick={() => handleMainVideoStream(sub)}>
-                <div key={i}>
+                <div key={i} className='cookyer-cookiee-content'>
                   <UserVideoComponent
                     videoStyle='cookyer-cookiee'
                     streamManager={sub}
                   />
                   {checkCookieeList && checkCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
-                    <h1>체크한 사람</h1>
-                  ) : null}
+                    <AiFillCheckCircle className='cookyer-check-icon-active'/>
+                  ) : (
+                    <AiFillCheckCircle className='cookyer-check-icon'/>
+                  )}
                   {handsUpCookieeList && handsUpCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
-                    <div>
-                      <h1>
-                        {handsUpCookieeList.indexOf(sub.stream.connection.connectionId) +  1}번째로 손 든 사람
-                      </h1>
-                      <button onClick={() => resetHandsUpCookiee({cookyer: publisher, cookiee: sub})}>손들기 해제</button>
-                    </div>
-                  ) : null}
+                    // <div>
+                    //   <h1>
+                    //     {handsUpCookieeList.indexOf(sub.stream.connection.connectionId) +  1}번째로 손 든 사람
+                    //   </h1>
+                    //   <button onClick={() => resetHandsUpCookiee({cookyer: publisher, cookiee: sub})}>손들기 해제</button>
+                    // </div>
+                    <IoIosHand className={`cookyer-handsup-icon-active-${handsUpCookieeList.indexOf(sub.stream.connection.connectionId)}`}/>
+                  ) : (
+                    <IoIosHand className='cookyer-handsup-icon'/>
+                  )}
                 </div>
               ))}
             </div>
@@ -296,7 +305,7 @@ function CookyerScreen() {
         </div>
         <CookyerLessonStep/>
       </div>
-      <VideoSideBar/>
+      <CookyerVideoSideBar/>
     </div>
   );
 }

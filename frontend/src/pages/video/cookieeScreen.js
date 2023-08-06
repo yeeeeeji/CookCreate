@@ -10,10 +10,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber, leaveSession, setAudioMute } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
 import { initCookieeVideo, resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
-import { initVideoLessonInfo, setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
+import { setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
 import '../../style/video.css'
 import { initScreenShare } from '../../store/video/screenShare';
 import LessonReviewModal from '../../component/Video/Cookiee/LessonReviewModal';
+
+import { AiFillCheckCircle } from 'react-icons/ai'
+import { IoIosHand } from 'react-icons/io'
 
 function CookieeScreen() {
   const dispatch = useDispatch()
@@ -193,7 +196,7 @@ function CookieeScreen() {
         ) : null}
         <div>
           <VideoHeader/>
-          <div>
+          <div className='cookiee-video-content'>
             <div>
               <div className='cookiee-sharing'>
               {/* <div className='cookiee-sharing' onClick={() => handleMainVideoStream(cookyerStream)}> */}
@@ -234,11 +237,15 @@ function CookieeScreen() {
                   <h1>쿠키 화면</h1>
                 )}
                 {check ? (
-                  <h1>나 체크했다</h1>
-                ) : null}
+                  <AiFillCheckCircle className='cookiee-check-icon-active'/>
+                ) : (
+                  <AiFillCheckCircle className='cookiee-check-icon'/>
+                )}
                 {handsUp ? (
-                  <h1>나 손들었다</h1>
-                ) : null}
+                  <IoIosHand className='cookiee-handsup-icon-active'/>
+                ) : (
+                  <IoIosHand className='cookiee-handsup-icon'/>
+                )}
               </div>
 
               {/* <div className='cookyer-cookiees'> */}

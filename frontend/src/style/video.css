@@ -135,6 +135,82 @@ p {
   width: 70px;
 }
 
+.cookyer-cookiee-content {
+  position: relative;
+}
+
+.cookyer-check-icon-active {
+  font-size: 35px;
+  position: absolute;
+  top: 210px;
+  right: 80px;
+  color: rgb(33, 172, 33);
+}
+
+.cookyer-check-icon {
+  font-size: 35px;
+  position: absolute;
+  top: 210px;
+  right: 80px;
+  color: rgb(114, 114, 114);
+}
+
+.cookyer-handsup-icon-active-0 {
+  font-size: 35px;
+  position: absolute;
+  top: 210px;
+  right: 35px;
+  color: rgb(255, 0, 0);
+}
+
+.cookyer-handsup-icon-active-1 {
+  font-size: 35px;
+  position: absolute;
+  top: 210px;
+  right: 35px;
+  color: rgb(255, 77, 0);
+}
+
+.cookyer-handsup-icon-active-2 {
+  font-size: 35px;
+  position: absolute;
+  top: 210px;
+  right: 35px;
+  color: rgb(255, 200, 0);
+}
+
+.cookyer-handsup-icon-active-3 {
+  font-size: 35px;
+  position: absolute;
+  top: 210px;
+  right: 35px;
+  color: rgb(27, 196, 12);
+}
+
+.cookyer-handsup-icon-active-4 {
+  font-size: 35px;
+  position: absolute;
+  top: 210px;
+  right: 35px;
+  color: rgb(0, 94, 255);
+}
+
+.cookyer-handsup-icon-active-5 {
+  font-size: 35px;
+  position: absolute;
+  top: 210px;
+  right: 35px;
+  color: rgb(89, 0, 134);
+}
+
+.cookyer-handsup-icon {
+  font-size: 35px;
+  position: absolute;
+  top: 210px;
+  right: 35px;
+  color: rgb(114, 114, 114);
+}
+
 .cookyer-lesson-step-modal {
   position: fixed;
   top: 50%;
@@ -150,6 +226,10 @@ p {
 }
 
 /* 쿠키 화면 */
+
+.cookiee-video-content {
+  display: flex;
+}
 
 .cookiee-sharing {
   background-color: rgb(111, 220, 220);
@@ -171,6 +251,7 @@ p {
   width: 458px;
   height: 310px;
   padding: 5px;
+  position: relative;
 }
 
 .cookiee-content-video {
@@ -178,6 +259,38 @@ p {
   border-radius: 5px;
   height: 300px;
   object-fit: cover;
+}
+
+.cookiee-check-icon-active {
+  font-size: 35px;
+  position: absolute;
+  top: 250px;
+  right: 80px;
+  color: rgb(33, 172, 33);
+}
+
+.cookiee-check-icon {
+  font-size: 35px;
+  position: absolute;
+  top: 250px;
+  right: 80px;
+  color: rgb(114, 114, 114);
+}
+
+.cookiee-handsup-icon-active {
+  font-size: 35px;
+  position: absolute;
+  top: 250px;
+  right: 35px;
+  color: rgb(255, 200, 0);
+}
+
+.cookiee-handsup-icon {
+  font-size: 35px;
+  position: absolute;
+  top: 250px;
+  right: 35px;
+  color: rgb(114, 114, 114);
 }
 
 .cookiee-lesson-review-modal {
