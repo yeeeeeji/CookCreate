@@ -9,9 +9,10 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber, leaveSession, setAudioMute } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
-import { resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
-import { setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
+import { initCookieeVideo, resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
+import { initVideoLessonInfo, setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
 import '../../style/video.css'
+import { initScreenShare } from '../../store/video/screenShare';
 
 function CookieeScreen() {
   const dispatch = useDispatch()
@@ -82,6 +83,9 @@ function CookieeScreen() {
       // session.off('sessionDisconnected', () => {
       session.on('sessionDisconnected', () => {
         dispatch(leaveSession())  // 혹시나 리뷰에서 관련 정보 필요하면 리뷰 쓴 후에 초기화로 미루기
+        dispatch(initCookieeVideo())
+        dispatch(initVideoLessonInfo())
+        dispatch(initScreenShare())
         setIsCompleted(true)
         // 쿠커가 수업 종료와 함께 모든 쿠키들을 페이지 이동 시키려면 이곳에서 하면 됨
       })

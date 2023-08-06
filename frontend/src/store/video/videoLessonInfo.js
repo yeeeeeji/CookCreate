@@ -35,10 +35,18 @@ const videoLessonInfo = createSlice({
       state.curStep = payload.curStep
       state.curIdx = payload.curIdx
     },
+    initVideoLessonInfo: (state) => {
+      state.lessonTitle = undefined
+      state.cookyerName = undefined
+      state.lessonStepList = undefined
+      state.totalSteps = 0
+      state.curStep = undefined
+      state.curIdx = undefined
+    }
   },
 });
 
 export const { 
-  setLessonInfo, setLessonStepList, setCurStep, setCurIdx, setStepInfo
+  setLessonInfo, setLessonStepList, setCurStep, setCurIdx, setStepInfo, initVideoLessonInfo
 } = videoLessonInfo.actions;
 export default videoLessonInfo.reducer;

@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { leaveSession } from '../../../store/video/video';
 import LessonStep from './LessonStep';
+import { initCookyerVideo } from '../../../store/video/cookyerVideo';
+import { initVideoLessonInfo } from '../../../store/video/videoLessonInfo';
+import { initScreenShare } from '../../../store/video/screenShare';
 
 function LessonStepModal() {
   const navigate = useNavigate()
@@ -30,7 +33,9 @@ function LessonStepModal() {
         console.log('쿠커 진행단계 디비 업데이트 성공', res.data)
         setIsStoreStep(true)
         dispatch(leaveSession())  // 스토어에 화상과외 관련 데이터 초기화
-        
+        dispatch(initCookyerVideo())
+        dispatch(initVideoLessonInfo())
+        dispatch(initScreenShare())
       })
       .catch((err) => {
         console.log('쿠커 진행단계 디비 업데이트 실패', err)
