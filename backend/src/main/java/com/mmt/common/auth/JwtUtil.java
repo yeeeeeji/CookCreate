@@ -5,14 +5,13 @@ import java.time.Duration;
 import java.util.*;
 
 import com.mmt.domain.TokenDto;
-import com.mmt.domain.entity.auth.RefreshToken;
-import com.mmt.repository.RefreshTokenRepository;
 import com.mmt.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,7 +32,7 @@ import javax.transaction.Transactional;
 public class JwtUtil { // 토큰을 생성하고 토큰에서 정보를 가져옴.
 
     private final UserDetailsServiceImpl userDetailsService;
-    private final RefreshTokenRepository refreshTokenRepository;
+//    private final RefreshTokenRepository refreshTokenRepository; -> redis로 수정
     private final Logger LOGGER = LoggerFactory.getLogger(JwtUtil.class);
 
     private static final long ACCESS_TIME =  Duration.ofHours(4).toMillis();
@@ -45,6 +44,8 @@ public class JwtUtil { // 토큰을 생성하고 토큰에서 정보를 가져�
     private String secretKey;
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+
+    private final RedisTemplate<String, String> redisTemplate;
 
     // bean으로 등록 되면서 딱 한번 실행이 됩니다.
     @PostConstruct
@@ -93,16 +94,18 @@ public class JwtUtil { // 토큰을 생성하고 토큰에서 정보를 가져�
     // db에 저장되어 있는 token과 비교
     // db에 저장한다는 것이 jwt token을 사용한다는 강점을 상쇄시킨다.
     // db 보다는 redis를 사용하는 것이 더욱 좋다. (in-memory db기 때문에 조회속도가 빠르고 주기적으로 삭제하는 기능이 기본적으로 존재합니다.)
-    public Boolean refreshTokenValidation(String token) {
-
-        // 1차 토큰 검증
-        if(!tokenValidation(token)) return false;
-
-        // DB에 저장한 토큰 비교
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUserId(getUserIdFromToken(token));
-
-        return refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken());
-    }
+    // 그래서 redis로 수정
+//    public Boolean refreshTokenValidation(String token) {
+//
+//        // 1차 토큰 검증
+//        if(!tokenValidation(token)) return false;
+//
+//        // DB에 저장한 토큰 비교
+////        String refreshToken = redisTemplate.opsForValue().get(authentication.getName());
+//        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUserId(getUserIdFromToken(token));
+//
+//        return refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken());
+//    }
 
     // 인증 객체 생성
     public Authentication createAuthentication(String userId) {
@@ -126,14 +129,24 @@ public class JwtUtil { // 토큰을 생성하고 토큰에서 정보를 가져�
         response.setHeader("Refresh_Token", refreshToken);
     }
 
-    public void logout(HttpServletRequest request){
-        String refreshToken = getHeaderToken(request, "Refresh");
-        removeRefreshToken(refreshToken);
-    }
+//    public void logout(HttpServletRequest request){
+//        String refreshToken = getHeaderToken(request, "Refresh");
+//        removeRefreshToken(refreshToken);
+//    }
 
-    @Transactional
-    public void removeRefreshToken(String refreshToken){
-        refreshTokenRepository.findByRefreshToken(refreshToken)
-                .ifPresent(r -> r.setRefreshToken(null));
+//    @Transactional
+//    public void removeRefreshToken(String refreshToken){
+//        refreshTokenRepository.findByRefreshToken(refreshToken)
+//                .ifPresent(r -> r.setRefreshToken(null));
+//    }
+
+    // access token의 남은 유효시간 얻기
+    public Long getExpiration(String accessToken){
+        Date date = Jwts.parserBuilder().setSigningKey(key).build()
+                .parseClaimsJws(accessToken).getBody().getExpiration();
+
+        long now = new Date().getTime();
+
+        return (date.getTime() - now);
     }
 }
