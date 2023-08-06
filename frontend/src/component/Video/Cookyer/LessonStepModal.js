@@ -32,10 +32,10 @@ function LessonStepModal() {
       .then((res) => {
         console.log('쿠커 진행단계 디비 업데이트 성공', res.data)
         setIsStoreStep(true)
-        dispatch(leaveSession())  // 스토어에 화상과외 관련 데이터 초기화
-        dispatch(initCookyerVideo())
-        dispatch(initVideoLessonInfo())
-        dispatch(initScreenShare())
+        // dispatch(leaveSession())  // 스토어에 화상과외 관련 데이터 초기화
+        // dispatch(initCookyerVideo())
+        // dispatch(initVideoLessonInfo())
+        // dispatch(initScreenShare())
       })
       .catch((err) => {
         console.log('쿠커 진행단계 디비 업데이트 실패', err)
@@ -46,6 +46,10 @@ function LessonStepModal() {
     if (session === undefined && isStoreStep) {
       // 스토어에 정보가 잘 지워졌는지 확인 후 이동하고 싶은데 수정해야 할듯
       navigate('/')
+      dispatch(leaveSession())  // 스토어에 화상과외 관련 데이터 초기화
+      dispatch(initCookyerVideo())
+      dispatch(initVideoLessonInfo())
+      dispatch(initScreenShare())
     }
   }, [session, isStoreStep])
 

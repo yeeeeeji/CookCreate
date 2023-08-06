@@ -4,7 +4,7 @@ import SearchBar from './SearchBar';
 import { useSelector, useDispatch } from "react-redux";
 import '../../style/navbar.css'
 import '../../style/video.css'
-import { initOVSession, setIsSessionOpened, setSessionId, setVideoLessonId } from '../../store/video/video';
+import { initOVSession, setIsExited, setIsSessionOpened, setSessionId, setVideoLessonId } from '../../store/video/video';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import AppliedLessonMenu from './AppliedLessonMenu';
@@ -24,6 +24,7 @@ function NavBar() {
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
   const session = useSelector((state) => state.video.session)
   const isSessionOpened = useSelector((state) => state.video.isSessionOpened)
+  const isExited = useSelector((state) => state.video.isExited) 
 
   /** 신청 수업 */
   const [ dropdown, setDropdown ] = useState(false)
@@ -52,9 +53,12 @@ function NavBar() {
 
   // 수업 목록에서 생성하기 버튼을 클릭하면 세션이 생성되고 등등
   const createRoom = ( lessonId ) => {
+    console.log("과외방 참여 버튼", isExited)
     // 0. 레슨아이디 스토어에 저장
-    if (videoLessonId === undefined) {
+    if (!isExited) {
       dispatch(setVideoLessonId(lessonId))
+    } else {
+      dispatch(setIsExited(false))
     }
   }
   
@@ -118,13 +122,13 @@ function NavBar() {
 
   // **4.
   useEffect(() => {
-    if (isSessionOpened && role === 'COOKYER') {
+    if (isSessionOpened && role === 'COOKYER' && !isExited) {
       console.log(isSessionOpened, "방이 열렸어요")
       if (sessionId) {
         navigate(`/videoLesson/${role}`)
       }
     }
-  }, [isSessionOpened])
+  }, [isSessionOpened, isExited])
 
 
   // useEffect(() => {  // 레슨 정보 받아오는 부분

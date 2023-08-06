@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import { initOVSession, setIsSessionOpened, setSessionId, setVideoLessonId } from '../../store/video/video';
+import { initOVSession, setSessionId, setVideoLessonId } from '../../store/video/video';
 import { useDispatch, useSelector } from 'react-redux';
 import { OpenVidu } from 'openvidu-browser';
 import { useNavigate } from 'react-router-dom';
@@ -49,28 +49,24 @@ function AppliedLessonMenu() {
   useEffect(() => {
     if (videoLessonId !== undefined) {
       console.log(videoLessonId, "레슨번호", access_token, "토큰")
-      if (role === 'COOKIEE') {
-        // 레슨아이디가 등록되면 학생은 토큰 생성 요청
-        console.log("쿠키 세션아이디 요청")
-        axios.post(
-          `api/v1/session/create`,
-          { 'lessonId': videoLessonId },
-          {
-            headers : {
-              Access_Token : access_token
-            }
-          })
-          .then((res) => {
-            console.log('쿠키 세션아이디 생성 성공', res.data)
-            const sessionId = res.data.token
-            dispatch(setSessionId(sessionId))
-          })
-          .catch((err) => {
-            console.log('쿠키 세션아이디 생성 실패', err)
-          })
-      } else {
-        console.log("여기에 어떻게..?")
-      }
+      // 레슨아이디가 등록되면 학생은 토큰 생성 요청
+      console.log("쿠키 세션아이디 요청")
+      axios.post(
+        `api/v1/session/create`,
+        { 'lessonId': videoLessonId },
+        {
+          headers : {
+            Access_Token : access_token
+          }
+        })
+        .then((res) => {
+          console.log('쿠키 세션아이디 생성 성공', res.data)
+          const sessionId = res.data.token
+          dispatch(setSessionId(sessionId))
+        })
+        .catch((err) => {
+          console.log('쿠키 세션아이디 생성 실패', err)
+        })  
     } else {
       console.log("레슨아이디 없음")
     }

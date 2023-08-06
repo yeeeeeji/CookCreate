@@ -12,6 +12,7 @@ const initialState = {
   isAudioPublished: true,
   videoLessonId: undefined,
   isSessionOpened: false,  // 들어올때 이걸로 문제가 생기면 undefined로 바꾸기
+  isExited: false,
 }
 
 export const video = createSlice({
@@ -42,6 +43,9 @@ export const video = createSlice({
     },
     setIsSessionOpened: (state, {payload}) => {
       state.isSessionOpened = payload
+    },
+    setIsExited: (state, {payload}) => {
+      state.isExited = payload
     },
     videoMute: (state) => {
       state.publisher.publishVideo(!state.isVideoPublished)
@@ -122,7 +126,7 @@ export const video = createSlice({
 
 export const {
     initOVSession, setPublisher, setMainStreamManager, setSessionId,
-    setSubscribers, setVideoLessonId, setIsSessionOpened,
+    setSubscribers, setVideoLessonId, setIsSessionOpened, setIsExited,
     videoMute, audioMute, setAudioMute, leaveSession,
     enteredSubscriber, deleteSubscriber
 } = video.actions
