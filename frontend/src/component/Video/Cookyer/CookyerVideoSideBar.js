@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from 'react';
 
-import '../../style/video.css'
+import '../../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { audioMute, leaveSession, videoMute } from '../../store/video/video';
+import { audioMute, leaveSession, videoMute } from '../../../store/video/video';
 import { useNavigate } from 'react-router-dom';
-import { setShareScreenPublisher } from '../../store/video/screenShare';
+import { setShareScreenPublisher } from '../../../store/video/screenShare';
 import axios from 'axios';
-import { setCheck, setHandsUp } from '../../store/video/cookieeVideo';
-import { closeSession, shareScreen } from '../../store/video/video-thunk';
+import { closeSession, shareScreen } from '../../../store/video/video-thunk';
 
-function VideoSideBar() {
+function CookyerVideoSideBar() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
   const publisher = useSelector((state) => state.video.publisher)
-  // const isVideoPublished = useSelector((state) => state.video.isVideoPublished)
   const isAudioPublished = useSelector((state) => state.video.isAudioPublished)
   
   /** 화면 공유 기능 */
@@ -27,16 +25,6 @@ function VideoSideBar() {
   const sessionId = useSelector((state) => state.video.sessionId)
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
   const access_token = localStorage.getItem('access_token')
-  // const access_token = useSelector((state) => state.auth.access_token)
-
-  const role = localStorage.getItem('role')
-
-  /** 체크 기능 */
-  const check = useSelector((state) => state.cookieeVideo.check)
-
-  /** 손들기 기능 */
-  const handsUp = useSelector((state) => state.cookieeVideo.handsUp)
-  // const [ isHandsUp, setIsHandsUp ] = useState(false)
 
   /** 과외방 닫기 */
   const handleCloseSession = () => {
@@ -158,63 +146,6 @@ function VideoSideBar() {
     dispatch(leaveSession())  // 수정필요
   }
 
-  /** 체크 */
-  const pressCheck = () => {
-    dispatch(setCheck())
-  }
-
-  useEffect(() => {
-    if (publisher) {
-      if (check) {
-        const data = {
-          connectionId: publisher.stream.connection.connectionId
-        }
-        console.log("체크했다", data)
-        publisher.stream.session.signal({
-          data: JSON.stringify(data),
-          type: 'check'
-        })
-      } else {
-        const data = {
-          connectionId: publisher.stream.connection.connectionId
-        }
-        console.log("체크해제했다", data)
-        publisher.stream.session.signal({
-          data: JSON.stringify(data),
-          type: 'uncheck'
-        })
-      }
-    }
-  }, [check])
-
-  const pressHandsUp = () => {
-    dispatch(setHandsUp())
-  }
-
-  useEffect(() => {
-    if (publisher) {
-      if (handsUp) {
-        const data = {
-          connectionId: publisher.stream.connection.connectionId
-        }
-        console.log("손들었다", data)
-        publisher.stream.session.signal({
-          data: JSON.stringify(data),
-          type: 'handsUp'
-        })
-      } else {
-        const data = {
-          connectionId: publisher.stream.connection.connectionId
-        }
-        console.log("손내렸다", data)
-        publisher.stream.session.signal({
-          data: JSON.stringify(data),
-          type: 'handsDown'
-        })
-      }
-    }
-  }, [handsUp])
-
   /** 쿠키 전체 음소거 */
   const handleCookieeAudio = () => {
     publisher.stream.session.signal({
@@ -229,13 +160,11 @@ function VideoSideBar() {
       >
         (잠시) 나가기
       </button>
-      { role === 'COOKYER' ? (
-        <button
-          onClick={handleCloseSession}
-        >
-          수업 끝내기
-        </button>
-      ) : null}
+      <button
+        onClick={handleCloseSession}
+      >
+        수업 끝내기
+      </button>
       <button
         onClick={setAudioMute}
       >
@@ -246,40 +175,18 @@ function VideoSideBar() {
       >
         화면뮤트
       </button>
-      
-      { role === 'COOKYER' ? (
-        <button
-          onClick={handleScreenShare}
-        >
-          화면공유
-        </button>
-      ) : null}
-
-      { role === 'COOKIEE' ? (
-        <button
-          onClick={() => pressCheck(publisher)}
-        >
-          {check ? ('체크 해제') : ('체크하기')}
-        </button>
-      ) : null}
-      { role === 'COOKIEE' ? (
-        <button
-          onClick={() => pressHandsUp(publisher)}
-        >
-          {handsUp ? ('손 내리기') : ('손 들기')}
-        </button>
-      ) : null}
-
-      { role === 'COOKYER' ? (
-        <button
-          onClick={() => handleCookieeAudio(publisher)}
-        >
-          쿠키 전체 음소거
-        </button>
-      ) : null}
-      
+      <button
+        onClick={handleScreenShare}
+      >
+        화면공유
+      </button>
+      <button
+        onClick={() => handleCookieeAudio(publisher)}
+      >
+        쿠키 전체 음소거
+      </button>
     </div>
   );
 }
 
-export default VideoSideBar;
+export default CookyerVideoSideBar;

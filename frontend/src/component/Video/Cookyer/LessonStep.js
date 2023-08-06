@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLessonStepList } from '../../store/video/videoLessonInfo';
+import { setLessonStepList } from '../../../store/video/videoLessonInfo';
 
 function LessonStep({ stepOrder, stepContent }) {
   const dispatch = useDispatch()

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCheckCookiee, setCheckCookieeList } from '../../store/video/cookyerVideo';
-import { setCurIdx, setCurStep, setLessonStepList } from '../../store/video/videoLessonInfo';
+import { setCheckCookiee, setCheckCookieeList } from '../../../store/video/cookyerVideo';
+import { setCurIdx, setCurStep, setLessonStepList } from '../../../store/video/videoLessonInfo';
 
 function CookyerLessonStep() {
   const dispatch = useDispatch()

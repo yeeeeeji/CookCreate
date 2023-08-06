@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import VideoSideBar from '../../component/Video/VideoSideBar';
 import VideoHeader from '../../component/Video/VideoHeader';
 import UserVideoComponent from '../../component/Video/UserVideoComponent';
 import Timer from '../../component/Video/Timer';
-import CookieeLessonStep from '../../component/Video/CookieeLessonStep';
+import CookieeLessonStep from '../../component/Video/Cookiee/CookieeLessonStep';
+import CookieeVideoSideBar from '../../component/Video/Cookiee/CookieeVideoSideBar';
 
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -182,7 +182,7 @@ function CookieeScreen() {
 
   return (
     <div className='video-page'>
-      <VideoSideBar/>
+      <CookieeVideoSideBar/>
       <div>
         <VideoHeader/>
         <div>

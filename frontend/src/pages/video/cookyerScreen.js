@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import VideoSideBar from '../../component/Video/VideoSideBar';
+import VideoSideBar from '../../component/Video/Cookyer/CookyerVideoSideBar';
 import VideoHeader from '../../component/Video/VideoHeader';
 import UserVideoComponent from '../../component/Video/UserVideoComponent';
 import Timer from '../../component/Video/Timer';
-import CookyerLessonStep from '../../component/Video/CookyerLessonStep';
-import LessonStepModal from '../../component/Video/LessonStepModal';
+import CookyerLessonStep from '../../component/Video/Cookyer/CookyerLessonStep';
+import LessonStepModal from '../../component/Video/Cookyer/LessonStepModal';
 
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
