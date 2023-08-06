@@ -1,5 +1,6 @@
 package com.mmt.service;
 
+import com.mmt.domain.TokenDto;
 import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.request.auth.UserLoginPostReq;
@@ -18,6 +19,7 @@ public interface MemberService {
     // 회원가입
     public ResponseDto signUp(UserSignUpReq userSignUpReq) throws Exception;
     public UserLoginRes login(UserLoginPostReq userLoginPostReq, HttpServletResponse response);
+    public UserLoginRes regenerateToken(TokenDto tokenDto, HttpServletResponse response);
 
     public ResponseDto logout(HttpServletRequest request, HttpServletResponse response);
     public UserInfoRes getUserInfo(String userId);

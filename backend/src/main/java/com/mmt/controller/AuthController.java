@@ -1,5 +1,6 @@
 package com.mmt.controller;
 
+import com.mmt.domain.TokenDto;
 import com.mmt.domain.request.auth.UserLoginPostReq;
 import com.mmt.domain.request.auth.UserSignUpReq;
 import com.mmt.domain.response.ResponseDto;
@@ -69,6 +70,21 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<UserLoginRes> login(@RequestBody UserLoginPostReq userLoginPostReq, HttpServletResponse response) {
         UserLoginRes userLoginRes = memberService.login(userLoginPostReq, response);
+        return new ResponseEntity<>(userLoginRes, userLoginRes.getStatusCode());
+    }
+
+    @Operation(summary = "refresh token 재발행", description = "refresh token을 재발행한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success",
+                    content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
+            @ApiResponse(responseCode = "401", description = "비밀번호를 확인해주세요.",
+                    content = @Content(schema = @Schema(implementation = UserSignUpReq.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 계정입니다.",
+                    content = @Content(schema = @Schema(implementation = UserSignUpReq.class)))
+    })
+    @PostMapping("/regenerateToken")
+    public ResponseEntity<UserLoginRes> regenerateToken(@RequestBody TokenDto tokenDto, HttpServletResponse response) {
+        UserLoginRes userLoginRes = memberService.regenerateToken(tokenDto, response);
         return new ResponseEntity<>(userLoginRes, userLoginRes.getStatusCode());
     }
 
