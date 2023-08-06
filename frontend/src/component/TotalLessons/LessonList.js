@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import LessonItem from './LessonItem';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { setCategories } from '../../store/lesson/lessonSearch';
+import { setCategories, setDeadLine, setKeyword, setOrder, setType } from '../../store/lesson/lessonSearch';
 function LessonList() {
   const [lessons, setLessons] = useState([]);
   const type = useSelector((state) => state.lessonSearch.type);
@@ -30,7 +30,11 @@ function LessonList() {
     });
   }, [type, keyword, category, order, deadline])
   const handleLinkClick = () => {
-    dispatch(setCategories([])); // 빈 문자열로 카테고리 초기화
+    dispatch(setCategories([]))
+    dispatch(setType('all'))
+    dispatch(setKeyword(''))
+    dispatch(setOrder('title'))
+    dispatch(setDeadLine(true))
   }
   return (
     <div>
