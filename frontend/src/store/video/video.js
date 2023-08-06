@@ -53,6 +53,12 @@ export const video = createSlice({
       state.isAudioPublished = !state.isAudioPublished
       console.log("오디오", state.isAudioPublished)
     },
+    setAudioMute: (state) => {
+      // 강제로 음소거할때
+      console.log("강제 음소거 됐니")
+      state.publisher.publishAudio(false)
+      state.isAudioPublished = false
+    },
     leaveSession: (state) => {
       state.OV = null
       state.session = undefined
@@ -117,7 +123,7 @@ export const video = createSlice({
 export const {
     initOVSession, setPublisher, setMainStreamManager, setSessionId,
     setSubscribers, setVideoLessonId, setIsSessionOpened,
-    videoMute, audioMute, leaveSession,
+    videoMute, audioMute, setAudioMute, leaveSession,
     enteredSubscriber, deleteSubscriber
 } = video.actions
 export default video.reducer

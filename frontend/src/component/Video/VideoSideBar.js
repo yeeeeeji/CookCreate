@@ -215,6 +215,13 @@ function VideoSideBar() {
     }
   }, [handsUp])
 
+  /** 쿠키 전체 음소거 */
+  const handleCookieeAudio = () => {
+    publisher.stream.session.signal({
+      type: 'forceAudioMute'
+    })
+  }
+
   return (
     <div className='video-sidebar'>
       <button
@@ -260,6 +267,14 @@ function VideoSideBar() {
           onClick={() => pressHandsUp(publisher)}
         >
           {handsUp ? ('손 내리기') : ('손 들기')}
+        </button>
+      ) : null}
+
+      { role === 'COOKYER' ? (
+        <button
+          onClick={() => handleCookieeAudio(publisher)}
+        >
+          쿠키 전체 음소거
         </button>
       ) : null}
       
