@@ -1,4 +1,9 @@
 import React, { useEffect } from 'react';
+
+//채팅
+// import WebSocketConfig from './WebSocketConfig';
+import Chat from './pages/chatList';
+
 import NavBar from './component/Header/NavBar';
 import SignUp from './pages/signUp';
 import LogIn from './pages/logIn';
@@ -31,6 +36,7 @@ import ReviewT from './component/MyPageT/Review';
 import CertifyT from './component/MyPageT/Certify';
 function App() {
   const dispatch = useDispatch();
+  // WebSocketConfig.send('/localhost/8080', { message: 'Hello, Server!' });
 
   useEffect(() => {
     const storedNickname = localStorage.getItem('nickname');
@@ -57,6 +63,7 @@ function App() {
       <NavBar />
       {/* 링크 이곳에 추가 */}
       <Routes>
+        <Route path='/chat' element={<Chat />} />
         <Route path='/mypageS' element={<MyPageS />} />
         <Route path='/mypageT' element={<MyPageT />} />
         <Route path='/' element={<MainPage />} />

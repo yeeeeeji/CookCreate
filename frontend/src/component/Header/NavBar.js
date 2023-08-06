@@ -215,6 +215,9 @@ function NavBar() {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }} className='navbar'>
+      <Link to='/chat'>
+        채팅
+      </Link> |
       <Link to='/mypageS'>
         학생my
       </Link> |
