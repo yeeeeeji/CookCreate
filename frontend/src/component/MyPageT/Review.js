@@ -1,67 +1,125 @@
-import React from 'react';
-import SideBar from './SideBar';
+import React, { useState, useEffect } from "react";
+import SideBar from "./SideBar";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import Modal from 'react-modal';
+import ReviewDetailT from "./ReviewDetailT";
 
-function Review(props) {
+
+
+function Review() {
+  const accessToken = useSelector((state) => state.auth.access_token);
+  const cookyerId = useSelector((state) => state.auth.id);
+  const [reviews, setReviews] = useState([]);
+  const [grade, setGrade] = useState([]);
+  const reviewsMessage = reviews[0]?.lessonId === 0 ? "받은 리뷰가 없습니다." : "";
+  //모달관련
+  const [selectedReviewId, setSelectedReviewId] = useState(null); // 선택된 리뷰의 reviewId
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  const handleOpenModal = (reviewId) => {
+    setSelectedReviewId(reviewId); // 선택한 리뷰의 reviewID저장
+    setIsModalOpen(true);
+  };
+
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    Modal.setAppElement("#root"); 
+  }, []);
+
+
+
+
+  //평점 불러오기
+  useEffect(() => {
+    axios
+      .get(`api/v1/review/avg/${cookyerId}`, {
+        headers: {
+          Access_Token: accessToken,
+        },
+      })
+      .then((res) => {
+        setGrade(res.data);
+        console.log("평점", grade);
+      })
+      .catch((err) => {
+        console.log("평점에러", err);
+      });
+  }, [accessToken]);
+
+  //리뷰불러오기
+  useEffect(() => {
+    axios
+      .get(`api/v1/review/${cookyerId}`, {
+        headers: {
+          Access_Token: accessToken,
+        },
+      })
+      .then((res) => {
+        setReviews(res.data);
+      })
+      .catch((err) => {
+        console.log("리뷰에러", err);
+      });
+  }, [accessToken]);
+
   return (
     <div>
       <SideBar />
       <section>
         <div className="header">
-          <h2 className="header_title">받은 리뷰</h2>
-        <h2 className="section_title">
-          받은 리뷰
-        </h2>
-        <div>
-          <h3>평균 별점</h3>
-        </div>
+          <h2 className="header_title">받은 리뷰:{grade.count}개</h2>
+          <h2 className="section_title">평균별점:{grade.avg}</h2>
+          <div></div>
         </div>
         <ul className="caution_list">
           <div className="caution_list_item">
-            <div>
-            </div>
+            <div></div>
           </div>
         </ul>
-        <div className="panel">
-          <div className="ac-dropdown e-order-default my-likes__dropdown  hidden-default-icon">
-            <select name="order" className="">
-              <option value="published_date">최근 리뷰</option>
-              <option value="title">오래된 순</option>
-            </select>
-          </div>
-        </div>
         <section className="review">
-          <div className="review_box">
-            <div className="review_item">
-              <div className="review_cont">
-                <a href="dd" className="review_link">강좌이름</a>
-                <div className="review_star">
-                  ⭐️⭐️⭐️⭐️ 4.2
-                </div>
-                <div className="review_author">
-                  작성자/아이디
-                </div>
-                <div className="review_tutor">
-                  선생님닉네임/이름
-                </div>
-                <div className="review_cont">
-                  리뷰내용
+          {reviewsMessage ? (
+            <div className="noreview">{reviewsMessage}</div>
+          ) : (
+            reviews.map((review) => (
+              <div className="review_item" key={review.id}>
+                <div className="review_box">
                   <div className="review_cont">
-                    맛있었구요.....
+                    <a href="dd" className="review_link">
+                      {review.lessonTitle}
+                    </a>
+                    <div className="review_star">⭐️⭐️⭐️⭐️ {review.rating}</div>
+                    <div className="review_author">작성자/아이디: {review.userId}</div>
+                    <div className="review_tutor">
+                      선생님닉네임/아이디: {review.cookyerName}/{review.cookyerId}
+                    </div>
+                    <div className="review_cont">
+                      리뷰내용:{review.reviewContents}
+                      <div className="review_cont">{review.content}</div>
+                    </div>
+                    <div className="review_fun">
+                      <button type="button" className="review_btn" onClick={() =>handleOpenModal(review.reviewId)}>
+                        <i className="review_icon">🔍</i>
+                        <span className="review_btn_txt">자세히보기</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className="review_fun">
-                  <button type="button" className="review_btn">
-                    <i className="review_icon">🔍</i>
-                    <span className="review_btn_txt">자세히보기</span>
-                  </button>
-                </div>
               </div>
-            </div>
-          </div>
+            ))
+          )}
+          <Modal isOpen={isModalOpen} onRequestClose={handleCloseModal}>
+            <ReviewDetailT reviewId={selectedReviewId} onClose={handleCloseModal} />
+          </Modal>
         </section>
       </section>
     </div>
-  )
+  );
 }
 
 export default Review;

@@ -1,0 +1,8 @@
+.course_card_front a {
+  text-decoration: none;
+}
+
+.card-image img {
+  width: 250px; 
+  height: auto; 
+}
