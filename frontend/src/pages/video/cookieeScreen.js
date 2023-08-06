@@ -50,6 +50,20 @@ function CookieeScreen() {
   /** 선생님 화면 고정하기 위해 선생님 subscriber 찾기 */
   const [ cookyerStream, setCookyerStream ] = useState(undefined)
 
+  /** 자동 전체 화면 */
+  useEffect(() => {
+    const element = document.documentElement; // 전체 화면으로 변경하고자 하는 요소
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+  }, []);
+
   useEffect(() => {
     if (subscribers) {
       console.log(subscribers)

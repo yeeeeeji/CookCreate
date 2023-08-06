@@ -50,6 +50,20 @@ function CookyerScreen() {
   /** 진행 단계 관련 모달 */
   const isSessionOpened = useSelector((state) => state.video.isSessionOpened)
 
+  /** 자동 전체 화면 */
+  useEffect(() => {
+    const element = document.documentElement; // 전체 화면으로 변경하고자 하는 요소
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+  }, []);
+
   useEffect(() => {
     console.log(3, session)
     if (session) {
@@ -294,7 +308,10 @@ function CookyerScreen() {
                     //   </h1>
                     //   <button onClick={() => resetHandsUpCookiee({cookyer: publisher, cookiee: sub})}>손들기 해제</button>
                     // </div>
-                    <IoIosHand className={`cookyer-handsup-icon-active-${handsUpCookieeList.indexOf(sub.stream.connection.connectionId)}`}/>
+                    <IoIosHand
+                      className={`cookyer-handsup-icon-active-${handsUpCookieeList.indexOf(sub.stream.connection.connectionId)}`}
+                      onClick={() => resetHandsUpCookiee({cookyer: publisher, cookiee: sub})}
+                    />
                   ) : (
                     <IoIosHand className='cookyer-handsup-icon'/>
                   )}
