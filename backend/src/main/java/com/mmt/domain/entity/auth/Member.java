@@ -36,8 +36,8 @@ public class Member extends BaseTimeEntity {
     private String introduce;
     private String profileImg;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<LessonParticipant> lessonParticipantList = new ArrayList<>();
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+//    private List<LessonParticipant> lessonParticipantList = new ArrayList<>();
 
     public Member(UserSignUpReq userSignUpReq){
         this.userId = userSignUpReq.getUserId();
