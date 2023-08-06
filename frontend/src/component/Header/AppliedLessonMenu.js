@@ -87,17 +87,10 @@ function AppliedLessonMenu() {
 
   useEffect(() => {
     if (session) {
-      if (role === 'COOKYER') {
-        console.log("방 생김")
-        dispatch(setIsSessionOpened(true))
-      } else if (role === 'COOKIEE') {
-        if (sessionId) {
-          navigate(`/videoLesson/${role}`)
-        } else {
-          console.log("쿠키 세션아이디 없어서 입장 불가")
-        }
+      if (sessionId) {
+        navigate(`/videoLesson/${role}`)
       } else {
-        console.log("너 누구야")
+        console.log("쿠키 세션아이디 없어서 입장 불가")
       }
     }
   }, [session])

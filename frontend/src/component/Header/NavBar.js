@@ -53,7 +53,9 @@ function NavBar() {
   // 수업 목록에서 생성하기 버튼을 클릭하면 세션이 생성되고 등등
   const createRoom = ( lessonId ) => {
     // 0. 레슨아이디 스토어에 저장
-    dispatch(setVideoLessonId(lessonId))
+    if (videoLessonId === undefined) {
+      dispatch(setVideoLessonId(lessonId))
+    }
   }
   
   // 1. 레슨아이디가 잘 저장되면 선생님이 해당 수업 방 만들기 요청 보내기
