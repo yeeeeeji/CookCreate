@@ -180,6 +180,20 @@ p {
   object-fit: cover;
 }
 
+.cookiee-lesson-review-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  width: 600px;
+  height: 800px;
+  z-index: 2;
+}
+
 /* 비디오 헤더 */
 .video-header {
   color: white;

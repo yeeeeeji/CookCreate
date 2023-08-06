@@ -2,6 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  lessonId: undefined,
   lessonTitle: undefined,
   cookyerName: undefined,
   lessonStepList: undefined,
@@ -15,6 +16,7 @@ const videoLessonInfo = createSlice({
   initialState,
   reducers: {
     setLessonInfo: (state, {payload}) => {
+      state.lessonId = payload.lessonId
       state.lessonTitle = payload.lessonTitle
       state.cookyerName = payload.cookyerName
       state.lessonStepList = payload.lessonStepList
@@ -36,6 +38,7 @@ const videoLessonInfo = createSlice({
       state.curIdx = payload.curIdx
     },
     initVideoLessonInfo: (state) => {
+      state.lessonId = undefined
       state.lessonTitle = undefined
       state.cookyerName = undefined
       state.lessonStepList = undefined

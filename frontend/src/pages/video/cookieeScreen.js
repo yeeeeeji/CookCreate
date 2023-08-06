@@ -13,6 +13,7 @@ import { initCookieeVideo, resetCheck, resetHandsUp } from '../../store/video/co
 import { initVideoLessonInfo, setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
 import '../../style/video.css'
 import { initScreenShare } from '../../store/video/screenShare';
+import LessonReviewModal from '../../component/Video/Cookiee/LessonReviewModal';
 
 function CookieeScreen() {
   const dispatch = useDispatch()
@@ -82,9 +83,8 @@ function CookieeScreen() {
       /** 쿠커가 수업을 종료하면 스토어에 저장된 관련 정보 초기화 후 리뷰쓰러 */
       // session.off('sessionDisconnected', () => {
       session.on('sessionDisconnected', () => {
-        dispatch(leaveSession())  // 혹시나 리뷰에서 관련 정보 필요하면 리뷰 쓴 후에 초기화로 미루기
+        dispatch(leaveSession())
         dispatch(initCookieeVideo())
-        dispatch(initVideoLessonInfo())
         dispatch(initScreenShare())
         setIsCompleted(true)
         // 쿠커가 수업 종료와 함께 모든 쿠키들을 페이지 이동 시키려면 이곳에서 하면 됨
@@ -188,69 +188,74 @@ function CookieeScreen() {
     <div className='video-page'>
       <CookieeVideoSideBar/>
       <div>
-        <VideoHeader/>
+        {isCompleted ? (
+          <LessonReviewModal/>
+        ) : null}
         <div>
+          <VideoHeader/>
           <div>
-            <div className='cookiee-sharing'>
-            {/* <div className='cookiee-sharing' onClick={() => handleMainVideoStream(cookyerStream)}> */}
-              <div className='cookiee-sharing-content'>
-                {isCompleted ? (
-                  <p>수업이 종료되었습니다.</p>
-                ) : (
+            <div>
+              <div className='cookiee-sharing'>
+              {/* <div className='cookiee-sharing' onClick={() => handleMainVideoStream(cookyerStream)}> */}
+                <div className='cookiee-sharing-content'>
+                  {isCompleted ? (
+                    <p>수업이 종료되었습니다.</p>
+                  ) : (
+                    <UserVideoComponent
+                      videoStyle='cookiee-sharing-content'
+                      streamManager={cookyerStream}
+                    />
+                  )}
+                </div>
+              </div>
+              <CookieeLessonStep/>
+            </div>
+            <div>
+              {/* 쿠커 화면 */}
+              <div className='cookiee-content'>
+                {cookyerStream ? (
                   <UserVideoComponent
-                    videoStyle='cookiee-sharing-content'
+                    videoStyle='cookiee-content-video'
                     streamManager={cookyerStream}
                   />
+                ) : (
+                  <h1>쿠커 화면</h1>
                 )}
               </div>
-            </div>
-            <CookieeLessonStep/>
-          </div>
-          <div>
-            {/* 쿠커 화면 */}
-            <div className='cookiee-content'>
-              {cookyerStream ? (
-                <UserVideoComponent
-                  videoStyle='cookiee-content-video'
-                  streamManager={cookyerStream}
-                />
-              ) : (
-                <h1>쿠커 화면</h1>
-              )}
-            </div>
-            <Timer role='COOKIEE'/>
-            {/* 쿠키 본인 화면 */}
-            <div className='cookiee-content'>
-              {publisher !== undefined ? (
-                <UserVideoComponent
-                  videoStyle='cookiee-content-video'
-                  streamManager={publisher}
-                />
-              ) : (
-                <h1>쿠키 화면</h1>
-              )}
-              {check ? (
-                <h1>나 체크했다</h1>
-              ) : null}
-              {handsUp ? (
-                <h1>나 손들었다</h1>
-              ) : null}
-            </div>
+              <Timer role='COOKIEE'/>
+              {/* 쿠키 본인 화면 */}
+              <div className='cookiee-content'>
+                {publisher !== undefined ? (
+                  <UserVideoComponent
+                    videoStyle='cookiee-content-video'
+                    streamManager={publisher}
+                  />
+                ) : (
+                  <h1>쿠키 화면</h1>
+                )}
+                {check ? (
+                  <h1>나 체크했다</h1>
+                ) : null}
+                {handsUp ? (
+                  <h1>나 손들었다</h1>
+                ) : null}
+              </div>
 
-            {/* <div className='cookyer-cookiees'> */}
-              {/* {subscribers} */}
-              {/* {subscribers ? (
-                subscribers.map((sub, i) => (
-                  <div key={i}>
-                    <UserVideoComponent
-                      videoStyle='cookyer-cookiee'
-                      streamManager={sub}
-                    />
-                  </div>
-                ))
-              ) : null} */}
-            {/* </div> */}
+              {/* <div className='cookyer-cookiees'> */}
+                {/* {subscribers} */}
+                {/* {subscribers ? (
+                  subscribers.map((sub, i) => (
+                    <div key={i}>
+                      <UserVideoComponent
+                        videoStyle='cookyer-cookiee'
+                        streamManager={sub}
+                      />
+                    </div>
+                  ))
+                ) : null} */}
+              {/* </div> */}
 
+            </div>
           </div>
         </div>
       </div>
