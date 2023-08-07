@@ -31,5 +31,6 @@ public class PaymentHistory {
     private String cardInfo;
     private PayStatus payStatus;
     private LocalDateTime approvedAt;
+    private LocalDateTime canceledAt;
 
 }
