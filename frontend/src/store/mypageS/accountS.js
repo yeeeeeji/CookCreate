@@ -6,6 +6,8 @@ const initialState = {
   food:[],
   role: "",
   profileImg: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+  classData: null,
+  completedData: null,
 };
 
 // export const mypages = createSlice({
@@ -33,10 +35,15 @@ const accountS = createSlice({
   reducers: {
     updateUserS: (state, action) => {
       state.food = action.payload.food;
-
     },
+    setClassData: (state, action) => {
+      state.classData = action
+    },
+    setCompletedData: (state, action) => {
+      state.completedData = action
+    }
   },
 });
 
-export const { updateUserS } = accountS.actions;
+export const { updateUserS, setClassData, setCompletedData } = accountS.actions;
 export default accountS.reducer;

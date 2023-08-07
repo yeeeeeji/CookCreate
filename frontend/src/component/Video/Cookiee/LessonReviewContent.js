@@ -52,6 +52,8 @@ function LessonReviewContent() {
 
   const leaveClass = () => {
     dispatch(initVideoLessonInfo())
+    const element = document.documentElement
+    element.exitFullscreen()
     navigate('/')
   }
 
@@ -84,6 +86,8 @@ function LessonReviewContent() {
       console.log(res.data);
       dispatch(initVideoLessonInfo())
       navigate('/')
+      const element = document.documentElement
+      element.exitFullscreen()
       alert('리뷰가 등록되었습니다.');
     })
     .catch((err) => {

@@ -73,6 +73,8 @@ function CookyerVideoSideBar() {
 
   useEffect(() => {
     if (isExited) {
+      const element = document.documentElement
+      element.exitFullscreen()
       navigate('/')
     }
   }, [isExited])

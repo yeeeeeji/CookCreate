@@ -5,14 +5,17 @@ import axios from 'axios';
 import { initOVSession, setIsExited, setIsSessionOpened, setSessionId, setVideoLessonId } from '../../store/video/video';
 import { OpenVidu } from 'openvidu-browser';
 import { useNavigate } from 'react-router-dom';
+import { setClassData, setCompletedData } from '../../store/mypageS/accountS';
 
 function ClassList() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const accessToken = useSelector((state) => state.auth.access_token);
-  const [ classData, setClassData ] = useState([]);
-  const [ completedData, setCompletedData ] = useState([]);
+  const classData = useSelector((state) => state.accountS.classData)
+  const completedData = useSelector((state) => state.accountS.classData)
+  // const [ classData, setClassData ] = useState([]);
+  // const [ completedData, setCompletedData ] = useState([]);
 
   /** 쿠커 화상과외방 입장 */
   const session = useSelector((state) => state.video.session)
@@ -32,7 +35,8 @@ function ClassList() {
         },
       })
       .then((res) => {
-        setClassData(res.data);
+        // setClassData(res.data);
+        dispatch(setClassData(res.data))
         console.log("신청한 과외", res.data);
       })
       .catch((err) => {
@@ -47,7 +51,8 @@ function ClassList() {
         },
       })
       .then((res) => {
-        setCompletedData(res.data);
+        // setCompletedData(res.data);
+        dispatch(setCompletedData(res.data))
         console.log("완료한 과외", res.data);
       })
       .catch((err) => {
