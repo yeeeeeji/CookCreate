@@ -14,30 +14,32 @@ function ApplyLesson({ disable }) {
 
   const [showPopup, setShowPopup] = useState(false)
 
-
   const handleApply = () => {
     if (!disable) {
-      axios.get(
-        `/api/v1/pay/ready/${lessonId}`,
-        {
+      axios
+        .get(`/api/v1/pay/ready/${lessonId}`, {
           headers: {
-            Access_Token: access_token
+            Access_Token: access_token,
+          },
+        })
+        .then((res) => {
+          setPayUrl(res.data.next_redirect_pc_url);
+          const popupWindow = window.open(
+            res.data.next_redirect_pc_url,
+            '_blank',
+            'width=500, height=600'
+          );
+          if (popupWindow) {
+            popupWindow.postMessage(res.data, window.location.origin);
           }
-        }
-      )
-      .then((res) => {
-        setPayUrl(res.data.next_redirect_pc_url);
-        const popupWindow = window.open(payUrl, '_blank', 'width=500, height=600');
-        if (popupWindow) {
-          popupWindow.postMessage(res.data, window.location.origin);
-        }
-      })
-      .catch((err) => {
-        console.log(access_token);
-        setErrMsg(err.response.data.message);
-      });
+        })
+        .catch((err) => {
+          console.log(access_token);
+          setErrMsg(err.response.data.message);
+        });
     }
   };
+  
 
   return (
     <div style={{

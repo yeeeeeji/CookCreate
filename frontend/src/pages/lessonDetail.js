@@ -10,8 +10,9 @@ import LessonSchedule from '../component/LessonDetail/LessonSchedule';
 import EditLesson from '../component/LessonDetail/EditLesson';
 import {
   setCategoryId, setCategoryName, setDescription, setDifficulty,
-  setJjimCount, setLessonDate, setLessonStepList, setLessonTitle, setRemaining,
-  setMaterials, setMaximum, setPrice, setThumbnailUrl, setTimeTaken, setVideoUrl
+  setLessonDate, setLessonStepList, setLessonTitle, setRemaining,
+  setMaterials, setMaximum, setPrice, setThumbnailUrl, setTimeTaken, setVideoUrl,
+  setIntroduce,
 } from '../store/lesson/lessonInfo';
 
 function LessonDetail() {
@@ -55,7 +56,6 @@ function LessonDetail() {
         dispatch(setPrice(res.data.price));
         dispatch(setThumbnailUrl(res.data.thumbnailUrl));
         dispatch(setRemaining(res.data.remaining));
-        dispatch(setJjimCount(res.data.jjimCount));
         dispatch(setVideoUrl(res.data.videoUrl));
         dispatch(setLessonDate(res.data.lessonDate));
         dispatch(setTimeTaken(res.data.timeTaken));

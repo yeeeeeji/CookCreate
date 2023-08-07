@@ -18,6 +18,7 @@ const initialState = {
   price : 0,
   remaining : 0,
   videoUrl : '',
+  introduce : ''
 }
 
 const lessonInfo = createSlice({
@@ -75,6 +76,9 @@ const lessonInfo = createSlice({
     setVideoUrl : (state, action) => {
       state.videoUrl = action.payload
     },
+    setIntroduce : (state, action) => {
+      state.introduce = action.payload
+    }
   }
 })
 
@@ -83,6 +87,6 @@ export const {
   setCookyerName, setDifficulty, setDescription, setLessonTitle,
   setJjimCount, setLessonDate, setLessonId,
   setMaterials, setMaximum, setPrice, setRemaining, setThumbnailUrl,
-  setLessonStepList, setTimeTaken, setVideoUrl
+  setLessonStepList, setTimeTaken, setVideoUrl, setIntroduce
 } = lessonInfo.actions
 export default lessonInfo.reducer
