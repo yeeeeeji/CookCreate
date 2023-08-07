@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-function ApplyLesson({ price, jjimCount, lessonId, videoUrl, disable }) {
+function ApplyLesson({ disable }) {
   console.log(disable)
+  const price = useSelector((state) => state.lessonInfo.price)
+  const lessonId = useSelector((state) => state.lessonInfo.lessonId)
+  const videoUrl = useSelector((state) => state.lessonInfo.videoUrl)
   const access_token = localStorage.getItem('access_token')
   const [errMsg, setErrMsg] = useState('')
   const [payUrl, setPayUrl] = useState('')
-  const [pg_token, setPg_Token] = useState('')
 
   const [showPopup, setShowPopup] = useState(false)
 
@@ -27,7 +29,6 @@ function ApplyLesson({ price, jjimCount, lessonId, videoUrl, disable }) {
         setPayUrl(res.data.next_redirect_pc_url);
         const popupWindow = window.open(payUrl, '_blank', 'width=500, height=600');
         if (popupWindow) {
-          // 새 창이 열렸을 경우에만 데이터 전달
           popupWindow.postMessage(res.data, window.location.origin);
         }
       })
@@ -64,12 +65,9 @@ function ApplyLesson({ price, jjimCount, lessonId, videoUrl, disable }) {
     {errMsg}
 
     <div style={{ display: 'flex' }}>
-      <Link to={videoUrl}>
+      <a href={videoUrl}>
         수업 맛보기 |
-      </Link>
-      <div>
-        🧡 {jjimCount}
-      </div>
+      </a>
     </div>
     <a href={payUrl}>
         결제

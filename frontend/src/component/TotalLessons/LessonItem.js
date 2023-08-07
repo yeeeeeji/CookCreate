@@ -1,26 +1,35 @@
 import React from 'react';
-import {setLessonId} from '../../store/lesson/lessonInfo'
+import { setLessonId } from '../../store/lesson/lessonInfo';
 import { useDispatch } from 'react-redux';
-function LessonItem({id, title, date, thumbnailUrl, reviewAvg, cookyerName, categoryId}) {
-  
-  const dispatch = useDispatch()
+
+function LessonItem({ id, title, date, thumbnailUrl, reviewAvg, cookyerName, categoryId }) {
+
+  const dispatch = useDispatch();
   const handleItemClick = () => {
-    dispatch(setLessonId(id))
+    dispatch(setLessonId(id));
   }
-  // 날짜를 08-03(목)과 같은 형태로 변환
-  const formattedDate = new Date(date);  
+
+  const formattedDate = new Date(date);
   const options = { month: '2-digit', day: '2-digit', weekday: 'short' };
   const formattedDateString = formattedDate.toLocaleDateString('ko-KR', options);
-  
-  const convertCategoryId = ['한식', '양식', '중식', '일식', '아시안', '건강식', '디저트']
-  const category = convertCategoryId[categoryId - 1]
+  const convertCategoryId = ['한식', '양식', '중식', '일식', '아시안', '건강식', '디저트'];
+  const category = convertCategoryId[categoryId - 1];
+
+  const currentTime = new Date();
+  const futureTime = new Date(currentTime.getTime() + 12 * 60 * 60 * 1000); // 현재 시간 + 12시간
+
+  let message = '';
+  if (formattedDate < futureTime) {
+    message = '앞으로 12시간 이전에 열릴 과외이므로, 신청 불가능합니다.'
+  }
+
   return (
     <div onClick={handleItemClick}>
-      <img src={thumbnailUrl} alt='image'/>
+      <img src={thumbnailUrl} alt='image' />
       <h3>{title}</h3>
       <div style={{ display: 'flex' }}>
         <div>
-          ⭐{reviewAvg} | 
+          ⭐{reviewAvg} |
         </div>
         <div style={{ display: 'flex' }}>
           {formattedDateString} |
@@ -29,6 +38,9 @@ function LessonItem({id, title, date, thumbnailUrl, reviewAvg, cookyerName, cate
       </div>
       <div>
         {category}
+      </div>
+      <div style={{ color: 'red' }}>
+        {message}
       </div>
     </div>
   );

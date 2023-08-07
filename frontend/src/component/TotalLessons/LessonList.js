@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import LessonItem from './LessonItem';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { setCategories, setDeadLine, setKeyword, setOrder, setType } from '../../store/lesson/lessonSearch';
+
 function LessonList() {
   const [lessons, setLessons] = useState([]);
   const type = useSelector((state) => state.lessonSearch.type);
@@ -11,7 +11,7 @@ function LessonList() {
   const order = useSelector((state) => state.lessonSearch.order);
   const category = useSelector((state) => state.lessonSearch.category);
   const keyword = useSelector((state) => state.lessonSearch.keyword);
-  const dispatch = useDispatch()
+
   useEffect(() => {
     axios.get(`/api/v1/lesson`, {
       params: {
@@ -29,13 +29,7 @@ function LessonList() {
       console.error(err)
     });
   }, [type, keyword, category, order, deadline])
-  const handleLinkClick = () => {
-    dispatch(setCategories([]))
-    dispatch(setType('all'))
-    dispatch(setKeyword(''))
-    dispatch(setOrder('title'))
-    dispatch(setDeadLine(true))
-  }
+
   return (
     <div>
       {lessons.map((lesson) => (
@@ -49,7 +43,6 @@ function LessonList() {
           <Link
             to={`/lesson/${lesson.lessonId}`}
             style={{ textDecoration: 'none', color: 'inherit' }}
-            onClick={handleLinkClick}
           >
             <LessonItem
               id={lesson.lessonId}

@@ -30,7 +30,7 @@ const lessonSearch = createSlice({
     },
     setLessonId : (state, action) => {
       state.lessonId = action.payload
-    }
+    },
   }
 })
 
