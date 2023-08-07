@@ -1,17 +1,13 @@
 package com.mmt.controller;
 
-import com.google.gson.JsonObject;
 import com.mmt.domain.entity.auth.UserDetailsImpl;
 import com.mmt.domain.entity.auth.Role;
-import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.request.session.SessionPostReq;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.session.SessionConnectRes;
 import com.mmt.service.LessonService;
-import com.mmt.service.MemberService;
 import io.openvidu.java.client.*;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,7 +16,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.checkerframework.checker.nullness.Opt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 
-
-import java.util.Optional;
-
-
 @Tag(name = "과외 세션 API", description = "과외 세션 관련 API입니다.")
 @Slf4j
 @RestController
@@ -40,20 +31,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SessionController {
 
-    @Value("${OPENVIDU_URL}")
-    private String OPENVIDU_URL;
+//    // openvidu 프론트에서 처리하는 걸로 수정
+//    @Value("${OPENVIDU_URL}")
+//    private String OPENVIDU_URL;
 
-    @Value("${OPENVIDU_SECRET}")
-    private String OPENVIDU_SECRET;
+//    @Value("${OPENVIDU_SECRET}")
+//    private String OPENVIDU_SECRET;
 
     private final LessonService lessonService;
 
-    private OpenVidu openvidu;
+//    private OpenVidu openvidu;
 
-    @PostConstruct
-    public void init() {
-        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-    }
+//    @PostConstruct
+//    public void init() {
+//        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+//    }
 
     @Operation(summary = "과외 세션 생성", description = "선생님이 과외 세션을 생성한다.")
     @ApiResponses(value = {
