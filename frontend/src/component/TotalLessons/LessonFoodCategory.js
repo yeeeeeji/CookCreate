@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setCategories } from '../../store/lesson/lessonSearch';
+import '../../style/lesson/lessonFoodCategoryCss.css';
 
 const LessonFoodCategory = () => {
   const dispatch = useDispatch();
@@ -28,17 +29,12 @@ const LessonFoodCategory = () => {
   };
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className='categoryContainer'>
       {foodCategories.map((category, index) => (
         <div
+        className={`categoryItem ${selectedCategories.includes(index + 1) ? 'selected' : ''}`}
           key={index}
           onClick={() => handleCategoryClick(index)}
-          style={{
-            backgroundColor: selectedCategories.includes(index + 1) ? 'lightgray' : 'white',
-            padding: '5px',
-            marginRight: '5px',
-            cursor: 'pointer',
-          }}
         >
           {category}
         </div>

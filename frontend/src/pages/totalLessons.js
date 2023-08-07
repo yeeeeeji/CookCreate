@@ -3,14 +3,16 @@ import SearchBar from '../component/TotalLessons/SearchBar';
 import LessonListFliter from '../component/TotalLessons/LessonListFliter';
 import LessonList from '../component/TotalLessons/LessonList';
 import LessonFoodCategory from '../component/TotalLessons/LessonFoodCategory';
+import '../style/lesson/totalLessonsCss.css';
+
 function totalLessons() {
   return (
     <div>
       <div>
-        <h3>
+        <h3 className='title'>
           수업 전체
         </h3>
-        <div>
+        <div className='desc'>
           실력 있는 선생님들과 직접 나만의 요리를 완성해보세요!
         </div>
       </div>

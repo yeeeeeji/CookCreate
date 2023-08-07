@@ -1,0 +1,47 @@
+.sortSelect{
+    width: 212px;
+    height: 51px;
+    flex-shrink: 0;
+    border-radius: 7px;
+    border: 0.7px solid #D9D9D9;
+    background: #FFF;
+
+    color: #4B4B4B;
+    padding-left: 20px;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.deadlineContainer {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.deadlineCheckbox {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 8px;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+
+    color: #4B4B4B;
+    text-align: center;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+.deadlineCheckbox:checked {
+    background-color: #FF7A42; /* 선택됐을 때의 배경색 */
+    border-color: #FF7A42; /* 선택됐을 때의 테두리색 */
+}
+
+.deadlineLabel {
+    cursor: pointer;
+}
