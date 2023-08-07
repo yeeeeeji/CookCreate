@@ -44,6 +44,9 @@ public class LessonDetailRes {
     private List<Integer> food;
     private String introduce;
     private String profileImg;
+    private boolean isOver; // 마감됐는지
+    private boolean isEnd; // 과외가 종료됐는지
+    private String sessionId;
 
     public LessonDetailRes(Lesson lesson){
         this.lessonId = lesson.getLessonId();
@@ -64,5 +67,8 @@ public class LessonDetailRes {
         this.createdDate = lesson.getCreatedDate().toString();
         this.modifiedDate = lesson.getModifiedDate().toString();
 //        this.lessonParticipantList = lesson.getLessonParticipantList();
+        this.isOver = lesson.getIsOver();
+        this.isEnd = lesson.getIsEnd();
+        this.sessionId = lesson.getSessionId();
     }
 }
