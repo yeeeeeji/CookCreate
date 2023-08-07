@@ -30,6 +30,9 @@ public class LessonSearchRes extends ResponseDto {
     private String createdDate;
     private String modifiedDate;
     private Long toDeadline;
+    private boolean isOver; // 마감됐는지
+    private boolean isEnd; // 과외가 종료됐는지
+    private String sessionId;
 
     public LessonSearchRes(Lesson lesson){
         this.lessonId = lesson.getLessonId();
@@ -47,5 +50,8 @@ public class LessonSearchRes extends ResponseDto {
         this.jjimCount = lesson.getJjimCount();
         this.createdDate = lesson.getCreatedDate().toString();
         this.modifiedDate = lesson.getModifiedDate().toString();
+        this.isOver = lesson.getIsOver();
+        this.isEnd = lesson.getIsEnd();
+        this.sessionId = lesson.getSessionId();
     }
 }
