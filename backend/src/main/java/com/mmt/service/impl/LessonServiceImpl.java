@@ -186,6 +186,12 @@ public class LessonServiceImpl implements LessonService {
     @Transactional
     @Override
     public ResponseDto deleteLesson(int lessonId) {
+        List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(lessonId);
+        if(lessonParticipantList.size() > 1){
+            // 선생님 외에 참여한 사람이 있으면
+            return new ResponseDto(HttpStatus.CONFLICT, "과외를 신청한 사람이 있어서 삭제할 수 없습니다.");
+        }
+
         try {
             lessonRepository.deleteByLessonId(lessonId);
         }catch (EmptyResultDataAccessException e){
