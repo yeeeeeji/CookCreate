@@ -37,10 +37,12 @@ const accountS = createSlice({
       state.food = action.payload.food;
     },
     setClassData: (state, action) => {
-      state.classData = action
+      state.classData = action.payload
+      console.log(action.payload, "수업데이터 저장")
     },
     setCompletedData: (state, action) => {
-      state.completedData = action
+      state.completedData = action.payload
+      console.log(action.payload, "완료된 수업 저장")
     }
   },
 });

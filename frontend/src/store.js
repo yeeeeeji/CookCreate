@@ -1,6 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import storage from "redux-persist/lib/storage"
-import { persistReducer, persistStore } from "redux-persist";
+import { persistReducer, createTransform } from "redux-persist";
 
 import authReducer from './store/auth/auth'
 import apiReducer from './store/apiUrl/apiUrl'
@@ -29,12 +29,23 @@ const reducers = combineReducers({
   videoLessonInfo: videoLessonInfoReducer
 })
 
+const setTransform = createTransform(
+  (inboundState, key) => {
+    return {...inboundState, mySet: [...inboundState.mySet]}
+  },
+  (outboundState, key) => {
+    return {...outboundState, mySet: new Set(outboundState.mySet)}
+  },
+  { whitelist: ['video'] }
+)
+
 const persistConfig = {
   key: 'root',
   storage,
+  transforms: [setTransform],
   whitelist: [
     'auth', 'api', 'lesson', 'lessonSearch', 'lessonInfo',
-    'accountS', 'video', 'screenShare', 'cookyerVideo', 'cookieeVideo', 'videoLessonInfo'
+    'accountS', 'screenShare', 'cookyerVideo', 'cookieeVideo', 'videoLessonInfo'
   ],
   blacklist: []
 }

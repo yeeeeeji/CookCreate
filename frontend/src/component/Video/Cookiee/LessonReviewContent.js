@@ -52,8 +52,12 @@ function LessonReviewContent() {
 
   const leaveClass = () => {
     dispatch(initVideoLessonInfo())
-    const element = document.documentElement
-    element.exitFullscreen()
+    if (document.fullscreenElement) {
+      document
+        .exitFullscreen()
+        .then(() => console.log("Document Exited from Full screen mode"))
+        .catch((err) => console.error(err));
+    }
     navigate('/')
   }
 
@@ -86,8 +90,12 @@ function LessonReviewContent() {
       console.log(res.data);
       dispatch(initVideoLessonInfo())
       navigate('/')
-      const element = document.documentElement
-      element.exitFullscreen()
+      if (document.fullscreenElement) {
+        document
+          .exitFullscreen()
+          .then(() => console.log("Document Exited from Full screen mode"))
+          .catch((err) => console.error(err));
+      }
       alert('리뷰가 등록되었습니다.');
     })
     .catch((err) => {

@@ -20,8 +20,12 @@ function CookieeVideoSideBar() {
   const handsUp = useSelector((state) => state.cookieeVideo.handsUp)
 
   const handleLeaveSession = () => {
-    const element = document.documentElement
-    element.exitFullscreen()
+    if (document.fullscreenElement) {
+      document
+        .exitFullscreen()
+        .then(() => console.log("Document Exited from Full screen mode"))
+        .catch((err) => console.error(err));
+    }
     navigate('/')
   }
 

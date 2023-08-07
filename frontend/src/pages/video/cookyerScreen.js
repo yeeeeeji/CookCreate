@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import VideoSideBar from '../../component/Video/Cookyer/CookyerVideoSideBar';
 import VideoHeader from '../../component/Video/VideoHeader';
 import UserVideoComponent from '../../component/Video/UserVideoComponent';
 import Timer from '../../component/Video/Timer';
 import CookyerLessonStep from '../../component/Video/Cookyer/CookyerLessonStep';
 import LessonStepModal from '../../component/Video/Cookyer/LessonStepModal';
+import CookyerVideoSideBar from '../../component/Video/Cookyer/CookyerVideoSideBar';
 
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,10 +13,10 @@ import { joinSession } from '../../store/video/video-thunk';
 import { setCheckCookiee, setCheckCookieeList, setHandsDownCookiee, setHandsUpCookiee, setHandsUpCookieeList, setUncheckCookiee } from '../../store/video/cookyerVideo';
 import { setLessonInfo } from '../../store/video/videoLessonInfo';
 import '../../style/video.css'
-import CookyerVideoSideBar from '../../component/Video/Cookyer/CookyerVideoSideBar';
 
 import { AiFillCheckCircle } from 'react-icons/ai'
 import { IoIosHand } from 'react-icons/io'
+import { BsMicFill, BsMicMuteFill } from "react-icons/bs";
 
 function CookyerScreen() {
   const dispatch = useDispatch()
@@ -253,6 +253,16 @@ function CookyerScreen() {
     e.stopPropagation()
   }
 
+  const handleACookieeAudio = (data) => {
+    const cookyer = data.cookyer
+    const cookiee = data.cookiee
+    
+    cookyer.stream.session.signal({
+      to: [cookiee.stream.connection],
+      type: 'forceAudioAdjust'
+    })
+  }
+
   return (
     <div className='video-page'>
       <div className='video-page-main'>
@@ -296,18 +306,17 @@ function CookyerScreen() {
                     videoStyle='cookyer-cookiee'
                     streamManager={sub}
                   />
+                  {sub.stream.audioActive ? (
+                    <BsMicFill className='cookyer-cookiee-audio-icon-active' onClick={() => handleACookieeAudio({cookyer: publisher, cookiee: sub})}/>
+                  ) : (
+                    <BsMicMuteFill className='cookyer-cookiee-audio-icon' onClick={() => handleACookieeAudio({cookyer: publisher, cookiee: sub})}/>
+                  )}
                   {checkCookieeList && checkCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
                     <AiFillCheckCircle className='cookyer-check-icon-active'/>
                   ) : (
                     <AiFillCheckCircle className='cookyer-check-icon'/>
                   )}
                   {handsUpCookieeList && handsUpCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
-                    // <div>
-                    //   <h1>
-                    //     {handsUpCookieeList.indexOf(sub.stream.connection.connectionId) +  1}번째로 손 든 사람
-                    //   </h1>
-                    //   <button onClick={() => resetHandsUpCookiee({cookyer: publisher, cookiee: sub})}>손들기 해제</button>
-                    // </div>
                     <IoIosHand
                       className={`cookyer-handsup-icon-active-${handsUpCookieeList.indexOf(sub.stream.connection.connectionId)}`}
                       onClick={() => resetHandsUpCookiee({cookyer: publisher, cookiee: sub})}

@@ -7,7 +7,7 @@ import CookieeVideoSideBar from '../../component/Video/Cookiee/CookieeVideoSideB
 
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteSubscriber, enteredSubscriber, leaveSession, setAudioMute } from '../../store/video/video';
+import { audioMute, deleteSubscriber, enteredSubscriber, leaveSession, setAudioMute } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
 import { initCookieeVideo, resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
 import { setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
@@ -134,6 +134,12 @@ function CookieeScreen() {
       session.on('signal:forceAudioMute', () => {
         console.log("음소거 시그널")
         dispatch(setAudioMute())
+      })
+
+      /** 쿠커로부터 오디오 조정 시그널 받고 조정 */
+      session.on('signal:forceAudioAdjust', () => {
+        console.log("오디오 조정 시그널")
+        dispatch(audioMute())
       })
 
       /** 화면공유 받기 */
