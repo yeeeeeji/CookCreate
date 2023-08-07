@@ -6,7 +6,6 @@ function SearchResModal({lessonTitle, lessonId}) {
   return (
     <div>
       {lessonTitle}
-      {lessonId}
     </div>
   );
 }

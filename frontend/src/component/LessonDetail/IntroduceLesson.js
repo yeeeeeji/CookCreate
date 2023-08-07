@@ -1,6 +1,10 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
-function IntroduceLesson({difficulty, description, materials}) {
+function IntroduceLesson() {
+  const difficulty = useSelector((state) => state.lessonInfo.difficulty)
+  const description = useSelector((state) => state.lessonInfo.description)
+  const materials = useSelector((state) => state.lessonInfo.materials)
   return (
     <div>
       <h2>강의 소개</h2>

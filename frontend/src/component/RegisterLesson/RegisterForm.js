@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 function RegisterForm() {
   const navigate = useNavigate()
+  const [thumbnailUrl, setThumbnailUrl] = useState('')
 
   const [lessonThumbnailUrl, setLessonThumbnailUrl] = useState('')
   const [ThumbnailFile, setThumbnailFile] = useState(null)
@@ -39,6 +40,7 @@ function RegisterForm() {
     const file = e.target.files[0]
     setThumbnailFile(file)
     setThumbnailValid(!!file)
+    setThumbnailUrl(URL.createObjectURL(file))
   };
 
   const register = (e) => {
@@ -93,7 +95,16 @@ function RegisterForm() {
             name = "filename"
             value={lessonThumbnailUrl}
             onChange={handleThumbnailUrl}
+            accept="image/*"
           />
+          {thumbnailUrl && thumbnailValid && (
+            <img
+            src={thumbnailUrl}
+            alt="Selected Thumbnail"
+            style={{ maxWidth: '100px', marginTop: '10px' }}
+            />
+            )}
+
         </div>
       </div>
     <button disabled={!isAllValid} onClick={register} >과외 등록하기</button>

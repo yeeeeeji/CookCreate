@@ -3,6 +3,7 @@ import authReducer from './store/auth/auth'
 import apiReducer from './store/apiUrl/apiUrl'
 import lessonReducer from './store/lesson/lesson'
 import lessonInfoReducer from './store/lesson/lessonInfo'
+import lessonEditReducer from './store/lesson/lessonEdit'
 import accountSReducer from "./store/mypageS/accountS";
 import lessonSearchReducer from './store/lesson/lessonSearch'
 import videoReducer from './store/video/video'
@@ -17,6 +18,7 @@ export const store = configureStore({
     lesson: lessonReducer,
     lessonSearch : lessonSearchReducer,
     lessonInfo : lessonInfoReducer,
+    lessonEdit : lessonEditReducer,
     accountS: accountSReducer,
     video: videoReducer,
     screenShare: screenShareReducer,

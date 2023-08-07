@@ -32,9 +32,10 @@ import CertifyT from './component/MyPageT/Certify';
 import PaymentFailed from './pages/paymentFailed';
 import PaymentSuccess from './pages/paymentSuccess';
 import PaymentCancelld from './pages/paymentCancelld';
+import EditLesson from './pages/editLesson';
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
 
   useEffect(() => {
     const storedNickname = localStorage.getItem('nickname');
@@ -53,7 +54,7 @@ function App() {
     } else {
       dispatch(logout());
     }
-  }, [dispatch]);
+  }, []);
 
 
   return (
@@ -67,6 +68,7 @@ function App() {
         <Route path='/lesson' element={<TotalLessons />} />
         <Route path='/signupbefore' element={<SignUpBefore/>}/>
         <Route path='/registerlesson' element={<RegisterLesson/>}></Route>
+        <Route path='/lesson/edit/:lessonId' element={<EditLesson/>}></Route>
         <Route path='/videoLesson/COOKYER' element={<CookyerScreen/>}></Route>
         <Route path='/videoLesson/COOKIEE' element={<CookieeScreen/>}></Route>
         <Route path='/lesson/:id' element={<LessonItem/>}></Route>
@@ -74,7 +76,6 @@ function App() {
         <Route path='/payment/fail' element={<PaymentFailed/>}></Route>
         <Route path='/payment/success' element={<PaymentSuccess/>}></Route>
         <Route path='/payment/cancel' element={<PaymentCancelld/>}></Route>
-
 
         <Route path='/mypageS' element={<MyPageS />} />
         <Route path='/mypageT' element={<MyPageT />} />
