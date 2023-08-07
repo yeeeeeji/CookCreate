@@ -5,10 +5,9 @@ import { login, logout } from './store/auth/auth'
 import CookyerScreen from './pages/video/cookyerScreen';
 import CookieeScreen from './pages/video/cookieeScreen';
 import AppWithLayout from './component/AppWithLayout';
-import Login from './component/LogIn/LogIn';
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
 
   useEffect(() => {
     const storedNickname = localStorage.getItem('nickname');
@@ -27,7 +26,7 @@ function App() {
     } else {
       dispatch(logout());
     }
-  }, [dispatch]);
+  }, []);
 
 
   return (

@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Modal from 'react-modal';
 import SearchResModal from './SearchResModal';
 import { setLessonId } from '../../store/lesson/lessonInfo';
 import { useNavigate } from 'react-router-dom';
+import { setCategories, setDeadLine, setOrder, setType } from '../../store/lesson/lessonSearch';
 
 function SearchBar() {
   const dispatch = useDispatch();
@@ -13,13 +13,12 @@ function SearchBar() {
   const [keyword, setKeyword] = useState('');
   const [isexist, setIsExist] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLessonId, setSelectedLessonId] = useState('');
   const [result, setResult] = useState([]);
 
-  const type = useSelector((state) => state.lessonSearch.type);
-  const deadline = useSelector((state) => state.lessonSearch.deadline);
-  const order = useSelector((state) => state.lessonSearch.order);
-  const category = useSelector((state) => state.lessonSearch.category);
+  const deadline = true
+  const type = 'title'
+  const order = 'title'
+  const category = []
 
   useEffect(() => {
     axios
@@ -34,8 +33,8 @@ function SearchBar() {
       })
       .then((res) => {
         setResult(res.data);
-
-        if (res.data.length > 0 && keyword !== '') {
+        console.log(result)
+        if (result.length > 0 && keyword !== '') {
           setIsExist(true);
           setIsOpen(true);
         } else {
@@ -55,9 +54,14 @@ function SearchBar() {
 
   const searchResClick = (lessonId) => {
     dispatch(setLessonId(lessonId));
-    setIsOpen(false);
-    setSelectedLessonId(lessonId);
-    navigate(`lesson/${lessonId}`);
+    setIsOpen(false)
+    navigate(`lesson/${lessonId}`)
+
+    dispatch(setCategories([]))
+    dispatch(setType('all'))
+    dispatch(setKeyword(''))
+    dispatch(setOrder('title'))
+    dispatch(setDeadLine(true))
   };
 
   return (

@@ -4,11 +4,11 @@ import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.pay.PayStatus;
 import com.mmt.domain.entity.pay.PaymentHistory;
-import com.mmt.domain.request.pay.PaymentReadyReq;
 import com.mmt.domain.response.my.MyPaymentRes;
 import com.mmt.domain.response.pay.PaymentApproveRes;
 import com.mmt.domain.response.pay.PaymentReadyRes;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.pay.PaymentRefundRes;
 import com.mmt.repository.MemberRepository;
 import com.mmt.repository.PaymentRepository;
 import com.mmt.repository.lesson.LessonRepository;
@@ -24,6 +24,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -43,9 +44,14 @@ public class PaymentServiceImpl {
     }
 
     @Transactional
-    public PaymentReadyRes readyPay(PaymentReadyReq paymentReadyReq) {
-        Member member = memberRepository.findByUserId(paymentReadyReq.getUserId()).get();
-        Lesson lesson = lessonRepository.findById(paymentReadyReq.getLessonId()).get();
+    public PaymentReadyRes readyPay(String userId, int lessonId) {
+       Optional<PaymentHistory> payment = paymentRepository.findFirstByLesson_LessonIdAndMember_UserIdOrderByApprovedAtDesc(lessonId, userId);
+        if(payment.isPresent() && payment.get().getPayStatus() == PayStatus.COMPLETED) {
+            return new PaymentReadyRes(HttpStatus.CONFLICT, "이미 신청한 수업입니다.");
+        }
+
+        Member member = memberRepository.findByUserId(userId).get();
+        Lesson lesson = lessonRepository.findById(lessonId).get();
 
         PaymentHistory paymentHistory = new PaymentHistory();
 
@@ -58,7 +64,7 @@ public class PaymentServiceImpl {
 
         parameter.add("cid", "TC0ONETIME");
         parameter.add("partner_order_id", String.valueOf(paymentHistory.getPaymentId()));
-        parameter.add("partner_user_id", paymentReadyReq.getUserId());
+        parameter.add("partner_user_id", userId);
         parameter.add("item_name",paymentHistory.getLesson().getLessonTitle());
         parameter.add("quantity", "1");
         parameter.add("total_amount", String.valueOf(paymentHistory.getTotalAmount()));
@@ -80,11 +86,13 @@ public class PaymentServiceImpl {
         paymentHistory.setPayStatus(PayStatus.READY);
         paymentRepository.save(paymentHistory);
 
-        paymentReadyRes.setTid(null);
+        paymentReadyRes.setStatusCode(HttpStatus.OK);
+        paymentReadyRes.setMessage("success");
 
         return paymentReadyRes;
     }
 
+    @Transactional
     public MyPaymentRes approvePay(String pg_Token, int paymentId) {
         PaymentHistory paymentHistory = paymentRepository.findByPaymentId(paymentId).get();
         log.debug("userId: " + paymentHistory.getMember().getUserId());
@@ -121,6 +129,7 @@ public class PaymentServiceImpl {
         return myPaymentRes;
     }
 
+    @Transactional
     public ResponseDto failPay(int paymentId) {
         PaymentHistory paymentHistory = paymentRepository.findByPaymentId(paymentId).get();
         paymentHistory.setPayStatus(PayStatus.FAIL);
@@ -129,12 +138,57 @@ public class PaymentServiceImpl {
         return new ResponseDto(HttpStatus.BAD_REQUEST, "결제에 실패했습니다.");
     }
 
+    @Transactional
     public ResponseDto cancelPay(int paymentId) {
         PaymentHistory paymentHistory = paymentRepository.findByPaymentId(paymentId).get();
         paymentHistory.setPayStatus(PayStatus.CANCEL);
         paymentRepository.save(paymentHistory);
 
         return new ResponseDto(HttpStatus.BAD_REQUEST, "결제 진행 중 취소되었습니다.");
+    }
+
+    @Transactional
+    public MyPaymentRes refundPay(String userId, int lessonId) {
+        Optional<PaymentHistory> payment = paymentRepository.findFirstByLesson_LessonIdAndMember_UserIdOrderByApprovedAtDesc(lessonId, userId);
+        if(!payment.isPresent()) {
+            return new MyPaymentRes(HttpStatus.BAD_REQUEST, "존재하지 않는 결제 항목입니다.");
+        } else if(payment.get().getPayStatus() != PayStatus.COMPLETED) {
+            return new MyPaymentRes(HttpStatus.BAD_REQUEST, "결제 완료 상태가 아닌 항목입니다.");
+        }
+
+        PaymentHistory paymentHistory = payment.get();
+
+        log.debug("TID: " + paymentHistory.getTId());
+
+        MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
+
+        parameter.add("cid", "TC0ONETIME");
+        parameter.add("tid", paymentHistory.getTId());
+        parameter.add("cancel_amount", String.valueOf(paymentHistory.getTotalAmount()));
+        parameter.add("cancel_tax_free_amount", "0");
+
+        PaymentRefundRes paymentRefundRes = webClient.post()
+                .uri("/cancel")
+                .body(BodyInserters.fromFormData(parameter))
+                .retrieve()
+                .bodyToMono(PaymentRefundRes.class)
+                .block();
+
+        paymentHistory.setCanceledAt(paymentRefundRes.getCanceled_at());
+        paymentHistory.setPayStatus(PayStatus.REFUND);
+        paymentRepository.save(paymentHistory);
+
+        if(paymentHistory.getCanceledAt() == null) {
+            return new MyPaymentRes(HttpStatus.BAD_REQUEST, "결제 취소에 실패했습니다.");
+        }
+
+        MyPaymentRes myPaymentRes = new MyPaymentRes(paymentHistory);
+        myPaymentRes.setCanceledAt(paymentHistory.getCanceledAt().toString());
+        myPaymentRes.setStatusCode(HttpStatus.OK);
+        myPaymentRes.setMessage("결제 취소가 완료되었습니다.");
+
+        return myPaymentRes;
+
     }
 
     public ResponseDto getPaymentHistory(int paymentId, String userId) {

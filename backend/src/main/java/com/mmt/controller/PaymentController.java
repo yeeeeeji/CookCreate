@@ -2,10 +2,10 @@ package com.mmt.controller;
 
 import com.mmt.domain.entity.auth.UserDetailsImpl;
 import com.mmt.domain.entity.pay.PayStatus;
-import com.mmt.domain.request.pay.PaymentReadyReq;
 import com.mmt.domain.response.my.MyPaymentRes;
 import com.mmt.domain.response.pay.PaymentReadyRes;
 import com.mmt.domain.response.ResponseDto;
+import com.mmt.domain.response.pay.PaymentRefundRes;
 import com.mmt.service.impl.PaymentServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,20 +40,18 @@ public class PaymentController {
             @ApiResponse(responseCode = "400", description = "결제 진행 중 취소되었습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "결제에 실패했습니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "409", description = "이미 신청한 수업입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
-    @GetMapping("/ready/{lessonId}")
+    @PostMapping("/ready/{lessonId}")
     public ResponseEntity<? extends ResponseDto> readyPay(@PathVariable int lessonId, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String userId = userDetails.getUsername();
 
-        PaymentReadyReq paymentReadyReq = new PaymentReadyReq(userId, lessonId);
+        PaymentReadyRes paymentReadyRes = paymentService.readyPay(userId, lessonId);
 
-        PaymentReadyRes paymentReadyRes = paymentService.readyPay(paymentReadyReq);
-        paymentReadyRes.setStatusCode(HttpStatus.OK);
-        paymentReadyRes.setMessage("success");
-
-        return new ResponseEntity<>(paymentReadyRes, HttpStatus.OK);
+        return new ResponseEntity<>(paymentReadyRes, paymentReadyRes.getStatusCode());
     }
 
     @Parameter(hidden = true)
@@ -86,6 +84,27 @@ public class PaymentController {
         return new RedirectView(redirectURL);
     }
 
+    @Operation(summary = "결제 환불하기", description = "<b>선택한 수업을 환불</b>한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "success",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 결제 항목입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "결제 완료 상태가 아닌 항목입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
+    @PutMapping("/refund/{lessonId}")
+    public ResponseEntity<MyPaymentRes> refundPay(@PathVariable int lessonId, Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        String userId = userDetails.getUsername();
+
+        MyPaymentRes myPaymentRes = paymentService.refundPay(userId, lessonId);
+
+        return new ResponseEntity<>(myPaymentRes, HttpStatus.OK);
+    }
+
     @Operation(summary = "결제 정보 가져오기", description = "결제 번호에 해당하는 결제 정보를 가져온다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "success",
@@ -104,5 +123,4 @@ public class PaymentController {
 
         return new ResponseEntity<>(myPaymentRes, myPaymentRes.getStatusCode());
     }
-
 }

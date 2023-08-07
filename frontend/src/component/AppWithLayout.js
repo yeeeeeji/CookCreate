@@ -30,6 +30,7 @@ import CertifyT from './MyPageT/Certify';
 import PaymentFailed from '../pages/paymentFailed';
 import PaymentSuccess from '../pages/paymentSuccess';
 import PaymentCancelld from '../pages/paymentCancelld';
+import EditLesson from '../pages/editLesson';
 
 function AppWithLayout({ match }) {
   // const dispatch = useDispatch();
@@ -69,6 +70,7 @@ function AppWithLayout({ match }) {
         <Route path='/payment/fail' element={<PaymentFailed/>}></Route>
         <Route path='/payment/success' element={<PaymentSuccess/>}></Route>
         <Route path='/payment/cancel' element={<PaymentCancelld/>}></Route>
+        <Route path='/lesson/edit/:lessonId' element={<EditLesson/>}></Route>
 
 
         <Route path='/mypageS' element={<MyPageS />} />

@@ -1,108 +1,105 @@
 import axios from 'axios';
-import React, {useState, useEffect} from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import IntroduceLesson from '../component/LessonDetail/IntroduceLesson';
 import IntroduceCookyer from '../component/LessonDetail/IntroduceCookyer';
 import LessonReview from '../component/LessonDetail/LessonReview';
 import CookieeNumber from '../component/LessonDetail/CookieeNumber';
 import ApplyLesson from '../component/LessonDetail/ApplyLesson';
 import LessonSchedule from '../component/LessonDetail/LessonSchedule';
+import EditLesson from '../component/LessonDetail/EditLesson';
+import {
+  setCategoryId, setCategoryName, setDescription, setDifficulty,
+  setLessonDate, setLessonStepList, setLessonTitle, setRemaining,
+  setMaterials, setMaximum, setPrice, setThumbnailUrl, setTimeTaken, setVideoUrl,
+  setIntroduce,
+} from '../store/lesson/lessonInfo';
+
 function LessonDetail() {
-  const lessonId = useSelector((state) => state.lessonInfo.lessonId)  
-  const accessToken = localStorage.getItem('access_token')
-  const [categoryName, setCategoryName] = useState('')
-  const [lessonTitle, setLessonTitle] = useState('')
-  const [thumbnailUrl, setThumbnailUrl] = useState('')
-  const [difficulty, setDifficulty] = useState('')
-  const [description, setDescription] = useState('')
-  const [materials, setMaterials] = useState([])
-  const [cookyerName, setCookyerName] = useState('')
-  const [remaining, setRemaining] = useState(0)
-  const [maximum, setMaximum] = useState(0)
-  const [price, setPrice] = useState(0)
-  const [jjimCount, setJjimCount] = useState(0)
-  const [videoUrl, setVideoUrl] = useState('')
-  const [timeTaken, setTimeTaken] = useState(0)
-  const [lessonDate, setLessonDate] = useState('')
-  
-  const userType = localStorage.getItem('role')
-  const [disable, setDisable] = useState(false) // 날짜가 지난 경우, 제한 인원이 다 찬 경우 처리.
-    
-  const maximumInt = parseInt(maximum)
-  const remainingInt = parseInt(remaining)
-  const currentInt = maximumInt - remainingInt
-  
+  const dispatch = useDispatch();
+
+  const lessonId = useSelector((state) => state.lessonInfo.lessonId);
+  const accessToken = localStorage.getItem('access_token');
+  const categoryName = useSelector((state) => state.lessonInfo.categoryName);
+  const userName = localStorage.getItem('nickname')
+  const lessonTitle = useSelector((state) => state.lessonInfo.lessonTitle);
+  const thumbnailUrl = useSelector((state) => state.lessonInfo.thumbnailUrl);
+
+  const userType = localStorage.getItem('role');
+  const [disable, setDisable] = useState(false);
+  const [disableEdit, setDisableEdit] = useState(false)
+  const lessonDate = useSelector((state) => state.lessonInfo.lessonDate);
+  const remaining = parseInt(useSelector((state) => state.lessonInfo.remaining));
+
   useEffect(() => {
-    // 신청 가능 판별 로직
-    const DateTransformType = new Date(lessonDate)
-    const today = new Date()
-    if (DateTransformType > today && currentInt >= 0) {
-      setDisable(false)
-    } else {
-      setDisable(true)
-    }
+    const DateTransformType = new Date(lessonDate);
+    const currentTime = new Date();
+    const futureTime = new Date(currentTime.getTime() + 12 * 60 * 60 * 1000); // 현재 시간 + 12시간
+    
     axios.get(`/api/v1/lesson/${lessonId}`, {
-      headers : {
-        Access_Token : accessToken
+      headers: {
+        Access_Token: accessToken
       }
     })
-    .then((res) => {
-      console.log(res.data)
-      setCategoryName(res.data.categoryName)
-      setLessonTitle(res.data.lessonTitle)
-      setThumbnailUrl(res.data.thumbnailUrl)
-      setDifficulty(res.data.difficulty)
-      setDescription(res.data.description)
-      setMaterials(res.data.materials)
-      setCookyerName(res.data.cookyerName)
-      setRemaining(res.data.remaining)
-      setMaximum(res.data.maximum)
-      setPrice(res.data.price)
-      setJjimCount(res.data.jjimCount)
-      setVideoUrl(res.data.videoUrl)
-      setLessonDate(res.data.lessonDate)
-      setTimeTaken(res.data.timeTaken)
-    })
-    .catch((err) => {
-      console.log(err)
-      alert(err.response.data.message)
-    })
-  }, [])
+      .then((res) => {
+        console.log(res.data);
+        console.log(DateTransformType > futureTime, ' 더 미래니?');
+        console.log(userType);
+        dispatch(setCategoryName(res.data.categoryName));
+        dispatch(setCategoryId(res.data.categoryId));
+        dispatch(setDescription(res.data.description));
+        dispatch(setDifficulty(res.data.difficulty));
+        dispatch(setLessonTitle(res.data.lessonTitle));
+        dispatch(setLessonStepList(res.data.lessonStepList));
+        dispatch(setMaterials(res.data.materials));
+        dispatch(setMaximum(res.data.maximum));
+        dispatch(setPrice(res.data.price));
+        dispatch(setThumbnailUrl(res.data.thumbnailUrl));
+        dispatch(setRemaining(res.data.remaining));
+        dispatch(setVideoUrl(res.data.videoUrl));
+        dispatch(setLessonDate(res.data.lessonDate));
+        dispatch(setTimeTaken(res.data.timeTaken));
+        dispatch(setVideoUrl(res.data.videoUrl));
+        if (DateTransformType > futureTime && remaining > 0 && userType === 'COOKIEE') {
+          setDisable(false);
+        } else {
+          setDisable(true);
+        }
+        if (userName === res.data.cookyerName) { 
+          setDisableEdit(false)
+        } else {
+          setDisableEdit(true)
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        alert(err.response.data.message);
+      });
+  }, [disable]);
 
   return (
     <div>
       <br />
+
       {categoryName}
       <h2>
         {lessonTitle}
       </h2>
       <img src={thumbnailUrl} alt="" />
-      <IntroduceLesson
-        difficulty = {difficulty}
-        description = {description}
-        materials = {materials}
-      />
-      <IntroduceCookyer
-        cookyerName = {cookyerName}
-      />
-      <LessonReview/>
+      <IntroduceLesson />
+      <IntroduceCookyer />
+      <LessonReview />
 
-      <CookieeNumber 
-        remaining = {remaining}
-        maximum = {maximum}
-      />
+      <CookieeNumber />
       <ApplyLesson
-        price = {price}
-        lessonId = {lessonId}
-        jjimCount = {jjimCount}
-        videoUrl = {videoUrl}
-        disable={disable || userType === 'COOKYER'}      
+        disable={disable}
       />
-      <LessonSchedule
-        timeTaken = {timeTaken}
-        lessonDate = {lessonDate}
+      <LessonSchedule />
+      <EditLesson 
+        lessonId={lessonId} 
+        disable={disableEdit} 
       />
-      {disable}
+
     </div>
   );
 }
