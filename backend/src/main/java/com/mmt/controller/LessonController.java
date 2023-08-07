@@ -249,4 +249,23 @@ public class LessonController {
 
         return new ResponseEntity<>(lessonLatestRes, lessonLatestRes.getStatusCode());
     }
+
+    @Operation(summary = "선생님 뱃지 조회", description = "Cookyer의 뱃지가 승인됐는지 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "뱃지 인증을 완료했습니다.",
+                    content = @Content(schema = @Schema(implementation = LessonDetailRes.class))),
+            @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
+                    content = @Content(schema = @Schema(implementation = LessonDetailRes.class))),
+            @ApiResponse(responseCode = "404", description = "획득한 뱃지가 없습니다.",
+            content = @Content(schema = @Schema(implementation = LessonDetailRes.class))),
+    })
+    @GetMapping("/badge/{cookyerId}")
+    public ResponseEntity<ResponseDto> getHavingBadge(@PathVariable(value = "cookyerId") String cookyerId, Authentication authentication){
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.debug("authentication: " + (userDetails.getUsername()));
+
+        ResponseDto responseDto = lessonService.getHavingBadge(cookyerId);
+
+        return new ResponseEntity<>(responseDto, responseDto.getStatusCode());
+    }
 }

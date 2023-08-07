@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 public class ChatRes extends ResponseDto {
     private String userId;
     private String nickname;
+    private int lessonId;
     private String content;
     private Type type;
     private String createTime;
@@ -17,6 +18,7 @@ public class ChatRes extends ResponseDto {
     public ChatRes(Chat chat) {
         this.userId = chat.getMember().getUserId();
         this.nickname = chat.getMember().getNickname();
+        this.lessonId = chat.getLesson().getLessonId();
         this.content = chat.getContent();
         this.type = chat.getType();
         this.createTime = chat.getCreatedDate().toString();

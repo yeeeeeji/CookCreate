@@ -24,6 +24,9 @@ public interface LessonService {
     List<LessonSearchRes> getLessonList(LessonSearchReq lessonSearchReq);
     LessonDetailRes getLessonDetail(int lessonId);
     LessonLatestRes getLessonLatest(String userId);
+    ResponseDto getHavingBadge(String cookyerId);
+
+    // 진행 단계 관련
     List<LessonStepRes> getLessonStep(int lessonId);
     ResponseDto modifyLessonStep(String userId, LessonStepPutReq lessonStepPutReq);
 

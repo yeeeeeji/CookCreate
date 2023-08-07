@@ -1,6 +1,5 @@
 package com.mmt.service.impl;
 
-import com.mmt.config.RedisConfig;
 import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.badge.Badge;
@@ -31,15 +30,11 @@ import com.mmt.service.LessonService;
 import com.mmt.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -186,6 +181,12 @@ public class LessonServiceImpl implements LessonService {
     @Transactional
     @Override
     public ResponseDto deleteLesson(int lessonId) {
+        List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(lessonId);
+        if(lessonParticipantList.size() > 1){
+            // 선생님 외에 참여한 사람이 있으면
+            return new ResponseDto(HttpStatus.CONFLICT, "과외를 신청한 사람이 있어서 삭제할 수 없습니다.");
+        }
+
         try {
             lessonRepository.deleteByLessonId(lessonId);
         }catch (EmptyResultDataAccessException e){
@@ -385,6 +386,28 @@ public class LessonServiceImpl implements LessonService {
         }
 
         return lessonLatestRes;
+    }
+
+    @Override
+    public ResponseDto getHavingBadge(String cookyerId) {
+        // 회원 조회 확인 절차
+        Optional<Member> member = memberRepository.findByUserId(cookyerId);
+        if(member.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 계정입니다.");
+        }
+
+        // 뱃지 불러오기
+        List<Badge> badgeList = badgeRepository.findAllByMember_UserId(cookyerId);
+        if(badgeList.size() == 0){ // 신청한 뱃지가 있는지 확인
+            return new ResponseDto(HttpStatus.NOT_FOUND, "신청한 뱃지가 없습니다.");
+        }
+        for(Badge badge : badgeList){ // 인증된 뱃지가 있는지 확인
+            if(badge.getCertificated().equals(Certificated.ACCESS)){
+                return new ResponseDto(HttpStatus.OK, "뱃지 인증을 완료했습니다.");
+            }
+        }
+
+        return new ResponseDto(HttpStatus.CONFLICT, "획득한 뱃지가 없습니다.");
     }
 
     @Override
