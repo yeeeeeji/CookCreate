@@ -1,13 +1,28 @@
 import React,{useState,useEffect} from 'react';
 import SideBar from "./SideBar";
-import { useSelector} from "react-redux";
+import { useDispatch, useSelector} from "react-redux";
 import axios from 'axios';
+import { initOVSession, setIsExited, setIsSessionOpened, setSessionId, setVideoLessonId } from '../../store/video/video';
+import { OpenVidu } from 'openvidu-browser';
+import { useNavigate } from 'react-router-dom';
 
 function ClassList() {
-  const accessToken = useSelector((state) => state.auth.access_token);
-  const [classData, setClassData] = useState([]);
-  const [completedData, setCompletedData] = useState([]);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
+  const accessToken = useSelector((state) => state.auth.access_token);
+  const [ classData, setClassData ] = useState([]);
+  const [ completedData, setCompletedData ] = useState([]);
+
+  /** 쿠커 화상과외방 입장 */
+  const session = useSelector((state) => state.video.session)
+  const sessionId = useSelector((state) => state.video.sessionId)
+  const videoLessonId = useSelector((state) => state.video.videoLessonId)
+  const isExited = useSelector((state) => state.video.isExited) 
+  const isSessionOpened = useSelector((state) => state.video.isSessionOpened)
+
+  /** 1시간 전부터 과외방 생성 가능 */ // 일단 새고해야 알 수 있는걸로..
+  const currentDate = new Date()
 
   useEffect(() => {
     axios
@@ -41,7 +56,78 @@ function ClassList() {
       });
     }, []);
 
+  /** 쿠커 화상과외방 생성 및 입장 */
+  const createRoom = ( lessonId ) => {
+    console.log("과외방 참여 버튼", isExited)
+    // 0. 레슨아이디 스토어에 저장
+    if (!isExited) {
+      dispatch(setVideoLessonId(lessonId))
+    } else {
+      dispatch(setIsExited(false))
+    }
+  }
 
+  // 1. 레슨아이디가 잘 저장되면 선생님이 해당 수업 방 만들기 요청 보내기
+  useEffect(() => {
+    if (videoLessonId !== undefined) {
+      console.log(videoLessonId, "레슨번호")
+      console.log("토큰", accessToken)
+      axios.post(
+        `api/v1/session/create`,
+        { 'lessonId': videoLessonId },
+        {
+          headers: {
+            access_token: accessToken
+          }
+        })
+        .then((res) => {
+          // console.log('방 만들기 요청 성공', res)
+          console.log('쿠커 세션아이디 생성 성공', res)
+          const sessionId = res.data.token
+          dispatch(setSessionId(sessionId))
+          // dispatch(setMySessionId(res.data)) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
+        })
+        .catch((err) => {
+          console.log('쿠커 세션아이디 생성 실패', err)
+        })
+      
+    } else {
+      console.log("레슨아이디 없음")
+    }
+  }, [videoLessonId])
+
+  // 2. 토큰이 생기면 이동 OV, session 객체 생성
+  useEffect(() => {
+    if (sessionId) {
+      const newOV = new OpenVidu()
+      const newSession = newOV.initSession()
+      dispatch(initOVSession({OV: newOV, session: newSession}))
+    }
+  }, [sessionId])
+
+  // 3. 세션이 생기면 방 열렸다 체크 / 쿠키는 바로 입장
+  // useEffect(() => {
+  //   if (session !== undefined) {
+  //     navigate(`/videoLesson/${role}`)
+  //   }
+  // }, [session])
+
+  useEffect(() => {
+    if (session) {
+      console.log("방 생김")
+      dispatch(setIsSessionOpened(true))
+    }
+  }, [session])
+
+  // **4.
+  useEffect(() => {
+    if (isSessionOpened && !isExited) {
+      console.log(isSessionOpened, "방이 열렸어요")
+      if (sessionId) {
+        navigate(`/videoLesson/COOKYER`)
+      }
+    }
+  }, [isSessionOpened, isExited])
 
   return (
     <div>
@@ -68,7 +154,8 @@ function ClassList() {
                   data-gtm-vis-total-visible-time-8964582_476="100"
                   data-gtm-vis-has-fired-8964582_476="1"
                 >
-                  <a className="course_card_front" href="ㅔㅔㅔㅔ">
+                  <div className="course_card_front">
+                  {/* <a className="course_card_front" href="ㅔㅔㅔㅔ"> */}
                     <div className="card-image">
                       <figure className="image is_thumbnail">
                         <img
@@ -129,6 +216,11 @@ function ClassList() {
                             "과외 날짜"
                           </dt>
                           <dd>{lesson.lessonDate} 예정</dd>
+                          {new Date(lesson.lessonDate) <= currentDate.setHours(currentDate.getHours() + 1) ? (
+                            <button onClick={() => createRoom(lesson.lessonId)}>수업시작</button>
+                          ) : (
+                            <button disabled='disabled'>수업시작</button>
+                          )}
                         </dl>
                         <div className="info_ea">
                           <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_people.png" alt="수강아이콘" width="29" style={{ paddingRight: "5px", verticalAlign: "text-bottom" }} />
@@ -150,7 +242,7 @@ function ClassList() {
                         </div>
                       </div>
                     </div>
-                  </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -170,7 +262,8 @@ function ClassList() {
                   data-gtm-vis-total-visible-time-8964582_476="100"
                   data-gtm-vis-has-fired-8964582_476="1"
                 >
-                  <a className="course_card_front" href="ㅔㅔㅔㅔ">
+                  <div className="course_card_front">
+                  {/* <a className="course_card_front" href="ㅔㅔㅔㅔ"> */}
                     <div className="card-image">
                       <figure className="image is_thumbnail">
                         <img
@@ -252,7 +345,8 @@ function ClassList() {
                         </div>
                       </div>
                     </div>
-                  </a>
+                  </div>
+                  {/* </a> */}
                 </div>
               </div>
             </div>

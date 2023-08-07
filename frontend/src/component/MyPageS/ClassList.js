@@ -1,22 +1,33 @@
 import React, {useState, useEffect} from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
 import ReviewForm from "./ReviewForm";
 import Modal from 'react-modal';
 import '../../style/classlist.css'
 import SideBar from "./SideBar";
+import { useNavigate } from "react-router-dom";
+import { initOVSession, setSessionId, setVideoLessonId } from "../../store/video/video";
+import { OpenVidu } from "openvidu-browser";
 
 
 
 
 function ClassList() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const accessToken = useSelector((state) => state.auth.access_token);
   console.log("토큰",accessToken);
   const [classData, setClassData] = useState([]);
   const [completedData, setCompletedData] = useState([]);
   const [reviewLessonId, setReviewLessonId] = useState(null);
   // const [showCompletedLectures, setShowCompletedLectures] = useState(false);
+
+  /** 쿠커 화상과외방 입장 */
+  const sessionId = useSelector((state) => state.video.sessionId)
+  const session = useSelector((state) => state.video.session)
+  const videoLessonId = useSelector((state) => state.video.videoLessonId)
 
   useEffect(() => {
     axios
@@ -91,6 +102,58 @@ function ClassList() {
     //   setIsModalOpen(false);
     // }
 
+  /** 쿠키 화상과외 참여 */
+  const joinLesson = (lessonId) => {
+    console.log("쿠키 입장 요청", lessonId)
+    dispatch(setVideoLessonId(lessonId))
+  }
+
+  // 1. 레슨아이디가 잘 저장되면 선생님이 해당 수업 방 만들기 요청 보내기
+  useEffect(() => {
+    if (videoLessonId !== undefined) {
+      console.log(videoLessonId, "레슨번호", accessToken, "토큰")
+      // 레슨아이디가 등록되면 학생은 토큰 생성 요청
+      console.log("쿠키 세션아이디 요청")
+      axios.post(
+        `api/v1/session/create`,
+        { 'lessonId': videoLessonId },
+        {
+          headers : {
+            Access_Token : accessToken
+          }
+        })
+        .then((res) => {
+          console.log('쿠키 세션아이디 생성 성공', res.data)
+          const sessionId = res.data.token
+          dispatch(setSessionId(sessionId))
+        })
+        .catch((err) => {
+          console.log('쿠키 세션아이디 생성 실패', err)
+        })  
+    } else {
+      console.log("레슨아이디 없음")
+    }
+  }, [videoLessonId])
+
+  // 2. 세션아이디가 생기면 이동. OV, session 객체 생성
+  useEffect(() => {
+    if (sessionId) {
+      const newOV = new OpenVidu()
+      const newSession = newOV.initSession()
+      dispatch(initOVSession({OV: newOV, session: newSession}))
+    }
+  }, [sessionId])
+
+  useEffect(() => {
+    if (session) {
+      if (sessionId) {
+        navigate(`/videoLesson/COOKIEE`)
+      } else {
+        console.log("쿠키 세션아이디 없어서 입장 불가")
+      }
+    }
+  }, [session])
+
     return (
       <div>
         <SideBar />
@@ -123,7 +186,8 @@ function ClassList() {
                   data-gtm-vis-total-visible-time-8964582_476="100"
                   data-gtm-vis-has-fired-8964582_476="1"
                 >
-                  <a className="course_card_front" href="ㅔㅔㅔㅔ">
+                  <div className="course_card_front">
+                  {/* <a className="course_card_front" href="ㅔㅔㅔㅔ"> */}
                     <div className="card-image">
                       <figure className="image is_thumbnail">
                         <img
@@ -184,6 +248,11 @@ function ClassList() {
                             "과외 날짜"
                           </dt>
                           <dd>{lesson.lessonDate} 예정</dd>
+                          {lesson.session_id === null ? (
+                            <button disabled="disabled">수업예정</button>
+                          ) : (
+                            <button onClick={() => joinLesson(lesson.lessonId)}>참가하기</button>
+                          )}
                         </dl>
                         <div className="info_ea">
                           <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_people.png" alt="수강아이콘" width="29" style={{ paddingRight: "5px", verticalAlign: "text-bottom" }} />
@@ -205,7 +274,8 @@ function ClassList() {
                         </div>
                       </div>
                     </div>
-                  </a>
+                  </div>
+                  {/* </a> */}
                 </div>
               </div>
             </div>
@@ -286,6 +356,7 @@ function ClassList() {
                             "과외 날짜"
                           </dt>
                           <dd>{lesson.lessonDate} 예정</dd>
+                          <button disabled="disabled">수업종료</button>
                         </dl>
                         <div className="info_ea">
                           <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_people.png" alt="수강아이콘" width="29" style={{ paddingRight: "5px", verticalAlign: "text-bottom" }} />
