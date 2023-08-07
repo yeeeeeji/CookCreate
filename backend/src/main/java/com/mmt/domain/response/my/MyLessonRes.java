@@ -24,6 +24,9 @@ public class MyLessonRes extends ResponseDto {
     private int jjimCount;
     private String createdDate;
     private String modifiedDate;
+    private boolean isOver; // 마감됐는지
+    private boolean isEnd; // 과외가 종료됐는지
+    private String sessionId;
 
     public MyLessonRes(Lesson lesson){
         this.lessonId = lesson.getLessonId();
@@ -38,5 +41,8 @@ public class MyLessonRes extends ResponseDto {
         this.lessonDate = lesson.getLessonDate();
         this.thumbnailUrl = lesson.getThumbnailUrl();
         this.jjimCount = lesson.getJjimCount();
+        this.isOver = lesson.getIsOver();
+        this.isEnd = lesson.getIsEnd();
+        this.sessionId = lesson.getSessionId();
     }
 }
