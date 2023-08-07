@@ -9,6 +9,8 @@ import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.lesson.LessonStep;
 import com.mmt.domain.request.jjim.JjimReq;
+import com.mmt.domain.entity.pay.PayStatus;
+import com.mmt.domain.entity.pay.PaymentHistory;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
@@ -115,7 +117,8 @@ public class LessonServiceImpl implements LessonService {
         if(lesson.get().getIsOver()) return new ResponseDto(HttpStatus.BAD_REQUEST, "이미 마감된 과외입니다.");
 
         // 추가하기 전 결제 완료 확인
-        if(!paymentRepository.findByLesson_LessonIdAndMember_UserId(lessonId, userId).isPresent()) {
+        Optional<PaymentHistory> paymentHistory = paymentRepository.findFirstByLesson_LessonIdAndMember_UserIdOrderByApprovedAtDesc(lessonId, userId);
+        if(!paymentHistory.isPresent() || paymentHistory.get().getPayStatus() != PayStatus.COMPLETED) {
             return new ResponseDto(HttpStatus.FORBIDDEN, "결제 한 사용자만 신청할 수 있습니다.");
         }
         LessonParticipant lessonParticipant = new LessonParticipant();

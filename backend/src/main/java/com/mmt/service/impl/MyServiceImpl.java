@@ -243,6 +243,9 @@ public class MyServiceImpl implements MyService {
 
         for(PaymentHistory paymentHistory : paymentList) {
             MyPaymentRes myPaymentRes = new MyPaymentRes(paymentHistory);
+            if(paymentHistory.getCanceledAt() != null) {
+                myPaymentRes.setCanceledAt(paymentHistory.getCanceledAt().toString());
+            }
             myPaymentRes.setStatusCode(HttpStatus.OK);
             myPaymentRes.setMessage("success");
 
@@ -263,6 +266,9 @@ public class MyServiceImpl implements MyService {
 
         for(PaymentHistory paymentHistory : paymentList) {
             MyPaymentRes myPaymentRes = new MyPaymentRes(paymentHistory);
+            if(paymentHistory.getCanceledAt() != null) {
+                myPaymentRes.setCanceledAt(paymentHistory.getCanceledAt().toString());
+            }
             myPaymentRes.setStatusCode(HttpStatus.OK);
             myPaymentRes.setMessage("sucess");
 
