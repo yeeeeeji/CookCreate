@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 //채팅
 // import WebSocketConfig from './WebSocketConfig';
-import Chat from './pages/chatList';
+import ChatRoom from './pages/chatRoom';
 
 import NavBar from './component/Header/NavBar';
 import SignUp from './pages/signUp';
@@ -63,7 +63,7 @@ function App() {
       <NavBar />
       {/* 링크 이곳에 추가 */}
       <Routes>
-        <Route path='/chat' element={<Chat />} />
+        <Route path='/chatroom' element={<ChatRoom />} />
         <Route path='/mypageS' element={<MyPageS />} />
         <Route path='/mypageT' element={<MyPageT />} />
         <Route path='/' element={<MainPage />} />

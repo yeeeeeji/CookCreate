@@ -1,0 +1,10 @@
+{
+  "presets": [
+    "@babel/preset-env",
+    // 추가로 필요한 프리셋을 여기에 추가
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-private-property-in-object"
+    // 필요한 플러그인을 여기에 추가
+  ]
+}

@@ -1,0 +1,243 @@
+[33mcommit 8275ae85710a322a605686d8d9f7d499a76a1d5a[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/front/mypage_cookyer[m[33m, [m[1;31morigin/feature/front/mypage_cookyer[m[33m)[m
+Author: hwnagsua <tsmich926@naver.com>
+Date:   Sun Aug 6 16:22:38 2023 +0900
+
+    [FEAT]채팅페이지 추가 #S09P12C111-255
+
+[33mcommit 006f4f796d0a5f303ec55a83416383a9cada4991[m
+Author: hwnagsua <tsmich926@naver.com>
+Date:   Sun Aug 6 11:17:49 2023 +0900
+
+    [FEAT]리뷰상세보기 #S09P12C111-250
+
+[33mcommit 42561ac6f5bdcc7a2b2cf5259948e45e22292374[m
+Author: hwnagsua <tsmich926@naver.com>
+Date:   Sun Aug 6 11:04:10 2023 +0900
+
+    [FEAT]리뷰평점표시 #S09P12C111-254
+
+[33mcommit 90e094026c5ed27ad1c798949e2f56f857f19687[m
+Author: hwnagsua <tsmich926@naver.com>
+Date:   Sat Aug 5 23:23:22 2023 +0900
+
+    [FEAT]과외목록 카테고리 수정 #S09P12C111-253
+
+[33mcommit ae894e54c573acc7275b02db770013dd226ca381[m
+Author: hwnagsua <tsmich926@naver.com>
+Date:   Sat Aug 5 22:11:21 2023 +0900
+
+    [FEAT]강의목록 api추가 #S09P12C111-253
+
+[33mcommit 884da60ad2cd33c7864055552250d4e56636b9ff[m
+Author: hwnagsua <tsmich926@naver.com>
+Date:   Sat Aug 5 01:17:51 2023 +0900
+
+    [FEAT] 리뷰수정 #S09P12C111-251
+
+[33mcommit c33b6152bdd9aeb0985496b8b7cd6f2f462f662f[m
+Author: hwnagsua <tsmich926@naver.com>
+Date:   Fri Aug 4 23:15:01 2023 +0900
+
+    [FEAT] 리뷰추가,삭제후 모달닫기,재렌더링 #S09P12C111-251
+
+[33mcommit 616cb96a34affee61c04f180a5bae7826427dc02[m
+Author: hwnagsua <tsmich926@naver.com>
+Date:   Fri Aug 4 22:58:03 2023 +0900
+
+    [FEAT] 리뷰상세보기 api추가 #S09P12C111-16
+
+[33mcommit 05a2a829fb11adc2015e5c328f3f6a64c58071e1[m
+Author: hwnagsua <tsmich926@naver.com>
+Date:   Fri Aug 4 17:07:24 2023 +0900
+
+    [FEAT] 리뷰작성 api추가  #S09P12C111-235
+
+[33mcommit b3d30e626e378e277d6a5033f454b99c22c7bb1b[m
+Author: hwnagsua <tsmich926@naver.com>
+Date:   Fri Aug 4 15:08:54 2023 +0900
+
+    [FEAT] 과외목록조회 api추가 #S09P12C111-163
+
+[33mcommit 776365c084894362a4ea4508954f46677e1da36b[m
+Merge: 595dac8 8e40171
+Author: hwnagsua <tsmich926@naver.com>
+Date:   Fri Aug 4 11:20:31 2023 +0900
+
+    Merge branch 'feature/front/mypage_cookyer' into develop
+
+[33mcommit 8e401711fc14e24657535e2a944ad6fd0c027e2c[m
+Author: hwnagsua <tsmich926@naver.com>
+Date:   Fri Aug 4 11:13:01 2023 +0900
+
+    [FEAT] 자격증등록 api추가 #S09P12C111-168
+
+[33mcommit 595dac88a154e289e66f4472beee46a537b54f58[m
+Merge: 2cc54df 32f852d
+Author: 양수원 <classicblue205@gmail.com>
+Date:   Fri Aug 4 10:05:47 2023 +0900
+
+    Merge branch 'feature/front/lessonCRUD' into develop
+
+[33mcommit 32f852dfe3f9adbb660a1f9a3556d1a9be82aef3[m
+Author: 양수원 <classicblue205@gmail.com>
+Date:   Fri Aug 4 10:05:05 2023 +0900
+
+    [FEAT] 과외 상세보기 화면단 구성 #S09P12C111-239
+
+[33mcommit 2cc54df88c3809b6768c7017d195430560e9358f[m
+Author: jjoyra <bunny7531@naver.com>
+Date:   Fri Aug 4 00:42:46 2023 +0900
+
+    [CHORE] session 닫기 오타, 포트 수정
+
+[33mcommit e2694c91d78bc1e561969158df3a3bcfdc5d3ca2[m
+Author: byunyc124 <byunyc124@naver.com>
+Date:   Thu Aug 3 17:30:40 2023 +0900
+
+    [CHORE] docker 빌드 관련 포트 수정 #S09P12C111-223
+
+[33mcommit 6fd3b4337c7a10ff6899973774c6910bcb2df9e8[m
+Merge: 23da241 912e324
+Author: 양수원 <classicblue205@gmail.com>
+Date:   Thu Aug 3 15:01:28 2023 +0900
+
+    Merge branch 'feature/front/lessonCRUD' into develop
+
+[33mcommit 912e324f550fe147417e008154954c76a78bcc42[m
+Author: 양수원 <classicblue205@gmail.com>
+Date:   Thu Aug 3 14:42:44 2023 +0900
+
+    [FEAT] 전체 과외 조회 화면단 구성 및 전체 과외 조회 #S09P12C111-230
+
+[33mcommit 23da241d44a322e215e81a6248db2524815e8e69[m
+Merge: 2a630c5 70cec4a
+Author: 윤예지 <hallo27@naver.com>
+Date:   Thu Aug 3 14:19:10 2023 +0900
+
+    Merge branch 'feature/front/webrtc' into 'develop'
+    
+    Feature/front/webrtc
+    
+    See merge request s09-webmobile1-sub2/S09P12C111!12
+
+[33mcommit 70cec4a5d49a21e5ac6521ab1eb8b0df8d620092[m
+Author: 윤예지 <hallo27@naver.com>
+Date:   Thu Aug 3 14:12:32 2023 +0900
+
+    [MODIFY] 쿠커 화상 과외방 종료 기능 수정 #S09P12C111-240
+
+[33mcommit 2a630c51919aee4918c6780f4d09a26db06dc464[m
+Author: byunyc124 <byunyc124@naver.com>
+Date:   Thu Aug 3 14:10:41 2023 +0900
+
+    [MODIFY] 세션 close back -> front로 수정
+
+[33mcommit 690fa9047b46ef1eef2f741e502fa522d3fce1f9[m
+Merge: a28487d 3ac5293
+Author: 윤예지 <hallo27@naver.com>
+Date:   Thu Aug 3 13:05:45 2023 +0900
+
+    Merge branch 'develop' of https://lab.ssafy.com/s09-webmobile1-sub2/S09P12C111 into feature/front/webrtc
+
+[33mcommit a28487d36f9955fbacde22553b5f2ae207f8fed0[m
+Author: 윤예지 <hallo27@naver.com>
+Date:   Thu Aug 3 12:16:04 2023 +0900
+
+    [MODYFI] 쿠커/쿠키 화상과외방 나가기 후 발생 이벤트 분리 #S09P12C111-240
+
+[33mcommit 3ac5293ec6387aa55f9bd999b1f74f189199a5c0[m
+Author: byunyc124 <byunyc124@naver.com>
+Date:   Thu Aug 3 12:13:33 2023 +0900
+
+    [MODIFY] back에서 세션 종료 안되는 버그 수정
+
+[33mcommit e828f214de36682bf3a880f3a796feff9e10d11e[m
+Merge: 4c2d070 2a2cd77
+Author: 윤예지 <hallo27@naver.com>
+Date:   Thu Aug 3 12:06:24 2023 +0900
+
+    Merge branch 'develop' of https://lab.ssafy.com/s09-webmobile1-sub2/S09P12C111 into feature/front/webrtc
+
+[33mcommit 2a2cd771de03f6d7a9321e9b3a4334c094da85fa[m
+Author: byunyc124 <byunyc124@naver.com>
+Date:   Thu Aug 3 12:05:47 2023 +0900
+
+    [MODIFY] back에서 세션 종료하는 걸로 수정
+
+[33mcommit 7e7da44e770f9a4f392d0cdc02aff3a0f16c82e7[m
+Merge: 6632646 7c86f0f
+Author: byunyc124 <byunyc124@naver.com>
+Date:   Thu Aug 3 11:22:58 2023 +0900
+
+    Merge branch 'develop' of https://lab.ssafy.com/s09-webmobile1-sub2/S09P12C111 into develop
+
+[33mcommit 6632646dea05793ab7ebf5420a99762fc97099f5[m
+Author: byunyc124 <byunyc124@naver.com>
+Date:   Thu Aug 3 11:22:52 2023 +0900
+
+    [FIX] get방식으로 요청받을 때 body 대신 param으로 수정
+
+[33mcommit 4c2d07099fc5ad5b618d8c5dbc0bdefdc88adf12[m
+Author: 윤예지 <hallo27@naver.com>
+Date:   Thu Aug 3 11:22:36 2023 +0900
+
+    [MODIFY] 쿠커 화상 과외방 생성 및 종료 API 연결 확인 #S09P12C111-240
+
+[33mcommit 7c86f0f8cc80ca3ab45a907abf9a1aab24dfbb5d[m
+Merge: 69f199b 4d7d2f4
+Author: 조희라 <bunny7531@naver.com>
+Date:   Thu Aug 3 11:13:51 2023 +0900
+
+    Merge branch 'develop' of https://lab.ssafy.com/s09-webmobile1-sub2/S09P12C111 into feature/back/chat
+
+[33mcommit 69f199bee0b680910dfcf8058526108a17a367e6[m
+Author: 조희라 <bunny7531@naver.com>
+Date:   Thu Aug 3 11:13:24 2023 +0900
+
+    [MODIFY] 채팅 response createTime 추가 #S09P12C111-132
+
+[33mcommit 4d7d2f489f9e102d98c0393edc4c194db67e9afc[m
+Merge: 6f27de9 626b906
+Author: 양수원 <classicblue205@gmail.com>
+Date:   Thu Aug 3 09:44:50 2023 +0900
+
+    Merge branch 'feature/front/lessonCRUD' into develop
+
+[33mcommit 626b906e205f39ef8958f348bf15e905deec5a83[m
+Author: 양수원 <classicblue205@gmail.com>
+Date:   Thu Aug 3 09:44:24 2023 +0900
+
+    [FIX] 과외 create시 썸네일 올리기 실패하는 이슈 해결 #S09P12C111-186
+
+[33mcommit c808e0c11f9dbfe43456c4d474459c092c62540c[m
+Author: 윤예지 <hallo27@naver.com>
+Date:   Thu Aug 3 09:41:13 2023 +0900
+
+    [MODIFY] 쿠커 방 생성 관련 로직 수정 #S09P12C111-240
+
+[33mcommit 6c28bc879e52b40629f7ccc8bcce938fd5984e5d[m
+Merge: dadb113 6f27de9
+Author: 윤예지 <hallo27@naver.com>
+Date:   Thu Aug 3 09:41:02 2023 +0900
+
+    Merge branch 'develop' of https://lab.ssafy.com/s09-webmobile1-sub2/S09P12C111 into feature/front/webrtc
+
+[33mcommit 6f27de9fd4d5e591c4e55847d272ba750171a027[m
+Author: byunyc124 <byunyc124@naver.com>
+Date:   Thu Aug 3 09:36:05 2023 +0900
+
+    [FIX] 파일 이미지 크기 조정
+
+[33mcommit 2abb20143655af5c1b3417637cc865eccbf551a7[m
+Author: byunyc124 <byunyc124@naver.com>
+Date:   Thu Aug 3 09:26:17 2023 +0900
+
+    [RENAME] db, jwt 프로퍼티 파일 정리
+
+[33mcommit 3a22d34a9e7ed3b7fdaf5ca2c8d7932a4ab88810[m
+Author: byunyc124 <byunyc124@naver.com>
+Date:   Thu Aug 3 09:23:10 2023 +0900
+
+    [DELETE] openvidu 프로퍼티 파일 삭제
+
+[33mcommit c306376c9ffaa55dcf1d4924743252922f559b8
