@@ -14,6 +14,7 @@ import com.mmt.repository.PaymentRepository;
 import com.mmt.repository.lesson.LessonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
+import java.time.Duration;
 import java.util.Optional;
 
 @Slf4j
@@ -34,6 +36,7 @@ public class PaymentServiceImpl {
     private final MemberRepository memberRepository;
     private final LessonRepository lessonRepository;
     private WebClient webClient;
+    private final RedisTemplate redisTemplate;
 
     @PostConstruct
     public void initWebClient() {
@@ -82,9 +85,16 @@ public class PaymentServiceImpl {
                 .bodyToMono(PaymentReadyRes.class)
                 .block();
 
-        paymentHistory.setTId(paymentReadyRes.getTid());
+//        paymentHistory.setTId(paymentReadyRes.getTid());
+
         paymentHistory.setPayStatus(PayStatus.READY);
         paymentRepository.save(paymentHistory);
+
+        redisTemplate.opsForValue().set(
+                "kakaopay:tid" + paymentHistory.getPaymentId(),
+                paymentReadyRes.getTid(),
+                Duration.ofDays(7)
+        );
 
         paymentReadyRes.setStatusCode(HttpStatus.OK);
         paymentReadyRes.setMessage("success");
@@ -95,14 +105,18 @@ public class PaymentServiceImpl {
     @Transactional
     public MyPaymentRes approvePay(String pg_Token, int paymentId) {
         PaymentHistory paymentHistory = paymentRepository.findByPaymentId(paymentId).get();
+
+        String tid = (String) redisTemplate.opsForValue().
+                get("kakaopay:tid" + paymentHistory.getPaymentId());
+
         log.debug("userId: " + paymentHistory.getMember().getUserId());
-        log.debug("tid: " + paymentHistory.getTId());
+        log.debug("tid: " + tid);
         log.debug("pg_token: " + pg_Token);
 
         MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
 
         parameter.add("cid", "TC0ONETIME");
-        parameter.add("tid", paymentHistory.getTId());
+        parameter.add("tid", tid);
         parameter.add("partner_order_id", String.valueOf(paymentId));
         parameter.add("partner_user_id", paymentHistory.getMember().getUserId());
         parameter.add("pg_token", pg_Token);
@@ -158,12 +172,15 @@ public class PaymentServiceImpl {
 
         PaymentHistory paymentHistory = payment.get();
 
-        log.debug("TID: " + paymentHistory.getTId());
+        String tid = (String) redisTemplate.opsForValue().
+                get("kakaopay:tid" + paymentHistory.getPaymentId());
+
+        log.debug(tid);
 
         MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
 
         parameter.add("cid", "TC0ONETIME");
-        parameter.add("tid", paymentHistory.getTId());
+        parameter.add("tid", tid);
         parameter.add("cancel_amount", String.valueOf(paymentHistory.getTotalAmount()));
         parameter.add("cancel_tax_free_amount", "0");
 
@@ -186,6 +203,8 @@ public class PaymentServiceImpl {
         myPaymentRes.setCanceledAt(paymentHistory.getCanceledAt().toString());
         myPaymentRes.setStatusCode(HttpStatus.OK);
         myPaymentRes.setMessage("결제 취소가 완료되었습니다.");
+
+        redisTemplate.delete("kakaopay:tid" + paymentHistory.getPaymentId());
 
         return myPaymentRes;
 
