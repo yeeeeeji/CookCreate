@@ -15,12 +15,15 @@
       e.preventDefault()
       axios.post(`api/v1/auth/login`, {userId, userPw})
       .then((res)=>{
+        const { access_token, refresh_token } = res.headers;
         dispatch(login({
           access_token : res.headers.access_token, 
           refresh_token : res.headers.refresh_token,
           userId,
           nickname: res.data.nickname,
           role : res.data.role}));
+        localStorage.setItem('access_token', access_token);
+        localStorage.setItem('refresh_token', refresh_token);
         navigate("/")
       })
       .catch((err) =>{
@@ -59,7 +62,7 @@
                 setUserPw(e.target.value)
               }}
               placeholder='비밀번호'
-              autoComplete="current-password" // 자동완성 방지
+              autoComplete="current-password"
               />
             </div>
             <br />
