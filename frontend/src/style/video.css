@@ -352,10 +352,19 @@ p {
   /* padding: 5px; */
 }
 
+.video-side-icon-wrap {
+  margin: 20px auto;
+  width: 30px;
+}
+
+.video-side-icon {
+  font-size: 30px;
+}
+
 .video-exit-icon {
-  font-size: 40px;
+  /* font-size: 40px; */
   color: rgb(223, 0, 0);
-  margin: auto;
+  /* margin: auto; */
 }
 
 /* 쿠커 타이머 */
@@ -434,8 +443,8 @@ input[type="number"]::-webkit-inner-spin-button {
   /* position: relative; */
   display: flex;
   position: absolute;
-  top: 918px;
-  left: 604px;
+  top: 911px;
+  left: 586px;
 }
 
 .video-step-title {
@@ -481,9 +490,21 @@ input[type="number"]::-webkit-inner-spin-button {
 .video-step-content {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   margin: auto 10px;
+  padding: 20px;
   width: 600px;
+}
+
+.video-step-content-update {
+  display: flex;
+}
+
+.video-step-content-update input {
+  border: none;
+  box-sizing: border-box;
+  outline: none;
+  border-bottom: 1px solid #a6a6a6;
 }
 
 .video-step-content button {
@@ -493,6 +514,7 @@ input[type="number"]::-webkit-inner-spin-button {
   width: 50px;
   height: 25px;
   margin-left: 10px;
+  font-size: 15px;
 }
 
 .video-step-content button:hover {

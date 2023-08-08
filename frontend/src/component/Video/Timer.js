@@ -103,7 +103,7 @@ function Timer({ role }) {
                 setCurMinutes(e.target.value)
               }}
             ></input>
-            <span> : </span>
+            <span>:</span>
             <input
               className='video-timer-input-seconds'
               type='number'
@@ -116,7 +116,7 @@ function Timer({ role }) {
         ) : (
           <h1>
             {curMinutes < 10 ? `0${curMinutes}` : curMinutes}
-            : 
+            :
             {curSeconds < 10 ? `0${curSeconds}` : curSeconds}
           </h1>
         )}

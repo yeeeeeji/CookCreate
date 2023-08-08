@@ -11,6 +11,7 @@ function CookyerLessonStep() {
   const checkCookieeList = useSelector((state) => state.cookyerVideo.checkCookieeList)
   const [ checkCount, setCheckCount ] = useState(0)
   const publisher = useSelector((state) => state.video.publisher)
+  const subscribers = useSelector((state) => state.video.subscribers)
 
   const lessonStepList = useSelector((state) => state.videoLessonInfo.lessonStepList)
   const curStep = useSelector((state) => state.videoLessonInfo.curStep)
@@ -109,7 +110,7 @@ function CookyerLessonStep() {
             <div>
               {isUpdate ? (
                 <div className='video-step-content'>
-                  <div>
+                  <div className='video-step-content-update'>
                     <p>{curIdx}. </p>
                     <input value={inputStep} onChange={handleInputChange}></input>
                   </div>
@@ -135,7 +136,7 @@ function CookyerLessonStep() {
             <p>{checkCount}</p>
             <p>/</p>
             {/* 총 숫자 어디선가 찾아서 넣기.. */}
-            <p>6</p>
+            <p>{subscribers.length}</p>
           </div>
         </div>
       </div>
