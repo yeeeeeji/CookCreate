@@ -16,10 +16,16 @@ function totalLessons() {
           실력 있는 선생님들과 직접 나만의 요리를 완성해보세요!
         </div>
       </div>
-      <SearchBar/>
-      <LessonFoodCategory/>
-      <LessonListFliter/>
-      <LessonList/>
+      <div className='contentContainer'>
+        <div className='mainContent'>
+          <SearchBar/>
+          <LessonFoodCategory/>
+          <LessonList/>
+        </div>
+        <div className='sidebar'>
+          <LessonListFliter/>
+        </div>
+      </div>
     </div>
   );
 }

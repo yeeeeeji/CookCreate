@@ -1,6 +1,8 @@
 import React from 'react';
 import {setLessonId} from '../../store/lesson/lessonInfo'
 import { useDispatch } from 'react-redux';
+import '../../style/lesson/lessonItemCss.css';
+
 function LessonItem({id, title, date, thumbnailUrl, reviewAvg, cookyerName, categoryId}) {
   
   const dispatch = useDispatch()
@@ -15,21 +17,23 @@ function LessonItem({id, title, date, thumbnailUrl, reviewAvg, cookyerName, cate
   const convertCategoryId = ['한식', '양식', '중식', '일식', '아시안', '건강식', '디저트']
   const category = convertCategoryId[categoryId - 1]
   return (
-    <div onClick={handleItemClick}>
-      <img src={thumbnailUrl} alt='image'/>
+    <div 
+      onClick={handleItemClick}
+      className='lessonItem'
+    >
+      <img className='thumbnail' src={thumbnailUrl} alt='image'/>
       <h3>{title}</h3>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>
-          ⭐{reviewAvg} | 
+          ⭐{reviewAvg}
         </div>
-        <div style={{ display: 'flex' }}>
-          {formattedDateString} |
-          {cookyerName}
+        <div className='datename'>
+          {formattedDateString} | {cookyerName}
         </div>
       </div>
-      <div>
+      <button className='categoryBadge'>
         {category}
-      </div>
+      </button>
     </div>
   );
 }

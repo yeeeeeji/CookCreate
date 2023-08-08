@@ -1,13 +1,13 @@
 .categoryContainer{
-    margin-top: 30px;
+    margin-top: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 70px; /* 컨테이너의 높이 설정 */
+    height: 50px; /* 컨테이너의 높이 설정 */
 }
 
 .categoryItem{
-    margin: 10px;
+    margin: 5px;
     display: flex;
     padding: 10px 20px;
     justify-content: center;
@@ -20,7 +20,7 @@
     color: #656363;
 
     text-align: center;
-    font-size: 18px;
+    font-size: 15px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
