@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import '../../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { audioMute, leaveSession, videoMute } from '../../../store/video/video';
+import { audioMute, leaveSession, setMainStreamManager, videoMute } from '../../../store/video/video';
 import { setShareScreenPublisher } from '../../../store/video/screenShare';
 import axios from 'axios';
 import { closeSession, shareScreen } from '../../../store/video/video-thunk';
@@ -75,6 +75,7 @@ function CookyerVideoSideBar() {
       session.unpublish(shareScreenPublisher)
       setIsShared(false)
       dispatch(setShareScreenPublisher(null))
+      dispatch(setMainStreamManager(publisher))
       console.log("화면공유 취소")
     }
   }
