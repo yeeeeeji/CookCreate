@@ -1,8 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { trigTimer } from './../../store/video/timer';
+
 
 function Timer({ role }) {
   const publisher = useSelector((state) => state.video.publisher)
+  const timerCheck = useSelector((state) => state.timer.timerCheck)
 
   const [ curMinutes, setCurMinutes ] = useState(0)
   const [ curSeconds, setCurSeconds ] = useState(0)
@@ -44,6 +47,13 @@ function Timer({ role }) {
       })
     }, 1000)
   }, [])
+
+  useEffect(() => {
+    if (timerCheck !== null) {
+      console.log('start 함수 호출 시도')
+      start();
+    }
+  }, [timerCheck])
 
   const stop = useCallback(() => {
     if (intervalRef.current === null) {
