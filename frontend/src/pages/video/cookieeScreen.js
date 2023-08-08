@@ -26,10 +26,6 @@ function CookieeScreen() {
   const session = useSelector((state) => state.video.session)
   const publisher = useSelector((state) => state.video.publisher)
   const subscribers = useSelector((state) => state.video.subscribers)
-  // 항상 쿠커가 먼저 들어와있기 때문에 이 로직도 괜찮을 것 같지만, subscribers가 있을때만 실행되는 것으로 변경
-  // const cookyerStream = subscribers.find((sub) => (
-  //   JSON.parse(sub.stream.connection.data).clientData.role === 'cookyer'
-  // ))
 
   const sessionId = useSelector((state) => state.video.sessionId)
   const nickname = localStorage.getItem('nickname');
@@ -175,12 +171,6 @@ function CookieeScreen() {
         dispatch(setAudioOffStream(connectionId))
       })
 
-      // /** 화면공유 받기 */
-      // session.on('signal:sharedScreen', (e) => {
-      //   console.log("화면공유 데이터 받았다", e)  // 시그널 받는거 필요하지 않을수도?
-      //   dispatch(setShareScreenPublisher(JSON.parse(JSON.parse(e.data).sharePublisher)))
-      // })
-
       console.log(4)
 
       /** 페이지 입장 후 세션에 연결 및 발행하기 */
@@ -209,12 +199,6 @@ function CookieeScreen() {
       };
     }
   }, []);
-
-  // useEffect(() => {
-  //   if (shareScreenPublisher) {
-  //     setCookyerStream(shareScreenPublisher)
-  //   }
-  // }, [shareScreenPublisher])
 
   useEffect(() => {
     if (videoLessonId) {

@@ -28,17 +28,6 @@ function CookieeVideoSideBar() {
     }
     navigate('/')
   }
-
-  // 쿠커가 화면공유하면 쿠키에게 시그널보냄
-  // 퍼블리셔만 갈아끼우는 지금은 필요없음
-  // const sendSignalUserChanged = (data) => {
-  //     const signalOptions = {
-  //         data: JSON.stringify(data),
-  //         type: 'sharedScreen',
-  //     };
-  //     console.log("쿠커가 쿠키에게 화면공유 시그널 보냄")
-  //     session.signal(signalOptions);
-  // }
   
   const setVideoMute = () => {
     dispatch(videoMute())
