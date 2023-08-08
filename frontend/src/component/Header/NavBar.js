@@ -39,7 +39,8 @@ function NavBar() {
       </Link> |
       <Link to='/lesson'>
         수업 전체
-      </Link>
+      </Link> |
+      <Link to='/chatroom'>채팅</Link>
       
       <SearchBar />
       {isLogin ? (
@@ -54,6 +55,7 @@ function NavBar() {
           {/* 쿠커들에게만 보입니다. */}
           {role === 'COOKYER' ? <Link to='registerlesson'>과외 등록</Link> : null} 
         </div>
+        
       ) : (
         <React.Fragment>
           <Link to='/login'>

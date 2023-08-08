@@ -99,8 +99,8 @@ function RecipeBook() {
                     <div>{recipe.lessonStepList}</div> */}
                   </div>
                   <div>
-                    <div>과외 날짜:{recipe.lessonDate}</div>
-                    {/* <div>{recipe.lessonDate}</div> */}
+                    {/* <div>과외 날짜:{recipe.lessonDate}</div> */}
+                    <div>과외 날짜: {new Date(recipe.lessonDate).toISOString().split("T")[0]}</div>
                   </div>
                 </ul>
               </div>

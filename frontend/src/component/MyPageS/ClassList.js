@@ -363,7 +363,7 @@ function ClassList() {
                                   <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_calendar.png" alt="기간아이콘" width="29" />
                                   "과외 날짜"
                                 </dt>
-                                <dd>{lesson.lessonDate} 예정</dd>
+                                <dd>{lesson.lessonDate} 완료</dd>
                                 <button disabled="disabled">수업종료</button>
                               </dl>
                               <div className="info_ea">
