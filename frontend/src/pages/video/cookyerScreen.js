@@ -80,7 +80,9 @@ function CookyerScreen() {
         if (subscriber && subscriber.stream.audioActive) {
           dispatch(setAudioOnStream(subscriber.stream.connection.connectionId))
         }
-        dispatch(enteredSubscriber(subscriber))
+        if (JSON.parse(subscriber.stream.connection.data).clientData.role === 'COOKIEE') {
+          dispatch(enteredSubscriber(subscriber))
+        }
       };
 
       // On every Stream destroyed...

@@ -72,6 +72,7 @@ function CookyerVideoSideBar() {
       publisher.stream.session.signal({
         type: 'shareEnd'
       })
+      session.unpublish(shareScreenPublisher)
       setIsShared(false)
       dispatch(setShareScreenPublisher(null))
       console.log("화면공유 취소")
@@ -144,7 +145,7 @@ function CookyerVideoSideBar() {
         <BsWindowFullscreen className='video-side-icon'/>
       </div>
       {/* 쿠키 전체 음소거 */}
-      <div onClick={() => handleCookieeAudio(publisher)}>
+      <div className='video-side-icon-wrap' onClick={() => handleCookieeAudio(publisher)}>
         <BsVolumeMuteFill className='video-side-icon'/>
       </div>
     </div>
