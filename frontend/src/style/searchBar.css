@@ -1,0 +1,32 @@
+.mainSearch-wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.searchBar {
+    border: none;
+    background-color: #EFEFEF;
+    border-radius: 0 0.3rem 0.3rem 0;
+    padding: 0.8rem 13rem 0.8rem 1rem;
+    font-size: medium;  
+}
+
+.searchBar::placeholder {
+    color: #b5b2b2; /* placeholder 텍스트 색상 설정 */
+  }
+
+.mainSearchContainer {
+    margin-left: 2rem;
+    padding-left: 1rem;
+    border-radius: 0.3rem;
+    background-color: #EFEFEF;
+    display: flex;
+    align-items: center;
+}
+
+.mainSearchIcon {
+    font-size: 1.5rem;
+    color: #656363;
+}
