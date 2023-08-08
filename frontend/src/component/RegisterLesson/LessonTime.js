@@ -7,41 +7,38 @@ import { setDateTime, setDateValid, setTimeTaken, setTimeTakenVaild } from "../.
 function LessonTime() {
   const dispatch = useDispatch()
 
-  const [selectedDateTime, setSelectedDateTime] = useState("")
-  const [lessonTakenTime, setLessonTakenTime] = useState("")
+  const [selectedDateTime, setSelectedDateTime] = useState("");
+  const [lessonTakenTime, setLessonTakenTime] = useState("");
 
-  // 유효성 검사
-  const dateValid = useSelector((state) => state.lesson.dateValid)
-  const timeTakenValid = useSelector((state) => state.lesson.timeTakenValid)
+  const dateValid = useSelector((state) => state.lesson.dateValid);
+  const timeTakenValid = useSelector((state) => state.lesson.timeTakenValid);
   
   const handleDateTimeChange = (date) => {
-    setSelectedDateTime(date)
+    setSelectedDateTime(date);
   };
 
   const handleTakenTime = (e) => {
     const selectedValue = e.target.value;
     setLessonTakenTime(selectedValue);
     dispatch(setTimeTaken(selectedValue));
-    dispatch(setTimeTakenVaild(selectedValue !== ''));
+    dispatch(setTimeTakenVaild(selectedValue !== ''))
   };
   
   useEffect(() => {
     if (selectedDateTime !== "") {
-      const isoDateTime = selectedDateTime.toISOString(); // ISO 8601 변환
+      const isoDateTime = selectedDateTime.toISOString();
       dispatch(setDateTime(isoDateTime));
       const currentDate = new Date();
-      const isWithin12Hours = (selectedDateTime - currentDate) <= 12 * 60 * 60 * 1000;
-      dispatch(setDateValid(selectedDateTime > currentDate && !isWithin12Hours));
-      dispatch(setTimeTakenVaild(!isWithin12Hours));
+      dispatch(setDateValid(selectedDateTime > currentDate));
     }
-  }, [dispatch, selectedDateTime, lessonTakenTime]);
+  }, [dispatch, selectedDateTime]);
 
   return (
-    <div style={{display : 'flex', alignItems : 'center'}}>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
       <div>
-        <div style={{display : 'flex', alignItems : 'center'}}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <h3>강의 일시</h3>
-          <div style={{marginLeft : '5px'}}>{dateValid ? '✅' : '🔲'}</div>
+          <div style={{ marginLeft: '5px' }}>{dateValid ? '✅' : '🔲'}</div>
         </div>
         <DatePicker
           selected={selectedDateTime}
@@ -59,9 +56,9 @@ function LessonTime() {
         </p>}
       </div>
       <div>
-        <div style={{display : 'flex', alignItems : 'center'}}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <h3>강의 시간</h3>
-          <div style={{marginLeft : '5px'}}>{timeTakenValid ? '✅' : '🔲'}</div>
+          <div style={{ marginLeft: '5px' }}>{timeTakenValid ? '✅' : '🔲'}</div>
         </div>
         <select value={lessonTakenTime} onChange={handleTakenTime}>
           <option value="">-</option>

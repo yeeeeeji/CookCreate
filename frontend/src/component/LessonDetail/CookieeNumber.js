@@ -9,6 +9,7 @@ function CookieeNumber() {
   // const currentInt = maximumInt - remainingInt
   return (
     <div>
+      {current} {remaining}
       <div style={{
         width : '300px',
         height : '100px',
