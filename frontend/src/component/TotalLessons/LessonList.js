@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import LessonItem from './LessonItem';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import { setCategories, setDeadLine, setKeyword, setOrder, setType } from '../../store/lesson/lessonSearch';
+import '../../style/lesson/lessonListCss.css';
 
 function LessonList() {
   const [lessons, setLessons] = useState([]);
@@ -31,15 +33,12 @@ function LessonList() {
   }, [type, keyword, category, order, deadline])
 
   return (
-    <div>
+    <div className='lessonListContainer'>
       {lessons.map((lesson) => (
         <div 
-        key={lesson.lessonId}
-        style={{
-          border: '1px solid #ccc',
-          padding: '20px',
-          marginTop: '20px'
-          }}>
+          key={lesson.lessonId}
+          className="lessonItemContainer"
+        >
           <Link
             to={`/lesson/${lesson.lessonId}`}
             style={{ textDecoration: 'none', color: 'inherit' }}

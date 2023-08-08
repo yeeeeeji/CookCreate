@@ -1,6 +1,7 @@
 import React from 'react';
 import { setLessonId } from '../../store/lesson/lessonInfo';
 import { useDispatch } from 'react-redux';
+import '../../style/lesson/lessonItemCss.css';
 
 function LessonItem({ id, title, date, thumbnailUrl, reviewAvg, cookyerName, categoryId }) {
 
@@ -24,21 +25,23 @@ function LessonItem({ id, title, date, thumbnailUrl, reviewAvg, cookyerName, cat
   }
 
   return (
-    <div onClick={handleItemClick}>
-      <img src={thumbnailUrl} alt='image' />
+    <div 
+      onClick={handleItemClick}
+      className='lessonItem'
+    >
+      <img className='thumbnail' src={thumbnailUrl} alt='image' />
       <h3>{title}</h3>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>
-          ⭐{reviewAvg} |
+          ⭐{reviewAvg}
         </div>
-        <div style={{ display: 'flex' }}>
-          {formattedDateString} |
-          {cookyerName}
+        <div className='datename'>
+          {formattedDateString} | {cookyerName}
         </div>
       </div>
-      <div>
+      <button className='categoryBadge'>
         {category}
-      </div>
+      </button>
       <div style={{ color: 'red' }}>
         {message}
       </div>
