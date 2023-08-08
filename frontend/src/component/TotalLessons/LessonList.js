@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import LessonItem from './LessonItem';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { setCategories, setDeadLine, setKeyword, setOrder, setType } from '../../store/lesson/lessonSearch';
 import '../../style/lesson/lessonListCss.css';
 
 function LessonList() {
