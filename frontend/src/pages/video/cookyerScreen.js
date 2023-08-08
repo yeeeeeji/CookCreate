@@ -233,7 +233,7 @@ function CookyerScreen() {
         dispatch(setHandsUpCookieeList(newHandsUpCookieeList))
         console.log(newHandsUpCookieeList, "새 손들기 리스트")
       } else {
-        dispatch(setCheckCookieeList([handsUpCookiee]))
+        dispatch(setHandsUpCookieeList([handsUpCookiee]))
         console.log(handsUpCookieeList, "손들기리스트에 값 없음")
       }
       dispatch(setHandsUpCookiee(''))

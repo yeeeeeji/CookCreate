@@ -65,7 +65,8 @@ function createSession(sessionId) {
     try {
       const data = JSON.stringify({ 'customSessionId': sessionId })
       const response = await axios.post(
-        `http://localhost:4443/openvidu/api/sessions`,
+        // `http://localhost:4443/openvidu/api/sessions`,
+        `https://i9c111.p.ssafy.io:8447/openvidu/api/sessions`,
         data,
         {
           headers: {
@@ -96,7 +97,8 @@ function createToken(sessionId) {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await axios.post(
-        `http://localhost:4443/openvidu/api/sessions/${sessionId}/connection`,
+        // `http://localhost:4443/openvidu/api/sessions/${sessionId}/connection`,
+        `https://i9c111.p.ssafy.io:8447/openvidu/api/sessions/${sessionId}/connection`,
         {},
         {
           headers: {

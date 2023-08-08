@@ -5,6 +5,7 @@ import LessonList from '../component/TotalLessons/LessonList';
 import LessonFoodCategory from '../component/TotalLessons/LessonFoodCategory';
 import { useDispatch } from 'react-redux';
 import { setCategories, setDeadLine, setKeyword, setLessonId, setOrder, setType } from '../store/lesson/lessonSearch';
+import '../style/lesson/totalLessonsCss.css';
 
 function TotalLessons() {
   const dispatch = useDispatch();
@@ -21,13 +22,23 @@ function TotalLessons() {
   return (
     <div>
       <div>
-        <h3>수업 전체</h3>
-        <div>실력 있는 선생님들과 직접 나만의 요리를 완성해보세요!</div>
+        <h3 className='title'>
+          수업 전체
+        </h3>
+        <div className='desc'>
+          실력 있는 선생님들과 직접 나만의 요리를 완성해보세요!
+        </div>
       </div>
-      <SearchBar />
-      <LessonFoodCategory />
-      <LessonListFliter />
-      <LessonList />
+      <div className='contentContainer'>
+        <div className='mainContent'>
+          <SearchBar/>
+          <LessonFoodCategory/>
+          <LessonList/>
+        </div>
+        <div className='sidebar'>
+          <LessonListFliter/>
+        </div>
+      </div>
     </div>
   );
 }

@@ -10,7 +10,7 @@ function LessonTime() {
   const [selectedDateTime, setSelectedDateTime] = useState("")
   const [lessonTakenTime, setLessonTakenTime] = useState("")
 
-  //유효성 검사
+  // 유효성 검사
   const dateValid = useSelector((state) => state.lesson.dateValid)
   const timeTakenValid = useSelector((state) => state.lesson.timeTakenValid)
   
@@ -19,25 +19,22 @@ function LessonTime() {
   };
 
   const handleTakenTime = (e) => {
-    setLessonTakenTime(e.target.value)
-    dispatch(setTimeTaken(e.target.value))
-    dispatch(setTimeTakenVaild(e.target.value !== ''))
+    const selectedValue = e.target.value;
+    setLessonTakenTime(selectedValue);
+    dispatch(setTimeTaken(selectedValue));
+    dispatch(setTimeTakenVaild(selectedValue !== ''));
   };
-
-
+  
   useEffect(() => {
     if (selectedDateTime !== "") {
       const isoDateTime = selectedDateTime.toISOString(); // ISO 8601 변환
       dispatch(setDateTime(isoDateTime));
       const currentDate = new Date();
-      if (selectedDateTime > currentDate) {
-        dispatch(setDateValid(true));
-      } else {
-        dispatch(setDateValid(false));
-      }
+      const isWithin12Hours = (selectedDateTime - currentDate) <= 12 * 60 * 60 * 1000;
+      dispatch(setDateValid(selectedDateTime > currentDate && !isWithin12Hours));
+      dispatch(setTimeTakenVaild(!isWithin12Hours));
     }
   }, [dispatch, selectedDateTime, lessonTakenTime]);
-  
 
   return (
     <div style={{display : 'flex', alignItems : 'center'}}>
@@ -55,9 +52,11 @@ function LessonTime() {
           dateFormat="yyyy-MM-dd HH:mm"
           placeholderText='과외 일시'
         />
-        {selectedDateTime && dateValid === false && <p style={{ color: 'red' }}>올바른 날짜를 선택해주세요.</p>}
-
-
+        {selectedDateTime && dateValid === false && <p style={{ color: 'red' }}>
+          현재 시간 기준 12시간 이전 강의는 생성할 수 없습니다!
+          <br/>
+          올바른 날짜를 선택해주세요.
+        </p>}
       </div>
       <div>
         <div style={{display : 'flex', alignItems : 'center'}}>

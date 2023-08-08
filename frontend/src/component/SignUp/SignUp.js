@@ -174,7 +174,7 @@ function Signup() {
     .then(() => {
       alert('회원가입 성공! Cook Create를 즐겨보세요!')
       localStorage.removeItem('userType')
-      navigate('/')
+      navigate('/login')
     })
     .catch((err) => {
       setUserCanSignUp(err.response.data.message)
