@@ -42,9 +42,7 @@ function LessonItem({ id, title, date, thumbnailUrl, reviewAvg, cookyerName, cat
       <button className='categoryBadge'>
         {category}
       </button>
-      <div style={{ color: 'red' }}>
-        {message}
-      </div>
+      {message && <div className='messageOverlay'>{message}</div>}
     </div>
   );
 }
