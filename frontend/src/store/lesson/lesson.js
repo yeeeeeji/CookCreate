@@ -95,6 +95,9 @@ const lesson = createSlice({
     },
     setVideoUrl : (state, action) => {
       state.videoUrl = action.payload
+    },
+    resetlessonReducer : (state) => {
+      return initialState
     }
   },
 });
@@ -110,5 +113,5 @@ export const {
   setDescription, setDescriptionValid,
   setMaterials, setMaterialsValid,
   setLessonStepList, setStepValid,
-  setVideoUrl, setThumbnailVaild} = lesson.actions;
+  setVideoUrl, setThumbnailVaild, resetlessonReducer} = lesson.actions;
 export default lesson.reducer;
