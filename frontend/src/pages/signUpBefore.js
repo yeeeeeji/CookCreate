@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../style/signUpBefore.css';
+import '../style/auth/signUpBefore.css';
 
 function SignUpBefore() {
+  useEffect(() => {
+    localStorage.clear()
+  }, [])
   const navigate = useNavigate();
   const [activeUserType, setActiveUserType] = useState(null);
 
@@ -11,8 +14,11 @@ function SignUpBefore() {
     setActiveUserType(userType);
   };
   const handleSignUpBtn = () => {
-    navigate("/signup");
-
+    if (!activeUserType) {
+      alert('회원 유형을 선택해주세요.')
+    } else {
+      navigate("/signup");
+    }
   }
   return (
     <div className='view'>

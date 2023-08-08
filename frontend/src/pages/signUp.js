@@ -1,6 +1,6 @@
 import React from 'react';
 import SignUp from '../component/SignUp/SignUp';
-import '../style/signup.css'
+import '../style/auth/signup.css'
 
 function signUp() {
   return (

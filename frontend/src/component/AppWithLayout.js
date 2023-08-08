@@ -56,7 +56,7 @@ function AppWithLayout({ match }) {
 
 
   return (
-    <div>
+    <div style={{padding : "0 15rem"}}>
       <NavBar />
       <Routes>
         <Route path='/' element={<MainPage />} />
@@ -89,8 +89,6 @@ function AppWithLayout({ match }) {
         <Route path="/reviewT" element={<ReviewT />}/>
         <Route path="/certificationT" element={<CertifyT />}/>
       </Routes>
-      <br />
-      <hr />
       <Footer />
     </div>
   );

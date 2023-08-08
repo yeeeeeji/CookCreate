@@ -12,7 +12,7 @@ import {
   setCategoryId, setCategoryName, setDescription, setDifficulty,
   setLessonDate, setLessonStepList, setLessonTitle, setRemaining,
   setMaterials, setMaximum, setPrice, setThumbnailUrl, setTimeTaken, setVideoUrl,
-  setIntroduce,
+  setIntroduce
 } from '../store/lesson/lessonInfo';
 
 function LessonDetail() {
@@ -60,6 +60,7 @@ function LessonDetail() {
         dispatch(setLessonDate(res.data.lessonDate));
         dispatch(setTimeTaken(res.data.timeTaken));
         dispatch(setVideoUrl(res.data.videoUrl));
+        dispatch(setIntroduce(res.data.introduce))
         if (DateTransformType > futureTime && remaining > 0 && userType === 'COOKIEE') {
           setDisable(false);
         } else {
