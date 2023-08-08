@@ -2,9 +2,11 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import SearchResModal from './SearchResModal';
+import '../../style/searchBar.css';
 import { setLessonId } from '../../store/lesson/lessonInfo';
 import { useNavigate } from 'react-router-dom';
 import { setCategories, setDeadLine, setOrder, setType } from '../../store/lesson/lessonSearch';
+import { BiSearch } from 'react-icons/bi';
 
 function SearchBar() {
   const dispatch = useDispatch();
@@ -65,15 +67,19 @@ function SearchBar() {
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="아무거나 검색하세요!"
-        value={keyword}
-        onChange={(e) => {
-          search(e);
-        }}
-      />
+    <div className="mainSearchContainer">
+      <div className="mainSearch-wrap">
+        <BiSearch className="mainSearchIcon" />
+        <input
+          type="text"
+          className="searchBar"
+          placeholder="요리를 검색해보세요!"
+          value={keyword}
+          onChange={(e) => {
+            search(e);
+          }}
+        />
+      </div>
       <div>
         {isexist &&
           isOpen &&
