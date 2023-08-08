@@ -1,53 +1,108 @@
+// import React, { Component } from "react";
+// import InputChat from "../component/Chat/ChatRoom/InputChat";
+// import SockJsClient from "react-stomp";
+
+// class ChatPage extends Component {
+//   constructor(props) {
+//     super(props);
+
+//     this.clientRef = null;
+//   }
+
+//   handleSocketConnect = () => {
+//     console.log("WebSocket connected");
+//   }
+
+//   handleSocketDisconnect = () => {
+//     console.log("WebSocket disconnected");
+//   }
+
+//   // handleSocketMessage = (msg) => {
+//   //   console.log("Received message:", msg);
+//   // }
+
+//   render() {
+//     return (
+//       <div>
+//         <InputChat />
+//         <SockJsClient
+//           url='http://localhost:8080/api/v1/message'
+//           topics={['/topics/all']}
+//           onConnect={this.handleSocketConnect}
+//           onDisconnect={this.handleSocketDisconnect}
+//           // onMessage={this.handleSocketMessage}
+//           ref={(client) => { this.clientRef = client; }}
+//         />
+//       </div>
+//     );
+//   }
+// }
+
+// export default ChatPage;
+
+
+// import React, { useEffect } from "react";
 // import React from "react";
-import React, { useEffect, useRef } from "react";
-import InputChat from "../component/Chat/ChatRoom/InputChat";
-import * as StompJs from "@stomp/stompjs";
-import SockJS from "sockjs-client";
+// import InputChat from "../component/Chat/ChatRoom/InputChat";
+// import SockJsClient from "react-stomp";
 
-function ChatPage() {
-  const stompClient = useRef(null); // stompClient 레퍼런스 생성
+// function ChatPage() {
+//   const handleSocketConnect = () => {
+//     console.log("WebSocket connected");
+//   };
 
-  useEffect(() => {
-    const socket = new SockJS("ws://localhost:8080/api/v1/message");
-    stompClient.current = StompJs.over(socket); // stompClient에 할당
+//   const handleSocketDisconnect = () => {
+//     console.log("WebSocket disconnected");
+//   };
 
-    // stompClient를 활용한 추가 로직 구현
+//   const handleSocketMessage = (msg) => {
+//     console.log("Received message:", msg);
+//   };
 
-    // 컴포넌트 언마운트 시 stompClient 해제 로직 필요
-    return () => {
-      if (stompClient.current) {
-        stompClient.current.disconnect();
-      }
-    };
-  }, []);
+//   return (
+//     <div>
+//       <InputChat />
+//       <SockJsClient
+//         url="http//localhost:8080/api/v1/message/ws"
+//         topics={["/topics/all"]}
+//         onConnect={handleSocketConnect}
+//         onDisconnect={handleSocketDisconnect}
+//         onMessage={handleSocketMessage}
+//       />
+//     </div>
+//   );
+// }
 
-  return (
-    <div>
-      <InputChat />
-    </div>
-  );
-}
+// export default ChatPage;
 
-export default ChatPage;
 
 
 
 // import React, { useEffect } from "react";
 // import InputChat from "../component/Chat/ChatRoom/InputChat";
-// import * as StompJs from "@stomp/stompjs";
-// import SockJS from "sockjs-client";
+// import * as SockJS from 'sockjs-client';
 
 // function ChatPage() {
 //   useEffect(() => {
-//     const client = new StompJs.Client({
-//       brokerURL: "ws://localhost:8080/api/v1/message", // Stomp 서버 주소
-//       webSocketFactory: () => new SockJS("ws://localhost:8080"), // SockJS 주소 수정
-//       onConnect: () => {
-//         console.log("Connected to Stomp server");
-//       },
+//     const client = new SockJS('http://localhost:8080/api/v1/message/ws', null, {
+//       transports: ['websocket'],
 //     });
 
-//     client.activate();
+//     client.onopen = () => {
+//       console.log("WebSocket connected");
+//     };
+
+//     // client.onmessage = (e) => {
+//     //   console.log("Received message:", e.data);
+//     // };
+
+//     client.onclose = () => {
+//       console.log("WebSocket disconnected");
+//     };
+
+//     return () => {
+//       client.close();
+//     };
 //   }, []);
 
 //   return (
@@ -58,4 +113,31 @@ export default ChatPage;
 // }
 
 // export default ChatPage;
+
+
+import React from "react";
+import * as StompJs from '@stomp/stompjs';
+
+
+function ChatPage() {
+
+    const client = new StompJS.Client({
+    brokerURL: `ws://localhost:8080/api/v1/message`,
+    // webSocketFactory: () => {
+    //   return new SockJS("localhost:8080");
+    // }
+  });
+
+  client.activate();
+
+  return (
+    <div>
+      
+    </div>
+  );
+}
+
+export default ChatPage;
+
+
 
