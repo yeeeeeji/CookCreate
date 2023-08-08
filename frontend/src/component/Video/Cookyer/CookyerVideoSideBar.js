@@ -202,7 +202,7 @@ function CookyerVideoSideBar() {
         <BsWindowFullscreen className='video-side-icon'/>
       </div>
       {/* 쿠키 전체 음소거 */}
-      <div className='video-side-icon-wrap' onClick={() => handleCookieeAudio(publisher)}>
+      <div onClick={() => handleCookieeAudio(publisher)}>
         <BsVolumeMuteFill className='video-side-icon'/>
       </div>
     </div>

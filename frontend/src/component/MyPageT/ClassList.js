@@ -134,6 +134,33 @@ function ClassList() {
     }
   }, [isSessionOpened, isExited])
 
+  /** 과외 수정 */
+  const updateClass = ( lessonId ) => {
+    navigate(`/lesson/edit/${lessonId}`)
+  }
+
+  /** 과외 삭제 */
+  const deleteClass = ( lessonId ) => {
+    axios.delete(
+      `api/v1/lesson/${lessonId}`,
+      {
+        headers: {
+          Access_Token: accessToken
+        }
+      }
+    )
+    .then((res) => {
+      console.log('쿠커 과외 삭제 성공', res)
+    })
+    .catch((err) => {
+      console.log('쿠커 과외 삭제 실패', err)
+      let error = Object.assign({}, err)
+      if (error?.response?.status === 409) {
+        alert('신청한 쿠키가 있어 수업을 삭제할 수 없습니다.')
+      }
+    })
+  }
+
   return (
     <div>
         <SideBar />
@@ -245,6 +272,8 @@ function ClassList() {
                                 <span className="tag" style={{ backgroundColor: "hsl(321,63%,90%)" }}>
                                   수정시간:{lesson.modifiedDate}
                                 </span>
+                                <button onClick={() => updateClass(lesson.lessonId)}>수정</button>
+                                <button onClick={() => deleteClass(lesson.lessonId)}>삭제</button>
                               </div>
                             </div>
                           </div>
