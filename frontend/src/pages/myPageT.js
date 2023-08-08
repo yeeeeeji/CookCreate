@@ -1,12 +1,15 @@
 import React from "react";
-import SideBar from "../component/MyPageT/SideBar";
+import Account from "../component/MyPageS/Account"
 
 
 function MyPageT() {
 
   return (
     <div>
-      <SideBar />
+      {/* <SideBar /> */}
+      <section>
+        <Account />
+      </section>
     </div>
   );
 }

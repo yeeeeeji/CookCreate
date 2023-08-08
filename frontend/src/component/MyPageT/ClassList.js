@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import SideBar from "./SideBar";
+// import SideBar from "./SideBar";
 import { useSelector} from "react-redux";
 import axios from 'axios';
 
@@ -45,7 +45,7 @@ function ClassList() {
 
   return (
     <div>
-        <SideBar />
+        {/* <SideBar /> */}
         <div className="column is-10 main_container">
           <div className="header">
             <div className="summary">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 // import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import SideBar from "./SideBar";
+// import SideBar from "./SideBar";
 import axios from "axios";
 
 function Certify() {
@@ -76,7 +76,7 @@ function Certify() {
 
   return (
     <div>
-      <SideBar />
+      {/* <SideBar /> */}
       <div>
         <h2>자격증 등록</h2>
         <form onSubmit={handleSubmit}>

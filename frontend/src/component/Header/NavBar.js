@@ -218,12 +218,9 @@ function NavBar() {
       <Link to='/chatroom'>
         채팅
       </Link> |
-      <Link to='/mypageS'>
-        학생my
-      </Link> |
-      <Link to='/mypageT'>
-        선생my
-      </Link> |
+      {/* <Link to={`/mypage${role === 'COOKYER' ? 'T' : 'S'}`}>
+      마이페이지
+      </Link> */}
       <Link to='/'>
         로고
       </Link> |
@@ -239,7 +236,10 @@ function NavBar() {
           {/* 쿠커들에게만 보입니다. */}
           {role === 'COOKYER' ? <Link to='registerlesson'>과외 등록</Link> : null} 
           <span onClick={Logout}>로그아웃</span>
-      </div>
+          <Link to={`/mypage${role === 'COOKYER' ? 'T' : 'S'}`}>
+          마이페이지
+          </Link>
+        </div>
       ) : (
         <React.Fragment>
           <Link to='/login'>
