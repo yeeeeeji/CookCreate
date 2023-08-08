@@ -308,6 +308,26 @@ p {
   z-index: 2;
 }
 
+/* 다른 쿠키 목록 */
+.other-cookiees {
+  position: absolute;
+  top: 590px;
+  right: 82px;
+  width: 330px;
+  height: 324px;
+  background-color: orange;
+}
+
+.other-cookiees-video {
+  background-color: var(--empty-color);
+  border-radius: 5px;
+  margin: 5px;
+  width: 150px;
+  height: 98px;
+  display: inline-block; /* inline-flex */
+  object-fit: cover;
+}
+
 /* 비디오 헤더 */
 .video-header {
   color: white;

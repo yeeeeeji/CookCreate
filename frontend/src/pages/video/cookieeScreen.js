@@ -12,12 +12,13 @@ import { joinSession } from '../../store/video/video-thunk';
 import { initCookieeVideo, resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
 import { setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
 import '../../style/video.css'
-import { initScreenShare, setShareScreenPublisher } from '../../store/video/screenShare';
+import { initScreenShare } from '../../store/video/screenShare';
 import LessonReviewModal from '../../component/Video/Cookiee/LessonReviewModal';
 
 import { AiFillCheckCircle } from 'react-icons/ai'
 import { IoIosHand } from 'react-icons/io'
 import { BsMicFill, BsMicMuteFill } from "react-icons/bs";
+import OtherCookiees from '../../component/Video/Cookiee/OtherCookiees';
 
 function CookieeScreen() {
   const dispatch = useDispatch()
@@ -55,6 +56,9 @@ function CookieeScreen() {
   const audioOnList = useSelector((state) => state.video.audioOnList)
   const audioOnStream = useSelector((state) => state.video.audioOnStream)
   const audioOffStream = useSelector((state) => state.video.audioOffStream)
+
+  /** 다른 쿠키 목록 기능 */
+  const showOthers = useSelector((state) => state.cookieeVideo.showOthers)
 
   /** 자동 전체 화면 */
   useEffect(() => {
@@ -335,25 +339,13 @@ function CookieeScreen() {
                   <IoIosHand className='cookiee-handsup-icon'/>
                 )}
               </div>
-
-              {/* <div className='cookyer-cookiees'> */}
-                {/* {subscribers} */}
-                {/* {subscribers ? (
-                  subscribers.map((sub, i) => (
-                    <div key={i}>
-                      <UserVideoComponent
-                        videoStyle='cookyer-cookiee'
-                        streamManager={sub}
-                      />
-                    </div>
-                  ))
-                ) : null} */}
-              {/* </div> */}
-
             </div>
           </div>
         </div>
       </div>
+      {showOthers ? (
+        <OtherCookiees/>
+      ) : null}
     </div>
   );
 }
