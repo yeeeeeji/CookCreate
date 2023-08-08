@@ -8,11 +8,12 @@ function Timer({ role }) {
   const [ curSeconds, setCurSeconds ] = useState(0)
   const [ totalSeconds, setTotalSeconds ] = useState(0)
 
+  /* 쿠키 타이머 시작 표시 */
+  const [ isRunning, setIsRunning ] = useState(false)
+
   // const [ clickInput, setSetTime ] = useState(false)
 
   console.log("나는야", role)
-
-  // const role = localStorage.getItem('role')  // 지금은 직접 넣어줬는데 나중엔 이걸로 하기 or props로 해결
 
   useEffect(() => {
     const total = curMinutes*60 + curSeconds
@@ -32,6 +33,7 @@ function Timer({ role }) {
   const intervalRef = useRef(null)
   
   const start = useCallback(() => {
+    setIsRunning(true)
     if (intervalRef.current !== null) {
       return
     }
@@ -48,6 +50,7 @@ function Timer({ role }) {
   }, [])
 
   const stop = useCallback(() => {
+    setIsRunning(false)
     if (intervalRef.current === null) {
       return
     }
@@ -121,20 +124,23 @@ function Timer({ role }) {
             ></input>
           </div>
         ) : (
-          <h1>
-            {curMinutes < 10 ? `0${curMinutes}` : curMinutes}
-            :
-            {curSeconds < 10 ? `0${curSeconds}` : curSeconds}
-          </h1>
+          <div className='video-timer-time'>
+            <p>{curMinutes < 10 ? `0${curMinutes}` : curMinutes}</p>
+            <p>:</p> 
+            <p>{curSeconds < 10 ? `0${curSeconds}` : curSeconds}</p>
+          </div>
         )}
         {/* 학생들에게 선생님이 설정한 타이머 값을 보냄 */}
         {role === 'COOKYER' ? (
           <button className='video-timer-set-btn' onClick={() => sendTime(publisher)}>설정</button>
         ) : (
           <div>
-            <button onClick={start}>Start</button>
-            <button onClick={stop}>Stop</button>
-            <button onClick={reset}>Reset</button>
+            {isRunning ? (
+              <button className='video-timer-set-btn' onClick={stop}>Stop</button>
+            ) : (
+              <button className='video-timer-set-btn' onClick={start}>Start</button>
+            )}
+            {/* <button onClick={reset}>Reset</button> */}
           </div>
         )}
       </div>

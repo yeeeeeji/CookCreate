@@ -312,9 +312,9 @@ function CookieeScreen() {
                   <h1>쿠커 화면</h1>
                 )}
                 {cookyerStream && audioOnList && audioOnList.find((item) => item === cookyerStream.stream.connection.connectionId) ? (
-                  <BsMicFill className='cookyer-cookiee-audio-icon-active'/>
+                  <BsMicFill className='cookiee-cookyer-audio-icon-active'/>
                 ) : (
-                  <BsMicMuteFill className='cookyer-cookiee-audio-icon'/>
+                  <BsMicMuteFill className='cookiee-cookyer-audio-icon'/>
                 )}
               </div>
               <Timer role='COOKIEE'/>

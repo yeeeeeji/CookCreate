@@ -55,19 +55,19 @@ function CookyerScreen() {
   const audioOnStream = useSelector((state) => state.video.audioOnStream)
   const audioOffStream = useSelector((state) => state.video.audioOffStream)
 
-  /** 자동 전체 화면 */
-  useEffect(() => {
-    const element = document.documentElement; // 전체 화면으로 변경하고자 하는 요소
-    if (element.requestFullscreen) {
-      element.requestFullscreen();
-    } else if (element.mozRequestFullScreen) {
-      element.mozRequestFullScreen();
-    } else if (element.webkitRequestFullscreen) {
-      element.webkitRequestFullscreen();
-    } else if (element.msRequestFullscreen) {
-      element.msRequestFullscreen();
-    }
-  }, []);
+  // /** 자동 전체 화면 */
+  // useEffect(() => {
+  //   const element = document.documentElement; // 전체 화면으로 변경하고자 하는 요소
+  //   if (element.requestFullscreen) {
+  //     element.requestFullscreen();
+  //   } else if (element.mozRequestFullScreen) {
+  //     element.mozRequestFullScreen();
+  //   } else if (element.webkitRequestFullscreen) {
+  //     element.webkitRequestFullscreen();
+  //   } else if (element.msRequestFullscreen) {
+  //     element.msRequestFullscreen();
+  //   }
+  // }, []);
 
   useEffect(() => {
     console.log(3, session)
