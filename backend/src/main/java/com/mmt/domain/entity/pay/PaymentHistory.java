@@ -26,7 +26,6 @@ public class PaymentHistory {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
-    private String tId;
     private int totalAmount;
     private String cardInfo;
     private PayStatus payStatus;
