@@ -12,7 +12,7 @@ import { joinSession } from '../../store/video/video-thunk';
 import { initCookieeVideo, resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
 import { setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
 import '../../style/video.css'
-import { initScreenShare } from '../../store/video/screenShare';
+import { initScreenShare, setShareScreenPublisher } from '../../store/video/screenShare';
 import LessonReviewModal from '../../component/Video/Cookiee/LessonReviewModal';
 
 import { AiFillCheckCircle } from 'react-icons/ai'
@@ -50,6 +50,10 @@ function CookieeScreen() {
 
   /** 선생님 화면 고정하기 위해 선생님 subscriber 찾기 */
   const [ cookyerStream, setCookyerStream ] = useState(undefined)
+  
+  /** 화면공유 subscriber 찾기 */
+  const [ screenShareStream, setScreenShareStream ] = useState(undefined)
+  // const shareScreenPublisher = useSelector((state) => state.screenShare.shareScreenPublisher)
 
   /** 참가자 소리 상태 확인 */
   const audioOnList = useSelector((state) => state.video.audioOnList)
@@ -77,8 +81,15 @@ function CookieeScreen() {
         JSON.parse(sub.stream.connection.data).clientData.role === 'COOKYER'
       ))
       setCookyerStream(cookyer)
+      const share = subscribers.find((sub) => (
+        JSON.parse(sub.stream.connection.data).clientData.role === 'SHARE'
+      ))
+      if (share) {
+        setScreenShareStream(share)
+      }
+      // 섭스크라이버에서 SHARE 찾기
     }
-  }, [subscribers, cookyerStream])
+  }, [subscribers])
 
   useEffect(() => {
     console.log(3, session)
@@ -164,9 +175,10 @@ function CookieeScreen() {
         dispatch(setAudioOffStream(connectionId))
       })
 
-      /** 화면공유 받기 */
+      // /** 화면공유 받기 */
       // session.on('signal:sharedScreen', (e) => {
       //   console.log("화면공유 데이터 받았다", e)  // 시그널 받는거 필요하지 않을수도?
+      //   dispatch(setShareScreenPublisher(JSON.parse(JSON.parse(e.data).sharePublisher)))
       // })
 
       console.log(4)
@@ -197,6 +209,12 @@ function CookieeScreen() {
       };
     }
   }, []);
+
+  // useEffect(() => {
+  //   if (shareScreenPublisher) {
+  //     setCookyerStream(shareScreenPublisher)
+  //   }
+  // }, [shareScreenPublisher])
 
   useEffect(() => {
     if (videoLessonId) {
@@ -281,10 +299,14 @@ function CookieeScreen() {
                   {isCompleted ? (
                     <p>수업이 종료되었습니다.</p>
                   ) : (
-                    <UserVideoComponent
-                      videoStyle='cookiee-sharing-content'
-                      streamManager={cookyerStream}
-                    />
+                    screenShareStream ? (
+                      <UserVideoComponent
+                        videoStyle='cookiee-sharing-content'
+                        streamManager={screenShareStream}
+                      />
+                    ) : (
+                      <h1>쿠커 화면</h1>
+                    )
                   )}
                 </div>
               </div>
@@ -301,7 +323,7 @@ function CookieeScreen() {
                 ) : (
                   <h1>쿠커 화면</h1>
                 )}
-                {audioOnList && audioOnList.find((item) => item === cookyerStream.stream.connection.connectionId) ? (
+                {cookyerStream && audioOnList && audioOnList.find((item) => item === cookyerStream.stream.connection.connectionId) ? (
                   <BsMicFill className='cookyer-cookiee-audio-icon-active'/>
                 ) : (
                   <BsMicMuteFill className='cookyer-cookiee-audio-icon'/>

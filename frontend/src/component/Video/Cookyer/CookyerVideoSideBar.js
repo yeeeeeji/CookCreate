@@ -23,6 +23,8 @@ function CookyerVideoSideBar() {
   /** 화면 공유 기능 */
   const shareScreenPublisher = useSelector((state) => state.screenShare.shareScreenPublisher)
   const [ isShared, setIsShared ] = useState(false)
+  const nickname = localStorage.getItem('nickname');
+  const role = localStorage.getItem('role')
   
   /** 세션 나가기 */
   const sessionId = useSelector((state) => state.video.sessionId)
@@ -79,6 +81,7 @@ function CookyerVideoSideBar() {
       }
     } else {
       setIsShared(false)
+      dispatch(setShareScreenPublisher(null))
       console.log("화면공유 취소")
     }
   }
@@ -86,28 +89,38 @@ function CookyerVideoSideBar() {
   useEffect(() => {
     if (isShared) {
       console.log("화면공유 시작")
-      dispatch(shareScreen({OV}))
+      const data = {
+        sessionId, nickname
+      }
+      dispatch(shareScreen(data))
     } else {
+      // const data = {
+      //   sharePublisher: JSON.stringify(publisher)
+      // }
       if (shareScreenPublisher) {  // 공유된 상태일때만
-        session.unpublish(shareScreenPublisher)
-        session.publish(publisher)
-        dispatch(setShareScreenPublisher(null))
-        console.log("화면공유 종료")
+        // publisher.stream.session.signal({
+        //   data: JSON.stringify(data),
+        //   type: 'sharedScreen'
+        // })
+        // session.unpublish(shareScreenPublisher)
+        // session.publish(publisher)
+        // dispatch(setShareScreenPublisher(null))
+        // console.log("화면공유 종료")
       }
     }
   }, [isShared])
 
   useEffect(() => {
     if (shareScreenPublisher !== null) {
-      shareScreenPublisher.once('accessAllowed', () => {
-        console.log("화면공유 여기까지 오니?", shareScreenPublisher.stream)
-        session.unpublish(publisher);
-        dispatch(setShareScreenPublisher(shareScreenPublisher))
-        session.publish(shareScreenPublisher).then(() => {
-          console.log("화면공유 퍼블리셔 발행 성공")
-          // sendSignalUserChanged({ isScreenShareActive: true });
-        })
-      });
+      // shareScreenPublisher.once('accessAllowed', () => {
+      //   console.log("화면공유 여기까지 오니?", shareScreenPublisher.stream)
+        // session.unpublish(publisher);
+        // dispatch(setShareScreenPublisher(shareScreenPublisher))
+        // session.publish(shareScreenPublisher).then(() => {
+        //   console.log("화면공유 퍼블리셔 발행 성공", shareScreenPublisher)
+        //   // sendSignalUserChanged({ isScreenShareActive: true });
+        // })
+      // });
     }
   }, [shareScreenPublisher])
 

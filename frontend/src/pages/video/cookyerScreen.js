@@ -76,6 +76,7 @@ function CookyerScreen() {
       // On every new Stream received...
       const handleStreamCreated = (event) => {
         const subscriber = session.subscribe(event.stream, undefined);
+        console.log("등장", subscriber)
         if (subscriber && subscriber.stream.audioActive) {
           dispatch(setAudioOnStream(subscriber.stream.connection.connectionId))
         }
