@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import LessonStep from '../component/RegisterLesson/LessonStep';
 import LessonInfoTop from '../component/RegisterLesson/LessonInfoTop';
 import LessonTime from '../component/RegisterLesson/LessonTime';
 import LessonDetail from '../component/RegisterLesson/LessonDetail';
 import RegisterForm from '../component/RegisterLesson/RegisterForm';
-function registerLesson() {
-
+import { useDispatch } from 'react-redux';
+import { resetlessonReducer } from '../store/lesson/lesson';
+function RegisterLesson() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(resetlessonReducer())
+  })
   return (
     <div>
       <h2>
@@ -21,4 +26,4 @@ function registerLesson() {
   );
 }
 
-export default registerLesson;
+export default RegisterLesson;
