@@ -69,6 +69,9 @@ function CookyerVideoSideBar() {
         console.log("화면공유하기")
       }
     } else {
+      publisher.stream.session.signal({
+        type: 'shareEnd'
+      })
       setIsShared(false)
       dispatch(setShareScreenPublisher(null))
       console.log("화면공유 취소")

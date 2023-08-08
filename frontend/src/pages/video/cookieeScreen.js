@@ -175,6 +175,11 @@ function CookieeScreen() {
         dispatch(setAudioOffStream(connectionId))
       })
 
+      /** 화면 공유 종료시 이벤트 추가 */
+      session.on('signal:shareEnd', () => {
+        setScreenShareStream(undefined)
+      })
+
       console.log(4)
 
       /** 페이지 입장 후 세션에 연결 및 발행하기 */
@@ -293,7 +298,10 @@ function CookieeScreen() {
                         streamManager={screenShareStream}
                       />
                     ) : (
-                      <h1>쿠커 화면</h1>
+                      <UserVideoComponent
+                        videoStyle='cookiee-sharing-content'
+                        streamManager={cookyerStream}
+                      />
                     )
                   )}
                 </div>
