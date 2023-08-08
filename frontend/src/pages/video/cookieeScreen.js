@@ -86,6 +86,9 @@ function CookieeScreen() {
       // On every new Stream received...
       const handleStreamCreated = (event) => {
         const subscriber = session.subscribe(event.stream, undefined);
+        if (subscriber && subscriber.stream.audioActive) {
+          dispatch(setAudioOnStream(subscriber.stream.connection.connectionId))
+        }
         dispatch(enteredSubscriber(subscriber))
       };
 
@@ -237,10 +240,10 @@ function CookieeScreen() {
         })
         newAudioOnList.push(audioOnStream)
         dispatch(setAudioOnList(newAudioOnList))
-        console.log(newAudioOnList, "새 손들기 리스트")
+        console.log(newAudioOnList, "새 소리 켠 참가자 리스트")
       } else {
         dispatch(setAudioOnList([audioOnStream]))
-        console.log(audioOnList, "손들기리스트에 값 없음")
+        console.log(audioOnList, "소리 켠 참가자 리스트에 값 없음")
       }
       dispatch(setAudioOnStream(''))
     }
@@ -248,13 +251,15 @@ function CookieeScreen() {
 
   /** 소리 끈 참가자 리스트에서 제거 */
   useEffect(() => {
-    console.log('손 내릴 쿠키 리스트에서 제거', audioOffStream)
-    if (audioOnList !== undefined && audioOffStream !== '') {
-      const newAudioOnList = audioOnList.filter((item) => {
-        return item !== audioOffStream
-      })
-      dispatch(setAudioOnList(newAudioOnList))
-      console.log(newAudioOnList, "손 내린 사람 제외 새 손들기 리스트")
+    console.log('소리 끈 참가자 리스트에서 제거', audioOffStream)
+    if (audioOffStream !== undefined && audioOffStream !== '') {
+      if (audioOnList !== undefined && audioOnList !== []) {
+        const newAudioOnList = audioOnList.filter((item) => {
+          return item !== audioOffStream
+        })
+        dispatch(setAudioOnList(newAudioOnList))
+        console.log(newAudioOnList, "소리 끈 참가자 제외 새 손들기 리스트")
+      }
       dispatch(setAudioOffStream(''))
     }
   }, [audioOffStream])

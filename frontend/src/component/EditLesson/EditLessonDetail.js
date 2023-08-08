@@ -139,15 +139,15 @@ function EditLessonDetail() {
             EASY
           </div>
           <div
-            onClick={() => handleDifficultyClick('MEDIUM')}
+            onClick={() => handleDifficultyClick('NORMAL')}
             style={{ 
-              backgroundColor: selectedDifficulty === 'MEDIUM' ? 'lightgray' : 'white',
+              backgroundColor: selectedDifficulty === 'NORMAL' ? 'lightgray' : 'white',
               padding : '5px',
               marginRight : '5px',
               cursor : 'pointer' 
             }}
           >
-            MEDIUM
+            NORMAL
           </div>
           <div
             onClick={() => handleDifficultyClick('HARD')}
