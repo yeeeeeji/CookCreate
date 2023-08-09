@@ -12,16 +12,17 @@ import {
   setCategoryId, setCategoryName, setDescription, setDifficulty,
   setLessonDate, setLessonStepList, setLessonTitle, setRemaining,
   setMaterials, setMaximum, setPrice, setThumbnailUrl, setTimeTaken, setVideoUrl,
-  setIntroduce,
+  setIntroduce
 } from '../store/lesson/lessonInfo';
 
 function LessonDetail() {
   const dispatch = useDispatch();
+  
+  const lessonId = useSelector((state) => state.lessonInfo.lessonId)
+  const access_token = localStorage.getItem('access_token')
 
-  const lessonId = useSelector((state) => state.lessonInfo.lessonId);
-  const accessToken = localStorage.getItem('access_token');
-  const categoryName = useSelector((state) => state.lessonInfo.categoryName);
   const userName = localStorage.getItem('nickname')
+  const categoryName = useSelector((state) => state.lessonInfo.categoryName);
   const lessonTitle = useSelector((state) => state.lessonInfo.lessonTitle);
   const thumbnailUrl = useSelector((state) => state.lessonInfo.thumbnailUrl);
 
@@ -30,15 +31,17 @@ function LessonDetail() {
   const [disableEdit, setDisableEdit] = useState(false)
   const lessonDate = useSelector((state) => state.lessonInfo.lessonDate);
   const remaining = parseInt(useSelector((state) => state.lessonInfo.remaining));
+  // const lessonId = useSelector((state) => state.lessonInfo.lessonId);
 
   useEffect(() => {
     const DateTransformType = new Date(lessonDate);
     const currentTime = new Date();
     const futureTime = new Date(currentTime.getTime() + 12 * 60 * 60 * 1000); // 현재 시간 + 12시간
-    
-    axios.get(`/api/v1/lesson/${lessonId}`, {
+    // const lessonId = useSelector((state) => state.lessonInfo.lessonId)
+    axios
+      .get(`/api/v1/lesson/${lessonId}`, {}, {
       headers: {
-        Access_Token: accessToken
+        Access_Token: access_token,
       }
     })
       .then((res) => {
@@ -60,6 +63,7 @@ function LessonDetail() {
         dispatch(setLessonDate(res.data.lessonDate));
         dispatch(setTimeTaken(res.data.timeTaken));
         dispatch(setVideoUrl(res.data.videoUrl));
+        dispatch(setIntroduce(res.data.introduce))
         if (DateTransformType > futureTime && remaining > 0 && userType === 'COOKIEE') {
           setDisable(false);
         } else {
@@ -75,12 +79,11 @@ function LessonDetail() {
         console.log(err);
         alert(err.response.data.message);
       });
-  }, [disable]);
+  }, [disable, lessonId]);
 
   return (
     <div>
       <br />
-
       {categoryName}
       <h2>
         {lessonTitle}

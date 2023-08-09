@@ -33,47 +33,50 @@ function NavBar() {
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }} className='navbar'>
-      <Link to='/'>
-        로고
-      </Link> |
-      <Link to='/lesson'>
-        수업 전체
-      </Link> |
-      <Link to='/chatroom'>채팅</Link>
-      
-      <SearchBar />
+    <div className='navbar'>
+      <div className="navbar-left">
+        <Link to='/' className='logo'>
+          <img src= "/logo.png" alt="로고" className='logo' />
+        </Link> 
+        <Link to='/lesson'>
+          수업 전체
+        </Link>
+        <SearchBar />
+      </div>
       {isLogin ? (
-        <div>
-          <div onClick={dropUserMenu}>
+        <div className="nav-cookyer">
+          {role === 'COOKYER' ? <Link to='registerlesson'>과외 등록</Link> : null} 
+          {role === 'COOKIEE' ? (
+          <div className='dropdown'>
+            <button className='drop-btn' onClick={dropLessonMenu}>신청수업</button>
+            { lessonDropdown ? (
+              <AppliedLessonMenu />
+            ) : null}
+          </div>
+      ) : null}
+          <div onClick={dropUserMenu} className="nav-user">
             {emoji}
             {nickname}
-          </div>
+            님
           { userDropdown ? (
             <UserDropMenu/>
           ) : null}
-          {/* 쿠커들에게만 보입니다. */}
-          {role === 'COOKYER' ? <Link to='registerlesson'>과외 등록</Link> : null} 
+            {/* 쿠커들에게만 보입니다. */}
+          </div>
         </div>
         
       ) : (
-        <React.Fragment>
-          <Link to='/login'>
-            로그인
-          </Link> |
-          <Link to='/signupbefore'>
-            회원가입
-          </Link>
+          <React.Fragment>
+            <div>
+              <Link to='/login'>
+                로그인
+              </Link> 
+              <Link to='/signupbefore'>
+                회원가입
+              </Link>
+            </div>
         </React.Fragment>
-      )} | 
-      {role === 'COOKIEE' ? (
-        <div className='dropdown'>
-          <button className='drop-btn' onClick={dropLessonMenu}>신청수업</button>
-          { lessonDropdown ? (
-            <AppliedLessonMenu />
-          ) : null}
-        </div>
-      ) : null}
+      )} 
       {/* {role === 'COOKYER' ? <button onClick={() => createRoom(5)}>쿠커화면</button> : null} */}
     </div>
   );

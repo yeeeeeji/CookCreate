@@ -18,6 +18,7 @@ import LessonReviewModal from '../../component/Video/Cookiee/LessonReviewModal';
 import { AiFillCheckCircle } from 'react-icons/ai'
 import { IoIosHand } from 'react-icons/io'
 import { BsMicFill, BsMicMuteFill } from "react-icons/bs";
+import OtherCookiees from '../../component/Video/Cookiee/OtherCookiees';
 
 function CookieeScreen() {
   const dispatch = useDispatch()
@@ -26,10 +27,6 @@ function CookieeScreen() {
   const session = useSelector((state) => state.video.session)
   const publisher = useSelector((state) => state.video.publisher)
   const subscribers = useSelector((state) => state.video.subscribers)
-  // 항상 쿠커가 먼저 들어와있기 때문에 이 로직도 괜찮을 것 같지만, subscribers가 있을때만 실행되는 것으로 변경
-  // const cookyerStream = subscribers.find((sub) => (
-  //   JSON.parse(sub.stream.connection.data).clientData.role === 'cookyer'
-  // ))
 
   const sessionId = useSelector((state) => state.video.sessionId)
   const nickname = localStorage.getItem('nickname');
@@ -50,11 +47,18 @@ function CookieeScreen() {
 
   /** 선생님 화면 고정하기 위해 선생님 subscriber 찾기 */
   const [ cookyerStream, setCookyerStream ] = useState(undefined)
+  
+  /** 화면공유 subscriber 찾기 */
+  const [ screenShareStream, setScreenShareStream ] = useState(undefined)
+  // const shareScreenPublisher = useSelector((state) => state.screenShare.shareScreenPublisher)
 
   /** 참가자 소리 상태 확인 */
   const audioOnList = useSelector((state) => state.video.audioOnList)
   const audioOnStream = useSelector((state) => state.video.audioOnStream)
   const audioOffStream = useSelector((state) => state.video.audioOffStream)
+
+  /** 다른 쿠키 목록 기능 */
+  const showOthers = useSelector((state) => state.cookieeVideo.showOthers)
 
   /** 자동 전체 화면 */
   useEffect(() => {
@@ -77,8 +81,15 @@ function CookieeScreen() {
         JSON.parse(sub.stream.connection.data).clientData.role === 'COOKYER'
       ))
       setCookyerStream(cookyer)
+      const share = subscribers.find((sub) => (
+        JSON.parse(sub.stream.connection.data).clientData.role === 'SHARE'
+      ))
+      if (share) {
+        setScreenShareStream(share)
+      }
+      // 섭스크라이버에서 SHARE 찾기
     }
-  }, [subscribers, cookyerStream])
+  }, [subscribers])
 
   useEffect(() => {
     console.log(3, session)
@@ -86,6 +97,9 @@ function CookieeScreen() {
       // On every new Stream received...
       const handleStreamCreated = (event) => {
         const subscriber = session.subscribe(event.stream, undefined);
+        if (subscriber && subscriber.stream.audioActive) {
+          dispatch(setAudioOnStream(subscriber.stream.connection.connectionId))
+        }
         dispatch(enteredSubscriber(subscriber))
       };
 
@@ -161,10 +175,10 @@ function CookieeScreen() {
         dispatch(setAudioOffStream(connectionId))
       })
 
-      /** 화면공유 받기 */
-      // session.on('signal:sharedScreen', (e) => {
-      //   console.log("화면공유 데이터 받았다", e)  // 시그널 받는거 필요하지 않을수도?
-      // })
+      /** 화면 공유 종료시 이벤트 추가 */
+      session.on('signal:shareEnd', () => {
+        setScreenShareStream(undefined)
+      })
 
       console.log(4)
 
@@ -237,10 +251,10 @@ function CookieeScreen() {
         })
         newAudioOnList.push(audioOnStream)
         dispatch(setAudioOnList(newAudioOnList))
-        console.log(newAudioOnList, "새 손들기 리스트")
+        console.log(newAudioOnList, "새 소리 켠 참가자 리스트")
       } else {
         dispatch(setAudioOnList([audioOnStream]))
-        console.log(audioOnList, "손들기리스트에 값 없음")
+        console.log(audioOnList, "소리 켠 참가자 리스트에 값 없음")
       }
       dispatch(setAudioOnStream(''))
     }
@@ -248,13 +262,15 @@ function CookieeScreen() {
 
   /** 소리 끈 참가자 리스트에서 제거 */
   useEffect(() => {
-    console.log('손 내릴 쿠키 리스트에서 제거', audioOffStream)
-    if (audioOnList !== undefined && audioOffStream !== '') {
-      const newAudioOnList = audioOnList.filter((item) => {
-        return item !== audioOffStream
-      })
-      dispatch(setAudioOnList(newAudioOnList))
-      console.log(newAudioOnList, "손 내린 사람 제외 새 손들기 리스트")
+    console.log('소리 끈 참가자 리스트에서 제거', audioOffStream)
+    if (audioOffStream !== undefined && audioOffStream !== '') {
+      if (audioOnList !== undefined && audioOnList !== []) {
+        const newAudioOnList = audioOnList.filter((item) => {
+          return item !== audioOffStream
+        })
+        dispatch(setAudioOnList(newAudioOnList))
+        console.log(newAudioOnList, "소리 끈 참가자 제외 새 손들기 리스트")
+      }
       dispatch(setAudioOffStream(''))
     }
   }, [audioOffStream])
@@ -276,10 +292,17 @@ function CookieeScreen() {
                   {isCompleted ? (
                     <p>수업이 종료되었습니다.</p>
                   ) : (
-                    <UserVideoComponent
-                      videoStyle='cookiee-sharing-content'
-                      streamManager={cookyerStream}
-                    />
+                    screenShareStream ? (
+                      <UserVideoComponent
+                        videoStyle='cookiee-sharing-content'
+                        streamManager={screenShareStream}
+                      />
+                    ) : (
+                      <UserVideoComponent
+                        videoStyle='cookiee-sharing-content'
+                        streamManager={cookyerStream}
+                      />
+                    )
                   )}
                 </div>
               </div>
@@ -296,10 +319,10 @@ function CookieeScreen() {
                 ) : (
                   <h1>쿠커 화면</h1>
                 )}
-                {audioOnList && audioOnList.find((item) => item === cookyerStream.stream.connection.connectionId) ? (
-                  <BsMicFill className='cookyer-cookiee-audio-icon-active'/>
+                {cookyerStream && audioOnList && audioOnList.find((item) => item === cookyerStream.stream.connection.connectionId) ? (
+                  <BsMicFill className='cookiee-cookyer-audio-icon-active'/>
                 ) : (
-                  <BsMicMuteFill className='cookyer-cookiee-audio-icon'/>
+                  <BsMicMuteFill className='cookiee-cookyer-audio-icon'/>
                 )}
               </div>
               <Timer role='COOKIEE'/>
@@ -324,25 +347,13 @@ function CookieeScreen() {
                   <IoIosHand className='cookiee-handsup-icon'/>
                 )}
               </div>
-
-              {/* <div className='cookyer-cookiees'> */}
-                {/* {subscribers} */}
-                {/* {subscribers ? (
-                  subscribers.map((sub, i) => (
-                    <div key={i}>
-                      <UserVideoComponent
-                        videoStyle='cookyer-cookiee'
-                        streamManager={sub}
-                      />
-                    </div>
-                  ))
-                ) : null} */}
-              {/* </div> */}
-
             </div>
           </div>
         </div>
       </div>
+      {showOthers ? (
+        <OtherCookiees/>
+      ) : null}
     </div>
   );
 }
