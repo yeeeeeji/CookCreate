@@ -4,28 +4,28 @@ import { useSelector } from 'react-redux';
 function Timer({ role }) {
   const publisher = useSelector((state) => state.video.publisher)
 
-  const [ curHours, setCurHours ] = useState(0)
   const [ curMinutes, setCurMinutes ] = useState(0)
   const [ curSeconds, setCurSeconds ] = useState(0)
   const [ totalSeconds, setTotalSeconds ] = useState(0)
 
+  /* 쿠키 타이머 시작 표시 */
+  const [ isRunning, setIsRunning ] = useState(false)
+
+  // const [ clickInput, setSetTime ] = useState(false)
+
   console.log("나는야", role)
 
-  // const role = localStorage.getItem('role')  // 지금은 직접 넣어줬는데 나중엔 이걸로 하기 or props로 해결
-
   useEffect(() => {
-    const total = curHours*3600 + curMinutes*60 + curSeconds
+    const total = curMinutes*60 + curSeconds
     setTotalSeconds(total)
     // console.log("시간입력", totalSeconds)
-  }, [ curHours, curMinutes, curSeconds ])
+  }, [ curMinutes, curSeconds ])
 
   const timer = () => {
     const checkMinutes = Math.floor(totalSeconds / 60)
-    const hours = Math.floor(totalSeconds / 3600)
     const minutes = checkMinutes % 60
     const seconds = totalSeconds % 60
 
-    setCurHours(hours)
     setCurMinutes(minutes)
     setCurSeconds(seconds)
   }
@@ -33,6 +33,7 @@ function Timer({ role }) {
   const intervalRef = useRef(null)
   
   const start = useCallback(() => {
+    setIsRunning(true)
     if (intervalRef.current !== null) {
       return
     }
@@ -49,6 +50,7 @@ function Timer({ role }) {
   }, [])
 
   const stop = useCallback(() => {
+    setIsRunning(false)
     if (intervalRef.current === null) {
       return
     }
@@ -65,7 +67,7 @@ function Timer({ role }) {
 
   const sendTime = (streamManager) => {
     const data = {
-      hours: curHours, minutes: curMinutes, seconds: curSeconds
+      minutes: curMinutes, seconds: curSeconds
     }
     streamManager.stream.session.signal({
       data: JSON.stringify(data),
@@ -80,63 +82,68 @@ function Timer({ role }) {
       publisher.stream.session.on('signal:timer', (e) => {
         const data = JSON.parse(e.data)
         if (data !== undefined) {
-          setCurHours(data.hours)
           setCurMinutes(data.minutes)
           setCurSeconds(data.seconds)
           console.log(data)
-          console.log("쿠커가 보낸 시간", curHours, curMinutes, curSeconds)
+          console.log("쿠커가 보낸 시간", curMinutes, curSeconds)
         }
       })
     }
-  }, [])
+  }, [publisher])
 
   return (
-    <div>
-      {role === 'COOKYER' ? (
-        <div>
-          {/* 60미만으로 적도록 뭐,, 제한 걸기 */}
-          <input
-            type='number'
-            value={curHours}
-            onChange={(e) => {
-              setCurHours(e.target.value)
-            }}
-          ></input>
-          <span> : </span>
-          <input
-            type='number'
-            value={curMinutes}
-            onChange={(e) => {
-              setCurMinutes(e.target.value)
-            }}
-          ></input>
-          <span> : </span>
-          <input
-            type='number'
-            value={curSeconds}
-            onChange={(e) => {
-              setCurSeconds(e.target.value)
-            }}
-          ></input>
-        </div>
-      ) : (
-        <h1>
-          {curHours < 10 ? `0${curHours}` : curHours}
-          : 
-          {curMinutes < 10 ? `0${curMinutes}` : curMinutes}
-          : 
-          {curSeconds < 10 ? `0${curSeconds}` : curSeconds}
-        </h1>
-      )}
-      <button onClick={start}>Start</button>
-      <button onClick={stop}>Stop</button>
-      <button onClick={reset}>Reset</button>
-      {/* 학생들에게 선생님이 설정한 타이머 값을 보냄 */}
-      {role === 'COOKYER' ? (
-        <button onClick={() => sendTime(publisher)}>설정</button>
-      ) : (
-        null
-      )}
+    <div className={role === 'COOKYER' ? 'cookyer-timer' : 'cookiee-timer'}>
+      <div className='video-timer-title'>
+        <p>타이머</p>
+      </div>
+      <div className='video-timer-content'>
+        {role === 'COOKYER' ? (
+          <div className='video-timer-input'>
+            <input
+              className='video-timer-input-minutes'
+              type='number'
+              min='0'
+              max='60'
+              value={curMinutes}
+              onChange={(e) => {
+                setCurMinutes(e.target.value)
+              }}
+              placeholder='00'
+            ></input>
+            <span>:</span>
+            <input
+              className='video-timer-input-seconds'
+              type='number'
+              min='0'
+              max='59'
+              value={curSeconds}
+              onChange={(e) => {
+                setCurSeconds(e.target.value)
+              }}
+              placeholder='00'
+            ></input>
+          </div>
+        ) : (
+          <div className='video-timer-time'>
+            <p>{curMinutes < 10 ? `0${curMinutes}` : curMinutes}</p>
+            <p>:</p> 
+            <p>{curSeconds < 10 ? `0${curSeconds}` : curSeconds}</p>
+          </div>
+        )}
+        {/* 학생들에게 선생님이 설정한 타이머 값을 보냄 */}
+        {role === 'COOKYER' ? (
+          <button className='video-timer-set-btn' onClick={() => sendTime(publisher)}>설정</button>
+        ) : (
+          <div>
+            {isRunning ? (
+              <button className='video-timer-set-btn' onClick={stop}>Stop</button>
+            ) : (
+              <button className='video-timer-set-btn' onClick={start}>Start</button>
+            )}
+            {/* <button onClick={reset}>Reset</button> */}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

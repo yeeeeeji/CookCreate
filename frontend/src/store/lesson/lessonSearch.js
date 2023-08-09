@@ -3,9 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   type : 'all',
   order : "title",
-  deadline : false,
+  deadline : true,
   category : [],
-  keyword : ""
+  keyword : "",
+  lessonId : ""
 }
 
 const lessonSearch = createSlice({
@@ -26,11 +27,17 @@ const lessonSearch = createSlice({
     },
     setType : (state, action) => {
       state.type = action.payload
+    },
+    setLessonId : (state, action) => {
+      state.lessonId = action.payload
+    },
+    resetlessonSearch : (state) => {
+      return initialState
     }
   }
 })
 
 export const {
-  setOrder, setDeadLine, setCategories, setKeyword, setType
+  setOrder, setDeadLine, setCategories, setKeyword, setType, setLessonId, resetlessonSearch
 } = lessonSearch.actions
 export default lessonSearch.reducer

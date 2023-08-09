@@ -44,7 +44,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         // 신청한 사용자인지 확인
-        Optional<LessonParticipant> lessonParticipant = lessonParticipantRepository.findByLesson_LessonIdAndUserId(reviewPostReq.getLessonId(), reviewPostReq.getUserId());
+        Optional<LessonParticipant> lessonParticipant = lessonParticipantRepository.findByLesson_LessonIdAndMember_UserId(reviewPostReq.getLessonId(), reviewPostReq.getUserId());
         if(lessonParticipant.isEmpty()){
             return new ResponseDto(HttpStatus.FORBIDDEN, "수강한 Cookiee만 이용 가능합니다");
         }

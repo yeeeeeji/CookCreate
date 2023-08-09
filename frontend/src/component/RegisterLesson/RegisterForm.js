@@ -4,10 +4,11 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 function RegisterForm() {
   const navigate = useNavigate()
+  const [thumbnailUrl, setThumbnailUrl] = useState('')
 
   const [lessonThumbnailUrl, setLessonThumbnailUrl] = useState('')
   const [ThumbnailFile, setThumbnailFile] = useState(null)
-  const accessToken = useSelector((state) => state.auth.access_token)
+  const accessToken = localStorage.getItem('access_token')
   const lessonTitle = useSelector((state) => state.lesson.lessonTitle)
   const categoryId = useSelector((state) =>  parseInt(state.lesson.categoryId))+1
   const maximum = useSelector((state) => parseInt(state.lesson.maximum))
@@ -39,6 +40,7 @@ function RegisterForm() {
     const file = e.target.files[0]
     setThumbnailFile(file)
     setThumbnailValid(!!file)
+    setThumbnailUrl(URL.createObjectURL(file))
   };
 
   const register = (e) => {
@@ -73,7 +75,7 @@ function RegisterForm() {
     .then((res) => {
       console.log(res);
       alert('과외 생성에 성공했습니다!')
-      navigate('/totallessons')
+      navigate('/lesson')
     })
     .catch((err) => {
       console.log(err);
@@ -84,14 +86,25 @@ function RegisterForm() {
     <div>
       {/* 썸네일 */}
       <div>
-        <h3>과외 썸네일</h3>
-        <div>{thumbnailValid ? '✅' : '🔲'}</div>
+        <div style={{display : 'flex', alignItems : 'center'}}>
+          <h3>과외 썸네일</h3>
+          <div>{thumbnailValid ? '✅' : '🔲'}</div>
+        </div>
         <div>
           <input type="file"
             name = "filename"
             value={lessonThumbnailUrl}
             onChange={handleThumbnailUrl}
+            accept="image/*"
           />
+          {thumbnailUrl && thumbnailValid && (
+            <img
+            src={thumbnailUrl}
+            alt="Selected Thumbnail"
+            style={{ maxWidth: '100px', marginTop: '10px' }}
+            />
+            )}
+
         </div>
       </div>
     <button disabled={!isAllValid} onClick={register} >과외 등록하기</button>

@@ -1,15 +1,22 @@
 import React, { useEffect } from 'react';
-import VideoSideBar from '../../component/Video/VideoSideBar';
 import VideoHeader from '../../component/Video/VideoHeader';
 import UserVideoComponent from '../../component/Video/UserVideoComponent';
 import Timer from '../../component/Video/Timer';
-import LessonStepWidget from '../../component/Video/LessonStepWidget';
+import CookyerLessonStep from '../../component/Video/Cookyer/CookyerLessonStep';
+import LessonStepModal from '../../component/Video/Cookyer/LessonStepModal';
+import CookyerVideoSideBar from '../../component/Video/Cookyer/CookyerVideoSideBar';
 
-import '../../style/video.css'
+import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteSubscriber, enteredSubscriber } from '../../store/video/video';
-import { publishStream } from '../../store/video/video-thunk';
-import { setCheckCookiee, setCheckCookieeList, setHandsUpCookiee, setHandsUpCookieeList } from '../../store/video/cookyerVideo';
+import { deleteSubscriber, enteredSubscriber, setAudioOffStream, setAudioOnList, setAudioOnStream, setMainStreamManager } from '../../store/video/video';
+import { joinSession } from '../../store/video/video-thunk';
+import { setCheckCookiee, setCheckCookieeList, setHandsDownCookiee, setHandsUpCookiee, setHandsUpCookieeList, setUncheckCookiee } from '../../store/video/cookyerVideo';
+import { setLessonInfo } from '../../store/video/videoLessonInfo';
+import '../../style/video.css'
+
+import { AiFillCheckCircle } from 'react-icons/ai'
+import { IoIosHand } from 'react-icons/io'
+import { BsMicFill, BsMicMuteFill } from "react-icons/bs";
 
 function CookyerScreen() {
   const dispatch = useDispatch()
@@ -20,19 +27,50 @@ function CookyerScreen() {
   const subscribers = useSelector((state) => state.video.subscribers)
 
   /** 화면공유 */
-  const streamManager = useSelector((state) => state.screenShare.streamManager)
+  const shareScreenPublisher = useSelector((state) => state.screenShare.shareScreenPublisher)
 
-  const OvToken = useSelector((state) => state.video.OvToken)
-  const myUserName = localStorage.getItem('nickname');
+  const sessionId = useSelector((state) => state.video.sessionId)
+  const nickname = localStorage.getItem('nickname');
   const role = localStorage.getItem('role')
+
+  /** 레슨 정보 */
+  const access_token = localStorage.getItem('access_token')
+  const videoLessonId = useSelector((state) => state.video.videoLessonId)
 
   /** 체크 */
   const checkCookieeList = useSelector((state) => state.cookyerVideo.checkCookieeList)
   const checkCookiee = useSelector((state) => state.cookyerVideo.checkCookiee)
+  const uncheckCookiee = useSelector((state) => state.cookyerVideo.uncheckCookiee)
 
   /** 손들기 */
   const handsUpCookieeList = useSelector((state) => state.cookyerVideo.handsUpCookieeList)
   const handsUpCookiee = useSelector((state) => state.cookyerVideo.handsUpCookiee)
+  const handsDownCookiee = useSelector((state) => state.cookyerVideo.handsDownCookiee)
+
+  /** 진행 단계 관련 모달 */
+  const isSessionOpened = useSelector((state) => state.video.isSessionOpened)
+
+  /** 참가자 소리 상태 확인 */
+  const audioOnList = useSelector((state) => state.video.audioOnList)
+  const audioOnStream = useSelector((state) => state.video.audioOnStream)
+  const audioOffStream = useSelector((state) => state.video.audioOffStream)
+
+  /** 메인비디오스트림 설정 */
+  const mainStreamManager = useSelector((state) => state.video.mainStreamManager)
+
+  // /** 자동 전체 화면 */
+  // useEffect(() => {
+  //   const element = document.documentElement; // 전체 화면으로 변경하고자 하는 요소
+  //   if (element.requestFullscreen) {
+  //     element.requestFullscreen();
+  //   } else if (element.mozRequestFullScreen) {
+  //     element.mozRequestFullScreen();
+  //   } else if (element.webkitRequestFullscreen) {
+  //     element.webkitRequestFullscreen();
+  //   } else if (element.msRequestFullscreen) {
+  //     element.msRequestFullscreen();
+  //   }
+  // }, []);
 
   useEffect(() => {
     console.log(3, session)
@@ -41,7 +79,13 @@ function CookyerScreen() {
       // On every new Stream received...
       const handleStreamCreated = (event) => {
         const subscriber = session.subscribe(event.stream, undefined);
-        dispatch(enteredSubscriber(subscriber))
+        console.log("등장", subscriber)
+        if (subscriber && subscriber.stream.audioActive) {
+          dispatch(setAudioOnStream(subscriber.stream.connection.connectionId))
+        }
+        if (JSON.parse(subscriber.stream.connection.data).clientData.role === 'COOKIEE') {
+          dispatch(enteredSubscriber(subscriber))
+        }
       };
 
       // On every Stream destroyed...
@@ -62,25 +106,53 @@ function CookyerScreen() {
       session.on('signal:check', (e) => {
         const connectionId = JSON.parse(e.data).connectionId
         console.log('체크한 사람', connectionId)
-        dispatch(setCheckCookiee({checkCookiee: connectionId}))
-        // setCheckCookiee(connectionId)
+        dispatch(setCheckCookiee(connectionId))
+      })
+
+      /** 체크 해제 이벤트 추가 */
+      session.on('signal:uncheck', (e) => {
+        const connectionId = JSON.parse(e.data).connectionId
+        console.log('체크 해제한 사람', connectionId)
+        dispatch(setUncheckCookiee(connectionId))
       })
 
       /** 손들기 이벤트 추가 */
       session.on('signal:handsUp', (e) => {
         const connectionId = JSON.parse(e.data).connectionId
         console.log('손 든 사람', connectionId)
-        dispatch(setHandsUpCookiee({handsUpCookiee: connectionId}))
+        dispatch(setHandsUpCookiee(connectionId))
+      })
+
+      /** 손들기 해제 이벤트 추가 */
+      session.on('signal:handsDown', (e) => {
+        const connectionId = JSON.parse(e.data).connectionId
+        console.log('손 내린 사람', connectionId)
+        dispatch(setHandsDownCookiee(connectionId))
+      })
+
+      /** 참가자 소리 조정 이벤트 추가 */
+      session.on('signal:audioOn', (e) => {
+        const connectionId = JSON.parse(e.data).connectionId
+        console.log('소리 켠 사람', connectionId)
+        dispatch(setAudioOnStream(connectionId))
+      })
+
+      session.on('signal:audioOff', (e) => {
+        const connectionId = JSON.parse(e.data).connectionId
+        console.log('소리 끈 사람', connectionId)
+        dispatch(setAudioOffStream(connectionId))
       })
 
       console.log(4)
       const data = {
         OV,
         session,
-        token: OvToken,
-        myUserName: myUserName
+        sessionId,
+        nickname,
+        role
       }
-      dispatch(publishStream(data))
+      dispatch(joinSession(data))
+      // dispatch(publishStream(data))
 
       console.log(5)
 
@@ -89,13 +161,35 @@ function CookyerScreen() {
         session.off('streamCreated', handleStreamCreated);
         session.off('streamDestroyed', handleStreamDestroyed);
         session.off('exception', handleException);
-        // const mySession = session;
-        // if (mySession) {
-        //   mySession.disconnect(); // 예시에서는 disconnect()로 대체하였으나, 이는 OpenVidu에 따라 다르게 적용될 수 있음
-        // }
+        const mySession = session;
+        if (mySession) {
+          mySession.disconnect(); // 예시에서는 disconnect()로 대체하였으나, 이는 OpenVidu에 따라 다르게 적용될 수 있음
+        }
       };
     }
   }, []);
+
+  useEffect(() => {
+    if (videoLessonId) {
+      axios.get(
+        `/api/v1/lesson/${videoLessonId}`,
+        {
+          headers : {
+            Access_Token : access_token
+          }
+        })
+        .then((res) => {
+          console.log(res.data)
+          console.log('화상 과외 수업 정보 받아와짐')
+          // setMyLesson(res.data) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
+          dispatch(setLessonInfo(res.data))
+        })
+        .catch((err) => {
+          console.log(err)
+          console.log('화상 과외 수업 정보 안받아와짐')
+        })
+    }
+  }, [videoLessonId])
 
   /** 체크한 쿠키 리스트에 추가 */
   useEffect(() => {
@@ -108,14 +202,28 @@ function CookyerScreen() {
           return item !== checkCookiee
         })
         newCheckCookieeList.push(checkCookiee)
-        dispatch(setCheckCookieeList({checkCookieeList: newCheckCookieeList}))
+        dispatch(setCheckCookieeList(newCheckCookieeList))
         console.log(newCheckCookieeList, "새 체크 리스트")
       } else {
-        dispatch(setCheckCookieeList({checkCookieeList: [checkCookiee]}))
+        dispatch(setCheckCookieeList([checkCookiee]))
         console.log(checkCookieeList, "체크리스트에 값 없음")
       }
+      dispatch(setCheckCookiee(''))
     }
   }, [checkCookiee])
+
+  /** 체크 해제한 쿠키 리스트에서 제거 */
+  useEffect(() => {
+    console.log('체크 해제한 쿠키 리스트에서 제거', uncheckCookiee)
+    if (checkCookieeList !== undefined && uncheckCookiee !== '') {
+      const newCheckCookieeList = checkCookieeList.filter((item) => {
+        return item !== uncheckCookiee
+      })
+      dispatch(setCheckCookieeList(newCheckCookieeList))
+      console.log(newCheckCookieeList, '체크 해제한 사람 제외 새 체크 리스트')
+      dispatch(setUncheckCookiee(''))
+    }
+  }, [uncheckCookiee])
 
   /** 손 든 쿠키 리스트에 추가 */
   useEffect(() => {
@@ -127,14 +235,28 @@ function CookyerScreen() {
           return item !== handsUpCookiee
         })
         newHandsUpCookieeList.push(handsUpCookiee)
-        dispatch(setHandsUpCookieeList({handsUpCookieeList: newHandsUpCookieeList}))
+        dispatch(setHandsUpCookieeList(newHandsUpCookieeList))
         console.log(newHandsUpCookieeList, "새 손들기 리스트")
       } else {
-        dispatch(setCheckCookieeList({handsUpCookieeList: [handsUpCookiee]}))
+        dispatch(setHandsUpCookieeList([handsUpCookiee]))
         console.log(handsUpCookieeList, "손들기리스트에 값 없음")
       }
+      dispatch(setHandsUpCookiee(''))
     }
   }, [handsUpCookiee])
+
+  /** 손 내린 쿠키 리스트에서 제거 */
+  useEffect(() => {
+    console.log('손 내릴 쿠키 리스트에서 제거', handsDownCookiee)
+    if (handsUpCookieeList !== undefined && handsDownCookiee !== '') {
+      const newHandsUpCookieeList = handsUpCookieeList.filter((item) => {
+        return item !== handsDownCookiee
+      })
+      dispatch(setHandsUpCookieeList(newHandsUpCookieeList))
+      console.log(newHandsUpCookieeList, "손 내린 사람 제외 새 손들기 리스트")
+      dispatch(setHandsDownCookiee(''))
+    }
+  }, [handsDownCookiee])
 
   const resetHandsUpCookiee = (data) => {
     const cookyer = data.cookyer  // 쿠커퍼블리셔와 쿠키섭스크라이버
@@ -144,8 +266,8 @@ function CookyerScreen() {
     const newHandsUpCookieeList = handsUpCookieeList.filter((item) => {
       return item !== cookieeConnectionId
     }) // 되는지 확인하고 파라미터로 넣어주던지, 넣었던걸 빼던지 하기
-    dispatch(setHandsUpCookieeList({handsUpCookieeList: newHandsUpCookieeList}))
-    dispatch(setHandsUpCookiee({handsUpCookiee: ''}))
+    dispatch(setHandsUpCookieeList(newHandsUpCookieeList))
+    dispatch(setHandsUpCookiee(''))
 
     // 특정 쿠키에게만 시그널을 보내야 함
     cookyer.stream.session.signal({
@@ -154,63 +276,147 @@ function CookyerScreen() {
     })
   }
 
+  const handleModalClick = (e) => {
+    e.stopPropagation()
+  }
+
+  const handleACookieeAudio = (data) => {
+    const cookyer = data.cookyer
+    const cookiee = data.cookiee
+    
+    cookyer.stream.session.signal({
+      to: [cookiee.stream.connection],
+      type: 'forceAudioAdjust'
+    })
+  }
+
+  /** 소리 켠 참가자 리스트에 추가 */
+  useEffect(() => {
+    console.log('소리 켠 참가자 리스트에 추가', audioOnStream)
+    if (audioOnStream !== undefined && audioOnStream !== '') {
+      // 만약 손든 사람이 또 손들면 거르기
+      if (audioOnList !== undefined && audioOnList !== []) {
+        const newAudioOnList = audioOnList.filter((item) => {
+          return item !== audioOnStream
+        })
+        newAudioOnList.push(audioOnStream)
+        dispatch(setAudioOnList(newAudioOnList))
+        console.log(newAudioOnList, "새 손들기 리스트")
+      } else {
+        dispatch(setAudioOnList([audioOnStream]))
+        console.log(audioOnList, "손들기리스트에 값 없음")
+      }
+      dispatch(setAudioOnStream(''))
+    }
+  }, [audioOnStream])
+
+  /** 소리 끈 참가자 리스트에서 제거 */
+  useEffect(() => {
+    console.log('소리 끈 참가자 리스트에서 제거', audioOffStream)
+    if (audioOnList !== undefined && audioOffStream !== '') {
+      if (audioOnList !== undefined && audioOnList !== []) {
+        const newAudioOnList = audioOnList.filter((item) => {
+          return item !== audioOffStream
+        })
+        dispatch(setAudioOnList(newAudioOnList))
+        console.log(newAudioOnList, "소리 끈 참가자 제외 새 손들기 리스트")
+      }
+      dispatch(setAudioOffStream(''))
+    }
+  }, [audioOffStream])
+
+  /** 메인비디오스트림 지정 */
+  const handleMainVideoStream = (stream) => {
+    if (mainStreamManager !== stream) {
+      dispatch(setMainStreamManager(stream))
+    } else {
+      if (shareScreenPublisher) {
+        dispatch(setMainStreamManager(shareScreenPublisher))
+      } else {
+        dispatch(setMainStreamManager(publisher))
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (shareScreenPublisher) {
+      dispatch(setMainStreamManager(shareScreenPublisher))
+    }
+  }, [shareScreenPublisher])
+
   return (
     <div className='video-page'>
-      <VideoSideBar/>
-      <div>
-        <VideoHeader/>
-        <div>
-          <div className='cookyer-sharing'>
-            <div className='cookyer-sharing-content'>
-              {streamManager === null ? (
-                <span>화면공유</span>
-              ) : (
-                <UserVideoComponent
-                  videoStyle='cookyer-sharing-content'
-                  streamManager={streamManager}
-                />
-              )}
+      <div className='video-page-main'>
+        {isSessionOpened ? null : (
+          <LessonStepModal onClick={handleModalClick}/>
+        )}
+        <div className='video-content'>
+          <VideoHeader/>
+          <div className='cookyer-components'>
+            <div className='cookyer-components-left'>
+              <div className='cookyer-sharing'>
+                <div className='cookyer-sharing-content' onClick={() => handleMainVideoStream(mainStreamManager)}>
+                  <UserVideoComponent
+                    videoStyle='cookyer-sharing-content'
+                    streamManager={mainStreamManager}
+                  />
+                  {/* {shareScreenPublisher === null ? (
+                    <UserVideoComponent
+                      videoStyle='cookyer-sharing-content'
+                      streamManager={publisher}
+                    />
+                  ) : (
+                    <UserVideoComponent
+                      videoStyle='cookyer-sharing-content'
+                      streamManager={shareScreenPublisher}
+                    />
+                  )} */}
+                </div>
+              </div>
+              <div className='cookyer-components-left-bottom'>
+                <div className='cookyer' onClick={() => handleMainVideoStream(publisher)}>
+                  <UserVideoComponent
+                    videoStyle='cookyer-video'
+                    streamManager={publisher}
+                  />
+                </div>
+                <Timer role='COOKYER'/>
+              </div>
+            </div>
+            <div className='cookyer-cookiees'>
+              {subscribers.map((sub, i) => (
+                // <div key={sub.id} onClick={() => handleMainVideoStream(sub)}>
+                <div key={i} className='cookyer-cookiee-content' onClick={() => handleMainVideoStream(sub)}>
+                  <UserVideoComponent
+                    videoStyle='cookyer-cookiee'
+                    streamManager={sub}
+                  />
+                  {audioOnList && audioOnList.find((item) => item === sub.stream.connection.connectionId) ? (
+                    <BsMicFill className='cookyer-cookiee-audio-icon-active' onClick={() => handleACookieeAudio({cookyer: publisher, cookiee: sub})}/>
+                  ) : (
+                    <BsMicMuteFill className='cookyer-cookiee-audio-icon' onClick={() => handleACookieeAudio({cookyer: publisher, cookiee: sub})}/>
+                  )}
+                  {checkCookieeList && checkCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
+                    <AiFillCheckCircle className='cookyer-check-icon-active'/>
+                  ) : (
+                    <AiFillCheckCircle className='cookyer-check-icon'/>
+                  )}
+                  {handsUpCookieeList && handsUpCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
+                    <IoIosHand
+                      className={`cookyer-handsup-icon-active-${handsUpCookieeList.indexOf(sub.stream.connection.connectionId)}`}
+                      onClick={() => resetHandsUpCookiee({cookyer: publisher, cookiee: sub})}
+                    />
+                  ) : (
+                    <IoIosHand className='cookyer-handsup-icon'/>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
-          {/* <div className='cookyer-sharing' onClick={() => handleMainVideoStream(publisher)}>
-            <UserVideoComponent
-              videoStyle='cookyer-sharing-content'
-              streamManager={publisher}
-            />
-          </div> */}
-          <div className='cookyer-cookiees'>
-            {/* {subscribers} */}
-            {subscribers.map((sub, i) => (
-              <div key={i}>
-                {/* <span>{sub.id}</span> */}
-                <UserVideoComponent
-                  videoStyle='cookyer-cookiee'
-                  streamManager={sub}
-                />
-                {checkCookieeList && checkCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
-                  <h1>체크한 사람</h1>
-                ) : null}
-                {handsUpCookieeList && handsUpCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
-                  <div>
-                    <h1>
-                      {handsUpCookieeList.indexOf(sub.stream.connection.connectionId) +  1}번째로 손 든 사람
-                    </h1>
-                    <button onClick={() => resetHandsUpCookiee({cookyer: publisher, cookiee: sub})}>손들기 해제</button>
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          </div>
-          <div className='cookyer'>
-            <UserVideoComponent
-              videoStyle='cookyer-video'
-              streamManager={publisher}
-            />
-          </div>
-          <Timer role={role}/>
-          <LessonStepWidget/>
         </div>
+        <CookyerLessonStep/>
       </div>
+      <CookyerVideoSideBar/>
     </div>
   );
 }

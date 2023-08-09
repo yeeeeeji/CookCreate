@@ -1,18 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { closeSession, publishStream } from './video-thunk'
+import { closeSession, joinSession, publishStream } from './video-thunk'
 
 const initialState = {
   OV: null,
   session: undefined,
-  OvToken: undefined,
+  sessionId: undefined,
   publisher: undefined,
   mainStreamManager: undefined,
   subscribers: [],
   isVideoPublished: true,
   isAudioPublished: true,
   videoLessonId: undefined,
-  roomPresent: false,
-  isSessionClosed: false,
+  isSessionOpened: false,  // 들어올때 이걸로 문제가 생기면 undefined로 바꾸기
+  audioOnList: [],
+  audioOnStream: undefined,
+  audioOffStream: undefined,
 }
 
 export const video = createSlice({
@@ -24,54 +26,82 @@ export const video = createSlice({
       state.session = payload.session
       console.log("initOVSession", state.OV, state.session)
     },
-    setOvToken: (state, { payload }) => {
-      console.log("리덕스 토큰 추가", payload.token)
-      state.OvToken = payload.token
+    setSessionId: (state, { payload }) => {
+      console.log("세션 아이디 저장 성공", payload)
+      state.sessionId = payload
     },
     setPublisher: (state, { payload }) => {
       console.log("13")
-      state.publisher = payload.publisher
+      state.publisher = payload
     },
     setMainStreamManager: (state, { payload }) => {
-      state.mainStreamManager = payload.publisher
+      state.mainStreamManager = payload
     },
     setSubscribers: (state, {payload}) => {
-      state.subscribers = payload.subscribers
+      state.subscribers = payload
     },
     setVideoLessonId: (state, {payload}) => {
-      state.videoLessonId = payload.videoLessonId
+      state.videoLessonId = payload
     },
-    setRoomPresent: (state, {payload}) => {
-      state.roomPresent = payload.roomPresent
+    setIsSessionOpened: (state, {payload}) => {
+      state.isSessionOpened = payload
     },
-    videoMute: (state) => {
+    videoMute: (state, {payload}) => {
       state.publisher.publishVideo(!state.isVideoPublished)
       state.isVideoPublished = !state.isVideoPublished
       console.log("비디오", state.isVideoPublished)
     },
-    audioMute: (state) => {
-      state.publisher.publishAudio(!state.isAudioPublished)
-      state.isAudioPublished = !state.isAudioPublished
+    audioMute: (state, {payload}) => {
+      const status = !state.isAudioPublished
+      state.publisher.publishAudio(status)
+      state.isAudioPublished = status
       console.log("오디오", state.isAudioPublished)
+
+      const data = {
+        connectionId: state.publisher.stream.connection.connectionId
+      }
+      if (status) {  // 소리가 켜져있다면
+        console.log("소리 켜진 신호 보내기")
+        state.publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'audioOn'
+        })
+      } else {
+        console.log("소리 꺼진 신호 보내기")
+        state.publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'audioOff'
+        })
+      }
+
+    },
+    setAudioMute: (state) => {
+      // 강제로 음소거할때
+      console.log("강제 음소거 됐니")
+      state.publisher.publishAudio(false)
+      state.isAudioPublished = false
+
+      const data = {
+        connectionId: state.publisher.stream.connection.connectionId
+      }
+      state.publisher.stream.session.signal({
+        data: JSON.stringify(data),
+        type: 'audioOff'
+      })
     },
     leaveSession: (state) => {
-      // const mySession = state.session
-      // if (mySession) {
-      //   mySession.disconnect()
-      // }
       state.OV = null
       state.session = undefined
-      state.OvToken = undefined
+      state.sessionId = undefined
       state.publisher = undefined
       state.mainStreamManager = undefined
       state.subscribers = []
       state.isVideoPublished = true
       state.isAudioPublished = true
       state.videoLessonId = undefined
-      state.roomPresent = false
+      state.isSessionOpened = false
     },
     enteredSubscriber: (state, action) => {
-      // console.log("여기가 문제라고??", action.payload)
       state.subscribers.push(action.payload)
     },
     deleteSubscriber: (state, action) => {
@@ -79,9 +109,28 @@ export const video = createSlice({
       if (index > -1) {
         state.subscribers.splice(index, 1)
       }
+    },
+    setAudioOnList: (state, { payload }) => {
+      state.audioOnList = payload
+    },
+    setAudioOnStream: (state, { payload }) => {
+      state.audioOnStream = payload
+    },
+    setAudioOffStream: (state, { payload }) => {
+      state.audioOffStream = payload
     }
   },
   extraReducers: {
+    [joinSession.fulfilled]: (state, { payload }) => {
+      console.log("joinSession fulfilled", payload)
+      // state.currentVideoDevice = payload.currentVideoDevice
+      state.mainStreamManager = payload
+      state.publisher = payload
+      // console.log(state.publisher)
+    },
+    [joinSession.rejected]: (state, { payload }) => {
+      console.log("joinSession rejected")
+    },
     [publishStream.fulfilled]: (state, { payload }) => {
       console.log("publishStream fulfilled", payload)
       state.OV = payload.OV
@@ -93,25 +142,27 @@ export const video = createSlice({
     },
     [closeSession.fulfilled]: (state, { payload }) => {
       console.log("closeSession fulfilled", payload)
-      state.OV = null
-      state.session = undefined
-      state.OvToken = undefined
-      state.publisher = undefined
-      state.mainStreamManager = undefined
-      state.subscribers = []
-      state.isVideoPublished = true
-      state.isAudioPublished = true
-      state.videoLessonId = undefined
-      state.roomPresent = false
-      state.isSessionClosed = true
-    }
+      // state.OV = null
+      // state.session = undefined
+      // state.sessionId = undefined
+      // state.publisher = undefined
+      // state.mainStreamManager = undefined
+      // state.subscribers = []
+      // state.isVideoPublished = true
+      // state.isAudioPublished = true
+      // state.videoLessonId = undefined
+      state.isSessionOpened = false
+    },
+    [closeSession.rejected]: (state, { payload }) => {
+      console.log("closeSession rejected")
+    } 
   }
 })
 
 export const {
-    initOVSession, setOvToken, setPublisher, setMainStreamManager,
-    setSubscribers, setVideoLessonId, setRoomPresent,
-    videoMute, audioMute, leaveSession,
-    enteredSubscriber, deleteSubscriber,
+    initOVSession, setPublisher, setMainStreamManager, setSessionId,
+    setSubscribers, setVideoLessonId, setIsSessionOpened,
+    videoMute, audioMute, setAudioMute, leaveSession,
+    enteredSubscriber, deleteSubscriber, setAudioOnList, setAudioOnStream, setAudioOffStream
 } = video.actions
 export default video.reducer

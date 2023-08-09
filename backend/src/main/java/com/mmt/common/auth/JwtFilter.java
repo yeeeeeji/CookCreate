@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mmt.domain.response.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +30,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtFilter.class);
 
     private final JwtUtil jwtUtil;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     // HTTP 요청이 오면 WAS(tomcat)가 HttpServletRequest, HttpServletResponse 객체를 만들어 줍니다.
@@ -44,28 +47,36 @@ public class JwtFilter extends OncePerRequestFilter {
             // 어세스 토큰값이 유효하다면 setAuthentication를 통해
             // security context에 인증 정보저장
             if(jwtUtil.tokenValidation(accessToken)){
-                setAuthentication(jwtUtil.getUserIdFromToken(accessToken));
-            } else if (refreshToken != null) { // 어세스 토큰이 만료된 상황 && 리프레시 토큰 또한 존재하는 상황
-                // 리프레시 토큰 검증 && 리프레시 토큰 DB에서  토큰 존재유무 확인
-                boolean isRefreshToken = jwtUtil.refreshTokenValidation(refreshToken);
-                // 리프레시 토큰이 유효하고 리프레시 토큰이 DB와 비교했을때 똑같다면
-                if (isRefreshToken) {
-                    // 리프레시 토큰으로 아이디 정보 가져오기
-                    String loginId = jwtUtil.getUserIdFromToken(refreshToken);
-                    // 새로운 어세스 토큰 발급
-                    String newAccessToken = jwtUtil.createToken(loginId, "Access");
-                    // 헤더에 어세스 토큰 추가
-                    jwtUtil.setHeaderAccessToken(response, newAccessToken);
-                    // Security context에 인증 정보 넣기
-                    setAuthentication(jwtUtil.getUserIdFromToken(newAccessToken));
-                } else { // 리프레시 토큰이 만료 || 리프레시 토큰이 DB와 비교했을때 똑같지 않다면
-                    jwtExceptionHandler(response, "재로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
-                    return;
+                // access token이 blacklist에 저장되어 있는지 확인
+                String isLogout = (String) redisTemplate.opsForValue().get(accessToken);
+                if(ObjectUtils.isEmpty(isLogout)){
+                    // 토큰이 유효할 경우 토큰에서 userid 가져와서 authentication 세팅
+                    setAuthentication(jwtUtil.getUserIdFromToken(accessToken));
                 }
-            } else {
-                jwtExceptionHandler(response, "재로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
-                return;
             }
+//            else if (refreshToken != null) { // 어세스 토큰이 만료된 상황 && 리프레시 토큰 또한 존재하는 상황
+//                // 리프레시 토큰 검증 && 리프레시 토큰 DB에서  토큰 존재유무 확인
+//                boolean isRefreshToken = jwtUtil.refreshTokenValidation(refreshToken);
+//                // -> redis로 수정
+////                String isRefreshToken = (String) redisTemplate.opsForValue().get()
+//                // 리프레시 토큰이 유효하고 리프레시 토큰이 DB와 비교했을때 똑같다면
+//                if (isRefreshToken) {
+//                    // 리프레시 토큰으로 아이디 정보 가져오기
+//                    String loginId = jwtUtil.getUserIdFromToken(refreshToken);
+//                    // 새로운 어세스 토큰 발급
+//                    String newAccessToken = jwtUtil.createToken(loginId, "Access");
+//                    // 헤더에 어세스 토큰 추가
+//                    jwtUtil.setHeaderAccessToken(response, newAccessToken);
+//                    // Security context에 인증 정보 넣기
+//                    setAuthentication(jwtUtil.getUserIdFromToken(newAccessToken));
+//                } else { // 리프레시 토큰이 만료 || 리프레시 토큰이 DB와 비교했을때 똑같지 않다면
+//                    jwtExceptionHandler(response, "재로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
+//                    return;
+//                }
+//            } else {
+//                jwtExceptionHandler(response, "재로그인 후 이용해주세요.", HttpStatus.UNAUTHORIZED);
+//                return;
+//            }
         }
 
         filterChain.doFilter(request,response);

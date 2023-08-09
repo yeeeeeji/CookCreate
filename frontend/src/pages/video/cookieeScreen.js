@@ -1,36 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import VideoSideBar from '../../component/Video/VideoSideBar';
 import VideoHeader from '../../component/Video/VideoHeader';
 import UserVideoComponent from '../../component/Video/UserVideoComponent';
 import Timer from '../../component/Video/Timer';
-import LessonStepWidget from '../../component/Video/LessonStepWidget';
+import CookieeLessonStep from '../../component/Video/Cookiee/CookieeLessonStep';
+import CookieeVideoSideBar from '../../component/Video/Cookiee/CookieeVideoSideBar';
 
-import '../../style/video.css'
+import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteSubscriber, enteredSubscriber, leaveSession, setSubscribers } from '../../store/video/video';
-import { publishStream } from '../../store/video/video-thunk';
-import { resetCheck, resetHandsUp, setIsCompleted } from '../../store/video/cookieeVideo';
-import { useNavigate } from 'react-router-dom';
+import { audioMute, deleteSubscriber, enteredSubscriber, leaveSession, setAudioMute, setAudioOffStream, setAudioOnList, setAudioOnStream } from '../../store/video/video';
+import { joinSession } from '../../store/video/video-thunk';
+import { initCookieeVideo, resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
+import { setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
+import '../../style/video.css'
+import { initScreenShare } from '../../store/video/screenShare';
+import LessonReviewModal from '../../component/Video/Cookiee/LessonReviewModal';
+
+import { AiFillCheckCircle } from 'react-icons/ai'
+import { IoIosHand } from 'react-icons/io'
+import { BsMicFill, BsMicMuteFill } from "react-icons/bs";
+import OtherCookiees from '../../component/Video/Cookiee/OtherCookiees';
 
 function CookieeScreen() {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
   
+  const OV = useSelector((state) => state.video.OV)
   const session = useSelector((state) => state.video.session)
   const publisher = useSelector((state) => state.video.publisher)
   const subscribers = useSelector((state) => state.video.subscribers)
-  // 항상 쿠커가 먼저 들어와있기 때문에 이 로직도 괜찮을 것 같지만, subscribers가 있을때만 실행되는 것으로 변경
-  // const cookyerStream = subscribers.find((sub) => (
-  //   JSON.parse(sub.stream.connection.data).clientData.role === 'cookyer'
-  // ))
 
-  const streamManager = useSelector((state) => state.screenShare.streamManager)
-
-  const OvToken = useSelector((state) => state.video.OvToken)
-  const myUserName = localStorage.getItem('nickname');
+  const sessionId = useSelector((state) => state.video.sessionId)
+  const nickname = localStorage.getItem('nickname');
   const role = localStorage.getItem('role')
 
-  const isCompleted = useSelector((state) => state.cookieeVideo.isCompleted)
+  /** 레슨 정보 */
+  const access_token = localStorage.getItem('access_token')
+  const videoLessonId = useSelector((state) => state.video.videoLessonId)
+  // const [ myLesson, setMyLesson ] = useState(undefined)  // 학생 모달창에 불러서 쓸 레슨 정보
+
+  const [ isCompleted, setIsCompleted ] = useState(false)
 
   /** 체크 기능 */
   const check = useSelector((state) => state.cookieeVideo.check)
@@ -40,15 +47,49 @@ function CookieeScreen() {
 
   /** 선생님 화면 고정하기 위해 선생님 subscriber 찾기 */
   const [ cookyerStream, setCookyerStream ] = useState(undefined)
+  
+  /** 화면공유 subscriber 찾기 */
+  const [ screenShareStream, setScreenShareStream ] = useState(undefined)
+  // const shareScreenPublisher = useSelector((state) => state.screenShare.shareScreenPublisher)
+
+  /** 참가자 소리 상태 확인 */
+  const audioOnList = useSelector((state) => state.video.audioOnList)
+  const audioOnStream = useSelector((state) => state.video.audioOnStream)
+  const audioOffStream = useSelector((state) => state.video.audioOffStream)
+
+  /** 다른 쿠키 목록 기능 */
+  const showOthers = useSelector((state) => state.cookieeVideo.showOthers)
+
+  /** 자동 전체 화면 */
+  useEffect(() => {
+    const element = document.documentElement; // 전체 화면으로 변경하고자 하는 요소
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+  }, []);
 
   useEffect(() => {
     if (subscribers) {
+      console.log(subscribers)
       const cookyer = subscribers.find((sub) => (
         JSON.parse(sub.stream.connection.data).clientData.role === 'COOKYER'
       ))
       setCookyerStream(cookyer)
+      const share = subscribers.find((sub) => (
+        JSON.parse(sub.stream.connection.data).clientData.role === 'SHARE'
+      ))
+      if (share) {
+        setScreenShareStream(share)
+      }
+      // 섭스크라이버에서 SHARE 찾기
     }
-  }, [subscribers, cookyerStream])
+  }, [subscribers])
 
   useEffect(() => {
     console.log(3, session)
@@ -56,6 +97,9 @@ function CookieeScreen() {
       // On every new Stream received...
       const handleStreamCreated = (event) => {
         const subscriber = session.subscribe(event.stream, undefined);
+        if (subscriber && subscriber.stream.audioActive) {
+          dispatch(setAudioOnStream(subscriber.stream.connection.connectionId))
+        }
         dispatch(enteredSubscriber(subscriber))
       };
 
@@ -74,9 +118,12 @@ function CookieeScreen() {
       session.on('exception', handleException);
 
       /** 쿠커가 수업을 종료하면 스토어에 저장된 관련 정보 초기화 후 리뷰쓰러 */
-      session.off('sessionDisconnected', () => {
-        dispatch(leaveSession())  // 혹시나 리뷰에서 관련 정보 필요하면 리뷰 쓴 후에 초기화로 미루기
-        dispatch(setIsCompleted())
+      // session.off('sessionDisconnected', () => {
+      session.on('sessionDisconnected', () => {
+        dispatch(leaveSession())
+        dispatch(initCookieeVideo())
+        dispatch(initScreenShare())
+        setIsCompleted(true)
         // 쿠커가 수업 종료와 함께 모든 쿠키들을 페이지 이동 시키려면 이곳에서 하면 됨
       })
 
@@ -93,42 +140,58 @@ function CookieeScreen() {
         dispatch(resetHandsUp())
       })
 
-      // /** 화면공유 받기 */
-      // // 현재 시그널이 안받아지는 상태. 하지만 이전부터 문제이므로 일단은 신경X
-      // // session.on('signal:sharedScreen', handleSharedScreen)
-      // session.on('signal:sharedScreen', (e) => {
-      //   console.log("화면공유 데이터 받았다", e)
-      //   let remoteUsers = subscribers
-      //   remoteUsers.forEach((user) => {
-      //     if (user.getConnectionId() === e.from.connectionId) {
-      //       console.log("화면공유 데이터 받았다", e.from)
-      //       // const data = JSON.parse(e.data)
-      //       // console.log("화면공유 시그널", e.data)
-      //       // if (data.isAudioActive !== undefined) {
-      //       //   user.setAudioActive(data.isAudioActive);
-      //       // }
-      //       // if (data.isVideoActive !== undefined) {
-      //       //     user.setVideoActive(data.isVideoActive);
-      //       // }
-      //       // if (data.nickname !== undefined) {
-      //       //     user.setNickname(data.nickname);
-      //       // }
-      //       // if (data.isScreenShareActive !== undefined) {
-      //       //     user.setScreenShareActive(data.isScreenShareActive);
-      //       // }
-      //     }
-      //   })
-      //   dispatch(setSubscribers(subscribers))
-      // })
+      /** 쿠커로부터 진행단계 변화 시그널 받고 진행단계 바꾸기 */
+      session.on('signal:changeStep', (e) => {
+        console.log("진행단계 시그널", e.data)
+        const data = JSON.parse(e.data)
+        console.log(data)
+        if (data !== undefined) {
+          dispatch(setStepInfo(data))
+        }
+      })
+
+      /** 쿠커로부터 음소거 시그널 받고 음소거하기 */
+      session.on('signal:forceAudioMute', () => {
+        console.log("음소거 시그널")
+        dispatch(setAudioMute())
+      })
+
+      /** 쿠커로부터 오디오 조정 시그널 받고 조정 */
+      session.on('signal:forceAudioAdjust', () => {
+        console.log("오디오 조정 시그널")
+        dispatch(audioMute())
+      })
+
+      /** 참가자 소리 조정 이벤트 추가 */
+      session.on('signal:audioOn', (e) => {
+        const connectionId = JSON.parse(e.data).connectionId
+        console.log('소리 켠 사람', connectionId)
+        dispatch(setAudioOnStream(connectionId))
+      })
+
+      session.on('signal:audioOff', (e) => {
+        const connectionId = JSON.parse(e.data).connectionId
+        console.log('소리 끈 사람', connectionId)
+        dispatch(setAudioOffStream(connectionId))
+      })
+
+      /** 화면 공유 종료시 이벤트 추가 */
+      session.on('signal:shareEnd', () => {
+        setScreenShareStream(undefined)
+      })
 
       console.log(4)
 
       /** 페이지 입장 후 세션에 연결 및 발행하기 */
       const data = {
-        token: OvToken,
-        myUserName: myUserName
+        OV,
+        session,
+        sessionId,
+        nickname,
+        role
       }
-      dispatch(publishStream({data}))
+      dispatch(joinSession(data))
+      // dispatch(publishStream({data}))
 
 
       console.log(5)
@@ -146,93 +209,151 @@ function CookieeScreen() {
     }
   }, []);
 
+  useEffect(() => {
+    if (videoLessonId) {
+      axios.get(
+        `/api/v1/lesson/${videoLessonId}`,
+        {
+          headers : {
+            Access_Token : access_token
+          }
+        })
+        .then((res) => {
+          console.log(res.data)
+          console.log('화상 과외 수업 정보 받아와짐')
+          // setMyLesson(res.data) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
+          dispatch(setLessonInfo(res.data))
+          const firstLessonStep = res.data.lessonStepList.find((step) => step.stepOrder === 1)
+          console.log(firstLessonStep.stepContent)
+          dispatch(setCurStep(firstLessonStep.stepContent))
+        })
+        .catch((err) => {
+          console.log(err)
+          console.log('화상 과외 수업 정보 안받아와짐')
+        })
+    }
+  }, [videoLessonId])
+
   // const handleMainVideoStream = (stream) => {
   //   if (mainStreamManager !== stream) {
-  //     dispatch(setMainStreamManager({publisher: stream}))
+  //     dispatch(setMainStreamManager(stream))
   //   }
   // }
 
+  /** 소리 켠 참가자 리스트에 추가 */
+  useEffect(() => {
+    console.log('소리 켠 참가자 리스트에 추가', audioOnStream)
+    if (audioOnStream !== undefined && audioOnStream !== '') {
+      // 만약 손든 사람이 또 손들면 거르기
+      if (audioOnList !== undefined && audioOnList !== []) {
+        const newAudioOnList = audioOnList.filter((item) => {
+          return item !== audioOnStream
+        })
+        newAudioOnList.push(audioOnStream)
+        dispatch(setAudioOnList(newAudioOnList))
+        console.log(newAudioOnList, "새 소리 켠 참가자 리스트")
+      } else {
+        dispatch(setAudioOnList([audioOnStream]))
+        console.log(audioOnList, "소리 켠 참가자 리스트에 값 없음")
+      }
+      dispatch(setAudioOnStream(''))
+    }
+  }, [audioOnStream])
+
+  /** 소리 끈 참가자 리스트에서 제거 */
+  useEffect(() => {
+    console.log('소리 끈 참가자 리스트에서 제거', audioOffStream)
+    if (audioOffStream !== undefined && audioOffStream !== '') {
+      if (audioOnList !== undefined && audioOnList !== []) {
+        const newAudioOnList = audioOnList.filter((item) => {
+          return item !== audioOffStream
+        })
+        dispatch(setAudioOnList(newAudioOnList))
+        console.log(newAudioOnList, "소리 끈 참가자 제외 새 손들기 리스트")
+      }
+      dispatch(setAudioOffStream(''))
+    }
+  }, [audioOffStream])
+
   return (
     <div className='video-page'>
-      <VideoSideBar/>
+      <CookieeVideoSideBar/>
       <div>
-        <VideoHeader/>
+        {isCompleted ? (
+          <LessonReviewModal/>
+        ) : null}
         <div>
-          <div>
-            <div className='cookiee-sharing'>
-              { isCompleted ? (
+          <VideoHeader/>
+          <div className='cookiee-video-content'>
+            <div>
+              <div className='cookiee-sharing'>
+              {/* <div className='cookiee-sharing' onClick={() => handleMainVideoStream(cookyerStream)}> */}
                 <div className='cookiee-sharing-content'>
-                  <span>수업이 종료되었습니다.</span>
+                  {isCompleted ? (
+                    <p>수업이 종료되었습니다.</p>
+                  ) : (
+                    screenShareStream ? (
+                      <UserVideoComponent
+                        videoStyle='cookiee-sharing-content'
+                        streamManager={screenShareStream}
+                      />
+                    ) : (
+                      <UserVideoComponent
+                        videoStyle='cookiee-sharing-content'
+                        streamManager={cookyerStream}
+                      />
+                    )
+                  )}
                 </div>
-              ) : (
-                <div className='cookiee-sharing-content'>
-                  <span>화면공유</span>
-                </div>
-              )}
+              </div>
+              <CookieeLessonStep/>
             </div>
-            {/* <div className='cookiee-sharing' onClick={() => handleMainVideoStream(publisher)}>
-              <UserVideoComponent
-                videoStyle='cookiee-sharing-content'
-                streamManager={publisher}
-              />
-            </div> */}
-            <div className='cookiee-sharing'>
-              {streamManager !== null ? (
-                <UserVideoComponent
-                  videoStyle='cookiee-sharing-content'
-                  streamManager={streamManager}
-                />
-              ) : (
-                <UserVideoComponent
-                  videoStyle='cookiee-sharing-content'
-                  streamManager={publisher}
-                />
-              )}
+            <div>
+              {/* 쿠커 화면 */}
+              <div className='cookiee-content'>
+                {cookyerStream ? (
+                  <UserVideoComponent
+                    videoStyle='cookiee-content-video'
+                    streamManager={cookyerStream}
+                  />
+                ) : (
+                  <h1>쿠커 화면</h1>
+                )}
+                {cookyerStream && audioOnList && audioOnList.find((item) => item === cookyerStream.stream.connection.connectionId) ? (
+                  <BsMicFill className='cookiee-cookyer-audio-icon-active'/>
+                ) : (
+                  <BsMicMuteFill className='cookiee-cookyer-audio-icon'/>
+                )}
+              </div>
+              <Timer role='COOKIEE'/>
+              {/* 쿠키 본인 화면 */}
+              <div className='cookiee-content'>
+                {publisher !== undefined ? (
+                  <UserVideoComponent
+                    videoStyle='cookiee-content-video'
+                    streamManager={publisher}
+                  />
+                ) : (
+                  <h1>쿠키 화면</h1>
+                )}
+                {check ? (
+                  <AiFillCheckCircle className='cookiee-check-icon-active'/>
+                ) : (
+                  <AiFillCheckCircle className='cookiee-check-icon'/>
+                )}
+                {handsUp ? (
+                  <IoIosHand className='cookiee-handsup-icon-active'/>
+                ) : (
+                  <IoIosHand className='cookiee-handsup-icon'/>
+                )}
+              </div>
             </div>
-            <LessonStepWidget/>
-          </div>
-          <div>
-            {/* 쿠커 화면 */}
-            <div className='cookiee-content'>
-              {cookyerStream ? (
-                <UserVideoComponent
-                  videoStyle='cookiee-content-video'
-                  streamManager={cookyerStream}
-                />
-              ) : null}
-            </div>
-            <Timer role={role}/>
-            {/* 쿠키 본인 화면 */}
-            <div className='cookiee-content'>
-              <UserVideoComponent
-                videoStyle='cookiee-content-video'
-                streamManager={publisher}
-              />
-              {check ? (
-                <h1>나 체크했다</h1>
-              ) : null}
-              {handsUp ? (
-                <h1>나 손들었다</h1>
-              ) : null}
-            </div>
-
-            {/* <div className='cookyer-cookiees'> */}
-              {/* {subscribers} */}
-              {/* {subscribers ? (
-                subscribers.map((sub, i) => (
-                  <div key={i}>
-                    <UserVideoComponent
-                      videoStyle='cookyer-cookiee'
-                      streamManager={sub}
-                    />
-                  </div>
-                ))
-              ) : null} */}
-            {/* </div> */}
-
           </div>
         </div>
       </div>
+      {showOthers ? (
+        <OtherCookiees/>
+      ) : null}
     </div>
   );
 }

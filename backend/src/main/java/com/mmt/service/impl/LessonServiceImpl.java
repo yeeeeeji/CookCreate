@@ -8,6 +8,9 @@ import com.mmt.domain.entity.lesson.Lesson;
 import com.mmt.domain.entity.lesson.LessonCategory;
 import com.mmt.domain.entity.lesson.LessonParticipant;
 import com.mmt.domain.entity.lesson.LessonStep;
+import com.mmt.domain.request.jjim.JjimReq;
+import com.mmt.domain.entity.pay.PayStatus;
+import com.mmt.domain.entity.pay.PaymentHistory;
 import com.mmt.domain.request.lesson.LessonPostReq;
 import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
@@ -31,10 +34,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.Duration;
@@ -59,7 +63,7 @@ public class LessonServiceImpl implements LessonService {
     private final ReviewService reviewService;
     private final AwsS3Uploader awsS3Uploader;
 
-    private final EntityManager entityManager;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
     @Override
@@ -96,7 +100,7 @@ public class LessonServiceImpl implements LessonService {
         // 참여자 목록에 lesson 세팅, 선생님 아이디 추가
         LessonParticipant lessonParticipant = new LessonParticipant();
         lessonParticipant.setLesson(save);
-        lessonParticipant.setUserId(lessonPostReq.getCookyerId());
+        lessonParticipant.setMember(cookyer.get());
         lessonParticipant.setCompleted(false);
         lessonParticipantRepository.save(lessonParticipant);
 
@@ -113,12 +117,14 @@ public class LessonServiceImpl implements LessonService {
         if(lesson.get().getIsOver()) return new ResponseDto(HttpStatus.BAD_REQUEST, "이미 마감된 과외입니다.");
 
         // 추가하기 전 결제 완료 확인
-        if(!paymentRepository.findByLesson_LessonIdAndMember_UserId(lessonId, userId).isPresent()) {
+        Optional<PaymentHistory> paymentHistory = paymentRepository.findFirstByLesson_LessonIdAndMember_UserIdOrderByApprovedAtDesc(lessonId, userId);
+        if(!paymentHistory.isPresent() || paymentHistory.get().getPayStatus() != PayStatus.COMPLETED) {
             return new ResponseDto(HttpStatus.FORBIDDEN, "결제 한 사용자만 신청할 수 있습니다.");
         }
         LessonParticipant lessonParticipant = new LessonParticipant();
         lessonParticipant.setLesson(lesson.get());
-        lessonParticipant.setUserId(userId);
+        Optional<Member> member = memberRepository.findByUserId(userId);
+        lessonParticipant.setMember(member.get());
         lessonParticipant.setCompleted(false);
         lessonParticipantRepository.save(lessonParticipant);
 
@@ -178,6 +184,12 @@ public class LessonServiceImpl implements LessonService {
     @Transactional
     @Override
     public ResponseDto deleteLesson(int lessonId) {
+        List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(lessonId);
+        if(lessonParticipantList.size() > 1){
+            // 선생님 외에 참여한 사람이 있으면
+            return new ResponseDto(HttpStatus.CONFLICT, "과외를 신청한 사람이 있어서 삭제할 수 없습니다.");
+        }
+
         try {
             lessonRepository.deleteByLessonId(lessonId);
         }catch (EmptyResultDataAccessException e){
@@ -203,7 +215,7 @@ public class LessonServiceImpl implements LessonService {
             return new ResponseDto(HttpStatus.FORBIDDEN, "신청한 Cookiee만 이용 가능합니다.");
         }
 
-        Optional<LessonParticipant> lessonParticipant = lessonParticipantRepository.findByLesson_LessonIdAndUserId(lessonId, userId);
+        Optional<LessonParticipant> lessonParticipant = lessonParticipantRepository.findByLesson_LessonIdAndMember_UserId(lessonId, userId);
         if(lessonParticipant.isEmpty()) {
             return new ResponseDto(HttpStatus.FORBIDDEN, "신청한 Cookiee만 이용 가능합니다.");
         }
@@ -314,18 +326,8 @@ public class LessonServiceImpl implements LessonService {
             Optional<LessonCategory> lessonCategory = lessonCategoryRepository.findById(lesson.get().getLessonCategory().getCategoryId());
             if(lessonCategory.isPresent()) result.setCategoryName(lessonCategory.get().getCategoryTitle());
 
-            // lessonParticipantList 세팅
             List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(lessonId);
-            List<Member> memberList = new ArrayList<>();
-            for (LessonParticipant lp : lessonParticipantList){
-                Member member = new Member();
-                String userId = lp.getUserId();
-                member.setUserId(userId);
-                member.setNickname(memberRepository.findByUserId(userId).get().getNickname());
-                memberList.add(member);
-            }
-            result.setLessonParticipantList(memberList);
-
+//            result.setLessonParticipantList(lessonParticipantList);
             // remaining 세팅
             result.setRemaining(result.getMaximum() - lessonParticipantList.size() + 1);
 
@@ -390,6 +392,28 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
+    public ResponseDto getHavingBadge(String cookyerId) {
+        // 회원 조회 확인 절차
+        Optional<Member> member = memberRepository.findByUserId(cookyerId);
+        if(member.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 계정입니다.");
+        }
+
+        // 뱃지 불러오기
+        List<Badge> badgeList = badgeRepository.findAllByMember_UserId(cookyerId);
+        if(badgeList.size() == 0){ // 신청한 뱃지가 있는지 확인
+            return new ResponseDto(HttpStatus.NOT_FOUND, "신청한 뱃지가 없습니다.");
+        }
+        for(Badge badge : badgeList){ // 인증된 뱃지가 있는지 확인
+            if(badge.getCertificated().equals(Certificated.ACCESS)){
+                return new ResponseDto(HttpStatus.OK, "뱃지 인증을 완료했습니다.");
+            }
+        }
+
+        return new ResponseDto(HttpStatus.CONFLICT, "획득한 뱃지가 없습니다.");
+    }
+
+    @Override
     public List<LessonStepRes> getLessonStep(int lessonId) {
         List<LessonStep> lessonStepList = lessonStepRepository.findByLesson_LessonId(lessonId);
         List<LessonStepRes> result = new ArrayList<>();
@@ -400,6 +424,7 @@ public class LessonServiceImpl implements LessonService {
         return result;
     }
 
+    @Transactional
     @Override
     public ResponseDto modifyLessonStep(String userId, LessonStepPutReq lessonStepPutReq) {
         Optional<Lesson> find = lessonRepository.findByLessonId(lessonStepPutReq.getLessonId());
@@ -448,10 +473,11 @@ public class LessonServiceImpl implements LessonService {
         if(lesson.get().getIsEnd()){
             return new ResponseDto(HttpStatus.CONFLICT, "이미 종료된 과외입니다.");
         }
-        if(lesson.get().getSessionId() != null){
-            return new ResponseDto(HttpStatus.CONFLICT, "이미 세션이 생성되어 있습니다.");
-        }
+//        if(lesson.get().getSessionId() != null){
+//            return new ResponseDto(HttpStatus.CONFLICT, "이미 세션이 생성되어 있습니다.");
+//        }
 
+//        String customSessionId = RandomStringUtils.randomAlphanumeric(15);
         lesson.get().setSessionId(sessionPostReq.getSessionId());
         lessonRepository.save(lesson.get());
 
@@ -459,13 +485,13 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public ResponseDto createConnection(SessionPostReq sessionPostReq) {
+    public ResponseDto checkSession(SessionPostReq sessionPostReq) {
         List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(sessionPostReq.getLessonId());
 
         // 과외를 신청했는지 확인
         boolean isApplied = false;
         for(LessonParticipant lessonParticipant : lessonParticipantList){
-            if(lessonParticipant.getUserId().equals(sessionPostReq.getUserId())){
+            if(lessonParticipant.getMember().getUserId().equals(sessionPostReq.getUserId())){
                 isApplied = true;
                 break;
             }
@@ -512,4 +538,70 @@ public class LessonServiceImpl implements LessonService {
 
         return new ResponseDto(HttpStatus.OK, "Success");
     }
+
+    @Transactional
+    @Override
+    public ResponseDto wantJjimOrNot(JjimReq jjimReq) {
+        int lessonId = jjimReq.getLessonId();
+        Optional<Lesson> lesson = lessonRepository.findByLessonId(lessonId);
+        if(lesson.isEmpty()){
+            return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+        }
+        if(lesson.get().getIsOver() || lesson.get().getIsEnd()){
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 마감된 과외입니다.");
+        }
+
+        Optional<Member> member = memberRepository.findByUserId(jjimReq.getUserId());
+        if(!member.get().getRole().equals(Role.COOKIEE)){
+            return new ResponseDto(HttpStatus.FORBIDDEN, "Cookiee만 이용할 수 있습니다.");
+        }
+
+        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
+
+//        예제
+//        setOperations.add("Key", chatMessage);
+//        System.out.println(setOperations.pop("Key"));       // 하나 꺼내기
+//        System.out.println(setOperations.members("Key"));  // 전체 조회
+
+        String key = "lessonId::" + jjimReq.getLessonId();
+        String value = jjimReq.getUserId();
+        if(Boolean.TRUE.equals(setOperations.isMember(key, value))){
+            setOperations.remove(key, value);
+            return new ResponseDto(HttpStatus.OK, "찜한 목록에서 제거됐습니다.");
+        }else{
+            setOperations.add(key, value);
+            return new ResponseDto(HttpStatus.OK, "찜한 목록에 추가됐습니다.");
+        }
+
+//        setOperations.pop(key);
+//        if(){
+//            setOperations.getOperations().get
+//            setOperations.put(key, hashkey, lesson.get().getJjimCount());
+//            setOperations.increment(key, hashkey,1);
+//            System.out.println(setOperations.get(key, hashkey));
+//        }else {
+//            setOperations.increment(key, hashkey,1);
+//            System.out.println(setOperations.get(key, hashkey));
+//        }
+    }
+
+//    @Scheduled(fixedDelay = 1000L*18L)
+//    @Transactional
+//    @Override
+//    public void cancelJjim(){
+//        String hashkey = "likes";
+//        Set<String> Rediskey = redisTemplate.keys("lessonId*");
+//        Iterator<String> it = Rediskey.iterator();
+//        while (it.hasNext()) {
+//            String data = it.next();
+//            int lessonId = Integer.parseInt(data.split("::")[1]);
+//            if (redisTemplate.opsForHash().get(data, hashkey) == null){
+//                break;
+//            }
+//            int jjimCnt = Integer.parseInt((String.valueOf(redisTemplate.opsForHash().get(data, hashkey))));
+//            //problemRepositoryImp.wantJjim(lessonId, jjimCnt);
+//            redisTemplate.opsForHash().delete(data, hashkey);
+//        }
+//        System.out.println("likes update complete");
+//    }
 }

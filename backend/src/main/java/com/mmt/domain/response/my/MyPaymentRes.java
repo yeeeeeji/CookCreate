@@ -7,6 +7,7 @@ import com.mmt.domain.entity.pay.PaymentHistory;
 import com.mmt.domain.response.ResponseDto;
 import com.mmt.domain.response.pay.Amount;
 import com.mmt.domain.response.pay.CardInfo;
+import com.mmt.domain.response.pay.PaymentRefundRes;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ public class MyPaymentRes extends ResponseDto {
     private String cardInfo;
     private PayStatus payStatus;
     private String approvedAt;
+    private String canceledAt;
 
     public MyPaymentRes(PaymentHistory paymentHistory) {
         this.userId = paymentHistory.getMember().getUserId();
@@ -36,6 +38,7 @@ public class MyPaymentRes extends ResponseDto {
         this.cardInfo = paymentHistory.getCardInfo();
         this.payStatus = paymentHistory.getPayStatus();
         this.approvedAt = paymentHistory.getApprovedAt().toString();
+
     }
 
     public MyPaymentRes(HttpStatus httpStatus, String message) {

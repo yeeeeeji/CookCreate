@@ -1,10 +1,17 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { setKeyword, setType } from '../../store/lesson/lessonSearch';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import '../../style/lesson/searchBarCss.css';
+import { BiSearch } from 'react-icons/bi';
+
 function SearchBar() {
   const dispatch = useDispatch()
-  const [inputKeyword, setInputKeyword] = useState('')
-  const [selectedType, setSelectedType] = useState('all')
+  const [keyword, setInputKeyword] = useState('')
+  const [type, setInputType] = useState('all')
+  const order = useSelector((state) => state.lessonSearch.order)
+  const deadline = useSelector((state) => state.lessonSearch.deadline)
+  const category = useSelector((state) => state.lessonSearch.category)
 
   const handleSearchBar = (e) => {
     const newKeyword = e.target.value;
@@ -14,32 +21,54 @@ function SearchBar() {
 
   const handleTypeChange = (e) => {
     const newType = e.target.value;
-    setSelectedType(newType);
+    setInputType(newType);
     dispatch(setType(newType))
   }
+
+  useEffect(() => {
+    axios.get(`/api/v1/lesson`, {
+      params : {
+        type,
+        keyword,
+        category,
+        order,
+        deadline
+      }
+    })
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }, [type, keyword, category, order, deadline])
   return (
     <div>
-      <div style={{display : 'flex', alignItems : 'center'}}>
-        <div>
-          전체 보기
-        </div>
+      <div className='searchContainer'>
         <select
           onChange={handleTypeChange}
-          value={selectedType}
+          value={type}
           style={{ marginLeft: '10px' }}
+          className='categorySelect'
         >
-          <option value="all">전체</option>
-          <option value="title">제목</option>
-          <option value="cookyer">Cookyer</option>
+          <option value="all">전체보기</option>
+          <option value="title">과외 제목</option>
+          <option value="cookyer">Cookyer 이름</option>
           <option value="ingre">재료</option>
         </select>
 
-        <input type="text"
-          placeholder='배우고 싶은 요리를 검색해보세요!'
-          style={{width : '400px'}}
-          onChange={handleSearchBar}
-          value={inputKeyword}
-        />
+        <div className='inputContainer'>
+          <input type="text"
+            placeholder='배우고 싶은 요리를 검색해보세요!'
+            style={{width : '400px'}}
+            onChange={handleSearchBar}
+            value={keyword}
+            className='searchInput'
+          />
+          <div className='searchIcon'>
+            <BiSearch/>
+          </div>
+        </div>
       </div>
     </div>
   );

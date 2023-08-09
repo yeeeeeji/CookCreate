@@ -174,7 +174,7 @@ function Signup() {
     .then(() => {
       alert('회원가입 성공! Cook Create를 즐겨보세요!')
       localStorage.removeItem('userType')
-      navigate('/')
+      navigate('/login')
     })
     .catch((err) => {
       setUserCanSignUp(err.response.data.message)
@@ -183,113 +183,127 @@ function Signup() {
     return (
     <div className='page'>
       <div className='titleWrap'>
-        회원가입을 <br />
-        진행합니다.
+        회원가입
       </div>
       <div className='contentWrap'>
-        <div className='inputTitle'>아이디</div>
-        <div className='inputWrap'>
-          <input type="text" className='input'
-          value={userId}
-          onChange={
-            onChangeUserId
-          }
-          placeholder='아이디'/>
-          <button onClick={idDupliCheck}>중복 확인</button>
-          <div>
-            {userIdMessage}
-            {userIdDupMessage}
+        <div className='signupinputContainer'>
+          <div className='inputTitle'>아이디 <span className="required">*</span></div>
+          <div className='inputWrap'>
+            <input type="text" className='input'
+            value={userId}
+            onChange={
+              onChangeUserId
+            }
+            placeholder='아이디'/>
+            <button className='dupliButton' onClick={idDupliCheck}>중복확인</button>
           </div>
         </div>
-
-        <div className='inputTitle'>비밀번호</div>
-        <div className='inputWrap'>
-          <input type="password" className='input'
-          value={userPw}
-          onChange={
-            onChangeUserPw
-          }
-          placeholder='비밀번호'
-          />
-          <div>
-            {userPwMessage}
-          </div>
-        </div>
-            
-        <div className='inputTitle'>비밀번호 확인</div>
-        <div className='inputWrap'>
-          <input type="password" className='input'
-          value={userPwCk}
-          onChange={
-            onChangeUserPwCk
-          }
-          placeholder='비밀번호 확인'
-          />
-          <div>
-            {userPwCkMessage}
-          </div>
+        <div className='inputMessage'>
+          {userIdMessage}
+          {userIdDupMessage}
         </div>
 
-
-        <div className='inputTitle'>닉네임</div>
-        <div className='inputWrap'>
-          <input type="nickname" className='input'
-          value={nickname}
-          onChange={
-            onChangeUserNickName
-          }
-          placeholder='닉네임'/>
-          <button onClick={nicknameDupliCheck}>중복확인</button>
-          <div>
-            {userNicknameMessage}
-            {userNNDupMessage}
+        <div className='signupinputContainer'>
+          <div className='inputTitle'>비밀번호 <span className="required">*</span></div>
+          <div className='inputWrap'>
+            <input type="password" className='input'
+            value={userPw}
+            onChange={
+              onChangeUserPw
+            }
+            placeholder='비밀번호'
+            />
           </div>
         </div>
-
-        <div className='inputTitle'>전화번호 입력</div>
-        <div className='inputWrap'>
-          <input type="phonenumber" className='input'
-          value={phoneNumber}
-          onChange={
-            onChangeUserPhonenumber
-          }
-          placeholder='전화번호 입력'/>
-          <div>
-            {userPhoneNumberMessage}
-          </div>
+        <div className='inputMessage'>
+          {userPwMessage}
         </div>
 
-        <div className='inputTitle'>이메일(선택사항)</div>
-        <div className='inputWrap'>
-          <input type="email" className='input'
-          value={userEmail}
-          onChange={
-            onChangeUserEmail
-          }
-          placeholder='이메일'/>
-          <div>
-            {userEmailMessage}
+        <div className='signupinputContainer'>
+          <div className='inputTitle'>비밀번호 확인 <span className="required">*</span></div>
+          <div className='inputWrap'>
+            <input type="password" className='input'
+            value={userPwCk}
+            onChange={
+              onChangeUserPwCk
+            }
+            placeholder='비밀번호 확인'
+            />
           </div>
         </div>
+        <div className='inputMessage'>
+          {userPwCkMessage}
+        </div>
+        
+        <div className='signupinputContainer'>
+          <div className='inputTitle'>닉네임 <span className="required">*</span></div>
+          <div className='inputWrap'>
+            <input type="nickname" className='input'
+            value={nickname}
+            onChange={
+              onChangeUserNickName
+            }
+            placeholder='닉네임'/>
+            <button  className='dupliButton' onClick={nicknameDupliCheck}>중복확인</button>
+          </div>
+        </div>        
+        <div className='inputMessage'>
+          {userNicknameMessage}
+          {userNNDupMessage}
+        </div>
 
-        <br/>
-        <FoodList selectedFood={food} toggleFood={handleSelectedFood} />
-        <button onClick={handleSignup}
-          className="bottomBtn"
-          disabled={
-            !(
-              isUserId &&
-              isIdDupli &&
-              isUserPw &&
-              isUserPwCk &&
-              isNickname &&
-              isNicknameDupli &&
-              isPhoneNumber &&
-              isUserEmail
-            )
-          }>
-          회원가입
-        </button>
+        <div className='signupinputContainer'>
+          <div className='inputTitle'>전화번호 <span className="required">*</span></div>
+          <div className='inputWrap'>
+            <input type="phonenumber" className='input'
+            value={phoneNumber}
+            onChange={
+              onChangeUserPhonenumber
+            }
+            placeholder='전화번호 입력'/>
+          </div>
+        </div>
+        <div className='inputMessage'>
+          {userPhoneNumberMessage}
+        </div>
+
+        <div className='signupinputContainer'>
+          <div className='inputTitle'>이메일</div>
+          <div className='inputWrap'>
+            <input type="email" className='input'
+            value={userEmail}
+            onChange={
+              onChangeUserEmail
+            }
+            placeholder='이메일'/>
+          </div>
+        </div>
+        <div className='inputMessage'>
+          {userEmailMessage}
+        </div>
+
+        <div>
+          <FoodList selectedFood={food} toggleFood={handleSelectedFood} />
+        </div>
+
+        <div className="bottomBtnContainer">
+          <button onClick={handleSignup}
+            className="bottomBtn"
+            disabled={
+              !(
+                isUserId &&
+                isIdDupli &&
+                isUserPw &&
+                isUserPwCk &&
+                isNickname &&
+                isNicknameDupli &&
+                isPhoneNumber &&
+                isUserEmail
+              )
+            }>
+            회원가입
+          </button>
+        </div>
       </div>
       {userCanSignUp}
     </div>
