@@ -10,7 +10,7 @@ import '../../style/video.css'
 function OpenViduVideoComponent(props) {
     const canvasRef = useRef(null);
     const contextRef = useRef(null);
-    const inputVideoRef = useRef(null);
+    const videoRef = useRef(null);
 
     const dispatch = useDispatch();
 
@@ -45,16 +45,22 @@ function OpenViduVideoComponent(props) {
     }
 
     useEffect(() => {
-      if(canvasRef.current && inputVideoRef.current) {
+      if (props && videoRef.current) {
+        props.streamManager.addVideoElement(videoRef.current);
+      }
+
+      if(canvasRef.current && videoRef.current) {
         const canvas = canvasRef.current;
-        const videoRef = inputVideoRef.current;
+        const video = videoRef.current;
         let gesture = "";
+
+
     
         if (canvas) {
           contextRef.current = canvas.getContext("2d");
         }
     
-        if (contextRef.current && canvas && videoRef) {
+        if (contextRef.current && canvas && video) {
           createHandLandmarker().then((handLandmarker) => {
             const drawingUtils = new DrawingUtils(contextRef.current);
             let lastVideoTime = -1;
@@ -62,15 +68,15 @@ function OpenViduVideoComponent(props) {
     
             function predict() {
               
-              canvas.style.width = videoRef.videoWidth;
-              canvas.style.height = videoRef.videoHeight;
-              canvas.width = videoRef.videoWidth;
-              canvas.height = videoRef.videoHeight;
+              canvas.style.width = video.videoWidth;
+              canvas.style.height = video.videoHeight;
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
 
               let startTimeMs = performance.now();
-              if (lastVideoTime !== videoRef.currentTime) {
-                lastVideoTime = videoRef.currentTime;
-                results = handLandmarker.detectForVideo(videoRef, startTimeMs);
+              if (lastVideoTime !== video.currentTime) {
+                lastVideoTime = video.currentTime;
+                results = handLandmarker.detectForVideo(video, startTimeMs);
                 // Perform gesture recognition
                 const recognizedGesture = recognizeGesture(results);
                 gesture = recognizedGesture ? recognizedGesture : "";
@@ -101,8 +107,8 @@ function OpenViduVideoComponent(props) {
             }
     
             navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-              videoRef.srcObject = stream;
-              videoRef.addEventListener("loadeddata", predict);
+              video.srcObject = stream;
+              video.addEventListener("loadeddata", predict);
             });
             
           });
@@ -118,7 +124,7 @@ function OpenViduVideoComponent(props) {
     const recognizeGesture = (results) => {
       const compareIndex = [[17, 4], [6, 8], [10, 12], [14, 16], [18, 20]]; // [0][0] 원래는 18이었음. 다른 숫자들로 테스트 해보자.
       const open = [false, false, false, false, false];
-      // const gesture = ['🖐️', '👌', ''] // 엄지 검지 V 이모지가 안보이네
+      const gesture = ['🖐️', '👌', '✅'] // 엄지 검지 V 이모지가 안보이네
       let isThumbIndexTouched = false; // 엄지 검지 맞닿아있는지 여부 (OK싸인 제스쳐 탐지에 활용) << 얘가 true이고 3, 4, 5번 compareIndex가 True이면 'OK사인' 제스쳐 보내기로 활용할 것
 
       if (results.landmarks && results.landmarks.length > 0) {
@@ -199,18 +205,17 @@ function OpenViduVideoComponent(props) {
     }
   
     return (
-<>
-      <div style={{ position: "relative" }}>
-        <video style={{ position: "absolute"}}
-          id="webcam"
-          autoPlay
-          playsInline
-          ref={inputVideoRef}  
+    <>
+      <div>
+        <video
+          className={props.videoStyle}
+          muted={true}
+          autoPlay={true}
+          ref={videoRef}
         ></video>
-      <canvas
+        <canvas
+          className={`${props.videoStyle}-canvas`}
           ref={canvasRef}
-          id="output_canvas"
-          style={{ position: "absolute", zIndex: 10}}
         ></canvas>
       </div>
     </>
