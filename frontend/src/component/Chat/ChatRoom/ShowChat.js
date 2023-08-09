@@ -1,9 +1,34 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
+import axios from "axios";
+import { MyChat, FriendChat } from "./ChatBlock";
 // import React, { useEffect, useRef } from "react";
 // import { useSelector } from "react-redux";
-// import { MyChat, FriendChat } from "./ChatBlock";
 
-const ChatWindow = () => {
+const ShowChat = () => {
+  const accessToken = localStorage.getItem('access_token');
+  const [messageList, setMessageList] = useState([]);
+  const my_user_id = localStorage.getItem('id'); 
+
+  const lessonId = 8;
+
+  useEffect(() => {
+    axios
+      .get(`api/v1/chat/${lessonId}`, {
+        headers: {
+          Access_Token: accessToken,
+        },
+      })
+      .then((res) => {
+        console.log("채팅내용", res.data);
+        setMessageList(res.data);
+      })
+      .catch((err) => {
+        console.log("채팅내용 조회못함", err);
+      });
+  }, []);
+
+
+
   // const messageList = useSelector((state) => state.chat.MessageList);
   // const chatDivRef = useRef();
 
@@ -19,18 +44,17 @@ const ChatWindow = () => {
 
   return (
     <div>
-      {/* <div ref={chatDivRef} style={{ overflowY: "auto", height: "300px" }}>
-        {messageList.map((message, index) => (
-          메시지를 보낸 사용자에 따라 다른 컴포넌트를 렌더링
-          {message.user_id !== my_user_id ? (
-            <FriendChat key={index} message={message} />
+      <div style={{ overflowY: "auto", height: "300px" }}>
+        {messageList.map((chat, index) => (
+          chat.userId !== my_user_id ? (
+            <FriendChat key={index} message={chat.content} />
           ) : (
-            <MyChat key={index} message={message} />
-          )}
+            <MyChat key={index} message={chat.content} />
+          )
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };
 
-export default ChatWindow;
+export default ShowChat;

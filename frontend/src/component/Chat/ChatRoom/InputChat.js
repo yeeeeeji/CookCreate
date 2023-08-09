@@ -5,11 +5,13 @@ import styled from "styled-components";
 // import axios from "axios";
 
 const Wrapper = styled.footer`
+  display: flex;
+  justify-content: flex-end;
   position: fixed;
   bottom: 0px;
   left: 0px;
   right: 0px;
-  width: 100%;
+  width: 70%;
   min-height: 50px;
   max-height: 200px;
   overflow: auto;
@@ -51,7 +53,7 @@ const Wrapper = styled.footer`
   }
 `;
 
-const InputChat = () => {
+const InputChat = ({ sendMessage }) => {
   // const accessToken = useSelector((state) => state.auth.token);
   const [contents, setContents] = useState("");
   const isCanSubmit = !!contents.replace(/ |\n/g, "");
@@ -77,23 +79,10 @@ const InputChat = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // const data = {
-    //   lessonId,
-    //   userId,
-    //   contents
-    // };
-    // axios
-    //   .put(`api/v1/send/{lessonId}`, data, {
-    //     headers: {
-    //       Access_Token: accessToken,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    if (isCanSubmit) {
+      sendMessage(contents);
+      setContents("");
+    }
   };
 
   const onEnterPress = (event) => {
