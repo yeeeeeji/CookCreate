@@ -9,7 +9,6 @@ function EditLesson({ lessonId, disable }) {
       navigate(`/lesson/edit/${lessonId}`);
     }
   };
-
   return (
     <div style={{
       width: '300px',

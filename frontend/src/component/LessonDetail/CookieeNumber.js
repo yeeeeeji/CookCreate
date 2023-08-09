@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 function CookieeNumber() {
+  // console.log('안녕')
   const maximum = parseInt(useSelector((state) => state.lessonInfo.maximum))
   const remaining = parseInt(useSelector((state) => state.lessonInfo.remaining))
   const current = maximum - remaining

@@ -4,20 +4,15 @@ import LessonListFliter from '../component/TotalLessons/LessonListFliter';
 import LessonList from '../component/TotalLessons/LessonList';
 import LessonFoodCategory from '../component/TotalLessons/LessonFoodCategory';
 import { useDispatch } from 'react-redux';
-import { setCategories, setDeadLine, setKeyword, setLessonId, setOrder, setType } from '../store/lesson/lessonSearch';
+import { resetlessonSearch } from '../store/lesson/lessonSearch';
+import { setLessonId } from '../store/lesson/lessonInfo';
 import '../style/lesson/totalLessonsCss.css';
 
 function TotalLessons() {
   const dispatch = useDispatch();
-
   useEffect(() => {
-    dispatch(setOrder("title"))
-    dispatch(setType("all"))
-    dispatch(setDeadLine(true))
-    dispatch(setCategories([]))
-    dispatch(setKeyword(""))
-    dispatch(setLessonId(""))
-  }, [dispatch]);
+    dispatch(resetlessonSearch())
+  })
 
   return (
     <div>

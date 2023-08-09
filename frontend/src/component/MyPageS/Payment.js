@@ -84,7 +84,7 @@ function Payment() {
 
   useEffect(() => {
     axios
-      .get(`api/v1/my/cookiee`, {
+      .get(`api/v1/my/cookiee`, {}, {
         headers: {
           Access_Token: accessToken,
         },
@@ -94,7 +94,7 @@ function Payment() {
         console.log(res.data);
       })
       .catch((err) => {
-        console.log("회원정보조회못함");
+        console.log(err);
       });
   }, [accessToken]);
 
