@@ -12,7 +12,6 @@ import { joinSession } from '../../store/video/video-thunk';
 import { initCookieeVideo, resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
 import { setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
 import '../../style/video.css'
-// import '../../style/canvas.css'
 import { initScreenShare } from '../../store/video/screenShare';
 import LessonReviewModal from '../../component/Video/Cookiee/LessonReviewModal';
 
