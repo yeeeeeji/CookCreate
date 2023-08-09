@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FoodCategory from "./FoodCategory";
 import { useDispatch, useSelector } from "react-redux";
 import { setLessonTitle, setTitleValid } from "../../store/lesson/lesson";
@@ -6,7 +6,12 @@ import { setLessonTitle, setTitleValid } from "../../store/lesson/lesson";
 function LessonInfoTop() {
   const dispatch = useDispatch();
   const [lessonTitle, sLessonTitle] = useState("");
+  const reduxLessonTitle = useSelector((state) => state.lesson.lessonTitle)
   const titleValid = useSelector((state) => state.lesson.titleValid)
+
+  useEffect(() => {
+    sLessonTitle(reduxLessonTitle)
+  }, [lessonTitle])
 
   const titleChange = (e) => {
     const titleValue = e.target.value;
