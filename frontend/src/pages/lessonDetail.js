@@ -17,12 +17,11 @@ import {
 
 function LessonDetail() {
   const dispatch = useDispatch();
-  
-  const lessonId = useSelector((state) => state.lessonInfo.lessonId)
-  const access_token = localStorage.getItem('access_token')
 
-  const userName = localStorage.getItem('nickname')
+  const lessonId = useSelector((state) => state.lessonInfo.lessonId);
+  const accessToken = localStorage.getItem('access_token');
   const categoryName = useSelector((state) => state.lessonInfo.categoryName);
+  const userName = localStorage.getItem('nickname')
   const lessonTitle = useSelector((state) => state.lessonInfo.lessonTitle);
   const thumbnailUrl = useSelector((state) => state.lessonInfo.thumbnailUrl);
 
@@ -31,23 +30,18 @@ function LessonDetail() {
   const [disableEdit, setDisableEdit] = useState(false)
   const lessonDate = useSelector((state) => state.lessonInfo.lessonDate);
   const remaining = parseInt(useSelector((state) => state.lessonInfo.remaining));
-  // const lessonId = useSelector((state) => state.lessonInfo.lessonId);
 
   useEffect(() => {
     const DateTransformType = new Date(lessonDate);
     const currentTime = new Date();
     const futureTime = new Date(currentTime.getTime() + 12 * 60 * 60 * 1000); // 현재 시간 + 12시간
-    // const lessonId = useSelector((state) => state.lessonInfo.lessonId)
-    axios
-      .get(`/api/v1/lesson/${lessonId}`, {}, {
+    
+    axios.get(`/api/v1/lesson/${lessonId}`, {
       headers: {
-        Access_Token: access_token,
+        Access_Token: accessToken
       }
     })
       .then((res) => {
-        console.log(res.data);
-        console.log(DateTransformType > futureTime, ' 더 미래니?');
-        console.log(userType);
         dispatch(setCategoryName(res.data.categoryName));
         dispatch(setCategoryId(res.data.categoryId));
         dispatch(setDescription(res.data.description));
@@ -79,11 +73,12 @@ function LessonDetail() {
         console.log(err);
         alert(err.response.data.message);
       });
-  }, [disable, lessonId]);
+  }, [disable]);
 
   return (
     <div>
       <br />
+
       {categoryName}
       <h2>
         {lessonTitle}
