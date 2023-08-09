@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 function ApplyLesson({ disable }) {
-  console.log(disable);
   const price = useSelector((state) => state.lessonInfo.price);
   const lessonId = useSelector((state) => state.lessonInfo.lessonId);
   const videoUrl = useSelector((state) => state.lessonInfo.videoUrl);
@@ -51,6 +50,7 @@ function ApplyLesson({ disable }) {
             })
             .then((res) => {
               console.log(res);
+              console.log('결제 후 신청 완료')
             })
             .catch((err) => {
               console.log(err);
@@ -60,7 +60,7 @@ function ApplyLesson({ disable }) {
           alert('다시 결제를 시도해주세요!');
           clearInterval(timer);
         }
-      }, 1000);
+      }, 500);
       return () => {
         clearInterval(timer);
       };
