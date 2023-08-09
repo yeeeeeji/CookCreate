@@ -30,12 +30,25 @@ export const cookieeVideo = createSlice({
       state.handsUp = false
       state.showOthers = false
     },
+    setCheckTrue: (state) => {
+      state.check = true
+    },
+    setCheckFalse: (state) => {
+      state.check = false
+    },
+    setHandsUpTrue: (state) => {
+      state.handsUp = true
+    },
+    setHandsUpFalse: (state) => {
+      state.handsUp = false
+    }
   },
   extraReducers: {
   }
 })
 
 export const {
-  setCheck, resetCheck, setHandsUp, resetHandsUp, setShowOthers, initCookieeVideo
+  setCheck, resetCheck, setHandsUp, resetHandsUp, setShowOthers, initCookieeVideo,
+  setCheckTrue, setCheckFalse, setHandsUpTrue, setHandsUpFalse
 } = cookieeVideo.actions
 export default cookieeVideo.reducer
