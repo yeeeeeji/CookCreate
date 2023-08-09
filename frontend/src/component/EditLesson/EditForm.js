@@ -106,7 +106,6 @@ function EditForm() {
     <div>
       {/* 썸네일 */}
       <div>
-        {thumbnailUrl}
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <h3>과외 썸네일</h3>
           <div>{thumbnailValid ? '✅' : '🔲'}</div>

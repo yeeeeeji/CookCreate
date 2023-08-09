@@ -4,23 +4,26 @@ import { useSelector, useDispatch } from 'react-redux';
 import SearchResModal from './SearchResModal';
 import '../../style/searchBar.css';
 import { setLessonId } from '../../store/lesson/lessonInfo';
-import { useNavigate } from 'react-router-dom';
-import { setCategories, setDeadLine, setOrder, setType } from '../../store/lesson/lessonSearch';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { setCategories, setDeadLine, setOrder, setType, setKeyword, resetlessonSearch } from '../../store/lesson/lessonSearch';
 import { BiSearch } from 'react-icons/bi';
 
 function SearchBar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const lessonId = useSelector((state) => state.lessonSearch.lessonId);
   const [keyword, setKeyword] = useState('');
-  const [isexist, setIsExist] = useState(false);
+  const [isExist, setIsExist] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [result, setResult] = useState([]);
 
-  const deadline = true
-  const type = 'title'
-  const order = 'title'
-  const category = []
+  //타이틀에 대해서만 검색을 할 것
+  const deadline = true;
+  const type = 'title';
+  const order = 'title';
+  const category = [];
 
   useEffect(() => {
     axios
@@ -35,35 +38,24 @@ function SearchBar() {
       })
       .then((res) => {
         setResult(res.data);
-        console.log(result)
-        if (result.length > 0 && keyword !== '') {
-          setIsExist(true);
-          setIsOpen(true);
-        } else {
-          setIsExist(false);
-          setIsOpen(false);
-        }
       })
       .catch((err) => {
         console.log(err);
       });
   }, [keyword]);
 
-  const search = (e) => {
-    const newtyping = e.target.value;
-    setKeyword(newtyping);
-  };
+  useEffect(() => {
+    setIsExist(result.length > 0 && keyword !== '');
+    setIsOpen(result.length > 0 && keyword !== '');
+  }, [result, keyword]);
 
   const searchResClick = (lessonId) => {
     dispatch(setLessonId(lessonId));
-    setIsOpen(false)
-    navigate(`lesson/${lessonId}`)
-
-    dispatch(setCategories([]))
-    dispatch(setType('all'))
-    dispatch(setKeyword(''))
-    dispatch(setOrder('title'))
-    dispatch(setDeadLine(true))
+    setIsOpen(false);
+    navigate(`lesson/${lessonId}`);
+    dispatch(resetlessonSearch());
+    setKeyword('')
+    // dispatch(setLessonId(lessonId))
   };
 
   return (
@@ -76,23 +68,19 @@ function SearchBar() {
           placeholder="요리를 검색해보세요!"
           value={keyword}
           onChange={(e) => {
-            search(e);
+            setKeyword(e.target.value);
           }}
         />
       </div>
-      <div>
-        {isexist &&
-          isOpen &&
-          result.map((obj, idx) => (
-            <div onClick={() => searchResClick(obj.lessonId)} key={idx}>
-              <SearchResModal
-                key={idx}
-                lessonTitle={obj.lessonTitle}
-                lessonId={obj.lessonId}
-              />
+      {isExist && isOpen && (
+        <div className="searchResults">
+          {result.map((obj, idx) => (
+            <div key={idx} onClick={() => searchResClick(obj.lessonId)}>
+              <SearchResModal lessonTitle={obj.lessonTitle} />
             </div>
           ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
