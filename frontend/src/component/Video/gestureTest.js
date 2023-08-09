@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import HandLandMarker from "./../Components/HandLandMarker"; // 수정하기
+import HandLandMarker from "./../../component/Gesture/HandLandMarker"; // 수정하기
 import { DrawingUtils, HandLandmarker as abc } from "@mediapipe/tasks-vision";
 
 const App = () => {
@@ -64,7 +64,7 @@ const App = () => {
             }
           }
           // Display recognized gesture
-          contextRef.current.font = "30px Arial";
+          contextRef.current.font = "50px Arial";
           contextRef.current.fillStyle = "#00FF00";
           contextRef.current.fillText(`${gesture}`, 10, 30);
           contextRef.current.restore();
