@@ -35,7 +35,7 @@ function NavBar() {
   return (
     <div className='navbar'>
       <div className="navbar-left">
-        <Link to='/'>
+        <Link to='/' className='logo'>
           <img src= "/logo.png" alt="로고" className='logo' />
         </Link> 
         <Link to='/lesson'>

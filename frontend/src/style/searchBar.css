@@ -9,8 +9,8 @@
     border: none;
     background-color: #EFEFEF;
     border-radius: 0 0.3rem 0.3rem 0;
-    padding: 0.8rem 13rem 0.8rem 1rem;
-    font-size: medium;  
+    padding: 0.6rem 9rem 0.6rem 0.7rem;
+    font-size: 0.9rem;  
 }
 
 .searchBar::placeholder {
