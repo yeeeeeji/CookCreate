@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setDeadLine, setOrder } from '../../store/lesson/lessonSearch';
 import '../../style/lesson/lessonListFilterCss.css';
 
 function LessonListFliter() {
   const dispatch = useDispatch();
   const [sortBy, setSortBy] = useState('title');
-  const [deadlineCheck, setDeadlineCheck] = useState(true);
-
+  const initDeadline = false
+  const [deadlineCheck, setDeadlineCheck] = useState(initDeadline);
+  const storeDeadline = useSelector((state) => state.lessonSearch.deadline)
   const handleSortChange = (event) => {
     setSortBy(event.target.value);
     dispatch(setOrder(event.target.value));
   };
   const handleDeadLine = () => {
-    const updatedDeadlineCheck = !deadlineCheck;
-    setDeadlineCheck(updatedDeadlineCheck);
-    dispatch(setDeadLine(updatedDeadlineCheck));
+    console.log(deadlineCheck, '체크라인 업뎃 전')
+    // const shownCheckbox = ;
+    setDeadlineCheck(!deadlineCheck);
+    
+    dispatch(setDeadLine(!storeDeadline));
+    console.log(deadlineCheck, '체크라인 업뎃 후')
   };
 
   return (
@@ -41,6 +45,7 @@ function LessonListFliter() {
           className='deadlineCheckbox'
           id='deadlineCheckbox'
         />
+        
         <label htmlFor='deadlineCheckbox' className='deadlineLabel'>
           마감 과외 보여주기
         </label>

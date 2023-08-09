@@ -42,9 +42,6 @@ function LessonDetail() {
       }
     })
       .then((res) => {
-        console.log(res.data);
-        console.log(DateTransformType > futureTime, ' 더 미래니?');
-        console.log(userType);
         dispatch(setCategoryName(res.data.categoryName));
         dispatch(setCategoryId(res.data.categoryId));
         dispatch(setDescription(res.data.description));

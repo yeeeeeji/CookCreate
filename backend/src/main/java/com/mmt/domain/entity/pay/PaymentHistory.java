@@ -27,7 +27,6 @@ public class PaymentHistory {
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
     private int totalAmount;
-    private String cardInfo;
     private PayStatus payStatus;
     private LocalDateTime approvedAt;
     private LocalDateTime canceledAt;

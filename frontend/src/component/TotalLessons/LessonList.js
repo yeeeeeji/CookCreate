@@ -1,31 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import LessonItem from './LessonItem';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import '../../style/lesson/lessonListCss.css';
 
+import { useNavigate } from 'react-router-dom';
+// import { setLessonId } from '../../store/lesson/lessonInfo';
+
 function LessonList() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  // const dispatch = useDispatch()
   const [lessons, setLessons] = useState([]);
   const type = useSelector((state) => state.lessonSearch.type);
   const deadline = useSelector((state) => state.lessonSearch.deadline);
   const order = useSelector((state) => state.lessonSearch.order);
   const category = useSelector((state) => state.lessonSearch.category);
   const keyword = useSelector((state) => state.lessonSearch.keyword);
-  const isLogin = useSelector((state) => state.auth.isLogin);
-
+  const isLogin = useSelector((state) => state.auth.isLogin)
+  
   const handleLessonDetail = (lessonId) => {
-    navigate(`/lesson/${lessonId}`);
-  };
+    // console.log(lessonId)
+    // dispatch(setLessonId)
+    navigate(`/lesson/${lessonId}`)
+  }
 
   const gotoLogin = () => {
-    alert('로그인 후 확인할 수 있습니다!');
-    navigate('/login');
-  };
-
+    alert('로그인 후 확인할 수 있습니다!')
+    navigate('/login')
+  }
   useEffect(() => {
-    axios.get('/api/v1/lesson', {
+    axios.get(`/api/v1/lesson`, {
       params: {
         type,
         keyword,
@@ -35,24 +39,23 @@ function LessonList() {
       }
     })
     .then((res) => {
-      setLessons(res.data);
+      setLessons(res.data)
     })
     .catch((err) => {
-      console.error(err);
+      console.error(err)
     });
-  }, [type, keyword, category, order, deadline]);
-
+  }, [type, keyword, category, order, deadline])
+  
   return (
-    <div className="lessonListContainer">
+    <div className='lessonListContainer'>
       {lessons.map((lesson) => (
-        <div
+        <div 
           key={lesson.lessonId}
           className="lessonItemContainer"
           style={{
             border: '1px solid #ccc',
             padding: '20px',
-            marginTop: '20px',
-            cursor: 'pointer',
+            marginTop: '20px'
           }}
           onClick={() => {
             if (isLogin) {
@@ -60,7 +63,7 @@ function LessonList() {
             } else {
               gotoLogin();
             }
-          }}
+          }}  
         >
           <LessonItem
             id={lesson.lessonId}
@@ -69,7 +72,7 @@ function LessonList() {
             thumbnailUrl={lesson.thumbnailUrl}
             reviewAvg={lesson.reviewAvg}
             cookyerName={lesson.cookyerName}
-            categoryId={lesson.categoryId}
+            categoryId={lesson.categoryId} 
           />
         </div>
       ))}
