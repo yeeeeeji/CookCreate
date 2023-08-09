@@ -205,27 +205,12 @@ function OpenViduVideoComponent(props) {
     }
   
     return (
-    <>
-      <div>
         <video
           className={props.videoStyle}
           muted={true}
           autoPlay={true}
           ref={videoRef}
         ></video>
-        <canvas
-          className={`${props.videoStyle}-canvas`}
-          ref={canvasRef}
-        ></canvas>
-      </div>
-    </>
-
-        // <video
-        //     className={this.props.videoStyle}
-        //     muted={true}
-        //     autoPlay={true}
-        //     ref={this.videoRef}
-        // />
     );
   };
   
