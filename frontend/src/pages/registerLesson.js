@@ -5,7 +5,9 @@ import LessonTime from '../component/RegisterLesson/LessonTime';
 import LessonDetail from '../component/RegisterLesson/LessonDetail';
 import RegisterForm from '../component/RegisterLesson/RegisterForm';
 import { useDispatch } from 'react-redux';
+import PreviousLesson  from '../component/RegisterLesson/PreviousLesson'
 import { resetlessonReducer } from '../store/lesson/lesson';
+
 function RegisterLesson() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -16,6 +18,7 @@ function RegisterLesson() {
       <h2>
         강의 개설하기
       </h2>
+      <PreviousLesson/>
       <LessonInfoTop/>
       <LessonTime/>
       <LessonDetail/>

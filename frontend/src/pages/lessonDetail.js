@@ -73,7 +73,7 @@ function LessonDetail() {
         console.log(err);
         alert(err.response.data.message);
       });
-  }, [disable]);
+  }, [disable, lessonId]);
 
   return (
     <div>
