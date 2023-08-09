@@ -1,53 +1,80 @@
-// import React, { useEffect } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-
-
-// function ChatList() {
-//   const [Lessons, setLessons] = useState("");
-//   const dispatch = useDispatch();
-//   const chatList = useSelector((state) => state.chat.chatList); 
-
-
-//     return (
-//       <div>
-//         <h2>수업 목록</h2>
-//         <ul>
-//           {lessons.map((lesson) => (
-//             <li key={lesson.lessonId}>
-//               <span>{lesson.lessonId}</span> : <span>{lesson.lastChat}</span>
-//             </li>
-//           ))}
-//         </ul>
-//       </div>
-//     );
-//   };
-// }
-
-// export default ChatList;
-
-
-import React from 'react';
-
-const dummyChatRooms = [
-  { id: 1, name: 'Chat Room 1', lastMessage: 'Hello!', unreadMessages: 2 },
-  { id: 2, name: 'Chat Room 2', lastMessage: 'Hi there!', unreadMessages: 0 },
-  { id: 3, name: 'Chat Room 3', lastMessage: 'Welcome!', unreadMessages: 5 },
-  // Add more dummy chat rooms here...
-];
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 const ChatList = () => {
+  const accessToken = localStorage.getItem("access_token");
+  const [chatlist, setChatList] = useState([]);
+
+
+    // console.log(chatlist);
+    // axios
+    //   .get(`api/v1/chat`, {
+    //     headers: {
+    //       Access_Token: accessToken,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     console.log("채팅목록", res.data);
+    //     setChatList(res.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log("채팅목록 조회못함", err);
+    //   });
+
+  useEffect(() => {
+    console.log(chatlist);
+    axios
+      .get(`api/v1/chat`, {
+        headers: {
+          Access_Token: accessToken,
+        },
+      })
+      .then((res) => {
+        console.log("채팅목록", res.data);
+        setChatList(res.data);
+      })
+      .catch((err) => {
+        console.log("채팅목록 조회못함", err);
+      });
+  }, []);
+
+
+  const formatTime = (dateTimeString) => {
+    const dateObject = new Date(dateTimeString);
+    const formattedTime = dateObject.toISOString().slice(0, 16);
+    return formattedTime;
+  };
+
   return (
     <div>
-      <h2>Chat Room List</h2>
+      <h2>참여중인 채팅방</h2>
       <ul>
-        {dummyChatRooms.map((chatRoom) => (
-          <li key={chatRoom.id}>
-            <strong>{chatRoom.name}</strong>
-            <p>Last Message: {chatRoom.lastMessage}</p>
-            {chatRoom.unreadMessages > 0 && (
-              <span>Unread Messages: {chatRoom.unreadMessages}</span>
+        {chatlist.map((chatRoom) => (
+          <div key={chatRoom.lessonId}>
+            {chatRoom.chatRoomOver === false && (
+              <>
+                {/* <Link to={`/chatroom/${chatRoom.lessonId}`}> */}
+                <Link to={`/chatroom`}>
+                  <strong>{chatRoom.lessonTitle}</strong>
+                  <p>마지막 메세지:{chatRoom.leastContent}</p>
+                  {/* <span>시간: {chatRoom.lestCreateTime}</span> */}
+                  <span>{formatTime(chatRoom.lestCreateTime)}</span>
+                </Link>
+              </>
             )}
-          </li>
+            {chatRoom.chatRoomOver === true && (
+              <>
+                <p>완료된 채팅방</p>
+                {/* <Link to={`/chatroom/${chatRoom.lessonId}`}> */}
+                <Link to={`/chatroom`}>
+                  <strong>{chatRoom.lessonTitle}</strong>
+                  <p>마지막 메세지: {chatRoom.leastContent}</p>
+                  <span>종료 시간: {formatTime(chatRoom.lestCreateTime)}</span>
+                </Link>
+              </>
+            )}
+          </div>
         ))}
       </ul>
     </div>

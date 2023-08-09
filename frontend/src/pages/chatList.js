@@ -1,7 +1,7 @@
 import React from "react";
 import ChatList from "../component/ChatList/ChatList";
 
-function chatList(props) {
+function chatList() {
   return (
     <div>
       <ChatList />
