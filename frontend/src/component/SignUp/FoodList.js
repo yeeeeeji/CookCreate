@@ -8,18 +8,18 @@ function FoodList({ selectedFood, toggleFood }) {
     <div>
       <div className='signupinputContainer'>
         {role === 'COOKYER' ? (
-          <div className='inputTitle'>
+          <div className='signupinputTitle'>
             자신 있는 요리
           </div>
         ) : null}
 
         {role === 'COOKIEE' ? (
-          <div className='inputTitle'>
+          <div className='signupinputTitle'>
             관심 있는 요리
           </div>
         ) : null}
 
-        <div className="inputWrap">
+        <div className="signupinputWrap">
           <div
             className={`category ${selectedFood.includes(0) ? 'selected' : ''}`}
             onClick={() => toggleFood(0, 'korean')}
