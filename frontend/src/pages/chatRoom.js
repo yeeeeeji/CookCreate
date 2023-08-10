@@ -129,7 +129,7 @@ function ChatRoom() {
         <InputChat sendMessage={sendMessage} />
       </div>
     </div>
-  </div>
+
 
   );
 }
