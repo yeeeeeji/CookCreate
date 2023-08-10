@@ -33,6 +33,9 @@ import PaymentCancelld from '../pages/paymentCancelld';
 import EditLesson from '../pages/editLesson';
 import ChatRoom from '../pages/chatRoom';
 
+import ChatList from '../pages/chatList';
+import ChatRoom from '../pages/chatRoom';
+
 function AppWithLayout({ match }) {
   // const dispatch = useDispatch();
 
@@ -74,6 +77,10 @@ function AppWithLayout({ match }) {
         <Route path='/lesson/edit/:lessonId' element={<EditLesson/>}></Route>
         <Route path='/chatroom' element={<ChatRoom/>}></Route>
 
+        
+        <Route path='/chatlist' element={<ChatList />} />
+        <Route path='/chatroom/:lessonId' element={<ChatRoom />} />
+        {/* <Route path='/chatroom' element={<ChatRoom />} /> */}
 
         <Route path='/mypageS' element={<MyPageS />} />
         <Route path='/mypageT' element={<MyPageT />} />
