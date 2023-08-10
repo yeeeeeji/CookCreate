@@ -53,7 +53,6 @@ function LessonList() {
           key={lesson.lessonId}
           className="lessonItemContainer"
           style={{
-            border: '1px solid #ccc',
             padding: '20px',
             marginTop: '20px'
           }}
