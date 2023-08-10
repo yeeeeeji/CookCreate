@@ -258,7 +258,8 @@ function CookyerScreen() {
     }
   }, [handsDownCookiee])
 
-  const resetHandsUpCookiee = (data) => {
+  const resetHandsUpCookiee = (e, data) => {
+    e.stopPropagation()
     const cookyer = data.cookyer  // 쿠커퍼블리셔와 쿠키섭스크라이버
     const cookiee = data.cookiee
     // 특정 쿠키를 찾아 리덕스에 저장된 리스트에서 해당 쿠키만 삭제하고
@@ -280,7 +281,8 @@ function CookyerScreen() {
     e.stopPropagation()
   }
 
-  const handleACookieeAudio = (data) => {
+  const handleACookieeAudio = (e, data) => {
+    e.stopPropagation()
     const cookyer = data.cookyer
     const cookiee = data.cookiee
     
@@ -343,6 +345,7 @@ function CookyerScreen() {
     if (shareScreenPublisher !== null) {
       dispatch(setMainStreamManager(shareScreenPublisher))
     } else {
+      console.log("퍼블리셔로 메인스트림매니저 바뀜")
       dispatch(setMainStreamManager(publisher))
     }
   }, [shareScreenPublisher])
@@ -388,9 +391,9 @@ function CookyerScreen() {
                     streamManager={sub}
                   />
                   {audioOnList && audioOnList.find((item) => item === sub.stream.connection.connectionId) ? (
-                    <BsMicFill className='cookyer-cookiee-audio-icon-active' onClick={() => handleACookieeAudio({cookyer: publisher, cookiee: sub})}/>
+                    <BsMicFill className='cookyer-cookiee-audio-icon-active' onClick={(e) => handleACookieeAudio(e, {cookyer: publisher, cookiee: sub})}/>
                   ) : (
-                    <BsMicMuteFill className='cookyer-cookiee-audio-icon' onClick={() => handleACookieeAudio({cookyer: publisher, cookiee: sub})}/>
+                    <BsMicMuteFill className='cookyer-cookiee-audio-icon' onClick={(e) => handleACookieeAudio(e, {cookyer: publisher, cookiee: sub})}/>
                   )}
                   {checkCookieeList && checkCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
                     <AiFillCheckCircle className='cookyer-check-icon-active'/>
@@ -400,7 +403,7 @@ function CookyerScreen() {
                   {handsUpCookieeList && handsUpCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
                     <IoIosHand
                       className={`cookyer-handsup-icon-active-${handsUpCookieeList.indexOf(sub.stream.connection.connectionId)}`}
-                      onClick={() => resetHandsUpCookiee({cookyer: publisher, cookiee: sub})}
+                      onClick={(e) => resetHandsUpCookiee(e, {cookyer: publisher, cookiee: sub})}
                     />
                   ) : (
                     <IoIosHand className='cookyer-handsup-icon'/>
