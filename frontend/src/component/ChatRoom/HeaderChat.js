@@ -1,3 +1,4 @@
+// import { useHistory } from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
 import axios from "axios";
@@ -34,12 +35,28 @@ const Wrapper = styled.header`
 const HeaderChat = ({lessonId}) => {
   const accessToken = localStorage.getItem('access_token')
   const role = localStorage.getItem('role')
-
+  // const history = useHistory();
 
 
   const onExit = () => {
     axios
-    .put(`api/v1/chat/${lessonId}`, {
+    .put(`/api/v1/chat/close/${lessonId}`, {
+      headers: {
+        Access_Token: accessToken,
+      },
+    })
+    .then((res) => {
+      console.log("채팅종료",res.data);
+    })
+    .catch((err) => {
+      console.log("채팅종료못함",err);
+    });
+
+  };
+
+  const onBye = () => {
+    axios
+    .put(`/api/v1/chat/${lessonId}`, {
       headers: {
         Access_Token: accessToken,
       },
@@ -50,9 +67,12 @@ const HeaderChat = ({lessonId}) => {
     .catch((err) => {
       console.log("채팅나가기못함",err);
     });
-    console.log("채팅방나가기 시도")
 
   };
+
+  // const onBefore = () => {
+  //   history.push('/chatlist');
+  // };  
 
   return (
     <Wrapper>
@@ -62,15 +82,15 @@ const HeaderChat = ({lessonId}) => {
           <i className="fas fa-arrow-left" />
         </button>
       ) : (
-        <button type="button" onClick={onExit}>
+        <button type="button" onClick={onBye}>
           <p>나가기</p>
           <i className="fas fa-arrow-left" />
         </button>
       )}
-        <button type="button" onClick={onExit}>
+        {/* <button type="button" onClick={onBefore}>
           <p>뒤로</p>
           <i className="fas fa-arrow-left" />
-        </button>
+        </button> */}
       <span>채팅방이름</span>
     </Wrapper>
   );

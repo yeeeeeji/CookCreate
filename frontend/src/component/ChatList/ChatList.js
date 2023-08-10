@@ -25,7 +25,7 @@ const ChatList = () => {
   useEffect(() => {
     console.log(chatlist);
     axios
-      .get(`api/v1/chat`, {
+      .get(`/api/v1/chat`, {
         headers: {
           Access_Token: accessToken,
         },
@@ -54,8 +54,8 @@ const ChatList = () => {
           <div key={chatRoom.lessonId}>
             {chatRoom.chatRoomOver === false && (
               <>
-                {/* <Link to={`/chatroom/${chatRoom.lessonId}`}> */}
-                <Link to={`/chatroom`}>
+                <Link to={`/chatroom/${chatRoom.lessonId}`}>
+                {/* <Link to={`/chatroom`}> */}
                   <strong>{chatRoom.lessonTitle}</strong>
                   <p>마지막 메세지:{chatRoom.leastContent}</p>
                   {/* <span>시간: {chatRoom.lestCreateTime}</span> */}
