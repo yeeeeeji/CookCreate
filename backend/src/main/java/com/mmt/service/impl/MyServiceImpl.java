@@ -24,9 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -83,6 +81,15 @@ public class MyServiceImpl implements MyService {
             myLessonRes.setMessage("Success");
 
             result.add(myLessonRes);
+        }
+
+        if(!isCompleted){ // 신청한 과외 목록인 경우 과외 날짜순으로 정렬
+            result.sort(new Comparator<MyLessonRes>() {
+                @Override
+                public int compare(MyLessonRes o1, MyLessonRes o2) {
+                    return o1.getLessonDate().compareTo(o2.getLessonDate());
+                }
+            });
         }
 
         return result;
