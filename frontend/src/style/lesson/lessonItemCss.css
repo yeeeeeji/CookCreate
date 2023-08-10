@@ -13,6 +13,10 @@
     border-radius: 5px;
 }
 
+.lessonItemTitle{
+    text-align: start;
+}
+
 .datename{
     margin-bottom: 20px;
 }

@@ -2,14 +2,14 @@
   max-width: 500px; /* 가로 크기를 500px로 고정 */
   margin: 0 auto; /* 가운데 정렬을 위해 margin 설정 */
   padding: 20px; /* 내용과의 간격을 주기 위해 padding 설정 */
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 .titleWrap{
   text-align: center;
   font-size: 23px;
-  margin-top: 20px;
-  margin-bottom: 25px;
+  margin-top: 5px;
+  margin-bottom: 35px;
 }
 
 .signupinputContainer{
