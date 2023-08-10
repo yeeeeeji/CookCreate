@@ -26,7 +26,13 @@ iframe {
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1000px) {
+  .container {
+    padding: 0 7rem;
+  }
+}
+
+@media screen and (max-width: 646px) {
   .container {
     padding: 0 3rem; /* 화면 크기가 768px 미만일 때 padding 값을 조정 */
   }
