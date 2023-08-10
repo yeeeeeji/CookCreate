@@ -31,7 +31,7 @@ import PaymentFailed from '../pages/paymentFailed';
 import PaymentSuccess from '../pages/paymentSuccess';
 import PaymentCancelld from '../pages/paymentCancelld';
 import EditLesson from '../pages/editLesson';
-import ChatRoom from '../pages/chatRoom'
+import ChatRoom from '../pages/chatRoom';
 
 function AppWithLayout({ match }) {
   // const dispatch = useDispatch();
@@ -57,7 +57,7 @@ function AppWithLayout({ match }) {
 
 
   return (
-    <div style={{padding : "0 15rem"}}>
+    <div className="container">
       <NavBar />
       <Routes>
         <Route path='/' element={<MainPage />} />

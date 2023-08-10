@@ -331,11 +331,32 @@ function CookyerScreen() {
   const handleMainVideoStream = (stream) => {
     if (mainStreamManager !== stream) {
       dispatch(setMainStreamManager(stream))
+      const data = {
+        connectionId: stream.stream.connection.connectionId
+      }
+      publisher.stream.session.signal({
+        data: JSON.stringify(data),
+        type: 'mainVideo'
+      })
     } else {
       if (shareScreenPublisher) {
         dispatch(setMainStreamManager(shareScreenPublisher))
+        const data = {
+          connectionId: shareScreenPublisher.stream.connection.connectionId
+        }
+        publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'mainVideo'
+        })
       } else {
         dispatch(setMainStreamManager(publisher))
+        const data = {
+          connectionId: publisher.stream.connection.connectionId
+        }
+        publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'mainVideo'
+        })
       }
     }
   }
@@ -344,9 +365,24 @@ function CookyerScreen() {
     console.log(shareScreenPublisher, "화면공유 퍼블리셔 바뀜")
     if (shareScreenPublisher !== null) {
       dispatch(setMainStreamManager(shareScreenPublisher))
+      const data = {
+        connectionId: shareScreenPublisher.stream.connection.connectionId
+      }
+      publisher.stream.session.signal({
+        data: JSON.stringify(data),
+        type: 'mainVideo'
+      })
     } else {
-      console.log("퍼블리셔로 메인스트림매니저 바뀜")
-      dispatch(setMainStreamManager(publisher))
+      if (publisher) {
+        dispatch(setMainStreamManager(publisher))
+        const data = {
+          connectionId: publisher.stream.connection.connectionId
+        }
+        publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'mainVideo'
+        })
+      }
     }
   }, [shareScreenPublisher])
 

@@ -13,6 +13,11 @@
     line-height: normal;
 }
 
+.sortSelectContainer {
+    display: flex;
+    align-items: center;    
+}
+
 .deadlineContainer {
     display: flex;
     align-items: center;

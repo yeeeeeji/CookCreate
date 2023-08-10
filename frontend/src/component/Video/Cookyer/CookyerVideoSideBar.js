@@ -77,7 +77,14 @@ function CookyerVideoSideBar() {
       shareSession.unpublish(shareScreenPublisher)
       setIsShared(false)
       dispatch(initScreenShare())
-      // dispatch(setMainStreamManager(publisher))
+      dispatch(setMainStreamManager(publisher))
+      const data = {
+        connectionId: publisher.stream.connection.connectionId
+      }
+      publisher.stream.session.signal({
+        data: JSON.stringify(data),
+        type: 'mainVideo'
+      })
       console.log("화면공유 취소", publisher)
     }
   }
