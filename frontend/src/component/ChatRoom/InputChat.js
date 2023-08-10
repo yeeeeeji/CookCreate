@@ -84,7 +84,7 @@ const InputChat = ({ sendMessage }) => {
   // };
 
   const onSubmit = (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     if (isCanSubmit) {
       sendMessage(messages);
       setMessages("");
