@@ -343,6 +343,7 @@ function CookieeScreen() {
                   <UserVideoComponent
                     videoStyle='cookiee-content-video'
                     streamManager={publisher}
+                    gesture={true}
                   />
                 ) : (
                   <h1>쿠키 화면</h1>
