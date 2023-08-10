@@ -15,6 +15,8 @@ import com.mmt.repository.lesson.LessonParticipantRepository;
 import com.mmt.repository.lesson.LessonRepository;
 import com.mmt.service.ChatService;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.nullness.Opt;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -102,12 +104,18 @@ public class ChatServiceImpl implements ChatService {
             Lesson lesson = lessonParticipant.getLesson();
             ChatRoomRes chatRoomRes = new ChatRoomRes(lesson);
 
-            Chat chat = chatRepository.findFirst1ByLesson_LessonIdOrderByCreatedDateDesc(lesson.getLessonId()).get();
+            Optional<Chat> chatRoom = chatRepository.findFirst1ByLesson_LessonIdOrderByCreatedDateDesc(lesson.getLessonId());
+            if(!chatRoom.isPresent()) {
+                result.add(new ChatRoomRes(HttpStatus.OK, "해당 채팅방에 채팅 내역이 없습니다."));
+                continue;
+            }
+
+            Chat chat = chatRoom.get();
 
             chatRoomRes.setLeastContent(chat.getContent());
             chatRoomRes.setLestCreateTime(chat.getCreatedDate().toString());
             chatRoomRes.setStatusCode(HttpStatus.OK);
-            chatRoomRes.setMessage("sucess");
+            chatRoomRes.setMessage("success");
 
             result.add(chatRoomRes);
         }
