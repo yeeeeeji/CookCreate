@@ -10,7 +10,8 @@
     const dispatch = useDispatch();
     const [userId, setUserId] = useState('');
     const [userPw, setUserPw] = useState('');
-    const [errMsg, setErrMsg] = useState('')
+    const [rememberMe, setRememberMe] = useState(false); // 추가: 기억하기 체크 상태
+    const [errMsg, setErrMsg] = useState('');
     const handleLogin = (e) => {
       e.preventDefault()
       axios.post(`api/v1/auth/login`, {userId, userPw})
@@ -24,6 +25,13 @@
           role : res.data.role}));
         localStorage.setItem('access_token', access_token);
         localStorage.setItem('refresh_token', refresh_token);
+
+        if (rememberMe) { // 추가: 아이디 기억하기 체크한 경우 로컬스토리지에 아이디 저장
+          localStorage.setItem('remembered_userId', userId);
+        } else {
+          localStorage.removeItem('remembered_userId'); // 추가: 아이디 기억하기 체크를 해제한 경우 저장된 아이디 제거
+        }
+
         navigate("/")
       })
       .catch((err) =>{
@@ -50,6 +58,19 @@
               />
             </div>
 
+            <div className="rememberMeContainer">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={() => setRememberMe(!rememberMe)}
+                className='rememberMeCheckbox'
+                id='rememberMeCheckbox'
+              />
+              <label htmlFor='rememberMeCheckbox' className='rememberMeLabel'>
+                아이디 기억하기
+              </label>
+            </div>
+
             <div className='logininputTitle'>비밀번호</div>
             <div className='logininputWrap'>
               <input type="password"
@@ -61,6 +82,16 @@
               placeholder='비밀번호'
               autoComplete="current-password"
               />
+            </div>
+
+            <div className='linkContainer'>
+              <button className='linkButton' onClick={() => navigate('/forgot-username')}>
+                아이디 찾기
+              </button>
+               | 
+              <button className='linkButton' onClick={() => navigate('/reset-password')}>
+                비밀번호 변경
+              </button>
             </div>
 
           <div className="bottomBtnContainer">
