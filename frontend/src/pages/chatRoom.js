@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 
 // import React,{useEffect} from "react";
@@ -24,33 +24,27 @@ function ChatRoom() {
   const [messageList, setMessageList] = useState([])
   const { lessonId } = useParams(); 
 
+  const client = useRef({});
 
-  const subscribe = (client) => {
-    client.current.subscribe("/sub/room/" + lessonId, (message) => {
-      console.log(message)
-      const json_body = JSON.parse(message.body);
-      setMessageList((chatList) => [...chatList, json_body]);
-    });
-  }
-
-    const client = new StompJs.Client({
+  const connect = () => {
+    client.current = new StompJs.Client({
       brokerURL: `ws://localhost:8080/api/v1/message`,
       onConnect: () => {
         console.log("웹소켓 연결");
-
+  
         const destination = "/pub/chat/enter";
         const data = {
           lessonId: lessonId,
           userId: id,
           nickname: nick,
         };
-
+  
         const body = JSON.stringify(data);
         console.log("채팅입장", body);
-
-        client.publish({ destination, body });
+  
+        client.current.publish({ destination, body });
         console.log("enter!");
-
+  
         //입장시 채팅내용조회
         axios
           .get(`/api/v1/chat/${lessonId}`, {
@@ -66,32 +60,47 @@ function ChatRoom() {
           .catch((err) => {
             console.log("채팅내용 조회못함", err);
           });
-
+  
         subscribe(client);
       },
     });
+  
+    client.current.activate();
+  }
 
-    client.activate();
 
- 
+  const subscribe = (client) => {
+    client.current.subscribe("/sub/room/" + lessonId, ({message}) => {
+      console.log(message)
+      const json_body = JSON.parse(message);
+      setMessageList((prev) => [...prev, json_body]);
+    });
+  }
 
   const sendMessage = (messages) => {
-    if (client.connected) {
-      const destination = "/pub/chat/message";
-      const data = {
-        lessonId: lessonId,
-        userId: id,
-        nickname: nick,
-        content: messages,
-      };
-      const body = JSON.stringify(data);
-      console.log("채팅내용", body);
+    if (!client.current.connected) return
+    const destination = "/pub/chat/message";
+    const data = {
+      lessonId: lessonId,
+      userId: id,
+      nickname: nick,
+      content: messages,
+    };
+    const body = JSON.stringify(data);
+    console.log("채팅내용", body);
 
-      client.publish({ destination, body });
-      console.log("chat!");
-
-    }
+    client.current.publish({ destination, body });
+    console.log("chat!");
   };
+
+  const disconnect = () => {
+    client.current.deactivate();
+  };
+
+  useEffect(() => {
+    connect()
+    return () => disconnect()
+  }, [])
 
 
   // const handleExit = () => {
