@@ -6,9 +6,7 @@ import styled from "styled-components";
 
 const Wrapper = styled.footer`
   display: flex;
-  justify-content: center; /* 수정된 부분 */
-  align-items: center; /* 추가된 부분 */
-  position: fixed;
+  position: relative;
   bottom: 0px;
   left: 0px;
   right: 0px;

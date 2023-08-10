@@ -1,4 +1,3 @@
-// import { useHistory } from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
 import axios from "axios";
@@ -70,9 +69,9 @@ const HeaderChat = ({lessonId}) => {
 
   };
 
-  // const onBefore = () => {
-  //   history.push('/chatlist');
-  // };  
+  const onBefore = () => {
+    window.location.href = '/chatlist';
+  };  
 
   return (
     <Wrapper>
@@ -87,10 +86,10 @@ const HeaderChat = ({lessonId}) => {
           <i className="fas fa-arrow-left" />
         </button>
       )}
-        {/* <button type="button" onClick={onBefore}>
+        <button type="button" onClick={onBefore}>
           <p>뒤로</p>
           <i className="fas fa-arrow-left" />
-        </button> */}
+        </button>
       <span>채팅방이름</span>
     </Wrapper>
   );

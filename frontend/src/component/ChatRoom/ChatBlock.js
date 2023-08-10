@@ -100,9 +100,10 @@ const LeftBlock = styled.div`
   }
 `;
 
-const Chat = ({ message }) => {
+const Chat = ({ message, author}) => {
   return (
     <ChatWrapper>
+      <span className="username">{author}</span>
       {message}
       {/* <span className="time">{localeTime}</span> */}
       {/* <span className="not-read">{notRead > 1 ? notRead : ""}</span> */}
@@ -131,11 +132,12 @@ const MyChat = ({ content, ...props }) => {
   );
 };
 
-const FriendChat = (props) => {
+const FriendChat = ({ author, message }) => {
   return (
     <LeftBlock>
       <div>
-        <Chat {...props} />
+        <span className="username">{author}</span>
+        <Chat message={message} />
       </div>
     </LeftBlock>
   );

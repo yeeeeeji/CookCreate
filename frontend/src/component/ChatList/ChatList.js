@@ -2,25 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+
 const ChatList = () => {
   const accessToken = localStorage.getItem("access_token");
   const [chatlist, setChatList] = useState([]);
-
-
-    // console.log(chatlist);
-    // axios
-    //   .get(`api/v1/chat`, {
-    //     headers: {
-    //       Access_Token: accessToken,
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log("채팅목록", res.data);
-    //     setChatList(res.data);
-    //   })
-    //   .catch((err) => {
-    //     console.log("채팅목록 조회못함", err);
-    //   });
 
   useEffect(() => {
     console.log(chatlist);
@@ -66,8 +51,8 @@ const ChatList = () => {
             {chatRoom.chatRoomOver === true && (
               <>
                 <p>완료된 채팅방</p>
-                {/* <Link to={`/chatroom/${chatRoom.lessonId}`}> */}
-                <Link to={`/chatroom`}>
+                <Link to={`/chatroom/${chatRoom.lessonId}`}>
+                {/* <Link to={`/chatroom`}> */}
                   <strong>{chatRoom.lessonTitle}</strong>
                   <p>마지막 메세지: {chatRoom.leastContent}</p>
                   <span>종료 시간: {formatTime(chatRoom.lestCreateTime)}</span>
