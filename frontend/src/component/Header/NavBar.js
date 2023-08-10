@@ -34,7 +34,7 @@ function NavBar() {
 
   return (
     <div className='navbar'>
-      <div className="navbar-left">
+      <div className="leftNav">
         <Link to='/' className='logo'>
           <img src= "/logo.png" alt="로고" className='logo' />
         </Link> 
@@ -44,8 +44,8 @@ function NavBar() {
         <SearchBar />
       </div>
       {isLogin ? (
-        <div>
-          <Link to='chatlist' >채팅</Link>
+        <div className="rightNav">
+          <Link to='chatlist'>채팅</Link>
           <div className="nav-cookyer">
             {role === 'COOKYER' ? <Link to='registerlesson'>과외 등록</Link> : null} 
             {role === 'COOKIEE' ? (

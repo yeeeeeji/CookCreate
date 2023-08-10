@@ -21,7 +21,13 @@ a:not(:first-of-type) {
   margin-left: 2rem;
 }
 
-.navbar-left {
+
+.leftNav {
+  display: flex;
+  align-items: center;
+}
+
+.rightNav {
   display: flex;
   align-items: center;
 }

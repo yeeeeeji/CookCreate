@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import SearchResModal from "./SearchResModal";
 import "../../style/searchBar.css";
 import { setLessonId } from "../../store/lesson/lessonInfo";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { setCategories, setDeadLine, setOrder, setType } from "../../store/lesson/lessonSearch";
 import { BiSearch } from "react-icons/bi";
 
@@ -91,7 +91,6 @@ function SearchBar() {
             </div>
           ))}
         </div>
-      )}
     </div>
   );
 }

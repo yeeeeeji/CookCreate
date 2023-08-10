@@ -31,7 +31,6 @@ import PaymentFailed from '../pages/paymentFailed';
 import PaymentSuccess from '../pages/paymentSuccess';
 import PaymentCancelld from '../pages/paymentCancelld';
 import EditLesson from '../pages/editLesson';
-import ChatRoom from '../pages/chatRoom';
 
 import ChatList from '../pages/chatList';
 import ChatRoom from '../pages/chatRoom';
