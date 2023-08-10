@@ -31,7 +31,7 @@ const Wrapper = styled.header`
   }
 `;
 
-const HeaderChat = ({lessonId}) => {
+const HeaderChat = ({lessonId, chatTitle}) => {
   const accessToken = localStorage.getItem('access_token')
   const role = localStorage.getItem('role')
   // const history = useHistory();
@@ -90,9 +90,10 @@ const HeaderChat = ({lessonId}) => {
           <p>뒤로</p>
           <i className="fas fa-arrow-left" />
         </button>
-      <span>채팅방이름</span>
+      <span>{chatTitle}</span>
     </Wrapper>
   );
 };
 
 export default HeaderChat;
+
