@@ -1,0 +1,53 @@
+.introduceCookyerContainer {
+    text-align: left; /* 내용을 왼쪽 정렬로 설정 */
+    margin-top: 40px; /* 내용 위쪽 여백 추가 */
+}
+
+.introduceCookyerTitle{
+    font-size: 22px;
+    margin-bottom: 15px;
+    font-weight: 500;
+    margin-bottom: 40px;
+}
+
+.introduceCookyerNameContainer{
+    margin-bottom: 20px;
+}
+
+.introduceCookyerName {
+    font-weight: bold;
+    font-size: 24px;
+    margin-right: 50px;
+}
+
+.introduceCookyerFood {
+    font-size: 13px;
+    color: #666;
+}
+
+.separator {
+    font-size: 13px; /* Font size for separator | */
+    color: #666; /* Color for separator | */
+    margin: 0 5px; /* Margin around separator */
+}
+
+.introduceCookyerBadge {
+    display: inline-block;
+    width: auto;
+    padding: 5px 20px 7px 20px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 50px;
+    border: 1px solid #CBCBCB;
+    background: #FFF;
+    color: #656363;
+    text-align: center;
+    font-size: 15px;
+    font-style: normal;
+    margin-bottom: 20px;
+}
+
+.introduceCookyerIntroduce {
+    font-size: 16px;
+}

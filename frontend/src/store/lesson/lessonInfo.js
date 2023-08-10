@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  cookyerId : '',
   categoryId : '',
   categoryName : '',
   cookyerName : '',
@@ -18,15 +19,23 @@ const initialState = {
   price : 0,
   remaining : 0,
   videoUrl : '',
-  introduce : ''
+  introduce : '',
+  food : [],
+  badge : ''
 }
 
 const lessonInfo = createSlice({
   name : 'lessonInfo',
   initialState,
   reducers : {
+    setCookyerId : (state, action) => {
+      state.cookyerId = action.payload
+    },
     setCategoryId : (state, action) => {
       state.categoryId = action.payload
+    },
+    setFood : (state, action) => {
+      state.food = action.payload
     },
     setCategoryName : (state, action) => {
       state.categoryName = action.payload
@@ -78,15 +87,18 @@ const lessonInfo = createSlice({
     },
     setIntroduce : (state, action) => {
       state.introduce = action.payload
+    },
+    setBadge : (state, action) => {
+      state.badge = action.payload
     }
   }
 })
 
 export const {
-  setCategoryId, setCategoryName,
+  setCategoryId, setCategoryName,setCookyerId,
   setCookyerName, setDifficulty, setDescription, setLessonTitle,
-  setJjimCount, setLessonDate, setLessonId,
+  setJjimCount, setLessonDate, setLessonId, setBadge,
   setMaterials, setMaximum, setPrice, setRemaining, setThumbnailUrl,
-  setLessonStepList, setTimeTaken, setVideoUrl, setIntroduce
+  setLessonStepList, setTimeTaken, setVideoUrl, setIntroduce, setFood
 } = lessonInfo.actions
 export default lessonInfo.reducer
