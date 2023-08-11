@@ -19,8 +19,6 @@ function LessonList() {
   const isLogin = useSelector((state) => state.auth.isLogin)
   
   const handleLessonDetail = (lessonId) => {
-    // console.log(lessonId)
-    // dispatch(setLessonId)
     navigate(`/lesson/${lessonId}`)
   }
 
