@@ -70,7 +70,7 @@ const HeaderChat = ({lessonId, chatTitle}) => {
   };
 
   const onBefore = () => {
-    window.location.href = '/chatlist';
+    window.location.href = '/';
   };  
 
   return (
@@ -87,7 +87,7 @@ const HeaderChat = ({lessonId, chatTitle}) => {
         </button>
       )}
         <button type="button" onClick={onBefore}>
-          <p>뒤로</p>
+          <p>HOME</p>
           <i className="fas fa-arrow-left" />
         </button>
       <span>{chatTitle}</span>
