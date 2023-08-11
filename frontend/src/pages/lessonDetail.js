@@ -12,7 +12,7 @@ import {
   setCategoryId, setCategoryName, setDescription, setDifficulty,
   setLessonDate, setLessonStepList, setLessonTitle, setRemaining,
   setMaterials, setMaximum, setPrice, setThumbnailUrl, setTimeTaken, setVideoUrl,
-  setIntroduce, setCookyerName, setFood, setCookyerId, setBadge
+  setIntroduce, setCookyerName, setFood, setCookyerId, setBadge, setProfileImg
 } from '../store/lesson/lessonInfo';
 import '../style/lesson/lessonDetailCss.css';
 
@@ -22,6 +22,7 @@ function LessonDetail() {
   const lessonId = useSelector((state) => state.lessonInfo.lessonId);
   const accessToken = localStorage.getItem('access_token');
   const categoryName = useSelector((state) => state.lessonInfo.categoryName);
+  const difficulty = useSelector((state) => state.lessonInfo.difficulty);
   const userName = localStorage.getItem('nickname')
   const lessonTitle = useSelector((state) => state.lessonInfo.lessonTitle);
   const thumbnailUrl = useSelector((state) => state.lessonInfo.thumbnailUrl);
@@ -60,6 +61,7 @@ function LessonDetail() {
         dispatch(setTimeTaken(res.data.timeTaken));
         dispatch(setVideoUrl(res.data.videoUrl));
         dispatch(setIntroduce(res.data.introduce));
+        dispatch(setProfileImg(res.data.profileImg));
 
         if (DateTransformType > futureTime && remaining > 0 && userType === 'COOKIEE') {
             setDisable(false);
@@ -97,7 +99,9 @@ function LessonDetail() {
     <div className='lessonDetailContainer'>
       <div className='detailLeftSection'>
         <br />
-        <div className='detailCategory'> {categoryName} </div>
+        <div className='detailCategoryContainer'> 
+          <span className='detailCategory'>{categoryName}</span> <span className='detailCategory'>{difficulty}</span>
+        </div>
         <h2 className='detailLessonTitle'> {lessonTitle} </h2>
         <img className='detailThumbnail' src={thumbnailUrl} alt="" />
         <IntroduceLesson />

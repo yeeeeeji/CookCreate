@@ -21,7 +21,8 @@ const initialState = {
   videoUrl : '',
   introduce : '',
   food : [],
-  badge : ''
+  badge : '',
+  profileImg : ''
 }
 
 const lessonInfo = createSlice({
@@ -90,6 +91,9 @@ const lessonInfo = createSlice({
     },
     setBadge : (state, action) => {
       state.badge = action.payload
+    },
+    setProfileImg : (state, action) => {
+      state.profileImg = action.payload
     }
   }
 })
@@ -99,6 +103,6 @@ export const {
   setCookyerName, setDifficulty, setDescription, setLessonTitle,
   setJjimCount, setLessonDate, setLessonId, setBadge,
   setMaterials, setMaximum, setPrice, setRemaining, setThumbnailUrl,
-  setLessonStepList, setTimeTaken, setVideoUrl, setIntroduce, setFood
+  setLessonStepList, setTimeTaken, setVideoUrl, setIntroduce, setFood, setProfileImg
 } = lessonInfo.actions
 export default lessonInfo.reducer

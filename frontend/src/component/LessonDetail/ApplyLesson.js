@@ -68,47 +68,19 @@ function ApplyLesson({ disable }) {
   }, [popupWindow]);
 
   return (
-    <div style={{
-      width : '300px',
-      height : '150px',
-      border: '1px solid #ccc'
-    }}>
+    <div>
       {price}원
-      <button
-        style={{
-          width: '200px',
-          height: '40px',
-          backgroundColor: disable ? '#ccc' : 'orange',
-          color: 'white',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: '5px',
-          cursor: disable ? 'not-allowed' : 'pointer',
-        }}
-        onClick={handleApply}
-      >
-        신청하기
-      </button>
+      <button onClick={handleApply}> 신청하기 </button>
       {errMsg && <div>{errMsg}</div>}
-
-      <div style={{ display: 'flex' }}>
+      <div>
         <a href={videoUrl}>
-          수업 맛보기 |
+          수업 맛보기
+        </a>
+        |
+        <a href={payUrl}>
+          결제
         </a>
       </div>
-      <a href={payUrl}>
-        결제
-      </a>
-      {/* {showPopup && (
-        <div>
-          <div>
-            <h3>팝업 제목</h3>
-            <h6>팝업 내용</h6>
-            <button onClick={() => setShowPopup(false)}>닫기</button>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }

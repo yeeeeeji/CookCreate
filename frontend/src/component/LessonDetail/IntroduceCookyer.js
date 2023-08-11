@@ -7,21 +7,27 @@ function IntroduceCookyer() {
   const food = useSelector((state) => state.lessonInfo.food);
   const introduce = useSelector((state) => state.lessonInfo.introduce);
   const badgeExist = useSelector((state) => state.lessonInfo.badge);
+  const profileImg = useSelector((state) => state.lessonInfo.profileImg);
   const foodLabels = [ '한식', '양식', '중식', '일식', '아시안', '건강식', '디저트'];
 
   return (
     <div className='introduceCookyerContainer'>
       <div className='introduceCookyerTitle'>강사 소개</div>
       <div className='introduceCookyerNameContainer'>
+        <img className='introduceCookyerProfileImg' src={profileImg} alt="" />
         <span className='introduceCookyerName'>{cookyerName}</span>
-        {food.map((item, index) => (
-          <React.Fragment key={index}>
-            {index > 0 && <span className='separator'> | </span>}
-            <span className='introduceCookyerFood'>{foodLabels[item]}</span>
-          </React.Fragment>
-        ))}
+        {food && food.length > 0 && (
+          <div className='introduceCookyerFoodContainer'>
+            {food.map((item, index) => (
+              <React.Fragment key={index}>
+                {index > 0 && <span className='separator'> | </span>}
+                <span className='introduceCookyerFood'>{foodLabels[item]}</span>
+              </React.Fragment>
+            ))}
+          </div>
+        )}
       </div>
-      <div> {badgeExist === 'X' && <span className='introduceCookyerBadge'>자격증 소지</span>} </div>
+      <div> {badgeExist === 'O' && <span className='introduceCookyerBadge'>자격증 소지</span>} </div>
       <div className='introduceCookyerIntroduce'>{introduce}</div>
     </div>
   );
