@@ -541,6 +541,7 @@ public class LessonServiceImpl implements LessonService {
         }
 
         lessonRepository.updateIsEnd(true, sessionPostReq.getLessonId());
+        lessonParticipantRepository.updateCompleted(true, sessionPostReq.getLessonId());
 
         return new ResponseDto(HttpStatus.OK, "Success");
     }
