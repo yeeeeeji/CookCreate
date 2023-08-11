@@ -21,7 +21,7 @@ function EditLesson({ lessonId, disable }) {
           }}>
           <button
             style={{
-              width: '260px',
+              width: '240px',
               height: '40px',
               backgroundColor: disable ? '#ccc' : '#FF7A42',
               color: '#FFFDFD',
