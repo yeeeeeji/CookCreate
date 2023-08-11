@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function EditLesson({ lessonId, disable }) {
   const navigate = useNavigate();
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleEditClick = () => {
     if (!disable) {
@@ -18,12 +19,13 @@ function EditLesson({ lessonId, disable }) {
             display: 'flex', 
             justifyContent: 'center', 
             marginTop: '30px'
-          }}>
+          }}
+        >
           <button
             style={{
               width: '240px',
               height: '40px',
-              backgroundColor: disable ? '#ccc' : '#FF7A42',
+              backgroundColor: disable ? '#ccc' : (isHovered ? '#FF6060' : '#FF7A42'),
               color: '#FFFDFD',
               display: 'flex',
               justifyContent: 'center',
@@ -35,6 +37,8 @@ function EditLesson({ lessonId, disable }) {
             }}
             disabled={disable}
             onClick={handleEditClick}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           >
             수정하기
           </button>
