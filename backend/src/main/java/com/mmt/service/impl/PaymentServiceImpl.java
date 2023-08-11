@@ -27,6 +27,7 @@ import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.time.Duration;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -93,7 +94,8 @@ public class PaymentServiceImpl {
         redisTemplate.opsForValue().set(
                 "kakaopay:tid" + paymentHistory.getPaymentId(),
                 paymentReadyRes.getTid(),
-                Duration.ofDays(7)
+                Duration.ofDays(7).toMillis(),
+                TimeUnit.MILLISECONDS
         );
 
         paymentReadyRes.setStatusCode(HttpStatus.OK);
