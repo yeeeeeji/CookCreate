@@ -1,0 +1,37 @@
+.introduceLessonContainer {
+    text-align: left; /* 내용을 왼쪽 정렬로 설정 */
+    margin-top: 40px; /* 내용 위쪽 여백 추가 */
+}
+
+.introduceLessonTitle {
+    font-size: 22px;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.introduceLessonDescription {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 50px;
+}
+
+.introduceLessonMateTitle {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 13px;
+}
+
+.introduceLessonMateDesc {
+    font-size: 14px;
+    margin-bottom: 9px;
+}
+
+.introduceLessonMateItems {
+    font-size: 14px;
+    margin-bottom: 50px;
+}
+
+.introduceLessonMateItem {
+    font-size: 14px;
+    margin-bottom: 7px;
+}

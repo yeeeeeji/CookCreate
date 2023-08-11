@@ -70,6 +70,7 @@ function LessonList() {
             reviewAvg={lesson.reviewAvg}
             cookyerName={lesson.cookyerName}
             categoryId={lesson.categoryId} 
+            difficulty={lesson.difficulty} 
           />
         </div>
       ))}
