@@ -74,7 +74,7 @@ function AppWithLayout({ match }) {
         <Route path='/payment/success' element={<PaymentSuccess/>}></Route>
         <Route path='/payment/cancel' element={<PaymentCancelld/>}></Route>
         <Route path='/lesson/edit/:lessonId' element={<EditLesson/>}></Route>
-        <Route path='/chatroom' element={<ChatRoom/>}></Route>
+        {/* <Route path='/chatroom' element={<ChatRoom/>}></Route> */}
 
         
         {/* <Route path='/chatlist' element={<ChatList />} /> */}
