@@ -1,0 +1,38 @@
+p {
+  margin: 0;
+}
+
+video {
+  width: 100%;
+  float: left;
+}
+
+/* 비디오 닉네임 */
+.stream-component div {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  /* font-size: 1em; */
+  /* font-weight: bold; */
+  /* bottom: 30px;
+  left: 30px; */
+}
+
+.video-background {
+  background-color: #262626;
+  height: 100vh;
+}
+
+.video-page,
+.half-video-page {
+  margin-right: 60px;
+  /* width: 100%; */
+}
+
+/* 쿠커 타이머 */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}

@@ -1,11 +1,6 @@
-.video-background {
-  background-color: #262626;
-  height: 100vh;
-}
-
 /* 반쪽화면 */
 .half-video-page {
-  margin-right: 60px;
+  /* margin-right: 60px; */
 }
 
 .half-video-header {

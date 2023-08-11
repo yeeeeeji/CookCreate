@@ -96,7 +96,7 @@ function CookyerHalfScreen(props) {
           ))}
         </div>
         
-        <CookyerLessonStep size={'half'}/>
+        <CookyerLessonStep size='half'/>
       </div>
     </div>
   )

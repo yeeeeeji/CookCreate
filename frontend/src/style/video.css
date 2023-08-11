@@ -50,183 +50,8 @@ p {
 
 /* 옮기기 */
 
-/* .video-page {
-  background-color: #262626;
-  grid-template-columns: repeat(12, 1fr);
-  display: flex;
-} */
-
-/* .video-nickname {
-  position: absolute;
-  bottom: 30px;
-  left: 30px;
-}
-
-.stream-component {
-  position: relative;
-} */
-
-/* 쿠커 화면 */
-
-.cookyer-sharing {
-  width: 968px;
-  height: 540px;
-  padding: 5px;
-} 
-
-.cookyer-sharing-content {
-  background-color: var(--empty-color);
-  border-radius: 5px;
-  height: 530px;
-  object-fit: cover;
-}
-
-.cookyer {
-  width: 586px;
-  height: 396px;
-  padding: 5px;
-}
-
-.cookyer-video {
-  background-color: var(--empty-color);
-  border-radius: 5px;
-  height: 386px;
-  object-fit: cover;
-}
-
-.cookyer-cookiees { 
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  width: 818px;
-  height: 810px;
-  overflow: hidden;
-}
-
-.cookyer-cookiee {
-  background-color: var(--empty-color);
-  border-radius: 5px;
-  margin: 5px;
-  width: 399px;
-  height: 260px;
-  display: inline-block; /* inline-flex */
-  object-fit: cover;
-}
-
-.cookyer-components {
-  display: flex;
-}
-
-.cookyer-components-left-bottom {
-  display: flex;
-}
-
-.cookyer-cookiee-content {
-  position: relative;
-}
-
-.cookyer-cookiee-audio-icon-active {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 125px;
-}
-
-.cookyer-cookiee-audio-icon {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 125px;
-}
-
-.cookyer-check-icon-active {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 80px;
-  color: rgb(33, 172, 33);
-}
-
-.cookyer-check-icon {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 80px;
-  color: rgb(114, 114, 114);
-}
-
-.cookyer-handsup-icon-active-0 {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
-  color: rgb(255, 0, 0);
-}
-
-.cookyer-handsup-icon-active-1 {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
-  color: rgb(255, 106, 42);
-}
-
-.cookyer-handsup-icon-active-2 {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
-  color: rgb(255, 200, 0);
-}
-
-.cookyer-handsup-icon-active-3 {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
-  color: rgb(27, 196, 12);
-}
-
-.cookyer-handsup-icon-active-4 {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
-  color: rgb(0, 94, 255);
-}
-
-.cookyer-handsup-icon-active-5 {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
-  color: rgb(89, 0, 134);
-}
-
-.cookyer-handsup-icon {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
-  color: rgb(114, 114, 114);
-}
-
-.cookyer-lesson-step-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  width: 600px;
-  height: 800px;
-  z-index: 2;
-}
 
 /* 쿠키 화면 */
-
 .cookiee-video-content {
   display: flex;
 }
@@ -422,14 +247,14 @@ p {
 }
 
 /* 쿠커 타이머 */
-input[type="number"]::-webkit-outer-spin-button,
+/* input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-}
+} */
 
-.full-cookyer-timer {
+/* .full-cookyer-timer {
   background-color: white;
   height: 190px;
   width: 332px;
@@ -440,7 +265,7 @@ input[type="number"]::-webkit-inner-spin-button {
   display: flex;
   align-items: center;
   justify-content: center;
-}
+} */
 
 .full-video-timer-title {
   position: absolute;
@@ -455,7 +280,7 @@ input[type="number"]::-webkit-inner-spin-button {
   margin: auto 30px;
 }
 
-.full-video-timer-input input {
+/* .full-video-timer-input input {
   border: none;
   width: 70px;
   margin: 0;
@@ -480,12 +305,12 @@ input[type="number"]::-webkit-inner-spin-button {
 .full-video-timer-set-btn:hover {
   background-color: #00A442;
   color: white;
-}
+} */
 
-.full-cookyer-timer input, .full-cookyer-timer span {
+/* .full-cookyer-timer input, .full-cookyer-timer span {
   font-size: 50px;
   color: rgb(33, 33, 33);
-}
+} */
 
 /* 쿠키 타이머 */
 .full-cookiee-timer {
@@ -510,17 +335,6 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 /* 쿠커/쿠키 진행단계 */
-.full-video-step-widget-cookyer {
-  background-color: white;
-  border-radius: 5px;
-  margin: 5px;
-  width: 1183px;
-  height: 106px;
-  display: flex;
-  position: absolute;
-  top: 911px;
-  left: 586px;
-}
 
 .full-video-step-widget-cookiee {
   background-color: white;
@@ -533,7 +347,7 @@ input[type="number"]::-webkit-inner-spin-button {
   position: relative;
 }
 
-.full-video-step-title {
+/* .full-video-step-title {
   position: absolute;
   top: 20px;
   left: 20px;
@@ -601,7 +415,7 @@ input[type="number"]::-webkit-inner-spin-button {
   height: 25px;
   margin-left: 10px;
   font-size: 15px;
-}
+} */
 
 .full-video-step-content button:hover {
   border: 1px solid rgb(255, 123, 0);
