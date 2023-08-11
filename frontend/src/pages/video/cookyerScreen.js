@@ -11,7 +11,6 @@ import { deleteCookiee, setCheckCookiee, setCheckCookieeList, setHandsDownCookie
 import { setLessonInfo } from '../../store/video/videoLessonInfo';
 import '../../style/video.css'
 import '../../style/video/cookyerScreen.css'
-import CookyerVideoSideBar from "../../component/Video/Cookyer/CookyerVideoSideBar";
 
 function CookyerScreen() {
   /** 반응형 웹 관련 */

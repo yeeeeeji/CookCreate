@@ -44,9 +44,11 @@ function CookyerLessonStep({ size }) {
   }, [])
 
   useEffect(() => {
-    if (curIdx) {
+    if (curIdx >= 0) {
+      console.log(curIdx, "변화한 인덱스 값")
       if (curIdx === 0) {
         dispatch(setCurStep("수업이 시작하면 진행 단계를 표시해주세요."))
+        console.log("하..")
       } else {
         if (lessonStepList) {
           const newStep = lessonStepList.find((step) => step.stepOrder === curIdx)

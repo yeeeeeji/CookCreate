@@ -48,7 +48,7 @@
 } 
 
 .half-cookyer-sharing-content {
-  background-color: var(--empty-color);
+  /* background-color: var(--empty-color); */
   border-radius: 5px;
   height: 271px;
   object-fit: cover;
@@ -68,7 +68,7 @@
 }
 
 .half-cookyer-cookiee {
-  background-color: var(--empty-color);
+  /* background-color: var(--empty-color); */
   border-radius: 5px;
   margin: 3px;
   width: 220px;
@@ -81,6 +81,7 @@
 .half-video-step-widget-cookyer-container {
   width: 100%;
 }
+
 .half-video-step-widget-cookyer {
   background-color: white;
   border-radius: 5px;
@@ -102,7 +103,7 @@
   height: 29px;
   border-radius: 46px;
   position: absolute;
-  top: 28px;
+  top: 20px;
   right: 30px;
 }
 

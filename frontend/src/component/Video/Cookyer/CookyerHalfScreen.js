@@ -66,7 +66,7 @@ function CookyerHalfScreen(props) {
             ) : null}
           </div>
         </div>
-
+        
         <div className='half-cookyer-cookiees'>
           {subscribers.map((sub, i) => (
             <div key={i} className='half-cookyer-cookiee-content' onClick={() => handleMainVideoStream(sub)}>
