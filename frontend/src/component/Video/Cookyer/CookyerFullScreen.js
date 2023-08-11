@@ -376,6 +376,10 @@ function CookyerFullScreen() {
     console.log("메인스트림매니저", mainStreamManager === publisher)
   }, [mainStreamManager])
 
+  const noneClick = (e) => {
+    e.stopPropagation()
+  }
+
   return (
     <div className='video-page'>
       <div className='video-page-main'>
@@ -418,9 +422,9 @@ function CookyerFullScreen() {
                     <BsMicMuteFill className='cookyer-cookiee-audio-icon' onClick={(e) => handleACookieeAudio(e, {cookyer: publisher, cookiee: sub})}/>
                   )}
                   {checkCookieeList && checkCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
-                    <AiFillCheckCircle className='cookyer-check-icon-active'/>
+                    <AiFillCheckCircle onClick={(e) => noneClick(e)} className='cookyer-check-icon-active'/>
                   ) : (
-                    <AiFillCheckCircle className='cookyer-check-icon'/>
+                    <AiFillCheckCircle onClick={(e) => noneClick(e)} className='cookyer-check-icon'/>
                   )}
                   {handsUpCookieeList && handsUpCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
                     <IoIosHand
@@ -428,7 +432,7 @@ function CookyerFullScreen() {
                       onClick={(e) => resetHandsUpCookiee(e, {cookyer: publisher, cookiee: sub})}
                     />
                   ) : (
-                    <IoIosHand className='cookyer-handsup-icon'/>
+                    <IoIosHand onClick={(e) => noneClick(e)} className='cookyer-handsup-icon'/>
                   )}
                 </div>
               ))}
