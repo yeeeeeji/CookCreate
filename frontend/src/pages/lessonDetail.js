@@ -14,11 +14,13 @@ import {
   setMaterials, setMaximum, setPrice, setThumbnailUrl, setTimeTaken, setVideoUrl,
   setIntroduce, setCookyerName, setFood, setCookyerId, setBadge, setProfileImg
 } from '../store/lesson/lessonInfo';
+import { useNavigate } from 'react-router-dom';
 import '../style/lesson/lessonDetailCss.css';
+
 
 function LessonDetail() {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate()
   const lessonId = useSelector((state) => state.lessonInfo.lessonId);
   const accessToken = localStorage.getItem('access_token');
   const categoryName = useSelector((state) => state.lessonInfo.categoryName);
@@ -34,8 +36,8 @@ function LessonDetail() {
   useEffect(() => {
     const DateTransformType = new Date(lessonDate);
     const currentTime = new Date();
-    const futureTime = new Date(currentTime.getTime() + 12 * 60 * 60 * 1000);
-
+    const futureTime = new Date(currentTime.getTime() + 12 * 60 * 60 * 1000); // 현재 시간 + 12시간
+    
     axios.get(`/api/v1/lesson/${lessonId}`, {
         headers: {
             Access_Token: accessToken
@@ -90,10 +92,8 @@ function LessonDetail() {
     .catch((err) => {
         console.log(err);
         alert(err.response.data.message);
-    });
-}, [lessonId, lessonDate, accessToken, remaining, userType, userName]);
-
-      
+      });
+  }, [disable, lessonId]);
 
   return (
     <div className='lessonDetailContainer'>

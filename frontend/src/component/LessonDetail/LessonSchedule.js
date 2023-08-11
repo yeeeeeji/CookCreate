@@ -16,8 +16,8 @@ function LessonSchedule() {
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit',
-      timeZone: 'UTC', // 시간대를 UTC로 설정
+      // second: '2-digit',
+      // timeZone: 'UTC', // 시간대를 UTC로 설정 (한국 시간으로 하는게 맞는 거 같다)
     };
     return localDate.toLocaleString(undefined, options);
   };
