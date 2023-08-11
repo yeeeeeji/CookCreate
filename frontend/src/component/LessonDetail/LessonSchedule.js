@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import '../../style/lesson/lesson-schedule-css.css';
 
 function LessonSchedule() {
   const lessonDate = useSelector((state) => state.lessonInfo.lessonDate)
@@ -22,18 +23,14 @@ function LessonSchedule() {
   };
 
   return (
-    <div style={{
-      width: '300px',
-      height: '100px',
-      border: '1px solid #ccc'
-    }}>
-      <div>
-        학습 일정
-        {displayTime(lessonDate)}
+    <div className='lessonScheduleContainer'>
+      <div className='lessonScheduleRowContainer'>
+        <div className='lessonScheduleFirstTitle'>학습 일정</div>
+        <div className='lessonScheduleFirstDesc'>{displayTime(lessonDate)}</div>
       </div>
-      <div>
-        학습 시간
-        {timeTaken}분
+      <div className='lessonScheduleRowContainer'>
+        <div className='lessonScheduleSecondTitle'>학습 시간</div>
+        <div className='lessonScheduleSecondDesc'>{timeTaken}분</div>
       </div>
     </div>
   );
