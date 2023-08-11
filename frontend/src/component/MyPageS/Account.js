@@ -120,7 +120,7 @@ function Account() {
         console.log(res.data);
       })
       .catch((err) => {
-        console.log("회원정보조회못함");
+        console.log("회원정보조회못함",err);
       });
   }, [accessToken]);
 
