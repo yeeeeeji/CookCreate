@@ -187,7 +187,7 @@ public class LessonServiceImpl implements LessonService {
         List<LessonParticipant> lessonParticipantList = lessonParticipantRepository.findAllByLesson_LessonId(lessonId);
         if(lessonParticipantList.size() > 1){
             // 선생님 외에 참여한 사람이 있으면
-            return new ResponseDto(HttpStatus.CONFLICT, "과외를 신청한 사람이 있어서 삭제할 수 없습니다.");
+            return new ResponseDto(HttpStatus.CONFLICT, "과외를 신청한 Cookiee가 있어 삭제할 수 없습니다.");
         }
 
         try {
@@ -206,6 +206,12 @@ public class LessonServiceImpl implements LessonService {
         if(lesson.isEmpty()){
             return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
         }
+        if(lesson.get().getIsOver()){
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 마감된 과외입니다.");
+        }
+        if(lesson.get().getIsEnd()){
+            return new ResponseDto(HttpStatus.CONFLICT, "이미 종료된 과외입니다.");
+        }
 
         Optional<Member> member = memberRepository.findByUserId(userId);
         if(member.isEmpty()) {
@@ -223,12 +229,12 @@ public class LessonServiceImpl implements LessonService {
         lessonParticipantRepository.delete(lessonParticipant.get());
 
         // 마감된 과외였다면 is_over = false로
-        if(lesson.get().getIsOver()){
-            lesson.get().setIsOver(false);
-            lessonRepository.save(lesson.get());
-        }
+//        if(lesson.get().getIsOver()){
+//            lesson.get().setIsOver(false);
+//            lessonRepository.save(lesson.get());
+//        }
 
-        return null;
+        return new ResponseDto(HttpStatus.OK, "Success");
     }
 
     @Override

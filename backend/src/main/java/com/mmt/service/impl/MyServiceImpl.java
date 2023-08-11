@@ -4,6 +4,7 @@ import com.mmt.domain.entity.auth.Member;
 import com.mmt.domain.entity.auth.Role;
 import com.mmt.domain.entity.badge.Badge;
 import com.mmt.domain.entity.lesson.LessonParticipant;
+import com.mmt.domain.entity.pay.PayStatus;
 import com.mmt.domain.entity.pay.PaymentHistory;
 import com.mmt.domain.entity.review.Review;
 import com.mmt.domain.response.ResponseDto;
@@ -24,9 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -83,6 +82,15 @@ public class MyServiceImpl implements MyService {
             myLessonRes.setMessage("Success");
 
             result.add(myLessonRes);
+        }
+
+        if(!isCompleted){ // 신청한 과외 목록인 경우 과외 날짜순으로 정렬
+            result.sort(new Comparator<MyLessonRes>() {
+                @Override
+                public int compare(MyLessonRes o1, MyLessonRes o2) {
+                    return o1.getLessonDate().compareTo(o2.getLessonDate());
+                }
+            });
         }
 
         return result;
@@ -234,7 +242,7 @@ public class MyServiceImpl implements MyService {
 
     @Override
     public List<MyPaymentRes> getCookieePayment(String UserId) {
-        List<PaymentHistory> paymentList = paymentRepository.findAllByMember_UserId(UserId);
+        List<PaymentHistory> paymentList = paymentRepository.findAllByMember_UserIdAndPayStatusNot(UserId, PayStatus.READY);
         List<MyPaymentRes> result = new ArrayList<>();
 
         if(paymentList.size() == 0) {
@@ -245,6 +253,9 @@ public class MyServiceImpl implements MyService {
             MyPaymentRes myPaymentRes = new MyPaymentRes(paymentHistory);
             if(paymentHistory.getCanceledAt() != null) {
                 myPaymentRes.setCanceledAt(paymentHistory.getCanceledAt().toString());
+            }
+            if(paymentHistory.getApprovedAt() != null) {
+                myPaymentRes.setApprovedAt(paymentHistory.getApprovedAt().toString());
             }
             myPaymentRes.setStatusCode(HttpStatus.OK);
             myPaymentRes.setMessage("success");
@@ -257,7 +268,7 @@ public class MyServiceImpl implements MyService {
 
     @Override
     public List<MyPaymentRes> getCookyerPayment(String userId) {
-        List<PaymentHistory> paymentList = paymentRepository.findAllByLesson_CookyerId(userId);
+        List<PaymentHistory> paymentList = paymentRepository.findAllByLesson_CookyerIdAndPayStatusNot(userId, PayStatus.READY);
         List<MyPaymentRes> result = new ArrayList<>();
 
         if(paymentList.size() == 0) {
@@ -269,8 +280,11 @@ public class MyServiceImpl implements MyService {
             if(paymentHistory.getCanceledAt() != null) {
                 myPaymentRes.setCanceledAt(paymentHistory.getCanceledAt().toString());
             }
+            if(paymentHistory.getApprovedAt() != null) {
+                myPaymentRes.setApprovedAt(paymentHistory.getApprovedAt().toString());
+            }
             myPaymentRes.setStatusCode(HttpStatus.OK);
-            myPaymentRes.setMessage("sucess");
+            myPaymentRes.setMessage("success");
 
             result.add(myPaymentRes);
         }

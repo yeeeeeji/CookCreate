@@ -17,6 +17,8 @@ const Wrapper = styled.footer`
   padding: 6px;
   z-index: 100;
   background-color: #eeeeee;
+  display: flex; /* Add display flex */
+  justify-content: flex-end; /* Align to the right */
   
   & form {
     position: relative;

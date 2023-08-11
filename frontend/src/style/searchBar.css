@@ -11,6 +11,7 @@
     border-radius: 0 0.3rem 0.3rem 0;
     padding: 0.6rem 9rem 0.6rem 0.7rem;
     font-size: 0.9rem;  
+    transition: padding 0.3s ease; /* 부드러운 애니메이션 효과 추가 
 }
 
 .searchBar::placeholder {
@@ -29,4 +30,22 @@
 .mainSearchIcon {
     font-size: 1.5rem;
     color: #656363;
+}
+
+@media screen and (max-width: 1350px) {
+    .searchBar {
+      padding: 0.6rem 5rem 0.6rem 0.7rem; /* 화면 크기가 768px 미만일 때 padding 값을 조정 */
+    }
+}
+
+@media screen and (max-width: 1125px) {
+    .searchBar {
+      padding: 0.6rem 0.8rem 0.6rem 0.7rem; /* 화면 크기가 768px 미만일 때 padding 값을 조정 */
+    }
+}
+
+@media screen and (max-width: 1035px) {
+    .mainSearchContainer {
+      display: none;
+    }
 }

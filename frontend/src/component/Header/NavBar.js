@@ -34,7 +34,7 @@ function NavBar() {
 
   return (
     <div className='navbar'>
-      <div className="navbar-left">
+      <div className="leftNav">
         <Link to='/' className='logo'>
           <img src= "/logo.png" alt="로고" className='logo' />
         </Link> 
@@ -45,7 +45,7 @@ function NavBar() {
       </div>
       {isLogin ? (
         <div>
-          <Link to='chatroom' >채팅</Link>
+          <Link to='/chatroom' >채팅</Link>
           <div className="nav-cookyer">
             {role === 'COOKYER' ? <Link to='registerlesson'>과외 등록</Link> : null} 
             {role === 'COOKIEE' ? (
@@ -67,6 +67,7 @@ function NavBar() {
             </div>
           </div>
         </div>
+        
       ) : (
           <React.Fragment>
             <div>

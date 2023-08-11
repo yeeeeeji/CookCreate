@@ -151,6 +151,8 @@ public class LessonController {
             @ApiResponse(responseCode = "403", description = "예약한 Cookyer만 이용 가능합니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "409", description = "과외를 신청한 Cookiee가 있어 삭제할 수 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @DeleteMapping("/{lessonId}")
@@ -182,6 +184,8 @@ public class LessonController {
             @ApiResponse(responseCode = "403", description = "신청한 Cookiee만 이용 가능합니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "409", description = "이미 마감된/완료한 과외입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @DeleteMapping("/cancel/{lessonId}")

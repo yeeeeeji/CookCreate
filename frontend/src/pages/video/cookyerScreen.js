@@ -329,20 +329,64 @@ function CookyerScreen() {
   const handleMainVideoStream = (stream) => {
     if (mainStreamManager !== stream) {
       dispatch(setMainStreamManager(stream))
+      const data = {
+        connectionId: stream.stream.connection.connectionId
+      }
+      publisher.stream.session.signal({
+        data: JSON.stringify(data),
+        type: 'mainVideo'
+      })
     } else {
       if (shareScreenPublisher) {
         dispatch(setMainStreamManager(shareScreenPublisher))
+        const data = {
+          connectionId: shareScreenPublisher.stream.connection.connectionId
+        }
+        publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'mainVideo'
+        })
       } else {
         dispatch(setMainStreamManager(publisher))
+        const data = {
+          connectionId: publisher.stream.connection.connectionId
+        }
+        publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'mainVideo'
+        })
       }
     }
   }
 
   useEffect(() => {
-    if (shareScreenPublisher) {
+    console.log(shareScreenPublisher, "화면공유 퍼블리셔 바뀜")
+    if (shareScreenPublisher !== null) {
       dispatch(setMainStreamManager(shareScreenPublisher))
+      const data = {
+        connectionId: shareScreenPublisher.stream.connection.connectionId
+      }
+      publisher.stream.session.signal({
+        data: JSON.stringify(data),
+        type: 'mainVideo'
+      })
+    } else {
+      if (publisher) {
+        dispatch(setMainStreamManager(publisher))
+        const data = {
+          connectionId: publisher.stream.connection.connectionId
+        }
+        publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'mainVideo'
+        })
+      }
     }
   }, [shareScreenPublisher])
+
+  useEffect(() => {
+    console.log("메인스트림매니저", mainStreamManager === publisher)
+  }, [mainStreamManager])
 
   return (
     <div className='video-page'>
@@ -360,17 +404,6 @@ function CookyerScreen() {
                     videoStyle='cookyer-sharing-content'
                     streamManager={mainStreamManager}
                   />
-                  {/* {shareScreenPublisher === null ? (
-                    <UserVideoComponent
-                      videoStyle='cookyer-sharing-content'
-                      streamManager={publisher}
-                    />
-                  ) : (
-                    <UserVideoComponent
-                      videoStyle='cookyer-sharing-content'
-                      streamManager={shareScreenPublisher}
-                    />
-                  )} */}
                 </div>
               </div>
               <div className='cookyer-components-left-bottom'>

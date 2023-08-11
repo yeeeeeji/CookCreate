@@ -59,7 +59,7 @@ function AppWithLayout({ match }) {
 
 
   return (
-    <div style={{padding : "0 15rem"}}>
+    <div className="container">
       <NavBar />
       <Routes>
         <Route path='/' element={<MainPage />} />
@@ -74,6 +74,7 @@ function AppWithLayout({ match }) {
         <Route path='/payment/success' element={<PaymentSuccess/>}></Route>
         <Route path='/payment/cancel' element={<PaymentCancelld/>}></Route>
         <Route path='/lesson/edit/:lessonId' element={<EditLesson/>}></Route>
+        <Route path='/chatroom' element={<ChatRoom/>}></Route>
 
         
         {/* <Route path='/chatlist' element={<ChatList />} /> */}

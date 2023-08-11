@@ -24,7 +24,7 @@ function LessonListFliter() {
 
   return (
     <div>
-      <div>
+      <div className='sortSelectContainer'>
         <select
           className='sortSelect'
           value={sortBy}

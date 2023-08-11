@@ -29,7 +29,8 @@ function LessonTime() {
       const isoDateTime = selectedDateTime.toISOString();
       dispatch(setDateTime(isoDateTime));
       const currentDate = new Date();
-      dispatch(setDateValid(selectedDateTime > currentDate));
+      const futureTime = new Date(currentDate.getTime() + 12 * 60 * 60 * 1000); // 현재 시간 + 12시간
+      dispatch(setDateValid(selectedDateTime > futureTime));
     }
   }, [dispatch, selectedDateTime]);
 

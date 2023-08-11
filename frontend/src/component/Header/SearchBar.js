@@ -4,13 +4,15 @@ import { useSelector, useDispatch } from "react-redux";
 import SearchResModal from "./SearchResModal";
 import "../../style/searchBar.css";
 import { setLessonId } from "../../store/lesson/lessonInfo";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { setCategories, setDeadLine, setOrder, setType } from "../../store/lesson/lessonSearch";
 import { BiSearch } from "react-icons/bi";
 
 function SearchBar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const lessonId = useSelector((state) => state.lessonSearch.lessonId);
   const [keyword, setKeyword] = useState("");
   const [isexist, setIsExist] = useState(false);
@@ -49,10 +51,10 @@ function SearchBar() {
       });
   }, [keyword]);
 
-  const search = (e) => {
-    const newtyping = e.target.value;
-    setKeyword(newtyping);
-  };
+  useEffect(() => {
+    setIsExist(result.length > 0 && keyword !== '');
+    setIsOpen(result.length > 0 && keyword !== '');
+  }, [result, keyword]);
 
   const searchResClick = (lessonId) => {
     dispatch(setLessonId(lessonId));
@@ -76,7 +78,7 @@ function SearchBar() {
           placeholder="요리를 검색해보세요!"
           value={keyword}
           onChange={(e) => {
-            search(e);
+            setKeyword(e.target.value);
           }}
         />
       </div>
@@ -88,7 +90,7 @@ function SearchBar() {
               <SearchResModal key={idx} lessonTitle={obj.lessonTitle} lessonId={obj.lessonId} />
             </div>
           ))}
-      </div>
+        </div>
     </div>
   );
 }
