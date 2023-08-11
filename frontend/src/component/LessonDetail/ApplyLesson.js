@@ -76,11 +76,16 @@ function ApplyLesson({ disable }) {
         <a href={videoUrl}>
           수업 맛보기
         </a>
-        |
-        <a href={payUrl}>
-          결제
-        </a>
       </div>
+      {/* {showPopup && (
+        <div>
+          <div>
+            <h3>팝업 제목</h3>
+            <h6>팝업 내용</h6>
+            <button onClick={() => setShowPopup(false)}>닫기</button>
+          </div>
+        </div>
+      )} */}
     </div>
   );
 }

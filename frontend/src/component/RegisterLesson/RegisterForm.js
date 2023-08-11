@@ -10,7 +10,7 @@ function RegisterForm() {
   const [ThumbnailFile, setThumbnailFile] = useState(null)
   const accessToken = localStorage.getItem('access_token')
   const lessonTitle = useSelector((state) => state.lesson.lessonTitle)
-  const categoryId = useSelector((state) =>  parseInt(state.lesson.categoryId))+1
+  const categoryId = useSelector((state) =>  parseInt(state.lesson.categoryId))
   const maximum = useSelector((state) => parseInt(state.lesson.maximum))
   const price = useSelector((state) => parseInt(state.lesson.price))
   const lessonDate = useSelector((state) => state.lesson.lessonDate).slice(0,-5)

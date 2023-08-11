@@ -106,7 +106,9 @@ public class ChatServiceImpl implements ChatService {
 
             Optional<Chat> chatRoom = chatRepository.findFirst1ByLesson_LessonIdOrderByCreatedDateDesc(lesson.getLessonId());
             if(!chatRoom.isPresent()) {
-                result.add(new ChatRoomRes(HttpStatus.OK, "해당 채팅방에 채팅 내역이 없습니다."));
+                chatRoomRes.setStatusCode(HttpStatus.OK);
+                chatRoomRes.setMessage("해당 채팅방에 채팅 내역이 없습니다.");
+                result.add(chatRoomRes);
                 continue;
             }
 

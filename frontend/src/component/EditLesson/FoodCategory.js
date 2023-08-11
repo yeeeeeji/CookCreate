@@ -7,18 +7,20 @@ function FoodCategory() {
   const initCategory = useSelector((state) => state.lessonInfo.categoryId)
   const transformCategoryId = ['한식', '양식', '중식', '일식', '아시안', '건강식', '디저트'];
   const initCategoryName = transformCategoryId[initCategory - 1];
-  const [selectedCategory, setSelectedCategory] = useState(initCategory);
+  const [selectedCategory, setSelectedCategory] = useState(initCategory); // categoryId 저장
 
   const categories = useMemo(() => ['한식', '양식', '중식', '일식', '아시안', '건강식', '디저트'], []);
   const categoryValid = useSelector((state) => state.lessonEdit.categoryValid)
+
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
     dispatch(setCategoryValid(e.target.value !== ''))
   };
 
   useEffect(() => {
-    const selectedIndex = categories.indexOf(selectedCategory) + 1;
-    dispatch(setCategory(selectedIndex));
+    // const selectedIndex = categories.indexOf(selectedCategory) + 1;
+    // console.log(selectedCategory)
+    dispatch(setCategory(selectedCategory));
   }, [dispatch, selectedCategory, categories]);
 
   return (
