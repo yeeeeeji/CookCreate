@@ -88,12 +88,12 @@ function Review() {
                     <a href="dd" className="review_link">
                       강좌이름: {review.lessonTitle}
                     </a>
-                    {/* <div className="review_star">⭐️⭐️⭐️⭐️ {review.rating}</div> */}
                     <StarShow rating={review.rating} size="1.4rem" color="gold" />
-                    <div className="review_author">작성자:{review.userId}</div>
+                    <div>{review.rating}</div>
+                    <div className="review_author">작성자:{review.nickname}</div>
                     <div className="review_tutor">
-                      선생님아이디/이름
-                      {review.cookyerId}/{review.cookyerName}
+                      선생님:
+                      {review.cookyerName}
                     </div>
                     <div className="review_cont">
                       리뷰내용

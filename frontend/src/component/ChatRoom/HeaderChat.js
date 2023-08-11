@@ -5,7 +5,7 @@ import axios from "axios";
 const Wrapper = styled.header`
   width: 100%;
   background-color: #ff8a00;
-  height: 50px;
+  height: 70px;
   position: relative;
   display: flex;
   align-items: center;

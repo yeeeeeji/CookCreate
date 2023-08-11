@@ -133,8 +133,6 @@ function Account() {
     }
   }, [userData]);
 
-
-
   //프로필
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -227,16 +225,16 @@ function Account() {
         console.log(res);
         alert("회원정보수정이 완료됐습니다.");
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log("회원정보수정못함",err)
+      });
   };
 
   return (
     <div className="mypage">
-      
       <SideBar />
       <div className="mytitle">정보수정</div>
-      <div>가입일:{userData.createdDate}</div>
-      <div className="myrole">{userData.role}</div>
+      {userData ? <div>가입일:{new Date(userData.createdDate).toISOString().split("T")[0]}</div> : null}
       <div className="mysubtitle">프로필 변경</div>
       <img
         src={profileImgUrl}
@@ -253,7 +251,7 @@ function Account() {
 
       <div className="myinputTitle">닉네임</div>
       <div className="inputWrap">
-        <input placeholder={nicknameDef} type="text" value={nicknameDef} onChange={onChangeUserNickName} />
+        <input placeholder={userData.nickname} type="text" value={nicknameDef} onChange={onChangeUserNickName} />
         <button onClick={nicknameDupliCheck}>중복확인</button>
         <div>
           {userNicknameMessage}
@@ -263,24 +261,24 @@ function Account() {
 
       <div className="myinputTitle">자기소개</div>
       <div>
-        <textarea placeholder={IntroduceDef} value={IntroduceDef} onChange={onChangeIntroduce}></textarea>
+        <textarea placeholder={userData.introduce} value={IntroduceDef} onChange={onChangeIntroduce}></textarea>
         <div>{userIntroduceMessage}</div>
       </div>
 
       <div>
         <p>소개영상url</p>
-        <input placeholder={IntroUrlDef} type="text" value={IntroUrlDef} onChange={onChangeintroUrl} />
+        <input placeholder={userData.introUrl} type="text" value={IntroUrlDef} onChange={onChangeintroUrl} />
       </div>
 
       <div className="myinputTitle">휴대폰번호</div>
       <div>
-        <input type="text" placeholder={phoneNumberDef} value={phoneNumberDef} onChange={onChangeUserPhonenumber} />
+        <input type="text" placeholder={userData.phoneNumber} value={phoneNumberDef} onChange={onChangeUserPhonenumber} />
         <div>{userPhoneNumberMessage}</div>
       </div>
 
       <div className="myinputTitle">이메일</div>
       <div>
-        <input placeholder={userEmailDef} type="text" value={userEmailDef} onChange={onChangeUserEmail} />
+        <input placeholder={userData.userEmail} type="text" value={userEmailDef} onChange={onChangeUserEmail} />
         <div>{userEmailMessage}</div>
       </div>
 

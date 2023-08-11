@@ -24,9 +24,6 @@ function SideBar() {
               <div className="side-item">
                 <Link to="/payrollT">정산내역</Link>
               </div>
-              <div className="side-item">
-                <Link to="/calendarT">캘린더</Link>
-              </div>
             </ul>
           </div>
         </div>

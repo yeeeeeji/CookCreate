@@ -13,15 +13,12 @@ import { useDispatch } from 'react-redux';
 import { login, logout } from '../store/auth/auth'
 import LessonItem from '../pages/lessonDetail';
 import MyPageS from '../pages/myPageS';
-import Calendar from './MyPageS/Calendar';
 import ClassList from './MyPageS/ClassList';
-import LikeList from './MyPageS/LikeList';
 import Payment from './MyPageS/Payment';
 import RecipeBook from './MyPageS/RecipeBook';
 import Review from './MyPageS/Review';
 import Account from './MyPageS/Account';
 import MyPageT from '../pages/myPageT';
-import CalendarT from './MyPageT/Calendar';
 import ClassListT from './MyPageT/ClassList';
 import AccountT from './MyPageT/Account';
 import PayrollT from './MyPageT/Payroll';
@@ -83,10 +80,7 @@ function AppWithLayout({ match }) {
 
         <Route path='/mypageS' element={<MyPageS />} />
         <Route path='/mypageT' element={<MyPageT />} />
-        <Route path="/calendar" element={<Calendar />}/>
-        <Route path="/calendarT" element={<CalendarT />}/>
         <Route path="/classList" element={<ClassList />}/>
-        <Route path="/likeList" element={<LikeList />}/>
         <Route path="/payment" element={<Payment />}/>
         <Route path="/recipeBook" element={<RecipeBook />}/>
         <Route path="/review" element={<Review />}/>
