@@ -24,8 +24,6 @@ public class MyPaymentRes extends ResponseDto {
         this.lessonTitle = paymentHistory.getLesson().getLessonTitle();
         this.totalAmount = paymentHistory.getTotalAmount();
         this.payStatus = paymentHistory.getPayStatus();
-        this.approvedAt = paymentHistory.getApprovedAt().toString();
-
     }
 
     public MyPaymentRes(HttpStatus httpStatus, String message) {
