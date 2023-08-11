@@ -32,10 +32,14 @@ const Wrapper = styled.header`
   }
 `;
 
-const HeaderChat = ({ lessonId, chatTitle,chatOver }) => {
+const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
   const accessToken = localStorage.getItem("access_token");
   const role = localStorage.getItem("role");
   // const history = useHistory();
+
+  //채팅종료여부
+  console.log("chatOver", chatOver);
+  console.log("role", role);
 
   const ExitT = () => {
     axios
@@ -98,22 +102,23 @@ const HeaderChat = ({ lessonId, chatTitle,chatOver }) => {
 
   return (
     <Wrapper>
-        {role === 'COOKYER' && !chatOver ? (
-          <button type="button" onClick={ExitT}>
-            <p>종료</p>
-            <i className="fas fa-arrow-left" />
-          </button>
-        ) : role === 'COOKYEE' && !chatOver ? (
-          <button type="button" onClick={ExitS}>
-            <p>나가기</p>
-            <i className="fas fa-arrow-left" />
-          </button>
-        ) : null}
-        <button type="button" onClick={onBefore}>
-          <p>HOME</p>
-          <i className="fas fa-arrow-left" />
-        </button>
-      <span>{chatTitle}</span>
+      {role === 'COOKYER' && chatOver === false ? (
+      <button type="button" onClick={ExitT}>
+        <p>종료</p>
+        <i className="fas fa-arrow-left" />
+      </button>
+    ) : null}
+    {role === 'COOKIEE' && chatOver === false ? (
+      <button type="button" onClick={ExitS}>
+        <p>나가기</p>
+        <i className="fas fa-arrow-left" />
+      </button>
+    ) : null}
+    <button type="button" onClick={onBefore}>
+      <p>HOME</p>
+      <i className="fas fa-arrow-left" />
+    </button>
+    <span>{chatTitle}</span>
     </Wrapper>
   );
 };

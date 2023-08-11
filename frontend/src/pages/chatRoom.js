@@ -7,17 +7,18 @@ function ChatRoom() {
   //채팅받기
   // const [chatinfo, setChatInfo] = useState([]);
   // const [chatList, setChatList] = useState([]); // 화면에 표시될 채팅 기록
-  // const { lessonId } = useParams(); 
-  
-  const [chatTitle, setChatTitle] = useState()
-  const [lessonId, setLessonId] = useState(null)
-  const [chatOver, setChatOver] = useState(false)
+  // const { lessonId } = useParams();
 
-  const goChatRoom = ({lessonId, chatTitle, chatOver}) => {
-    setLessonId(lessonId)
-    setChatTitle(chatTitle)
-    setChatOver(chatOver)
-  }
+  const [chatTitle, setChatTitle] = useState();
+  const [lessonId, setLessonId] = useState(null);
+  const [chatOver, setChatOver] = useState(false);
+
+  const goChatRoom = ({ lessonId, chatTitle, chatOver }) => {
+    console.log("고챗룸", chatOver);
+    setLessonId(lessonId);
+    setChatTitle(chatTitle);
+    setChatOver(chatOver);
+  };
 
   return (
     <div className="chatroom-container">
@@ -34,10 +35,7 @@ function ChatRoom() {
         )}
       </div>
     </div>
-
-
   );
 }
 
 export default ChatRoom;
-
