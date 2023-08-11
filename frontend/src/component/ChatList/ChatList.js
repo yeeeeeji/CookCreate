@@ -30,9 +30,9 @@ const ChatList = (props) => {
     return formattedTime;
   };
 
-  const handleChatRoom = ({chatTitle, lessonId}) => {
-    console.log(chatTitle, lessonId)
-    props.goChatRoom({chatTitle, lessonId})
+  const handleChatRoom = ({chatTitle, lessonId, chatOver}) => {
+    console.log(chatTitle, lessonId,chatOver)
+    props.goChatRoom({chatTitle, lessonId,chatOver})
   }
 
   return (
@@ -55,7 +55,7 @@ const ChatList = (props) => {
             {chatRoom.chatRoomOver === true && (
               <>
                 <p>완료된 채팅방</p>
-                <div onClick={() => handleChatRoom({lessonId: chatRoom.lessonId, chatTitle: chatRoom.leastContent})}>
+                <div onClick={() => handleChatRoom({lessonId: chatRoom.lessonId, chatTitle: chatRoom.leastContent, chatOver:chatRoom.chatRoomOver})}>
                 {/* <Link to={`/chatroom`}> */}
                   <strong>{chatRoom.lessonTitle}</strong>
                   <p>마지막 메세지: {chatRoom.leastContent}</p>

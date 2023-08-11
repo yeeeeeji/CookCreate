@@ -5,7 +5,7 @@ import InputChat from "./InputChat"
 import * as StompJs from "@stomp/stompjs";
 import axios from "axios";
 
-const ShowChat = ({lessonId, chatTitle}) => {
+const ShowChat = ({lessonId, chatTitle, chatOver}) => {
   const accessToken = localStorage.getItem("access_token");
   const nick = localStorage.getItem("nickname");
   const id = localStorage.getItem("id");
@@ -102,15 +102,17 @@ const ShowChat = ({lessonId, chatTitle}) => {
 
   return (
     <div>
-      <HeaderChat lessonId={lessonId} chatTitle={chatTitle} />
+      <HeaderChat lessonId={lessonId} chatTitle={chatTitle} chatOver={chatOver} />
       <div style={{ overflowY: "auto", height: "300px" }} id="ChatRoom" ref={scrollRef}>
         {messageList.map((chat, index) =>
           chat.userId !== id ? <FriendChat key={index} message={chat.content} author={chat.userId} /> : <MyChat key={index} message={chat.content} />
         )}
       </div>
-      <div className="InputChatContainer">
-        <InputChat sendMessage={sendMessage} />
-      </div>
+      {!chatOver && (
+        <div className="InputChatContainer">
+          <InputChat sendMessage={sendMessage} />
+        </div>
+      )}
     </div>
   );
 };

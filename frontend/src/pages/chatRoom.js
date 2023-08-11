@@ -11,10 +11,12 @@ function ChatRoom() {
   
   const [chatTitle, setChatTitle] = useState()
   const [lessonId, setLessonId] = useState(null)
+  const [chatOver, setChatOver] = useState(false)
 
-  const goChatRoom = ({lessonId, chatTitle}) => {
+  const goChatRoom = ({lessonId, chatTitle, chatOver}) => {
     setLessonId(lessonId)
     setChatTitle(chatTitle)
+    setChatOver(chatOver)
   }
 
   return (
@@ -27,7 +29,7 @@ function ChatRoom() {
           <p>채팅방을 선택해주세요.</p>
         ) : (
           <div className="ChatSpace">
-            <ShowChat lessonId={lessonId} chatTitle={chatTitle}/>
+            <ShowChat lessonId={lessonId} chatTitle={chatTitle} chatOver={chatOver} />
           </div>
         )}
       </div>
