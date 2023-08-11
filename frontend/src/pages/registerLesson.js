@@ -12,7 +12,7 @@ function RegisterLesson() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(resetlessonReducer())
-  })
+  }, []) // 페이지 렌더링시 lessonReducer 초기화
   return (
     <div>
       <h2>

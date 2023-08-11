@@ -2,19 +2,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  categoryId: "",
+  categoryId: '',
   categoryValid : false,
   lessonTitle: "",
   titleValid : false,
-  maximum: 1,
+  maximum: 0,
   maxValid : false,
-  price: 0,
+  price: "",
   priceValid : false,
   lessonDate: "",
   dateValid : false,
   difficulty: "",
   difficultyValid : false,
-  timeTaken: 60,
+  timeTaken: 0,
   timeTakenValid : false,
   description: "",
   descriptionValid : false,
@@ -38,9 +38,11 @@ const lesson = createSlice({
     },
     setCategory : (state, action) => {
       state.categoryId = action.payload
+      console.log(action)
     },
     setCategoryValid : (state, action) => {
       state.categoryValid = action.payload
+      console.log(action)
     },
     setTimeTaken : (state, action) => {
       state.timeTaken = action.payload
@@ -96,7 +98,7 @@ const lesson = createSlice({
     setVideoUrl : (state, action) => {
       state.videoUrl = action.payload
     },
-    resetlessonReducer : (state) => {
+    resetlessonReducer : () => {
       return initialState
     }
   },

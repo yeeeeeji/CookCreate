@@ -2,17 +2,9 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
-  setLessonTitle, setTitleValid,
-  setCategory, setCategoryValid,
-  setTimeTaken, setTimeTakenVaild,
-  setDateTime, setDateValid,
-  setPrice, setPriceValid,
-  setMaximum, setMaximumValid,
-  setDifficulty, setDifficultyValid,
-  setDescription, setDescriptionValid,
-  setMaterials, setMaterialsValid,
-  setLessonStepList, setStepValid,
-  setVideoUrl, setThumbnailVaild
+  setLessonTitle, setCategory, setTimeTaken,
+  setPrice, setMaximum, setDifficulty, setDescription, 
+  setMaterials, setLessonStepList, setVideoUrl
   } from '../../store/lesson/lesson'
 function PreviousLesson() {
   const dispatch = useDispatch()
@@ -31,7 +23,7 @@ function PreviousLesson() {
         },
       })
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
         dispatch(setLessonTitle(res.data.lessonTitle))
         dispatch(setCategory(res.data.categoryId))
         dispatch(setTimeTaken(res.data.timeTaken))
