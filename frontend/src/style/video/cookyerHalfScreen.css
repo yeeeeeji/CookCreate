@@ -55,7 +55,8 @@
   grid-template-rows: 1fr 1fr;
   width: 678px;
   height: 298px;
-  margin: auto;
+  margin: 10px auto;
+  border: 1px solid orange;
 }
 
 .half-cookyer-cookiee-content {
@@ -80,16 +81,17 @@
 .half-video-step-widget-cookyer {
   background-color: white;
   border-radius: 5px;
-  margin: 0 10px;
+  margin: 0 20px;
   display: flex;
   position: relative;
+  height: 57px;
 }
 
 .half-video-step-title {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  font-size: 13px;
+  top: 9px;
+  left: 9px;
+  font-size: 12px;
 }
 
 .half-video-step-check-btn {
@@ -98,20 +100,20 @@
   height: 29px;
   border-radius: 46px;
   position: absolute;
-  top: 20px;
-  right: 30px;
+  top: 15px;
+  right: 20px;
 }
 
 .half-video-step-check-btn-wrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: auto 20px;
+  margin: 3px 10px;
 }
 
 .half-video-step-check-count {
   display: flex;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .half-video-step-check-icon {
@@ -123,8 +125,16 @@
   align-items: center;
   justify-content: center;
   margin: auto;
-  font-size: 18px;
+  font-size: 15px;
   /* text-align: center; */
+}
+
+.half-video-step-p {
+  display: flex;
+}
+
+.half-video-step-current {
+  margin-left: 7px;
 }
 
 .half-video-step-content {
@@ -145,6 +155,8 @@
   box-sizing: border-box;
   outline: none;
   border-bottom: 1px solid #a6a6a6;
+  font-size: 15px;
+  margin-left: 7px;
 }
 
 .half-video-step-content button {
