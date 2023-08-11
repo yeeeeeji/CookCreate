@@ -93,7 +93,7 @@ function Payment() {
                 <div className="class-info">
                   <div className="info-details">
                     <div>과외명</div>
-                    <div>{payment.lessonTitle} 원</div>
+                    <div>{payment.lessonTitle}</div>
                     <div>결제 시간</div>
                     <div>{formatDateTime(payment.approvedAt)}</div>
                     <div>환불 시간</div>

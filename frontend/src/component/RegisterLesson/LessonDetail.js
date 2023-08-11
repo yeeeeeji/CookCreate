@@ -5,21 +5,28 @@ import { setPrice, setPriceValid, setMaximum, setMaximumValid, setDifficulty, se
 
 function LessonDetail() {
   const dispatch = useDispatch();
-  const [lessonPrice, setLessonPrice] = useState('');
   const [maximum, setLessonMaximum] = useState('');
   const [lessonDifficulty, setLessonDifficulty] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
+  const [lessonPrice, setLessonPrice] = useState('');
   const [lessonDescription, setLessonDescription] = useState('')
   const [lessonVideoUrl, setLessonVideoUrl] = useState('')
   const [lessonMaterialList, setLessonMaterialList] = useState([])
   const [lessonMaterial, setLessonMaterial] = useState('')
+  //불러오기
+  const reduxPrice = useSelector((state) => state.lesson.price)
+  const reduxMaximum = useSelector((state) => state.lesson.maximum)
+  const reduxDescribe = useSelector((state) => state.lesson.description)
+  const reduxVideoUrl = useSelector((state) => state.lesson.videoUrl)
+  const reduxDifficulty = useSelector((state) => state.lesson.difficulty)
+  const reduxMaterialList = useSelector((state) => state.lesson.materials)
   //유효성
   const priceValid = useSelector((state) => state.lesson.priceValid)
-  const [errorMsg, setErrorMsg] = useState('');
   const maxValid = useSelector((state) => state.lesson.maxValid)
   const difficultyValid = useSelector((state) => state.lesson.difficultyValid)
   const descriptionValid = useSelector((state) => state.lesson.descriptionValid)
   const materialValid = useSelector((state) => state.lesson.materialsValid)
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleChangePrice = (e) => {
     const input = e.target.value
@@ -29,30 +36,26 @@ function LessonDetail() {
       setErrorMsg('')
       setLessonPrice(input)
       dispatch(setPrice(input))
-      dispatch(setPriceValid(input.trim() !== ""))
     }
   };
   const changeMaximum = (e) => {
     const input = e.target.value
     setLessonMaximum(input)
     dispatch(setMaximum(input))
-    dispatch(setMaximumValid(input.trim() !== ''))
   };
-
   const handleDifficultyClick = (difficulty) => {
-    setLessonDifficulty(difficulty);
-    setSelectedDifficulty(difficulty)
-    dispatch(setDifficultyValid(true))
+    setLessonDifficulty(difficulty)
+    dispatch(setDifficulty(difficulty))
   };
   const handleLessonDescription = (e) =>{
     const input = e.target.value
     setLessonDescription(input)
     dispatch(setDescription(input))
-    dispatch(setDescriptionValid(input.trim() !== ''))
   }
-
   const handleVideoUrl = (e) => {
-    setLessonVideoUrl(e.target.value)
+    const url = e.target.value
+    dispatch(setVideoUrl(url))
+    setLessonVideoUrl(url)
   }
   const handleChange = (e) => {
     setLessonMaterial(e.target.value)
@@ -61,20 +64,36 @@ function LessonDetail() {
     e.preventDefault()
     const newList = lessonMaterial.split('\n').map((str) => str.trim()).filter((str) => str !== '');
     setLessonMaterialList(newList)
-    dispatch(setMaterialsValid(lessonDescription.trim() !== '' || newList.length > 0));
-
+    dispatch(setMaterials(newList))    
   }
+  useEffect(() => {
+    setLessonPrice(reduxPrice)
+    dispatch(setPriceValid(!!lessonPrice.toString().length))
+  }, [reduxPrice, lessonPrice])
 
+  useEffect(() => { 
+    setLessonDescription(reduxDescribe)
+    dispatch(setDescriptionValid((lessonDescription.trim() !== '')))
+  }, [lessonDescription, reduxDescribe])
 
   useEffect(() => {
-    dispatch(setPrice(lessonPrice));
-    dispatch(setMaximum(maximum));
-    dispatch(setDifficulty(lessonDifficulty))
-    dispatch(setDescription(lessonDescription))
-    dispatch(setVideoUrl(lessonVideoUrl))
-    dispatch(setMaterials(lessonMaterialList))
-  }, [dispatch, lessonPrice, maximum, lessonDifficulty, lessonDescription,
-      lessonVideoUrl, lessonMaterialList]);
+    setLessonVideoUrl(reduxVideoUrl)
+  }, [reduxVideoUrl, lessonVideoUrl])
+
+  useEffect(() => {
+    setLessonMaximum(reduxMaximum)
+    dispatch(setMaximumValid(maximum !== 0))
+  }, [reduxMaximum, maximum])
+
+  useEffect(() => {
+    setSelectedDifficulty(reduxDifficulty);
+    dispatch(setDifficultyValid(!!reduxDifficulty));
+  }, [reduxDifficulty]);
+
+  useEffect(() => {
+    setLessonMaterialList(reduxMaterialList)
+    dispatch(setMaterialsValid(lessonMaterial.trim() !== '' || lessonMaterialList.length > 0));
+  }, [reduxMaterialList, lessonMaterialList])
 
   return (
     <div>
@@ -112,6 +131,7 @@ function LessonDetail() {
           </select>
         </div>
       </div>
+      
       {/* 난이도 */}
       <div>
         <div style={{display : 'flex', alignItems : 'center'}}>
@@ -120,7 +140,7 @@ function LessonDetail() {
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>
           <div
-            onClick={() => handleDifficultyClick('EASY')}
+            onClick={() =>  handleDifficultyClick('EASY')}
             style={{ 
               backgroundColor: selectedDifficulty === 'EASY' ? 'lightgray' : 'white',
               padding : '5px',
@@ -153,6 +173,7 @@ function LessonDetail() {
           </div>
         </div>
       </div>
+
       {/* 과외 설명 */}
       <div>
         <div style={{display : 'flex', alignItems : 'center'}}>
@@ -165,7 +186,6 @@ function LessonDetail() {
           placeholder='과외 설명'
         />
       </div>
-
 
       {/* 유튜브 링크 */}
       <div>

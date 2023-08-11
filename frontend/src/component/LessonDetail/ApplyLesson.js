@@ -97,9 +97,6 @@ function ApplyLesson({ disable }) {
           수업 맛보기 |
         </a>
       </div>
-      <a href={payUrl}>
-        결제
-      </a>
       {/* {showPopup && (
         <div>
           <div>

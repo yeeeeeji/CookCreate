@@ -74,12 +74,24 @@ function EditLessonDetail() {
 
 
   useEffect(() => {
-    dispatch(setPrice(lessonPrice));
-    dispatch(setMaximum(maximum));
-    dispatch(setDifficulty(lessonDifficulty))
-    dispatch(setDescription(lessonDescription))
-    dispatch(setVideoUrl(lessonVideoUrl))
-    dispatch(setMaterials(lessonMaterialList))
+    if (lessonPrice) {
+      dispatch(setPrice(lessonPrice));
+    }
+    if (maximum) {
+      dispatch(setMaximum(maximum));
+    }
+    if (lessonDifficulty) {
+      dispatch(setDifficulty(lessonDifficulty))
+    }
+    if (lessonDescription) {
+      dispatch(setDescription(lessonDescription))
+    }
+    if (lessonVideoUrl) {
+      dispatch(setVideoUrl(lessonVideoUrl))
+    }
+    if (lessonMaterialList) {
+      dispatch(setMaterials(lessonMaterialList))
+    }
   }, [dispatch, lessonPrice, maximum, lessonDifficulty, lessonDescription,
       lessonVideoUrl, lessonMaterialList]);
 

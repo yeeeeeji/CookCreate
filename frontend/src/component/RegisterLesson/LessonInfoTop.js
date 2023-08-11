@@ -6,19 +6,19 @@ import { setLessonTitle, setTitleValid } from "../../store/lesson/lesson";
 function LessonInfoTop() {
   const dispatch = useDispatch();
   const [lessonTitle, sLessonTitle] = useState("");
-  const reduxLessonTitle = useSelector((state) => state.lesson.lessonTitle)
   const titleValid = useSelector((state) => state.lesson.titleValid)
+  const reduxLessonTitle = useSelector((state) => state.lesson.lessonTitle)
+  const titleChange = (e) => {
+    const titleValue = e.target.value;
+    dispatch(setLessonTitle(titleValue));
+    sLessonTitle(titleValue);
+  };
 
   useEffect(() => {
     sLessonTitle(reduxLessonTitle)
-  }, [lessonTitle])
+    dispatch(setTitleValid(lessonTitle.trim() !== ""));
+  }, [reduxLessonTitle, lessonTitle])
 
-  const titleChange = (e) => {
-    const titleValue = e.target.value;
-    sLessonTitle(titleValue);
-    dispatch(setLessonTitle(titleValue));
-    dispatch(setTitleValid(titleValue.trim() !== ""));
-  };
 
   return (
     <div style={{display : 'flex', alignItems : 'center'}}>
