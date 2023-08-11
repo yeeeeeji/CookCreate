@@ -18,6 +18,7 @@ export default class UserVideoComponent extends Component {
                         <OpenViduVideoComponent
                             videoStyle={this.props.videoStyle}
                             streamManager={this.props.streamManager}
+                            gesture={this.props.gesture}
                         />
                         <div>
                             <p>{this.getNicknameTag()}</p>

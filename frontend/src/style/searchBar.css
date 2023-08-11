@@ -32,13 +32,19 @@
     color: #656363;
 }
 
-@media screen and (max-width: 1339px) {
+@media screen and (max-width: 1350px) {
     .searchBar {
       padding: 0.6rem 5rem 0.6rem 0.7rem; /* 화면 크기가 768px 미만일 때 padding 값을 조정 */
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1125px) {
+    .searchBar {
+      padding: 0.6rem 0.8rem 0.6rem 0.7rem; /* 화면 크기가 768px 미만일 때 padding 값을 조정 */
+    }
+}
+
+@media screen and (max-width: 1035px) {
     .mainSearchContainer {
       display: none;
     }
