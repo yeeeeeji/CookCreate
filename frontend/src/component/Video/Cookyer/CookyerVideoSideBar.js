@@ -131,10 +131,12 @@ function CookyerVideoSideBar({ size, setMeWidget, setTimerWidget }) {
 
   const handleSetMeWidget = () => {
     setMeWidget((prev) => !prev)
+    setTimerWidget(false)
   }
 
   const handleSetTimerWidget = () => {
     setTimerWidget((prev) => !prev)
+    setMeWidget(false)
   }
 
   return (

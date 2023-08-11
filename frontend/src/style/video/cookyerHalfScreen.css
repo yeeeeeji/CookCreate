@@ -177,8 +177,8 @@
 /* 반쪽화면 쿠커 타이머 */
 .half-timer-widget {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 310px;
+  right: -84px;
   transform: translate(-50%, -50%);
   height: 120px;
   width: 332px;
@@ -204,6 +204,8 @@ input[type="number"]::-webkit-inner-spin-button {
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: 0;
+  animation: widgetFadeInAnimation 0.5s ease forwards;
 }
 
 .half-video-timer-title {
@@ -254,12 +256,14 @@ input[type="number"]::-webkit-inner-spin-button {
 /* 본인 화면 모달 */
 .half-me-widget {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 256px;
+  right: 80px;
   transform: translate(-50%, -50%);
   width: 141px;
   height: 92px;
   z-index: 2;
+  opacity: 0;
+  animation: widgetFadeInAnimation 0.5s ease forwards;
 }
 
 .half-cookyer-video {
@@ -284,4 +288,15 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .stream-component {
   position: relative;
+}
+
+@keyframes widgetFadeInAnimation {
+  0% {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
