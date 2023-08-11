@@ -13,17 +13,23 @@
     border-radius: 5px;
 }
 
+.lessonItemTitle{
+    text-align: start;
+}
+
 .datename{
     margin-bottom: 20px;
 }
 
-.categoryBadge{
-    display: flex;
-    width: 71px;
-    height: 35px;
+.badgeContainer {
+    display: flex; /* 내부 요소를 가로 방향으로 정렬 */
+    margin-top: 10px; /* 배지와 다른 요소 사이에 약간의 간격 추가 */
+}
+
+.categoryBadge, .difficultyBadge {
+    display: inline-block; /* Display badges in a single row */
+    margin-right: 10px; /* Add some space between badges */
     padding: 6px 10px;
-    justify-content: center;
-    align-items: center;
     border-style: none;
     border-radius: 5px;
     background: #F4F4F4;

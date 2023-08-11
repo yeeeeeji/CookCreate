@@ -408,15 +408,15 @@ public class LessonServiceImpl implements LessonService {
         // 뱃지 불러오기
         List<Badge> badgeList = badgeRepository.findAllByMember_UserId(cookyerId);
         if(badgeList.size() == 0){ // 신청한 뱃지가 있는지 확인
-            return new ResponseDto(HttpStatus.NOT_FOUND, "신청한 뱃지가 없습니다.");
+            return new ResponseDto(HttpStatus.OK, "X");
         }
         for(Badge badge : badgeList){ // 인증된 뱃지가 있는지 확인
             if(badge.getCertificated().equals(Certificated.ACCESS)){
-                return new ResponseDto(HttpStatus.OK, "뱃지 인증을 완료했습니다.");
+                return new ResponseDto(HttpStatus.OK, "O");
             }
         }
 
-        return new ResponseDto(HttpStatus.CONFLICT, "획득한 뱃지가 없습니다.");
+        return new ResponseDto(HttpStatus.OK, "X");
     }
 
     @Override

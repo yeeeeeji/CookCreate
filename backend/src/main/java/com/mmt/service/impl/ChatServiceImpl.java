@@ -84,10 +84,15 @@ public class ChatServiceImpl implements ChatService {
 
         List<Chat> messageList = lessonRepository.findByLessonId(lessonId).get().getChatList();
 
+        if(messageList.isEmpty()) {
+            result.add(new ChatRes(HttpStatus.OK, "채팅 내용이 없습니다."));
+            return result;
+        }
+
         for(Chat chat : messageList) {
             ChatRes chatRes = new ChatRes(chat);
             chatRes.setStatusCode(HttpStatus.OK);
-            chatRes.setMessage("sucess");
+            chatRes.setMessage("success");
 
             result.add(chatRes);
         }
@@ -106,7 +111,9 @@ public class ChatServiceImpl implements ChatService {
 
             Optional<Chat> chatRoom = chatRepository.findFirst1ByLesson_LessonIdOrderByCreatedDateDesc(lesson.getLessonId());
             if(!chatRoom.isPresent()) {
-                result.add(new ChatRoomRes(HttpStatus.OK, "해당 채팅방에 채팅 내역이 없습니다."));
+                chatRoomRes.setStatusCode(HttpStatus.OK);
+                chatRoomRes.setMessage("해당 채팅방에 채팅 내역이 없습니다.");
+                result.add(chatRoomRes);
                 continue;
             }
 
