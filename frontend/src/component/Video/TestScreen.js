@@ -1,10 +1,14 @@
 import React, { useEffect, useRef } from "react";
+import { useDispatch } from 'react-redux';
 import HandLandMarker from "./../../component/Gesture/HandLandMarker"; // 수정하기
 import { DrawingUtils, HandLandmarker as abc } from "@mediapipe/tasks-vision";
+import { startTimer, raiseHand, checkUp } from "./../../store/video/gestureTest";
 
-const App = () => {
+const TestScreen = () => {
+  const dispatch = useDispatch();
+
   const canvasRef = useRef(null);
-  const contextRef = useRef(null);
+  // const contextRef = useRef(null);
   const inputVideoRef = useRef(null);
 
   // 탐지를 1번만 했을 때 함수 호출 시 너무 민감하게 작동하므로 count를 n 이상 했을때만 함수 호출
@@ -21,14 +25,14 @@ const App = () => {
     const videoRef = inputVideoRef.current;
     let gesture = "";
 
-    if (canvas) {
-      contextRef.current = canvas.getContext("2d");
-    }
+    // if (canvas) {
+    //   contextRef.current = canvas.getContext("2d");
+    // }
 
-    if (contextRef.current && canvas && videoRef) {
+    if ( canvas && videoRef ) {
       createHandLandmarker().then((handLandmarker) => {
         // console.log(handLandmarker);
-        const drawingUtils = new DrawingUtils(contextRef.current);
+        // const drawingUtils = new DrawingUtils(contextRef.current);
         let lastVideoTime = -1;
         let results = undefined;
 
@@ -48,26 +52,26 @@ const App = () => {
             gesture = recognizedGesture ? recognizedGesture : "";
           }
 
-          contextRef.current.save();
-          contextRef.current.clearRect(0, 0, canvas.width, canvas.height);
-          if (results.landmarks) {
-            for (const landmarks of results.landmarks) {
-              drawingUtils.drawConnectors(landmarks, abc.HAND_CONNECTIONS, {
-                color: "#FFF000",
-                lineWidth: 5,
-              });
+          // contextRef.current.save();
+          // contextRef.current.clearRect(0, 0, canvas.width, canvas.height);
+          // if (results.landmarks) {
+          //   for (const landmarks of results.landmarks) {
+          //     drawingUtils.drawConnectors(landmarks, abc.HAND_CONNECTIONS, {
+          //       color: "#FFF000",
+          //       lineWidth: 5,
+          //     });
 
-              drawingUtils.drawLandmarks(landmarks, {
-                color: "#00FF00",
-                lineWidth: 5,
-              });
-            }
-          }
+          //     drawingUtils.drawLandmarks(landmarks, {
+          //       color: "#00FF00",
+          //       lineWidth: 5,
+          //     });
+          //   }
+          // }
           // Display recognized gesture
-          contextRef.current.font = "50px Arial";
-          contextRef.current.fillStyle = "#00FF00";
-          contextRef.current.fillText(`${gesture}`, 10, 30);
-          contextRef.current.restore();
+          // contextRef.current.font = "50px Arial";
+          // contextRef.current.fillStyle = "#00FF00";
+          // contextRef.current.fillText(`${gesture}`, 10, 30);
+          // contextRef.current.restore();
 
           window.requestAnimationFrame(predict);
         }
@@ -104,14 +108,14 @@ const App = () => {
           isThumbIndexTouched = dist(landmarks[4].x, landmarks[4].y, landmarks[8].x, landmarks[8].y) < dist(landmarks[4].x, landmarks[4].y, landmarks[3].x, landmarks[3].y);
 
 					if (open[0] === true && open[1] === true && open[2] === false && open[3] === false && open[4] === false) {
-						ans = 0;
+						dispatch(checkUp());
 					}
 
 					if (isThumbIndexTouched === true && open[2] === true && open[3] === true && open[4] === true) {
-						ans = 1;
+						dispatch(startTimer());
 					}
 					else if (open[0] === true && open[1] === true && open[2] === true && open[3] === true && open[4] === true) {
-						ans = 2;
+						dispatch(raiseHand());
 					}
         } 
       }
@@ -129,16 +133,15 @@ const App = () => {
           playsInline
           ref={inputVideoRef}
         ></video>
-<canvas
+          <canvas
           ref={canvasRef}
-          id="output_canvas"
-          style={{ position: "absolute", left: "0px", top: "0px" }}
+          style={{display:"none"}}
         ></canvas>
       </div>
     </>
   );
 };
 
-export default App;
+export default TestScreen;
 
 // 이제 여기에 

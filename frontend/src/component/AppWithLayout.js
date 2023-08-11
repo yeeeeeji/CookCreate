@@ -31,6 +31,7 @@ import PaymentFailed from '../pages/paymentFailed';
 import PaymentSuccess from '../pages/paymentSuccess';
 import PaymentCancelld from '../pages/paymentCancelld';
 import EditLesson from '../pages/editLesson';
+import GestureTest from '../pages/video/gestureTest';
 
 import ChatList from '../pages/chatList';
 import ChatRoom from '../pages/chatRoom';
@@ -96,6 +97,7 @@ function AppWithLayout({ match }) {
         <Route path="/payrollT" element={<PayrollT />}/>
         <Route path="/reviewT" element={<ReviewT />}/>
         <Route path="/certificationT" element={<CertifyT />}/>
+        <Route path="/gestureTest" element={<GestureTest />}/>
       </Routes>
       <Footer />
     </div>
