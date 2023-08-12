@@ -4,7 +4,8 @@ import axios from "axios";
 
 const Wrapper = styled.header`
   width: 100%;
-  background-color: #ff8a00;
+  // background-color: #ff8a00;
+  background-color: #ff9416;
   height: 70px;
   position: relative;
   display: flex;
@@ -14,6 +15,7 @@ const Wrapper = styled.header`
   flex-direction: row-reverse;
 
   & span {
+    color:wheat;
     font-weight: bold;
     font-size: 20px;
     margin-right: 50px;
@@ -23,11 +25,14 @@ const Wrapper = styled.header`
 
   & button {
     font-size: 20px;
-    background-color: #a9bdce;
+    // background-color: #a9bdce;
+    background-color: #FF7A42;
     outline: none;
     cursor: pointer;
+    border-radius: 4px;
+    color: white;
     &:hover {
-      color: #dcdcdc;
+      background-color: ##ff7700;
     }
   }
 `;
@@ -96,9 +101,9 @@ const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
       alert("채팅방나가기 성공")
   };
 
-  const onBefore = () => {
-    window.location.href = '/';
-  };
+  // const onBefore = () => {
+  //   window.location.href = '/';
+  // };
 
   return (
     <Wrapper>
@@ -114,10 +119,10 @@ const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
         <i className="fas fa-arrow-left" />
       </button>
     ) : null}
-    <button type="button" onClick={onBefore}>
+    {/* <button type="button" onClick={onBefore}>
       <p>HOME</p>
       <i className="fas fa-arrow-left" />
-    </button>
+    </button> */}
     <span>{chatTitle}</span>
     </Wrapper>
   );

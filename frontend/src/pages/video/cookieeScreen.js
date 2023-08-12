@@ -13,7 +13,6 @@ import { initCookieeVideo, resetCheck, resetHandsUp } from '../../store/video/co
 import { setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
 import '../../style/video.css'
 import '../../style/video/cookieeScreen.css'
-// import '../../style/canvas.css'
 import { initScreenShare } from '../../store/video/screenShare';
 import LessonReviewModal from '../../component/Video/Cookiee/LessonReviewModal';
 

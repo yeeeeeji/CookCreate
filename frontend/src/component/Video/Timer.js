@@ -1,10 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { trigTimer } from './../../store/video/timer';
+import { startTimer } from './../../store/video/gestureTest';
 
 
-function Timer({ role, size }) {
+function Timer({ role, size, isGestureTest }) {
+  const dispatch = useDispatch()
   const publisher = useSelector((state) => state.video.publisher)
   const timerCheck = useSelector((state) => state.timer.timerCheck)
+  const timerTest = useSelector((state) => state.gestureTest.timerTest)
+  console.log(`timerTest 초기에 불러와지나? ${timerTest}`)
 
   const [ curMinutes, setCurMinutes ] = useState(0)
   const [ curSeconds, setCurSeconds ] = useState(0)
@@ -51,6 +56,7 @@ function Timer({ role, size }) {
     if (intervalRef.current !== null) {
       return
     }
+    dispatch(startTimer());
     intervalRef.current = setInterval(() => {
       setTotalSeconds((c) => {
         if (c > 0) {
@@ -83,6 +89,32 @@ function Timer({ role, size }) {
     setTotalSeconds(0)
     stop()
   }, [])
+
+  const testerReset = useCallback(() => { // 제스처 테스트용 함수 (화면 처음 불러오거나 Rest 버튼 누르면 1분00초로 세팅)
+    if (isGestureTest === true)
+    setTotalSeconds(60)
+    stop()
+  }, [])
+
+  function testTurnOn() {
+    dispatch(startTimer());
+  }
+
+  useEffect(() => {
+    if (isGestureTest === true) {
+      testerReset();
+      testTurnOn();
+    }
+
+  }, [isGestureTest])
+
+  useEffect(() => {
+    if (isGestureTest === true && timerTest === false) {
+      testerReset();
+    }
+    console.log(`timerTest 값 바뀜1: ${timerTest}`)
+    console.log(`timerTest 값 바뀜2: ${timerTest}`)
+  }, [timerTest])
 
   useEffect(timer, [totalSeconds])
 
