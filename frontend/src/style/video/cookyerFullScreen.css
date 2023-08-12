@@ -65,90 +65,76 @@
   position: relative;
 }
 
-.cookyer-cookiee-audio-icon-active {
-  font-size: 35px;
+.cookyer-cookiee-audio-icon-active,
+.cookyer-cookiee-audio-icon,
+.cookyer-check-icon-active,
+.cookyer-check-icon,
+.cookyer-handsup-icon,
+.cookyer-handsup-icon-active-0,
+.cookyer-handsup-icon-active-1,
+.cookyer-handsup-icon-active-2,
+.cookyer-handsup-icon-active-3,
+.cookyer-handsup-icon-active-4,
+.cookyer-handsup-icon-active-5 {
+  font-size: 25px;
   position: absolute;
-  top: 210px;
-  right: 125px;
+  bottom: 25px;
 }
 
+.cookyer-cookiee-audio-icon-active,
 .cookyer-cookiee-audio-icon {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 125px;
+  right: 90px;
+}
+
+.cookyer-check-icon-active,
+.cookyer-check-icon {
+  right: 55px;
 }
 
 .cookyer-check-icon-active {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 80px;
   color: rgb(33, 172, 33);
 }
 
 .cookyer-check-icon {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 80px;
+  color: rgb(114, 114, 114);
+}
+
+.cookyer-handsup-icon,
+.cookyer-handsup-icon-active-0,
+.cookyer-handsup-icon-active-1,
+.cookyer-handsup-icon-active-2,
+.cookyer-handsup-icon-active-3,
+.cookyer-handsup-icon-active-4,
+.cookyer-handsup-icon-active-5 {
+  right: 25px;
+}
+
+.cookyer-handsup-icon {
   color: rgb(114, 114, 114);
 }
 
 .cookyer-handsup-icon-active-0 {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
   color: rgb(255, 0, 0);
 }
 
 .cookyer-handsup-icon-active-1 {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
   color: rgb(255, 106, 42);
 }
 
 .cookyer-handsup-icon-active-2 {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
   color: rgb(255, 200, 0);
 }
 
 .cookyer-handsup-icon-active-3 {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
   color: rgb(27, 196, 12);
 }
 
 .cookyer-handsup-icon-active-4 {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
   color: rgb(0, 94, 255);
 }
 
 .cookyer-handsup-icon-active-5 {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
   color: rgb(89, 0, 134);
-}
-
-.cookyer-handsup-icon {
-  font-size: 35px;
-  position: absolute;
-  top: 210px;
-  right: 35px;
-  color: rgb(114, 114, 114);
 }
 
 .cookyer-lesson-step-modal {
@@ -185,7 +171,7 @@
   left: 20px;
 }
 
-.full-video-timer-content {
+.full-video-timer-content-cookyer {
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -308,6 +294,11 @@
   height: 25px;
   margin-left: 10px;
   font-size: 13px;
+}
+
+.full-video-step-content button:hover {
+  border: 1px solid rgb(255, 123, 0);
+  color: rgb(255, 123, 0);
 }
 
 .full-video-step-p {

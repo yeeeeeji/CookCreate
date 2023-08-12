@@ -73,6 +73,34 @@
   object-fit: cover;
 }
 
+.half-cookyer-cookiee-audio-icon-active,
+.half-cookyer-cookiee-audio-icon,
+.half-cookyer-check-icon-active,
+.half-cookyer-check-icon,
+.half-cookyer-handsup-icon-active,
+.half-cookyer-handsup-icon {
+  font-size: 20px;
+  position: absolute;
+}
+
+.half-cookyer-cookiee-audio-icon-active,
+.half-cookyer-cookiee-audio-icon {
+  bottom: 15px;
+  right: 65px;
+}
+
+.half-cookyer-check-icon-active,
+.half-cookyer-check-icon {
+  bottom: 15px;
+  right: 40px;
+}
+
+.half-cookyer-handsup-icon-active,
+.half-cookyer-handsup-icon {
+  bottom: 15px;
+  right: 15px;
+}
+
 /* 반쪽화면 쿠커 진행단계 */
 .half-video-step-widget-cookyer-container {
   width: 100%;
