@@ -42,8 +42,8 @@ const Wrapper = styled.footer`
     }
     
     & button {
-      width: 50px;
-      height: 40px;
+      width: 52px;
+      height: 47.5px;
       // background: #ff8a00;
       
       &.canSubmit {

@@ -30,6 +30,7 @@ const Wrapper = styled.header`
     outline: none;
     cursor: pointer;
     border-radius: 3px;
+    border: none;
     color: wheat;
     &:hover {
       background-color: #FF7A42;

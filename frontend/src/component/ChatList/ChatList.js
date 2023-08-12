@@ -25,11 +25,11 @@ const ChatList = (props) => {
       });
   }, []);
 
-  const formatTime = (dateTimeString) => {
-    const dateObject = new Date(dateTimeString);
-    const formattedTime = dateObject.toISOString().slice(0, 16);
-    return formattedTime;
-  };
+  // const formatTime = (dateTimeString) => {
+  //   const dateObject = new Date(dateTimeString);
+  //   const formattedTime = dateObject.toISOString().slice(0, 16);
+  //   return formattedTime;
+  // };
 
   const handleChatRoom = ({ chatTitle, lessonId, chatOver }) => {
     console.log(chatTitle, lessonId, chatOver);
@@ -46,11 +46,18 @@ const ChatList = (props) => {
               <>
                 <div onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.lessonTitle, chatOver: chatRoom.chatRoomOver })}>
                   {/* <Link to={`/chatroom`}> */}
-                  <strong>{chatRoom.lessonTitle}</strong>
-                  {/* <p>마지막 메세지:{chatRoom.leastContent}</p> */}
-                  <p>마지막 메세지: {chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 7) + ".." : chatRoom.leastContent}</p>
-                  {/* <span>시간: {chatRoom.lestCreateTime}</span> */}
-                  <span>{formatTime(chatRoom.lestCreateTime)}</span>
+                  {chatRoom.lessonTitle ? (
+                    <strong>{chatRoom.lessonTitle}</strong>
+                  ) : (
+                    <p>참여중인 채팅방이 없습니다.</p>
+                  )}
+                  {chatRoom.leastContent && (
+                    <div>
+                      <p>{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 7) + ".." : chatRoom.leastContent}</p>
+                      {/* <span>{formatTime(chatRoom.lestCreateTime)}</span> */}
+                      <span style={{ fontSize: '10px' }}  >{new Date(chatRoom.lestCreateTime).toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', minute: '2-digit' })}</span>  
+                    </div>
+                    )}
                 </div>
               </>
             )}
@@ -60,9 +67,11 @@ const ChatList = (props) => {
                 <div onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.leastContent, chatOver: chatRoom.chatRoomOver })}>
                   {/* <Link to={`/chatroom`}> */}
                   <strong>{chatRoom.lessonTitle}</strong>
+                  {/* <h2>{chatRoom.lessonTitle}</h2> */}
                   {/* <p>마지막 메세지: {chatRoom.leastContent}</p> */}
-                  <p>마지막 메세지: {chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 7) + ".." : chatRoom.leastContent}</p>
-                  <span>종료 시간: {formatTime(chatRoom.lestCreateTime)}</span>
+                  <p>{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 7) + ".." : chatRoom.leastContent}</p>
+                  {/* <span>종료 시간: {formatTime(chatRoom.lestCreateTime)}</span> */}
+                  <span style={{ fontSize: '10px' }} >{new Date(chatRoom.lestCreateTime).toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', minute: '2-digit' })}</span>  
                 </div>
               </>
             )}
