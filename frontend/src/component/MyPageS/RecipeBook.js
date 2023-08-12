@@ -10,6 +10,7 @@ function RecipeBook() {
   // console.log(accessToken);
   const [ recipeBookData, setRecipeBookData ] = useState(null);
   const [ showRecipe, setShowRecipe ] = useState(false)
+  const [ recipeModalData, setRecipeModalData ] = useState(null)
 
   useEffect(() => {
     axios
@@ -32,7 +33,9 @@ function RecipeBook() {
   }, []);
 
   const handleShowRecipe = ( data ) => {
-    setShowRecipe(data)
+    setShowRecipe(data.showRecipe)
+    setRecipeModalData(data.recipe)
+    
   }
 
   return (
@@ -90,7 +93,7 @@ function RecipeBook() {
                     <div>과외 날짜: {new Date(recipe.lessonDate).toISOString().split("T")[0]}</div>
                   </div>
                   <div>
-                    <button onClick={() => handleShowRecipe(true)}>레시피 보기</button>
+                    <button key={recipe.lessonId} onClick={() => handleShowRecipe({showRecipe: true, recipe: recipe.lessonStepList})}>레시피 보기</button>
                     {/* <div>진행단계</div>
                     <div>{recipe.lessonStepList}</div> */}
                   </div>
@@ -99,7 +102,7 @@ function RecipeBook() {
             </div>
             {showRecipe ? (
               <RecipeBookModal
-                lessonStepList={recipe.lessonStepList}
+                lessonStepList={recipeModalData}
                 handleShowRecipe={handleShowRecipe}
               />
             ) : null}
