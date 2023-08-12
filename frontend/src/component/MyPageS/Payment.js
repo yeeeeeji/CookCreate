@@ -105,7 +105,24 @@ function Payment() {
                 <div className="pay-label">
                   <div className="pay-state">
                     <div>결제상태</div>
-                    <div>{payment.payStatus}</div>
+                    <div>
+                      {(() => {
+                        switch (payment.payStatus) {
+                          case 'READY':
+                            return '결제 준비중';
+                          case 'FAIL':
+                            return '결제 실패'
+                          case 'CANCEL':
+                            return '결제 취소'
+                          case 'COMPLETED':
+                            return '결제 완료'
+                          case 'REFUND':
+                            return '환불 처리'
+                          default:
+                            return '알 수 없음'
+                        }
+                      })()}
+                    </div>
                   </div>
                 </div>
                 <div className="pay-info">
