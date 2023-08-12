@@ -264,17 +264,7 @@ function ClassList() {
                               </dd>
                             </div>
                             <div className="instructor">쿠커: {lesson.cookyerName}</div>
-                            <div className="date">신청날짜:{new Date(lesson.createdDate).toISOString().split("T")[0]}</div>
-                            {/* <div className="date">신청날짜: {new Date(lesson.createdDate).toISOString().split("T")[0]}</div>                            <div className="price">가격:{lesson.price}</div> */}
-                            <div className="difficulty">난이도:{lesson.difficulty}</div>
                             <div className="view2_summary_info">
-                              <dl className="info_delivery">
-                                <dt>
-                                  <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_clock2.png" alt="시간아이콘" width="29" />
-                                  "소요시간"
-                                </dt>
-                                <dd>{lesson.timeTaken}분</dd>
-                              </dl>
                               <dl className="info_delivery">
                                 <dt>
                                   <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_calendar.png" alt="기간아이콘" width="29" />
@@ -305,13 +295,6 @@ function ClassList() {
                               </div>
                               <p className="card-content__notice"></p>
                               <div className="tags">
-                                {/* <span className="tag" style={{ backgroundColor: "hsl(321,63%,90%)" }}>
-                                  수정시간:{lesson.modifiedDate}
-                                </span> */}
-                                {lesson ? 
-                                <span className="tag" style={{ backgroundColor: "hsl(321,63%,90%)" }}>
-                                  수정시간:{displayTime(lesson.modifiedDate)}
-                                </span>: null}
                                 <button onClick={() => updateClass(lesson.lessonId)}>수정</button>
                                 <button onClick={() => deleteClass(lesson.lessonId)}>삭제</button>
                               </div>
@@ -384,17 +367,7 @@ function ClassList() {
                               </dd>
                             </div>
                             <div className="instructor">쿠커: {lesson.cookyerName}</div>
-                            <div className="date">신청날짜:{new Date(lesson.createdDate).toISOString().split("T")[0]}</div>
-                            <div className="price">가격:{lesson.price}</div>
-                            <div className="difficulty">난이도:{lesson.difficulty}</div>
                             <div className="view2_summary_info">
-                              <dl className="info_delivery">
-                                <dt>
-                                  <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_clock2.png" alt="시간아이콘" width="29" />
-                                  "소요시간"
-                                </dt>
-                                <dd>{lesson.timeTaken}분</dd>
-                              </dl>
                               <dl className="info_delivery">
                                 <dt>
                                   <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_calendar.png" alt="기간아이콘" width="29" />
@@ -408,8 +381,8 @@ function ClassList() {
                               </dl>
                               <div className="info_ea">
                                 <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_people.png" alt="수강아이콘" width="29" style={{ paddingRight: "5px", verticalAlign: "text-bottom" }} />
-                                <b>"{lesson.remaining}"명 남음.</b>
-                                  최대인원:{lesson.maximum}명
+                                <p>수강 인원</p>
+                                <p>{lesson.maximum - lesson.remaining}</p>
                               </div>
                             </div>
                             <div className="rating">
@@ -419,15 +392,6 @@ function ClassList() {
                                 </div>
                               </div>
                               <p className="card-content__notice"></p>
-                              <div className="tags">
-                                {/* <span className="tag" style={{ backgroundColor: "hsl(321,63%,90%)" }}>
-                                  수정시간:{lesson.modifiedDate}
-                                </span> */}
-                                {lesson ? 
-                                <span className="tag" style={{ backgroundColor: "hsl(321,63%,90%)" }}>
-                                  수정시간:{displayTime(lesson.modifiedDate)}
-                                </span>: null}
-                              </div>
                             </div>
                           </div>
                         </div>

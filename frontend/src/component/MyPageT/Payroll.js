@@ -98,15 +98,15 @@ function Payroll() {
                     <dt>결제 수단</dt>
                     <dd>{pay.cardInfo}</dd>
                     <dt>결제 승인 완료 시간</dt>
-                    <dd>{pay.approvedAt}</dd>
+                    <dd>{new Date(pay.approvedAt).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</dd>
                   </dl>
                   <dl className="info_price">
                     <dt>결제 금액</dt>
                     <dd>
                       {pay.totalAmount} 원
-                      <button type="button" className="payback">
+                      {/* <button type="button" className="payback">
                         환불 신청
-                      </button>
+                      </button> */}
                     </dd>
                   </dl>
                 </div>
