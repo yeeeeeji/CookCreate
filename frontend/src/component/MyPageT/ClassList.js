@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React,{useEffect, useState} from 'react';
 import SideBar from "./SideBar";
 import { useDispatch, useSelector} from "react-redux";
 import axios from 'axios';
@@ -6,6 +6,7 @@ import { initOVSession, setIsSessionOpened, setSessionId, setVideoLessonId } fro
 import { OpenVidu } from 'openvidu-browser';
 import { useNavigate } from 'react-router-dom';
 import { setClassData, setCompletedData } from '../../store/mypageS/accountS';
+import { setLessonId } from '../../store/lesson/lessonInfo';
 
 //시간 포맷
 const displayTime = (dateTime) => {
@@ -46,6 +47,10 @@ function ClassList() {
 
   /** 1시간 전부터 과외방 생성 가능 */ // 일단 새고해야 알 수 있는걸로..
   const currentDate = new Date()
+
+  /** 이동할 과외 아이디 */
+  const [ goLessonDetail, setGoLessonDetail ] = useState(false)
+  const lessonId = useSelector((state) => state.lessonInfo.lessonId)
 
   useEffect(() => {
     axios
@@ -178,6 +183,18 @@ function ClassList() {
     })
   }
 
+  const goLesson = (lessonId) => {
+    setGoLessonDetail(true)
+    dispatch(setLessonId(lessonId))
+    navigate(`/lesson/${lessonId}`)
+  }
+
+  useEffect(() => {
+    if (goLessonDetail && lessonId !== null) {
+      navigate(`/lesson/${lessonId}`)
+    }
+  }, [lessonId])
+
   return (
     <div>
         <SideBar />
@@ -193,7 +210,7 @@ function ClassList() {
               <h2>신청한 과외</h2>
               {classData !== null && classData !== undefined && classData ? (
                 classData.map((lesson)=> (
-                  <div key = {lesson.lessonId} className="columns is-multiline is-mobile courses_card_list_body">
+                  <div key = {lesson.lessonId} className="columns is-multiline is-mobile courses_card_list_body" onClick={() => goLesson(lesson.lessonId)}>
                     <div className="column is-3-fullhd is-3-widescreen is-4-desktop is-4-tablet is-6-mobile ">
                       <div
                         className="card course course_card_item"
@@ -313,7 +330,7 @@ function ClassList() {
               <h2>완료한 과외</h2>
               {completedData !== null && completedData !== undefined && completedData ? (
                 completedData.map((lesson)=> (
-                  <div key = {lesson.lessonId} className="columns is-multiline is-mobile courses_card_list_body">
+                  <div key = {lesson.lessonId} className="columns is-multiline is-mobile courses_card_list_body" onClick={() => goLesson(lesson.lessonId)}>
                     <div className="column is-3-fullhd is-3-widescreen is-4-desktop is-4-tablet is-6-mobile ">
                       <div
                         className="card course course_card_item"

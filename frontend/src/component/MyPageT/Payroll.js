@@ -3,14 +3,22 @@ import React, { useState, useEffect } from "react";
 import SideBar from "./SideBar";
 // import { useSelector} from "react-redux";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { setLessonId } from "../../store/lesson/lessonInfo";
 
 
 function Payroll() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const accessToken = localStorage.getItem('access_token')
   const [pays, setPays] = useState([]);
   const payrollMessage = pays[0]?.lessonId === 0 ? "정산 내역이 없습니다." : "";
 
-
+  /** 이동할 과외 아이디 */
+  const [ goLessonDetail, setGoLessonDetail ] = useState(false)
+  const lessonId = useSelector((state) => state.lessonInfo.lessonId)
 
   useEffect(() => {
     axios
@@ -27,6 +35,18 @@ function Payroll() {
         console.log("정산에러",err);
       });
   }, [accessToken,pays]);
+
+  const goLesson = (lessonId) => {
+    setGoLessonDetail(true)
+    dispatch(setLessonId(lessonId))
+    navigate(`/lesson/${lessonId}`)
+  }
+
+  useEffect(() => {
+    if (goLessonDetail && lessonId !== null) {
+      navigate(`/lesson/${lessonId}`)
+    }
+  }, [lessonId])
 
   return (
     <div className="mypage">
@@ -74,7 +94,7 @@ function Payroll() {
                     {/* <dt>가격</dt>
                     <dd>{payment.totalAmount} 원</dd> */}
                     <dt>과외명</dt>
-                    <dd>{pay.lessonTitle}</dd>
+                    <dd onClick={() => goLesson(pay.lessonId)}>{pay.lessonTitle}</dd>
                     <dt>결제 수단</dt>
                     <dd>{pay.cardInfo}</dd>
                     <dt>결제 승인 완료 시간</dt>
