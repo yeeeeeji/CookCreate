@@ -7,7 +7,7 @@ import RegisterForm from '../component/RegisterLesson/RegisterForm';
 import { useDispatch } from 'react-redux';
 import PreviousLesson  from '../component/RegisterLesson/PreviousLesson'
 import { resetlessonReducer } from '../store/lesson/lesson';
-import AlertModal from '../component/AlertModal';
+import SimpleModal from '../component/AlertModal/SimpleModal';
 
 function RegisterLesson() {
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ function RegisterLesson() {
       <br />
       <RegisterForm setContent={setContent} setShowAlert={setShowAlert} setPath={setPath}/>
       {showAlert ? (
-        <AlertModal content={content} path={path}/>
+        <SimpleModal content={content} path={path}/>
       ) :  null}
     </div>
   );
