@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    timer: false,
+    timerTest: false,
     hand: false,
     check: false
 }
@@ -11,7 +11,7 @@ export const gestureTest = createSlice({
     initialState,
     reducers: {
         startTimer: (state) => {
-            state.timer = true;
+            state.timerTest = true;
         },
         raiseHand: (state) => {
             state.hand = true;

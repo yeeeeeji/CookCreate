@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import HandLandMarker from "./../../component/Gesture/HandLandMarker"; // 수정하기
 import { DrawingUtils, HandLandmarker as abc } from "@mediapipe/tasks-vision";
 import { startTimer, raiseHand, checkUp } from "./../../store/video/gestureTest";
+import { trigTimer } from "./../../store/video/timer";
 
 const TestScreen = () => {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ const TestScreen = () => {
           if (lastVideoTime !== videoRef.currentTime) {
             lastVideoTime = videoRef.currentTime;
             results = handLandmarker.detectForVideo(videoRef, startTimeMs);
-            console.log(results);
+            // console.log(results);
             // Perform gesture recognition
             const recognizedGesture = recognizeGesture(results);
             gesture = recognizedGesture ? recognizedGesture : "";
@@ -112,7 +113,7 @@ const TestScreen = () => {
 					}
 
 					if (isThumbIndexTouched === true && open[2] === true && open[3] === true && open[4] === true) {
-						dispatch(startTimer());
+						dispatch(trigTimer());
 					}
 					else if (open[0] === true && open[1] === true && open[2] === true && open[3] === true && open[4] === true) {
 						dispatch(raiseHand());
