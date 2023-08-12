@@ -7,15 +7,34 @@ import { OpenVidu } from 'openvidu-browser';
 import { useNavigate } from 'react-router-dom';
 import { setClassData, setCompletedData } from '../../store/mypageS/accountS';
 
+//시간 포맷
+const displayTime = (dateTime) => {
+  if (!dateTime) return null;
+
+  const localDate = new Date(dateTime);
+  const options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    // second: '2-digit',
+    timeZone: 'Asia/Seoul', // 시간대를 UTC로 설정 (한국 시간으로 하는게 맞는 거 같다)
+  };
+  return localDate.toLocaleString(undefined, options);
+};
+
+
 function ClassList() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
 
   // const accessToken = useSelector((state) => state.auth.access_token);
   const accessToken = localStorage.getItem('access_token')
 
   const classData = useSelector((state) => state.accountS.classData)
-  const completedData = useSelector((state) => state.accountS.classData)
+  const completedData = useSelector((state) => state.accountS.completedData)
   // const [ classData, setClassData ] = useState([]);
   // const [ completedData, setCompletedData ] = useState([]);
 
@@ -36,9 +55,11 @@ function ClassList() {
         },
       })
       .then((res) => {
-        // setClassData(res.data);
-        dispatch(setClassData(res.data))
-        console.log("신청한 과외", res.data);
+        if (res.data[0].message !== "신청한 과외가 없습니다.") {
+          dispatch(setClassData(res.data))
+        } else {
+          dispatch(setClassData(null))
+        }
       })
       .catch((err) => {
         console.log("신청한 과외 조회 에러", err);
@@ -52,9 +73,11 @@ function ClassList() {
         },
       })
       .then((res) => {
-        // setCompletedData(res.data);
-        dispatch(setCompletedData(res.data))
-        console.log("완료한 과외", res.data);
+        if (res.data[0].message !== "신청한 과외가 없습니다.") {
+          dispatch(setCompletedData(res.data))
+        } else {
+          dispatch(setCompletedData(null))
+        }
       })
       .catch((err) => {
         console.log("완료한 과외 조회 에러", err);
@@ -187,15 +210,14 @@ function ClassList() {
                             <figure className="image is_thumbnail">
                               <img
                                 loading="lazy"
-                                src="https://cdn.inflearn.com/public/courses/324582/course_cover/1ead1042-97cc-41f2-bc73-a6e86ae86a4d/nodeReact.png"
-                                data-src="https://cdn.inflearn.com/public/courses/324582/course_cover/1ead1042-97cc-41f2-bc73-a6e86ae86a4d/nodeReact.png"
+                                src={lesson.thumbnailUrl}
+                                // data-src="https://cdn.inflearn.com/public/courses/324582/course_cover/1ead1042-97cc-41f2-bc73-a6e86ae86a4d/nodeReact.png"
                                 className="swiper-lazy"
                                 alt="course_title.png"
                               />
                               <div className="onload_placeholder"></div>
                               <div className="swiper-lazy-preloader"></div>
                             </figure>
-                            <span className="course_cnt">강의번호:{lesson.lessonId}</span>
                           </div>
                           <div className="card-content">
                             <div className="course_title">강좌명:{lesson.lessonTitle}</div>
@@ -224,11 +246,10 @@ function ClassList() {
                                 })()}
                               </dd>
                             </div>
-                            <div className="instructor">쿠커: {lesson.cookyerName}({lesson.cookyerId})</div>
-                            <div className="date">신청날짜: {lesson.createdDate}</div>
-                            <div className="price">가격:{lesson.price}</div>
+                            <div className="instructor">쿠커: {lesson.cookyerName}</div>
+                            <div className="date">신청날짜:{new Date(lesson.createdDate).toISOString().split("T")[0]}</div>
+                            {/* <div className="date">신청날짜: {new Date(lesson.createdDate).toISOString().split("T")[0]}</div>                            <div className="price">가격:{lesson.price}</div> */}
                             <div className="difficulty">난이도:{lesson.difficulty}</div>
-                            <div className="time">찜:{lesson.jjimCount}</div>
                             <div className="view2_summary_info">
                               <dl className="info_delivery">
                                 <dt>
@@ -242,7 +263,11 @@ function ClassList() {
                                   <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_calendar.png" alt="기간아이콘" width="29" />
                                   "과외 날짜"
                                 </dt>
-                                <dd>{lesson.lessonDate} 예정</dd>
+                                {/* <dd>{lesson.lessonDate} 예정</dd> */}
+                                {lesson ? 
+                                <dd>
+                                  {displayTime(lesson.lessonDate)}
+                                </dd>: null}
                                 {new Date(lesson.lessonDate) <= currentDate.setHours(currentDate.getHours() + 1) ? (
                                   <button onClick={() => createRoom(lesson.lessonId)}>수업시작</button>
                                 ) : (
@@ -263,9 +288,13 @@ function ClassList() {
                               </div>
                               <p className="card-content__notice"></p>
                               <div className="tags">
-                                <span className="tag" style={{ backgroundColor: "hsl(321,63%,90%)" }}>
+                                {/* <span className="tag" style={{ backgroundColor: "hsl(321,63%,90%)" }}>
                                   수정시간:{lesson.modifiedDate}
-                                </span>
+                                </span> */}
+                                {lesson ? 
+                                <span className="tag" style={{ backgroundColor: "hsl(321,63%,90%)" }}>
+                                  수정시간:{displayTime(lesson.modifiedDate)}
+                                </span>: null}
                                 <button onClick={() => updateClass(lesson.lessonId)}>수정</button>
                                 <button onClick={() => deleteClass(lesson.lessonId)}>삭제</button>
                               </div>
@@ -276,7 +305,9 @@ function ClassList() {
                     </div>
                   </div>
                 ))
-              ) : null}
+              ) : (
+                <p>신청한 과외가 없습니다.</p>
+              )}
             </div>
             <div>
               <h2>완료한 과외</h2>
@@ -299,15 +330,14 @@ function ClassList() {
                             <figure className="image is_thumbnail">
                               <img
                                 loading="lazy"
-                                src="https://cdn.inflearn.com/public/courses/324582/course_cover/1ead1042-97cc-41f2-bc73-a6e86ae86a4d/nodeReact.png"
-                                data-src="https://cdn.inflearn.com/public/courses/324582/course_cover/1ead1042-97cc-41f2-bc73-a6e86ae86a4d/nodeReact.png"
+                                src={lesson.thumbnailUrl}
+                                // data-src="https://cdn.inflearn.com/public/courses/324582/course_cover/1ead1042-97cc-41f2-bc73-a6e86ae86a4d/nodeReact.png"
                                 className="swiper-lazy"
                                 alt="course_title.png"
                               />
                               <div className="onload_placeholder"></div>
                               <div className="swiper-lazy-preloader"></div>
                             </figure>
-                            <span className="course_cnt">강의번호:{lesson.lessonId}</span>
                           </div>
                           <div className="card-content">
                             <div className="course_title">강좌명:{lesson.lessonTitle}</div>
@@ -336,11 +366,10 @@ function ClassList() {
                                 })()}
                               </dd>
                             </div>
-                            <div className="instructor">쿠커: {lesson.cookyerName}({lesson.cookyerId})</div>
-                            <div className="date">신청날짜: {lesson.createdDate}</div>
+                            <div className="instructor">쿠커: {lesson.cookyerName}</div>
+                            <div className="date">신청날짜:{new Date(lesson.createdDate).toISOString().split("T")[0]}</div>
                             <div className="price">가격:{lesson.price}</div>
                             <div className="difficulty">난이도:{lesson.difficulty}</div>
-                            <div className="time">찜:{lesson.jjimCount}</div>
                             <div className="view2_summary_info">
                               <dl className="info_delivery">
                                 <dt>
@@ -354,7 +383,11 @@ function ClassList() {
                                   <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_calendar.png" alt="기간아이콘" width="29" />
                                   "과외 날짜"
                                 </dt>
-                                <dd>{lesson.lessonDate} 완료</dd>
+                                {/* <dd>{lesson.lessonDate} 완료</dd> */}
+                                {lesson ? 
+                                <dd>
+                                  {displayTime(lesson.lessonDate)}
+                                </dd>: null}
                               </dl>
                               <div className="info_ea">
                                 <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_people.png" alt="수강아이콘" width="29" style={{ paddingRight: "5px", verticalAlign: "text-bottom" }} />
@@ -370,9 +403,13 @@ function ClassList() {
                               </div>
                               <p className="card-content__notice"></p>
                               <div className="tags">
-                                <span className="tag" style={{ backgroundColor: "hsl(321,63%,90%)" }}>
+                                {/* <span className="tag" style={{ backgroundColor: "hsl(321,63%,90%)" }}>
                                   수정시간:{lesson.modifiedDate}
-                                </span>
+                                </span> */}
+                                {lesson ? 
+                                <span className="tag" style={{ backgroundColor: "hsl(321,63%,90%)" }}>
+                                  수정시간:{displayTime(lesson.modifiedDate)}
+                                </span>: null}
                               </div>
                             </div>
                           </div>
@@ -382,7 +419,9 @@ function ClassList() {
                     </div>
                   </div>
                 ))
-              ) : null}
+              ) : (
+                <p>완료한 과외가 없습니다.</p>
+              )}
             </div>
         </div>
       </div>

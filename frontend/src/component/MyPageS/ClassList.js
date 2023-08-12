@@ -211,7 +211,6 @@ function ClassList() {
                               <div className="onload_placeholder"></div>
                               <div className="swiper-lazy-preloader"></div>
                             </figure>
-                            <span className="course_cnt">강의번호:{lesson.lessonId}</span>
                           </div>
                           <div className="card-content">
                             <div className="course_title">강좌명:{lesson.lessonTitle}</div>
@@ -323,7 +322,6 @@ function ClassList() {
                               <div className="onload_placeholder"></div>
                               <div className="swiper-lazy-preloader"></div>
                             </figure>
-                            <span className="course_cnt">강의번호:{lesson.lessonId}</span>
                           </div>
                           <div className="card-content">
                             <div className="course_title">강좌명:{lesson.lessonTitle}</div>

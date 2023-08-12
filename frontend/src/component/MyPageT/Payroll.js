@@ -48,7 +48,7 @@ function Payroll() {
             <div className="pay_item" key={pay.id}>
               <dl className="pay_list">
                 <div className="pay_label">
-                  <span className="pay_state">결제상태{pay.payStatus}</span>
+                  <span className="pay_state">결제상태[{pay.payStatus}]</span>
                 </div>
                 <strong className="pay_info">결제정보</strong>
                 <div className="class_info">
@@ -56,7 +56,7 @@ function Payroll() {
                     {/* <dt>가격</dt>
                     <dd>{payment.totalAmount} 원</dd> */}
                     <dt>과외명</dt>
-                    <dd>{pay.lessonTitle} 원</dd>
+                    <dd>{pay.lessonTitle}</dd>
                     <dt>결제 수단</dt>
                     <dd>{pay.cardInfo}</dd>
                     <dt>결제 승인 완료 시간</dt>

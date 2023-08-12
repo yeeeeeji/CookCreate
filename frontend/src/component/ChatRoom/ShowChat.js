@@ -109,7 +109,7 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
         )}
       </div>
       {!chatOver && (
-        <div className="InputChatContainer">
+        <div className="InputChatContainer" >
           <InputChat sendMessage={sendMessage} />
         </div>
       )}

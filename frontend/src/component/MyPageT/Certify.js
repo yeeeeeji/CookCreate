@@ -69,9 +69,9 @@ function Certify() {
         console.log("자격증목록", certificates);
       })
       .catch((err) => {
-        console.log("자격증 조회못함");
+        console.log("자격증 조회못함",err);
       });
-  }, [capture,accessToken]);
+  }, [success,accessToken]);
 
 
 
@@ -101,7 +101,7 @@ function Certify() {
           <img src={certificate.capture} alt={`자격증 ID: ${certificate.badgeId}`} style={{ maxWidth: "200px" }} />
           <p>자격증 ID: {certificate.badgeId}</p>
           <p>상태: {certificate.certificated}</p>
-          <p>등록일: {certificate.createdDate}</p>
+          <p>등록일: {new Date(certificate.createdDate).toISOString().split("T")[0]}</p>
           <hr />
         </div>
         ))}
