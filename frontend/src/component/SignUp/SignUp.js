@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-import { login } from '../../store/auth/auth'
 
 import FoodList from './FoodList';
 function Signup() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [userId, setUserId] = useState('')
   const [userPw, setUserPw] = useState('')
   const [userPwCk, setUserPwCk] = useState('')
@@ -162,8 +159,6 @@ function Signup() {
     }
   };
   
-
-
   const handleSignup = (e) => {
     e.preventDefault()
     const foodString = food.join(',');
@@ -189,13 +184,18 @@ function Signup() {
         <div className='signupinputContainer'>
           <div className='signupinputTitle'>아이디 <span className="required">*</span></div>
           <div className='signupinputWrap'>
-            <input type="text" className='signupinput'
-            value={userId}
-            onChange={
-              onChangeUserId
-            }
-            placeholder='아이디'/>
-            <button className='signupdupliButton' onClick={idDupliCheck}>중복확인</button>
+            <input 
+              type="text"
+              className='signupinput'
+              value={userId}
+              onChange={onChangeUserId}
+              placeholder='아이디'
+            />
+            <button className='signupdupliButton' onClick={idDupliCheck}>
+              중복확인
+            </button>
+            {isUserId && isIdDupli ? '✅' : '🔲'}
+
           </div>
         </div>
         <div className='signupinputMessage'>
@@ -217,6 +217,7 @@ function Signup() {
         </div>
         <div className='signupinputMessage'>
           {userPwMessage}
+          {isUserPw ? '✅' : '🔲'}
         </div>
 
         <div className='signupinputContainer'>
@@ -233,6 +234,7 @@ function Signup() {
         </div>
         <div className='signupinputMessage'>
           {userPwCkMessage}
+          {isUserPwCk ? '✅' : '🔲'}
         </div>
         
         <div className='signupinputContainer'>
@@ -250,6 +252,7 @@ function Signup() {
         <div className='signupinputMessage'>
           {userNicknameMessage}
           {userNNDupMessage}
+          {isNickname && isNicknameDupli ? '✅' : '🔲'}
         </div>
 
         <div className='signupinputContainer'>
