@@ -410,6 +410,7 @@ function CookyerScreen() {
           checkCookieeList={checkCookieeList}
           handsUpCookieeList={handsUpCookieeList}
           isSessionOpened={isSessionOpened}
+          shareScreenPublisher={shareScreenPublisher}
           handleModalClick={handleModalClick}
           handleMainVideoStream={handleMainVideoStream}
           handleACookieeAudio={handleACookieeAudio}

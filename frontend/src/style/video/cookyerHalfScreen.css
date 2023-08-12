@@ -5,7 +5,7 @@
 
 .half-video-header {
   color: white;
-  padding: 20px;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
 }
@@ -39,7 +39,7 @@
   width: 508px;
   height: 281px;
   padding: 5px;
-  margin: auto;
+  margin: 10px auto;
 } 
 
 .half-cookyer-sharing-content {
@@ -256,7 +256,7 @@ input[type="number"]::-webkit-inner-spin-button {
 /* 본인 화면 모달 */
 .half-me-widget {
   position: fixed;
-  top: 256px;
+  top: 212px;
   right: 80px;
   transform: translate(-50%, -50%);
   width: 141px;
@@ -267,7 +267,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .half-cookyer-video {
-  background-color: var(--empty-color);
+  /* background-color: var(--empty-color); */
   border-radius: 5px;
   height: 92px;
   object-fit: cover;

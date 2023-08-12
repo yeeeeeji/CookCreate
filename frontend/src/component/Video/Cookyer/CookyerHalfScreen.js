@@ -21,6 +21,7 @@ function CookyerHalfScreen(props) {
   const checkCookieeList = props.checkCookieeList
   const handsUpCookieeList = props.handsUpCookieeList
   const isSessionOpened = props.isSessionOpened
+  const shareScreenPublisher = props.shareScreenPublisher
 
   const handleModalClick = props.handleModalClick
   const handleMainVideoStream = props.handleMainVideoStream
@@ -46,7 +47,9 @@ function CookyerHalfScreen(props) {
       <CookyerVideoSideBar size={'half'} setMeWidget={setMeWidget} setTimerWidget={setTimerWidget}/>
       
       <div className="half-video-page-main">
-        <VideoHeader size={'half'}/>
+        {shareScreenPublisher === null ? (
+          <VideoHeader size={'half'}/>
+        ) : null}
 
         <div className='half-cookyer-container'>
           <div className='half-cookyer-sharing'>

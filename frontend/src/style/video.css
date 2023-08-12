@@ -238,12 +238,25 @@ p {
 
 .video-side-icon {
   font-size: 30px;
+  transition: all 0.2s linear;
+}
+
+.video-side-icon:hover {
+  transform: scale(1.1);
 }
 
 .video-exit-icon {
   /* font-size: 40px; */
   color: rgb(223, 0, 0);
   /* margin: auto; */
+}
+
+.video-side-icon-wrap div {
+  display: none;
+}
+
+.video-side-icon:hover + .video-side-icon-p {
+  display: block;
 }
 
 /* 쿠커 타이머 */
