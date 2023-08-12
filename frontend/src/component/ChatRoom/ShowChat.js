@@ -25,7 +25,8 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
 
   const connect = () => {
     client.current = new StompJs.Client({
-      brokerURL: `ws://localhost:8080/api/v1/message`,
+      brokerURL: `wss://i9c111.p.ssafy.io/api/v1/message`,
+      // brokerURL: `ws://localhost:8080/api/v1/message`,
       onConnect: () => {
         console.log("웹소켓 연결");
   

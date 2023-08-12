@@ -24,15 +24,15 @@ const Wrapper = styled.header`
   }
 
   & button {
-    font-size: 20px;
-    // background-color: #a9bdce;
-    background-color: #FF7A42;
+    font-size: 15px;
+    background-color: #ff9416;
+    // background-color: #FF7A42;
     outline: none;
     cursor: pointer;
-    border-radius: 4px;
-    color: white;
+    border-radius: 3px;
+    color: wheat;
     &:hover {
-      background-color: ##ff7700;
+      background-color: #FF7A42;
     }
   }
 `;

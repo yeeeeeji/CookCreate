@@ -28,18 +28,24 @@ function EditLessonTime() {
     return `${ampm} ${displayHours}:${displayMinutes}`;
   };
 
-  const formattedDate = new Date(lessonDate).toISOString().substr(0, 10);
-  const formattedTime = formatAMPM(new Date(lessonDate));
+  const options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  };
+  const formattedDate = new Intl.DateTimeFormat('ko-KR', options).format(new Date(lessonDate));
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h3>강의 일시</h3>
-          <h5>강의 일시는 수정할 수 없습니다.</h5>
+          <h3>과외 일시</h3>
+          <h5>과외 일시는 수정할 수 없습니다.</h5>
           <div style={{ marginLeft: '5px' }}>{dateValid ? '✅' : '🔲'}</div>
         </div>
-        {formattedDate} {formattedTime}
+        <p>{formattedDate}</p>
       </div>
       <div>
         <div style={{ display: 'flex', alignItems: 'center' }}>

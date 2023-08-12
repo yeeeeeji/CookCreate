@@ -1,19 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import SearchResModal from "./SearchResModal";
 import "../../style/searchBar.css";
 import { setLessonId } from "../../store/lesson/lessonInfo";
-import { useNavigate, useLocation } from "react-router-dom";
-import { setCategories, setDeadLine, setOrder, setType } from "../../store/lesson/lessonSearch";
+import { useNavigate } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
 
 function SearchBar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const lessonId = useSelector((state) => state.lessonSearch.lessonId);
   const [keyword, setKeyword] = useState("");
   const [isexist, setIsExist] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -60,12 +56,7 @@ function SearchBar() {
     dispatch(setLessonId(lessonId));
     setIsOpen(false);
     navigate(`lesson/${lessonId}`);
-
-    dispatch(setCategories([]));
-    dispatch(setType("all"));
-    dispatch(setKeyword(""));
-    dispatch(setOrder("title"));
-    dispatch(setDeadLine(true));
+    setKeyword('')
   };
 
   return (
