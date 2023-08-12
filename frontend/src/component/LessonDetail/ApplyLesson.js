@@ -25,15 +25,15 @@ function ApplyLesson() {
   useEffect(() => {
     if (remaining === 0) {
       setDisable(true);
-      setDisableMsg('최대 인원을 채운 강의입니다.');
+      setDisableMsg('최대 인원을 채운 과외입니다.');
     } else if (futureTime > DateTransformType) {
       setDisable(true);
-      setDisableMsg('현재 시간 기준 12시간 이전에 예정된 강의는 수강 신청할 수 없습니다.');
+      setDisableMsg('현재 시간 기준 12시간 이전에 예정된 과외는 수강 신청할 수 없습니다.');
     } else {
-      setDisable(false)
-      setDisableMsg('')
+      setDisable(false);
+      setDisableMsg('');
     }
-  }, [remaining,DateTransformType, futureTime]);
+  }, [remaining, DateTransformType, futureTime]);
 
   const handleApply = () => {
     axios
@@ -89,10 +89,11 @@ function ApplyLesson() {
     }
   }, [popupWindow]);
 
-
   return (
     <div className='applyLessonContainer'>
-      <div className='applyLessonPrice'>{price}원</div>
+      <div className='applyLessonPrice'>
+        {price.toLocaleString()}원
+      </div>
       <div className='applyLessonApplyButtonContainer'>
         {role === 'COOKIEE' && (
           <button
@@ -106,12 +107,13 @@ function ApplyLesson() {
       </div>
       {errMsg && <div className='errMsg'>{errMsg}</div>}
       {disableMsg && <div className='disableMsg'>{disableMsg}</div>}
-      <div className='applyLessonVideoUrl'>
-        <a href={videoUrl}> 수업 맛보기 </a>
-      </div>
+      {videoUrl && (
+        <div className='applyLessonVideoUrl'>
+          <a href={videoUrl}> 수업 맛보기 </a>
+        </div>
+      )}
     </div>
   );
-
 }
 
 export default ApplyLesson;

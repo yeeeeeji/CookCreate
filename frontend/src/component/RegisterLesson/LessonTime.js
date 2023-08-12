@@ -20,11 +20,6 @@ function LessonTime() {
     
     setSelectedDateTime(date);
     dispatch(setDateTime(utcDateTime)); // 변환된 값을 Redux에 저장
-    
-    const currentDate = new Date();
-    const futureTime = new Date(currentDate.getTime() + 12 * 60 * 60 * 1000); // 현재 시간 + 12시간
-    
-    dispatch(setDateValid(selectedDateTime > futureTime)); // dateValid 업데이트 로직...
   };
 
   const handleTakenTime = (e) => {
@@ -37,12 +32,28 @@ function LessonTime() {
     setLessonTakenTime(reduxTimeTaken);
     dispatch(setTimeTakenVaild(lessonTakenTime !== 0))
   }, [reduxTimeTaken, lessonTakenTime]);
+
+  useEffect(() => {
+    if (selectedDateTime) {
+      const currentDate = new Date();
+      const futureTime = new Date(currentDate.getTime() + 12 * 60 * 60 * 1000); // 현재 시간 + 12시간
+      dispatch(setDateValid(selectedDateTime > futureTime));
+    }
+  }, [selectedDateTime]);
+  
+  useEffect(() => {
+    if (selectedDateTime && lessonTakenTime) {
+      dispatch(setTimeTakenVaild(true));
+    } else {
+      dispatch(setTimeTakenVaild(false));
+    }
+  }, [selectedDateTime, lessonTakenTime]);
   
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h3>강의 일시</h3>
+          <h3>과외 일시</h3>
           <div style={{ marginLeft: '5px' }}>{dateValid ? '✅' : '🔲'}</div>
         </div>
         <DatePicker
@@ -51,18 +62,18 @@ function LessonTime() {
           showTimeSelect
           timeFormat="HH:mm"
           timeIntervals={30}
-          dateFormat="yyyy-MM-dd HH:mm"
+          dateFormat="yyyy. MM. dd. HH:mm"
           placeholderText='과외 일시'
         />
-        {selectedDateTime && dateValid === false && <p style={{ color: 'red' }}>
-          현재 시간 기준 12시간 이전 강의는 생성할 수 없습니다!
+        {selectedDateTime && !dateValid && <p style={{ color: 'red' }}>
+          현재 시간 기준 12시간 이전 과외는 생성할 수 없습니다!
           <br/>
           올바른 날짜를 선택해주세요.
         </p>}
       </div>
       <div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h3>강의 시간</h3>
+          <h3>과외 시간</h3>
           <div style={{ marginLeft: '5px' }}>{timeTakenValid ? '✅' : '🔲'}</div>
         </div>
         <select value={lessonTakenTime} onChange={handleTakenTime}>

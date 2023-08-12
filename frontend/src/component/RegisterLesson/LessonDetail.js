@@ -135,7 +135,7 @@ function LessonDetail() {
       {/* 난이도 */}
       <div>
         <div style={{display : 'flex', alignItems : 'center'}}>
-          <h3>강의 난이도</h3>
+          <h3>과외 난이도</h3>
           <div style={{marginLeft : '5px'}}>{difficultyValid ? '✅' : '🔲'}</div>
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>

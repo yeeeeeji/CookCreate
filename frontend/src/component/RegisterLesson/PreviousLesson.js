@@ -48,7 +48,7 @@ function PreviousLesson() {
 
   return (
     <div>
-      <div onClick={handlePreviousLesson}>직전에 예약한 강의 불러오기</div>
+      <div onClick={handlePreviousLesson}>직전에 예약한 과외 불러오기</div>
 
       {showModal && (
         <div className="modal">
