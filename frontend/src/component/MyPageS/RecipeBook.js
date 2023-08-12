@@ -90,7 +90,7 @@ function RecipeBook() {
                   </div>
                   <div>
                     {/* <div>과외 날짜:{recipe.lessonDate}</div> */}
-                    <div>과외 날짜: {new Date(recipe.lessonDate).toISOString().split("T")[0]}</div>
+                    <div>과외 날짜: {new Date(recipe.lessonDate).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
                   </div>
                   <div>
                     <button key={recipe.lessonId} onClick={() => handleShowRecipe({showRecipe: true, recipe: recipe.lessonStepList})}>레시피 보기</button>
