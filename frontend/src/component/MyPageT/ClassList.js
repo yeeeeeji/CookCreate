@@ -7,6 +7,8 @@ import { OpenVidu } from 'openvidu-browser';
 import { useNavigate } from 'react-router-dom';
 import { setClassData, setCompletedData } from '../../store/mypageS/accountS';
 import { setLessonId } from '../../store/lesson/lessonInfo';
+import AlertModal from '../AlertModal';
+
 
 //시간 포맷
 const displayTime = (dateTime) => {
@@ -51,6 +53,15 @@ function ClassList() {
   /** 이동할 과외 아이디 */
   const [ goLessonDetail, setGoLessonDetail ] = useState(false)
   const lessonId = useSelector((state) => state.lessonInfo.lessonId)
+
+  /** 삭제 전 알림 모달 관련 */
+  const [ showAlert, setShowAlert ] = useState(false)
+  const [ action, setAction ] = useState(false)
+  const [ deleteLessonId, setDeleteLessonId ] = useState(null)
+
+  /** 삭제 후 알림 모달 관련 */
+  const [ content, setContent ] = useState(null)
+  const [ showCompletedAlert, setShowCompletedAlert ] = useState(false)
 
   useEffect(() => {
     axios
@@ -173,12 +184,16 @@ function ClassList() {
     )
     .then((res) => {
       console.log('쿠커 과외 삭제 성공', res)
+      setContent("과외가 삭제되었습니다.")
     })
     .catch((err) => {
       console.log('쿠커 과외 삭제 실패', err)
       let error = Object.assign({}, err)
       if (error?.response?.status === 409) {
-        alert('신청한 쿠키가 있어 수업을 삭제할 수 없습니다.')
+        // alert('신청한 쿠키가 있어 수업을 삭제할 수 없습니다.')
+        setContent("신청한 쿠키가 있어 과외를 삭제할 수 없습니다.")
+      } else {
+        setContent("과외를 삭제할 수 없습니다.")
       }
     })
   }
@@ -195,6 +210,32 @@ function ClassList() {
     }
   }, [lessonId])
 
+  useEffect(() => {
+    console.log("여기까지 오니?", action, deleteLessonId)
+    if (action && deleteLessonId) {
+      setShowAlert(false)
+      deleteClass(deleteLessonId)
+      setAction(false)
+    }
+  }, [action, deleteLessonId])
+
+  const handleDeleteClass = (lessonId) => {
+    setShowAlert(true)
+    setDeleteLessonId(lessonId)
+  }
+
+  useEffect(() => {
+    if (content) {
+      setShowCompletedAlert(true)
+    }
+  }, [content])
+
+  useEffect(() => {
+    if (!showCompletedAlert) {
+      setContent(null)
+    }
+  }, [showCompletedAlert])
+
   return (
     <div>
         <SideBar />
@@ -210,7 +251,7 @@ function ClassList() {
               <h2>신청한 과외</h2>
               {classData !== null && classData !== undefined && classData ? (
                 classData.map((lesson)=> (
-                  <div key = {lesson.lessonId} className="columns is-multiline is-mobile courses_card_list_body" onClick={() => goLesson(lesson.lessonId)}>
+                  <div key = {lesson.lessonId} className="columns is-multiline is-mobile courses_card_list_body">
                     <div className="column is-3-fullhd is-3-widescreen is-4-desktop is-4-tablet is-6-mobile ">
                       <div
                         className="card course course_card_item"
@@ -237,7 +278,7 @@ function ClassList() {
                             </figure>
                           </div>
                           <div className="card-content">
-                            <div className="course_title">강좌명:{lesson.lessonTitle}</div>
+                            <div className="course_title" onClick={() => goLesson(lesson.lessonId)}>과외명:{lesson.lessonTitle}</div>
                             <div className="course_title">
                             <dt>카테고리</dt>
                               <dd>
@@ -296,7 +337,14 @@ function ClassList() {
                               <p className="card-content__notice"></p>
                               <div className="tags">
                                 <button onClick={() => updateClass(lesson.lessonId)}>수정</button>
-                                <button onClick={() => deleteClass(lesson.lessonId)}>삭제</button>
+                                <button onClick={() => handleDeleteClass(lesson.lessonId)}>삭제</button>
+                                {/* <button onClick={() => deleteClass(lesson.lessonId)}>삭제</button> */}
+                                {showAlert ? (
+                                  <AlertModal content={'정말로 삭제하시겠습니까?'} path='setTrue' actions={setAction}/>
+                                ) : null}
+                                {showCompletedAlert ? (
+                                  <AlertModal content={content} path='setFalse' actions={setShowCompletedAlert}/>
+                                ) : null}
                               </div>
                             </div>
                           </div>
@@ -313,7 +361,7 @@ function ClassList() {
               <h2>완료한 과외</h2>
               {completedData !== null && completedData !== undefined && completedData ? (
                 completedData.map((lesson)=> (
-                  <div key = {lesson.lessonId} className="columns is-multiline is-mobile courses_card_list_body" onClick={() => goLesson(lesson.lessonId)}>
+                  <div key = {lesson.lessonId} className="columns is-multiline is-mobile courses_card_list_body">
                     <div className="column is-3-fullhd is-3-widescreen is-4-desktop is-4-tablet is-6-mobile ">
                       <div
                         className="card course course_card_item"
@@ -340,7 +388,7 @@ function ClassList() {
                             </figure>
                           </div>
                           <div className="card-content">
-                            <div className="course_title">강좌명:{lesson.lessonTitle}</div>
+                            <div className="course_title" onClick={() => goLesson(lesson.lessonId)}>과외명:{lesson.lessonTitle}</div>
                             <div className="course_title">
                             <dt>카테고리</dt>
                               <dd>
