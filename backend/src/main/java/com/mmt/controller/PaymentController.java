@@ -58,7 +58,7 @@ public class PaymentController {
     @GetMapping("/completed")
     public RedirectView approvePay(String pg_token, int paymentId) {
         MyPaymentRes myPaymentRes = paymentService.approvePay(pg_token, paymentId);
-        String redirectURL = "http://i9c111.p.ssafy.io/payment/fail?paymentId=" + paymentId
+        String redirectURL = "https://i9c111.p.ssafy.io/payment/fail?paymentId=" + paymentId
                 +"&payStatus=" + PayStatus.COMPLETED;
 //        String redirectURL = "http://localhost:3000/payment/success?paymentId=" + paymentId
 //                +"&payStatus=" + PayStatus.COMPLETED;
@@ -69,11 +69,11 @@ public class PaymentController {
     @GetMapping("/fail")
     public RedirectView failPay(int paymentId) {
         paymentService.failPay(paymentId);
-        String redirectURL = "http://i9c111.p.ssafy.io/payment/fail?paymentId=" + paymentId
+        String redirectURL = "https://i9c111.p.ssafy.io/payment/fail?paymentId=" + paymentId
                 +"&payStatus=" + PayStatus.FAIL;
 //        String redirectURL = "http://localhost:3000/payment/fail?paymentId=" + paymentId
 //                +"&payStatus=" + PayStatus.FAIL;
-//        return new RedirectView(redirectURL);
+        return new RedirectView(redirectURL);
     }
 
     @Parameter(hidden = true)
@@ -81,7 +81,7 @@ public class PaymentController {
     public RedirectView cancelPay(int paymentId) {
         // TODO: 취소 처리
         paymentService.cancelPay(paymentId);
-        String redirectURL = "http://i9c111.p.ssafy.io/payment/fail?paymentId=" + paymentId
+        String redirectURL = "https://i9c111.p.ssafy.io/payment/fail?paymentId=" + paymentId
                 +"&payStatus=" + PayStatus.CANCEL;
 //        String redirectURL = "http://localhost:3000/payment/cancel?paymentId=" + paymentId
 //                +"&payStatus=" + PayStatus.CANCEL;
