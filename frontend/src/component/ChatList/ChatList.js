@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+
+
 const ChatList = (props) => {
   console.log("props", props);
   const accessToken = localStorage.getItem("access_token");
@@ -36,8 +38,8 @@ const ChatList = (props) => {
 
   return (
     <div>
-      <h2>참여중인 채팅방</h2>
-      <ul>
+      <h3>참여중인 채팅방</h3>
+      <div>
         {chatlist.map((chatRoom) => (
           <div key={chatRoom.lessonId}>
             {chatRoom.chatRoomOver === false && (
@@ -45,7 +47,8 @@ const ChatList = (props) => {
                 <div onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.lessonTitle, chatOver: chatRoom.chatRoomOver })}>
                   {/* <Link to={`/chatroom`}> */}
                   <strong>{chatRoom.lessonTitle}</strong>
-                  <p>마지막 메세지:{chatRoom.leastContent}</p>
+                  {/* <p>마지막 메세지:{chatRoom.leastContent}</p> */}
+                  <p>마지막 메세지: {chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 7) + ".." : chatRoom.leastContent}</p>
                   {/* <span>시간: {chatRoom.lestCreateTime}</span> */}
                   <span>{formatTime(chatRoom.lestCreateTime)}</span>
                 </div>
@@ -53,18 +56,19 @@ const ChatList = (props) => {
             )}
             {chatRoom.chatRoomOver === true && (
               <>
-                <p>완료된 채팅방</p>
+                <h3>완료된 채팅방</h3>
                 <div onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.leastContent, chatOver: chatRoom.chatRoomOver })}>
                   {/* <Link to={`/chatroom`}> */}
                   <strong>{chatRoom.lessonTitle}</strong>
-                  <p>마지막 메세지: {chatRoom.leastContent}</p>
+                  {/* <p>마지막 메세지: {chatRoom.leastContent}</p> */}
+                  <p>마지막 메세지: {chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 7) + ".." : chatRoom.leastContent}</p>
                   <span>종료 시간: {formatTime(chatRoom.lestCreateTime)}</span>
                 </div>
               </>
             )}
           </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

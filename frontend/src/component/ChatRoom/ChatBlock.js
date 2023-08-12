@@ -42,7 +42,9 @@ const RightBlock = styled.div`
   margin-right: 10px;
 
   & ${ChatWrapper} {
-    background-color: #ffec42;
+    // background-color: #ffec42;
+    background-color: #ffffff;
+
     text-align: left;
     & span {
       position: absolute;
@@ -70,7 +72,9 @@ const LeftBlock = styled.div`
   margin-right: 10px;
   padding-left: 50px;
   & ${ChatWrapper} {
-    background-color: #fff;
+    // background-color: #fff;
+    background-color: #ffe3b0;
+
     & span {
       position: absolute;
       &.time {
@@ -111,10 +115,10 @@ const Chat = ({ message, author}) => {
   );
 };
 
-const SeparationBlock = ({ content }) => {
+const SeparationBlock = ({ EnterNickname }) => {
   return (
     <BorderBlock>
-      <span>{content}</span>
+      <span>{EnterNickname}님이 입장하셨습니다.</span>
     </BorderBlock>
   );
 };
@@ -143,4 +147,4 @@ const FriendChat = ({ author, message }) => {
   );
 };
 
-export { Chat, MyChat, FriendChat };
+export { Chat, MyChat, FriendChat, SeparationBlock };
