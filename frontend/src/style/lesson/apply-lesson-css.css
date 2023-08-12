@@ -34,10 +34,16 @@
     color: #FFFDFD;
     margin-top: 25px;
 }
+.applyLessonApplyButton.disabled {
+    background-color: gray;
+    cursor: not-allowed;
+  }
 .applyLessonApplyButton:hover {
     background-color: #FF6060;
 }
-
+.applyLessonApplyButton:hover.disabled {
+    background-color: gray;
+}
 .applyLessonVideoUrl{
     text-align: center;
     margin-top: 15px;
