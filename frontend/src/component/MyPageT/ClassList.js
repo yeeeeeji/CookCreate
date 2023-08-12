@@ -56,14 +56,14 @@ function ClassList() {
 
   /** 삭제 전 알림 모달 관련 */
   const [ showAlert, setShowAlert ] = useState(false)
-  const [ action, setAction ] = useState(false)
+  const [ deleteAction, setDeleteAction ] = useState(false)
   const [ deleteLessonId, setDeleteLessonId ] = useState(null)
 
   /** 삭제 후 알림 모달 관련 */
-  const [ content, setContent ] = useState(null)
+  const [ deleteContent, setDeleteContent ] = useState(null)
   const [ showCompletedAlert, setShowCompletedAlert ] = useState(false)
 
-  useEffect(() => {
+  const getClassList = () => {
     axios
       .get(`api/v1/my/applied`, {
         headers: {
@@ -99,7 +99,11 @@ function ClassList() {
         console.log("완료한 과외 조회 에러", err);
         // 에러 처리 로직 추가 가능
       });
-    }, []);
+  }
+
+  useEffect(() => {
+    getClassList()
+  }, []);
 
   /** 쿠커 화상과외방 생성 및 입장 */
   const createRoom = ( lessonId ) => {
@@ -184,16 +188,17 @@ function ClassList() {
     )
     .then((res) => {
       console.log('쿠커 과외 삭제 성공', res)
-      setContent("과외가 삭제되었습니다.")
+      setDeleteContent("과외가 삭제되었습니다.")
+      getClassList()
     })
     .catch((err) => {
       console.log('쿠커 과외 삭제 실패', err)
       let error = Object.assign({}, err)
       if (error?.response?.status === 409) {
         // alert('신청한 쿠키가 있어 수업을 삭제할 수 없습니다.')
-        setContent("신청한 쿠키가 있어 과외를 삭제할 수 없습니다.")
+        setDeleteContent("신청한 쿠키가 있어 과외를 삭제할 수 없습니다.")
       } else {
-        setContent("과외를 삭제할 수 없습니다.")
+        setDeleteContent("과외를 삭제할 수 없습니다.")
       }
     })
   }
@@ -211,13 +216,13 @@ function ClassList() {
   }, [lessonId])
 
   useEffect(() => {
-    console.log("여기까지 오니?", action, deleteLessonId)
-    if (action && deleteLessonId) {
+    console.log("여기까지 오니?", deleteAction, deleteLessonId)
+    if (deleteAction && deleteLessonId) {
       setShowAlert(false)
       deleteClass(deleteLessonId)
-      setAction(false)
+      setDeleteAction(false)
     }
-  }, [action, deleteLessonId])
+  }, [deleteAction, deleteLessonId])
 
   const handleDeleteClass = (lessonId) => {
     setShowAlert(true)
@@ -225,14 +230,14 @@ function ClassList() {
   }
 
   useEffect(() => {
-    if (content) {
+    if (deleteContent) {
       setShowCompletedAlert(true)
     }
-  }, [content])
+  }, [deleteContent])
 
   useEffect(() => {
     if (!showCompletedAlert) {
-      setContent(null)
+      setDeleteContent(null)
     }
   }, [showCompletedAlert])
 
@@ -340,10 +345,10 @@ function ClassList() {
                                 <button onClick={() => handleDeleteClass(lesson.lessonId)}>삭제</button>
                                 {/* <button onClick={() => deleteClass(lesson.lessonId)}>삭제</button> */}
                                 {showAlert ? (
-                                  <AlertModal content={'정말로 삭제하시겠습니까?'} path='setTrue' actions={setAction}/>
+                                  <AlertModal content={'정말로 삭제하시겠습니까?'} path='setTrue' actions={setDeleteAction}/>
                                 ) : null}
                                 {showCompletedAlert ? (
-                                  <AlertModal content={content} path='setFalse' actions={setShowCompletedAlert}/>
+                                  <AlertModal content={deleteContent} path='setFalse' actions={setShowCompletedAlert}/>
                                 ) : null}
                               </div>
                             </div>
