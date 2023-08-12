@@ -4,6 +4,7 @@ import HandLandMarker from "./../../component/Gesture/HandLandMarker"; // 수정
 import { DrawingUtils, HandLandmarker as abc } from "@mediapipe/tasks-vision";
 import { startTimer, raiseHand, checkUp } from "./../../store/video/gestureTest";
 import { trigTimer } from "./../../store/video/timer";
+import '../../style/testVideo.css'
 
 const TestScreen = () => {
   const dispatch = useDispatch();
@@ -109,36 +110,43 @@ const TestScreen = () => {
           isThumbIndexTouched = dist(landmarks[4].x, landmarks[4].y, landmarks[8].x, landmarks[8].y) < dist(landmarks[4].x, landmarks[4].y, landmarks[3].x, landmarks[3].y);
 
 					if (open[0] === true && open[1] === true && open[2] === false && open[3] === false && open[4] === false) {
-						dispatch(checkUp());
+						// dispatch(checkUp());
+            checkCount += 1;
 					}
 
 					if (isThumbIndexTouched === true && open[2] === true && open[3] === true && open[4] === true) {
-						dispatch(trigTimer());
+						// dispatch(trigTimer());
+            okCount += 1;
 					}
 					else if (open[0] === true && open[1] === true && open[2] === true && open[3] === true && open[4] === true) {
-						dispatch(raiseHand());
+						// dispatch(raiseHand());
+            handCount += 1;
 					}
-        } 
-      }
+        }
 
+        if (checkCount >= 8) dispatch(checkUp());
+        if (okCount >= 8) dispatch(trigTimer());
+        if (handCount >= 8) dispatch(raiseHand());
+      } else {
+        checkCount = 0;
+        okCount = 0;
+        handCount = 0;
+      }
       return gesture[ans];
     };
 
   return (
     <>
-      <div style={{ position: "relative" }}>
-        <video
-          id="webcam"
-          style={{ position: "absolute" }}
-          autoPlay
-          playsInline
-          ref={inputVideoRef}
-        ></video>
-          <canvas
-          ref={canvasRef}
-          style={{display:"none"}}
-        ></canvas>
-      </div>
+      <video
+        className='test-video'
+        autoPlay
+        playsInline
+        ref={inputVideoRef}
+      ></video>
+        <canvas
+        ref={canvasRef}
+        style={{display:"none"}}
+      ></canvas>
     </>
   );
 };
