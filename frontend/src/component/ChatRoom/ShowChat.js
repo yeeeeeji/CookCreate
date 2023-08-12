@@ -103,7 +103,7 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
   return (
     <div>
       <HeaderChat lessonId={lessonId} chatTitle={chatTitle} chatOver={chatOver} />
-      <div style={{ overflowY: "auto", height: "300px" }} id="ChatRoom" ref={scrollRef}>
+      <div style={{ overflowY: "auto", height: "450px", background:"#fff9f2" }} id="ChatRoom" ref={scrollRef}>
         {messageList.map((chat, index) =>
           chat.userId !== id ? <FriendChat key={index} message={chat.content} author={chat.userId} /> : <MyChat key={index} message={chat.content} />
         )}
