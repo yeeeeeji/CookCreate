@@ -9,19 +9,21 @@ const BorderBlock = styled.div`
   & span {
     position: relative;
     display: inline-block;
-    background-color: #b2c7d9;
+    // background-color: #b2c7d9;
+    // background-color: #d1cfca;
+    background-color: #ffd3a1;
     padding: 0 10px;
   }
-  &:before {
-    content: "";
-    display: block;
-    position: absolute;
-    left: 2%;
-    top: 50%;
-    width: 96%;
-    height: 1px;
-    background-color: #727b83;
-  }
+  // &:before {
+  //   content: "";
+  //   display: block;
+  //   position: absolute;
+  //   left: 2%;
+  //   top: 50%;
+  //   width: 96%;
+  //   height: 1px;
+  //   background-color: #727b83;
+  // }
 `;
 
 const ChatWrapper = styled.div`
@@ -77,6 +79,7 @@ const LeftBlock = styled.div`
 
     & span {
       position: absolute;
+      display: inline-block;
       &.time {
         min-width: 65px;
         text-align: left;
