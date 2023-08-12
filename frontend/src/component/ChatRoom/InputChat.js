@@ -10,14 +10,14 @@ const Wrapper = styled.footer`
   bottom: 0px;
   left: 0px;
   right: 0px;
-  width: 70%;
+  width: 100%;
   min-height: 50px;
   max-height: 200px;
   overflow: auto;
   padding: 6px;
   z-index: 100;
-  background-color: #eeeeee;
-  display: flex; /* Add display flex */
+  background-color: #f5f2f2;
+  // display: flex;
   justify-content: flex-end; /* Align to the right */
   
   & form {
@@ -36,7 +36,7 @@ const Wrapper = styled.footer`
     & textarea {
       width: 100%;
       resize: none;
-      height: 100%;
+      height: 90%;
       margin: 0;
       padding: 5px 20px;
     }
@@ -44,12 +44,13 @@ const Wrapper = styled.footer`
     & button {
       width: 50px;
       height: 40px;
-      background: #ff8a00;
+      // background: #ff8a00;
       
       &.canSubmit {
         cursor: pointer;
         pointer-events: all;
         color: #ffffff;
+        background: #ff8a00;
       }
       
       &.cannotSubmit {

@@ -7,3 +7,8 @@
 .chatroom-container {
   display: flex;
 }
+
+.ChatSpace {
+  width: 750px;
+  height: 800px;
+}
