@@ -12,7 +12,6 @@ function EditLessonDetail() {
   const initDescription = useSelector((state) => state.lessonInfo.description)
   const initMaterial = useSelector((state) => state.lessonInfo.materials)
 
-  const [lessonPrice, setLessonPrice] = useState(initPrice);
   const [maximum, setLessonMaximum] = useState(initMaximum);
   const [lessonDifficulty, setLessonDifficulty] = useState(initDifficulty);
   const [selectedDifficulty, setSelectedDifficulty] = useState(initDifficulty);
@@ -22,23 +21,11 @@ function EditLessonDetail() {
   const [lessonMaterial, setLessonMaterial] = useState('')
   //유효성
   const priceValid = useSelector((state) => state.lessonEdit.priceValid)
-  const [errorMsg, setErrorMsg] = useState('');
   const maxValid = useSelector((state) => state.lessonEdit.maxValid)
   const difficultyValid = useSelector((state) => state.lessonEdit.difficultyValid)
   const descriptionValid = useSelector((state) => state.lessonEdit.descriptionValid)
   const materialValid = useSelector((state) => state.lessonEdit.materialsValid)
 
-  const handleChangePrice = (e) => {
-    const input = e.target.value
-    if (isNaN(input)) {
-      setErrorMsg('숫자만 입력해주세요!')
-    } else {
-      setErrorMsg('')
-      setLessonPrice(input)
-      dispatch(setPrice(input))
-      dispatch(setPriceValid(input.trim() !== ""))
-    }
-  };
   const changeMaximum = (e) => {
     const input = e.target.value
     setLessonMaximum(input)
@@ -74,9 +61,6 @@ function EditLessonDetail() {
 
 
   useEffect(() => {
-    if (lessonPrice) {
-      dispatch(setPrice(lessonPrice));
-    }
     if (maximum) {
       dispatch(setMaximum(maximum));
     }
@@ -92,7 +76,7 @@ function EditLessonDetail() {
     if (lessonMaterialList) {
       dispatch(setMaterials(lessonMaterialList))
     }
-  }, [dispatch, lessonPrice, maximum, lessonDifficulty, lessonDescription,
+  }, [dispatch, maximum, lessonDifficulty, lessonDescription,
       lessonVideoUrl, lessonMaterialList]);
 
   return (
@@ -102,18 +86,10 @@ function EditLessonDetail() {
         <div>
           <div style={{display : 'flex', alignItems : 'center'}}>
             <h3>수강료</h3>
+            <h5>수강료는 수정할 수 없습니다.</h5>
             <div style={{marginLeft : '5px'}}>{priceValid ? '✅' : '🔲'}</div>
           </div>
-          <div> 
-            <input
-              type="text"
-              min="0"
-              placeholder="수강료"
-              value={lessonPrice}
-              onChange={handleChangePrice}
-              />
-          </div>
-          {errorMsg && <div style={{ color: 'red' }}>{errorMsg}</div>}
+          {initPrice.toLocaleString()}원
         </div>
         {/* 최대 수강 인원 */}
         <div>
@@ -135,7 +111,7 @@ function EditLessonDetail() {
       {/* 난이도 */}
       <div>
         <div style={{display : 'flex', alignItems : 'center'}}>
-          <h3>강의 난이도</h3>
+          <h3>과외 난이도</h3>
           <div style={{marginLeft : '5px'}}>{difficultyValid ? '✅' : '🔲'}</div>
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>
