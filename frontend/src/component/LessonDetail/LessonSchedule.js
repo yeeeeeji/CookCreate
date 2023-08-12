@@ -17,7 +17,7 @@ function LessonSchedule() {
     const formattedHour = (Number(hour) % 12) || 12; // 12시는 12로 표시
     const formattedTime = `${meridiem} ${formattedHour}:${minute}`;
 
-    return `${year}-${month}-${day} ${formattedTime}`;
+    return `${year}.${month}.${day}. ${formattedTime}`;
   };
 
   return (
