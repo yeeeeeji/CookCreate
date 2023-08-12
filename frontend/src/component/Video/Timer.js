@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { trigTimer } from './../../store/video/timer';
 
 
-function Timer({ role }) {
+function Timer({ role, size }) {
   const publisher = useSelector((state) => state.video.publisher)
   const timerCheck = useSelector((state) => state.timer.timerCheck)
 
@@ -14,9 +13,21 @@ function Timer({ role }) {
   /* 쿠키 타이머 시작 표시 */
   const [ isRunning, setIsRunning ] = useState(false)
 
+  const [ classRole, setClassRole ] = useState(null)
+
   // const [ clickInput, setSetTime ] = useState(false)
 
   console.log("나는야", role)
+
+  useEffect(() => {
+    if (role) {
+      if (role === 'COOKIEE') {
+        setClassRole('cookiee')
+      } else {
+        setClassRole('cookyer')
+      }
+    }
+  }, [role])
 
   useEffect(() => {
     const total = curMinutes*60 + curSeconds
@@ -102,15 +113,15 @@ function Timer({ role }) {
   }, [publisher])
 
   return (
-    <div className={role === 'COOKYER' ? 'cookyer-timer' : 'cookiee-timer'}>
-      <div className='video-timer-title'>
+    <div className={role === 'COOKYER' ? `${size}-cookyer-timer` : `${size}-cookiee-timer`}>
+      <div className={`${size}-video-timer-title`}>
         <p>타이머</p>
       </div>
-      <div className='video-timer-content'>
+      <div className={`${size}-video-timer-content-${classRole}`}>
         {role === 'COOKYER' ? (
-          <div className='video-timer-input'>
+          <div className={`${size}-video-timer-input`}>
             <input
-              className='video-timer-input-minutes'
+              className={`${size}-video-timer-input-minutes`}
               type='number'
               min='0'
               max='60'
@@ -122,7 +133,7 @@ function Timer({ role }) {
             ></input>
             <span>:</span>
             <input
-              className='video-timer-input-seconds'
+              className={`${size}-video-timer-input-seconds`}
               type='number'
               min='0'
               max='59'
@@ -134,7 +145,7 @@ function Timer({ role }) {
             ></input>
           </div>
         ) : (
-          <div className='video-timer-time'>
+          <div className={`${size}-video-timer-time`}>
             <p>{curMinutes < 10 ? `0${curMinutes}` : curMinutes}</p>
             <p>:</p> 
             <p>{curSeconds < 10 ? `0${curSeconds}` : curSeconds}</p>
@@ -142,13 +153,13 @@ function Timer({ role }) {
         )}
         {/* 학생들에게 선생님이 설정한 타이머 값을 보냄 */}
         {role === 'COOKYER' ? (
-          <button className='video-timer-set-btn' onClick={() => sendTime(publisher)}>설정</button>
+          <button className={`${size}-video-timer-set-btn`} onClick={() => sendTime(publisher)}>설정</button>
         ) : (
           <div>
             {isRunning ? (
-              <button className='video-timer-set-btn' onClick={stop}>Stop</button>
+              <button className={`${size}-video-timer-set-btn`} onClick={stop}>Stop</button>
             ) : (
-              <button className='video-timer-set-btn' onClick={start}>Start</button>
+              <button className={`${size}-video-timer-set-btn`} onClick={start}>Start</button>
             )}
             {/* <button onClick={reset}>Reset</button> */}
           </div>

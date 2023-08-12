@@ -84,10 +84,15 @@ public class ChatServiceImpl implements ChatService {
 
         List<Chat> messageList = lessonRepository.findByLessonId(lessonId).get().getChatList();
 
+        if(messageList.isEmpty()) {
+            result.add(new ChatRes(HttpStatus.OK, "채팅 내용이 없습니다."));
+            return result;
+        }
+
         for(Chat chat : messageList) {
             ChatRes chatRes = new ChatRes(chat);
             chatRes.setStatusCode(HttpStatus.OK);
-            chatRes.setMessage("sucess");
+            chatRes.setMessage("success");
 
             result.add(chatRes);
         }
