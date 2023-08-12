@@ -47,10 +47,28 @@ function Payroll() {
           pays.map((pay) => (
             <div className="pay_item" key={pay.id}>
               <dl className="pay_list">
-                <div className="pay_label">
-                  <span className="pay_state">결제상태[{pay.payStatus}]</span>
-                </div>
-                <strong className="pay_info">결제정보</strong>
+                <div className="pay-state">
+                    <div>결제상태</div>
+                    <div>
+                      {(() => {
+                        switch (pay.payStatus) {
+                          case 'READY':
+                            return '결제 준비중';
+                          case 'FAIL':
+                            return '결제 실패'
+                          case 'CANCEL':
+                            return '결제 취소'
+                          case 'COMPLETED':
+                            return '결제 완료'
+                          case 'REFUND':
+                            return '환불 처리'
+                          default:
+                            return '알 수 없음'
+                        }
+                      })()}
+                    </div>
+                  </div>
+                <p className="pay_info">결제정보</p>
                 <div className="class_info">
                   <dl className="info_details">
                     {/* <dt>가격</dt>
