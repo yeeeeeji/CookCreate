@@ -35,6 +35,7 @@ function chatList() {
 
   client.activate();
 
+function chatList() {
   return (
     <div>
       <ChatList />
@@ -44,3 +45,4 @@ function chatList() {
 }
 
 export default chatList;
+

@@ -14,10 +14,10 @@ function EditForm() {
   const [ThumbnailFile, setThumbnailFile] = useState(null); // 수정한 파일 정보 넣어줄 것
   const accessToken = localStorage.getItem('access_token');
   const lessonTitle = useSelector((state) => state.lessonEdit.lessonTitle);
-  const categoryId = useSelector((state) => parseInt(state.lessonEdit.categoryId)) + 1;
+  const categoryId = useSelector((state) => parseInt(state.lessonEdit.categoryId));
   const maximum = useSelector((state) => parseInt(state.lessonEdit.maximum));
   const price = useSelector((state) => parseInt(state.lessonEdit.price));
-  const lessonDate = useSelector((state) => state.lessonEdit.lessonDate).slice(0, -5);
+  // const lessonDate = useSelector((state) => state.lessonEdit.lessonDate).slice(0, -5);
   const difficulty = useSelector((state) => state.lessonEdit.difficulty);
   const timeTaken = useSelector((state) => parseInt(state.lessonEdit.timeTaken));
   const description = useSelector((state) => state.lessonEdit.description);
@@ -71,7 +71,8 @@ function EditForm() {
     formData.append('categoryId', categoryId);
     formData.append('maximum', maximum);
     formData.append('price', price);
-    formData.append('lessonDate', lessonDate);
+    // formData.append('lessonDate', lessonDate);
+    // console.log(lessonDate)
     formData.append('difficulty', difficulty);
     formData.append('timeTaken', timeTaken);
     formData.append('description', description);
@@ -106,7 +107,6 @@ function EditForm() {
     <div>
       {/* 썸네일 */}
       <div>
-        {thumbnailUrl}
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <h3>과외 썸네일</h3>
           <div>{thumbnailValid ? '✅' : '🔲'}</div>

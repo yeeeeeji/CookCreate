@@ -19,8 +19,6 @@ function LessonList() {
   const isLogin = useSelector((state) => state.auth.isLogin)
   
   const handleLessonDetail = (lessonId) => {
-    // console.log(lessonId)
-    // dispatch(setLessonId)
     navigate(`/lesson/${lessonId}`)
   }
 
@@ -53,7 +51,6 @@ function LessonList() {
           key={lesson.lessonId}
           className="lessonItemContainer"
           style={{
-            border: '1px solid #ccc',
             padding: '20px',
             marginTop: '20px'
           }}
@@ -73,6 +70,7 @@ function LessonList() {
             reviewAvg={lesson.reviewAvg}
             cookyerName={lesson.cookyerName}
             categoryId={lesson.categoryId} 
+            difficulty={lesson.difficulty} 
           />
         </div>
       ))}

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-function RegisterForm() {
+function RegisterForm({ setContent, setShowAlert, setPath }) {
   const navigate = useNavigate()
   const [thumbnailUrl, setThumbnailUrl] = useState('')
 
@@ -10,7 +10,7 @@ function RegisterForm() {
   const [ThumbnailFile, setThumbnailFile] = useState(null)
   const accessToken = localStorage.getItem('access_token')
   const lessonTitle = useSelector((state) => state.lesson.lessonTitle)
-  const categoryId = useSelector((state) =>  parseInt(state.lesson.categoryId))+1
+  const categoryId = useSelector((state) =>  parseInt(state.lesson.categoryId))
   const maximum = useSelector((state) => parseInt(state.lesson.maximum))
   const price = useSelector((state) => parseInt(state.lesson.price))
   const lessonDate = useSelector((state) => state.lesson.lessonDate).slice(0,-5)
@@ -74,10 +74,16 @@ function RegisterForm() {
     })
     .then((res) => {
       console.log(res);
-      alert('과외 생성에 성공했습니다!')
-      navigate('/lesson')
+      setContent("과외가 등록되었습니다.")
+      setShowAlert(true)
+      setPath('/lesson')
+      // alert('과외 생성에 성공했습니다!')
+      // navigate('/lesson')
     })
     .catch((err) => {
+      setContent("과외를 등록할 수 없습니다. 다시 한 번 확인해주세요.")
+      setShowAlert(true)
+      setPath(null)
       console.log(err);
     });
   };

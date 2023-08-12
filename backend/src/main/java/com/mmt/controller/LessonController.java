@@ -151,6 +151,8 @@ public class LessonController {
             @ApiResponse(responseCode = "403", description = "예약한 Cookyer만 이용 가능합니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "409", description = "과외를 신청한 Cookiee가 있어 삭제할 수 없습니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @DeleteMapping("/{lessonId}")
@@ -182,6 +184,8 @@ public class LessonController {
             @ApiResponse(responseCode = "403", description = "신청한 Cookiee만 이용 가능합니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 과외입니다.",
+                    content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "409", description = "이미 마감된/완료한 과외입니다.",
                     content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @DeleteMapping("/cancel/{lessonId}")
@@ -252,12 +256,10 @@ public class LessonController {
 
     @Operation(summary = "선생님 뱃지 조회", description = "Cookyer의 뱃지가 승인됐는지 조회한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "뱃지 인증을 완료했습니다.",
+            @ApiResponse(responseCode = "200", description = "O/X",
                     content = @Content(schema = @Schema(implementation = LessonDetailRes.class))),
             @ApiResponse(responseCode = "401", description = "로그인 후 이용해주세요.(Token expired)",
-                    content = @Content(schema = @Schema(implementation = LessonDetailRes.class))),
-            @ApiResponse(responseCode = "404", description = "획득한 뱃지가 없습니다.",
-            content = @Content(schema = @Schema(implementation = LessonDetailRes.class))),
+                    content = @Content(schema = @Schema(implementation = LessonDetailRes.class)))
     })
     @GetMapping("/badge/{cookyerId}")
     public ResponseEntity<ResponseDto> getHavingBadge(@PathVariable(value = "cookyerId") String cookyerId, Authentication authentication){

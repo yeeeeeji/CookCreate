@@ -9,19 +9,21 @@ const BorderBlock = styled.div`
   & span {
     position: relative;
     display: inline-block;
-    background-color: #b2c7d9;
+    // background-color: #b2c7d9;
+    // background-color: #d1cfca;
+    background-color: #ffd3a1;
     padding: 0 10px;
   }
-  &:before {
-    content: "";
-    display: block;
-    position: absolute;
-    left: 2%;
-    top: 50%;
-    width: 96%;
-    height: 1px;
-    background-color: #727b83;
-  }
+  // &:before {
+  //   content: "";
+  //   display: block;
+  //   position: absolute;
+  //   left: 2%;
+  //   top: 50%;
+  //   width: 96%;
+  //   height: 1px;
+  //   background-color: #727b83;
+  // }
 `;
 
 const ChatWrapper = styled.div`
@@ -42,7 +44,9 @@ const RightBlock = styled.div`
   margin-right: 10px;
 
   & ${ChatWrapper} {
-    background-color: #ffec42;
+    // background-color: #ffec42;
+    background-color: #ffffff;
+
     text-align: left;
     & span {
       position: absolute;
@@ -70,9 +74,12 @@ const LeftBlock = styled.div`
   margin-right: 10px;
   padding-left: 50px;
   & ${ChatWrapper} {
-    background-color: #fff;
+    // background-color: #fff;
+    background-color: #ffe3b0;
+
     & span {
       position: absolute;
+      display: inline-block;
       &.time {
         min-width: 65px;
         text-align: left;
@@ -100,9 +107,10 @@ const LeftBlock = styled.div`
   }
 `;
 
-const Chat = ({ message }) => {
+const Chat = ({ message, author}) => {
   return (
     <ChatWrapper>
+      <span className="username">{author}</span>
       {message}
       {/* <span className="time">{localeTime}</span> */}
       {/* <span className="not-read">{notRead > 1 ? notRead : ""}</span> */}
@@ -110,10 +118,10 @@ const Chat = ({ message }) => {
   );
 };
 
-const SeparationBlock = ({ content }) => {
+const SeparationBlock = ({ EnterNickname }) => {
   return (
     <BorderBlock>
-      <span>{content}</span>
+      <span>{EnterNickname}님이 입장하셨습니다.</span>
     </BorderBlock>
   );
 };
@@ -131,14 +139,15 @@ const MyChat = ({ content, ...props }) => {
   );
 };
 
-const FriendChat = (props) => {
+const FriendChat = ({ author, message }) => {
   return (
     <LeftBlock>
       <div>
-        <Chat {...props} />
+        <span className="username">{author}</span>
+        <Chat message={message} />
       </div>
     </LeftBlock>
   );
 };
 
-export { Chat, MyChat, FriendChat };
+export { Chat, MyChat, FriendChat, SeparationBlock };

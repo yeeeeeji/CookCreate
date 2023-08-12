@@ -3,13 +3,14 @@ import React, { useEffect, useState } from 'react';
 import '../../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { audioMute, leaveSession, setMainStreamManager, videoMute } from '../../../store/video/video';
-import { setShareScreenPublisher } from '../../../store/video/screenShare';
+import { initScreenShare, setShareScreenPublisher } from '../../../store/video/screenShare';
 import axios from 'axios';
 import { closeSession, shareScreen } from '../../../store/video/video-thunk';
-import { BsMicFill, BsMicMute, BsCameraVideoFill, BsCameraVideoOff, BsWindowFullscreen, BsVolumeMuteFill } from "react-icons/bs"
+import { BsMicFill, BsMicMute, BsCameraVideoFill, BsCameraVideoOff, BsWindowFullscreen, BsVolumeMuteFill, BsPersonSquare } from "react-icons/bs"
 import { RxExit } from "react-icons/rx"
+import { IoIosTimer } from "react-icons/io"
 
-function CookyerVideoSideBar() {
+function CookyerVideoSideBar({ size, setMeWidget, setTimerWidget }) {
   const dispatch = useDispatch()
 
   const session = useSelector((state) => state.video.session)
@@ -18,6 +19,8 @@ function CookyerVideoSideBar() {
   const isVideoPublished = useSelector((state) => state.video.isVideoPublished)
   
   /** 화면 공유 기능 */
+  const shareOV = useSelector((state) => state.screenShare.shareOV)
+  const shareSession = useSelector((state) => state.screenShare.shareSession)
   const shareScreenPublisher = useSelector((state) => state.screenShare.shareScreenPublisher)
   const [ isShared, setIsShared ] = useState(false)
   const nickname = localStorage.getItem('nickname');
@@ -72,11 +75,18 @@ function CookyerVideoSideBar() {
       publisher.stream.session.signal({
         type: 'shareEnd'
       })
-      session.unpublish(shareScreenPublisher)
+      shareSession.unpublish(shareScreenPublisher)
       setIsShared(false)
-      dispatch(setShareScreenPublisher(null))
+      dispatch(initScreenShare())
       dispatch(setMainStreamManager(publisher))
-      console.log("화면공유 취소")
+      const data = {
+        connectionId: publisher.stream.connection.connectionId
+      }
+      publisher.stream.session.signal({
+        data: JSON.stringify(data),
+        type: 'mainVideo'
+      })
+      console.log("화면공유 취소", publisher)
     }
   }
 
@@ -119,35 +129,66 @@ function CookyerVideoSideBar() {
     })
   }
 
+  const handleSetMeWidget = () => {
+    setMeWidget((prev) => !prev)
+    setTimerWidget(false)
+  }
+
+  const handleSetTimerWidget = () => {
+    setTimerWidget((prev) => !prev)
+    setMeWidget(false)
+  }
+
   return (
     <div className='video-sidebar'>
-      {/* 수업 끝내기 */}
-      <div className='video-side-icon-wrap' onClick={handleCloseSession}>
-        <RxExit className='video-side-icon video-exit-icon'/>
+      <div>
+        {/* 수업 끝내기 */}
+        <div className='video-side-icon-wrap' onClick={handleCloseSession}>
+          <RxExit className='video-side-icon video-exit-icon'/>
+          <div className='video-side-icon-p'>
+            <p>수업</p><p>끝내기</p>
+          </div>
+        </div>
+        {/* 화면뮤트 */}
+        <div className='video-side-icon-wrap' onClick={setVideoMute}>
+          {isVideoPublished ? (
+            <BsCameraVideoFill className='video-side-icon'/>
+          ) : (
+            <BsCameraVideoOff className='video-side-icon'/>
+          )}
+        </div>
+        {/* 소리뮤트 */}
+        <div className='video-side-icon-wrap' onClick={setAudioMute}>
+          {isAudioPublished ? (
+            <BsMicFill className='video-side-icon'/>
+          ) : (
+            <BsMicMute className='video-side-icon'/>
+          )}
+        </div>
+        {/* 화면공유 */}
+        <div className='video-side-icon-wrap' onClick={handleScreenShare}>
+          <BsWindowFullscreen className='video-side-icon'/>
+        </div>
       </div>
-      {/* 화면뮤트 */}
-      <div className='video-side-icon-wrap' onClick={setVideoMute}>
-        {isVideoPublished ? (
-          <BsCameraVideoFill className='video-side-icon'/>
-        ) : (
-          <BsCameraVideoOff className='video-side-icon'/>
-        )}
-      </div>
-      {/* 소리뮤트 */}
-      <div className='video-side-icon-wrap' onClick={setAudioMute}>
-        {isAudioPublished ? (
-          <BsMicFill className='video-side-icon'/>
-        ) : (
-          <BsMicMute className='video-side-icon'/>
-        )}
-      </div>
-      {/* 화면공유 */}
-      <div className='video-side-icon-wrap' onClick={handleScreenShare}>
-        <BsWindowFullscreen className='video-side-icon'/>
-      </div>
+
+      {size === 'half' ? (
+        <div>
+          {/* 본인 화면 */}
+          <div className='video-side-icon-wrap' onClick={handleSetMeWidget}>
+            <BsPersonSquare className='video-side-icon'/>
+          </div>
+          {/* 타이머 */}
+          <div className='video-side-icon-wrap' onClick={handleSetTimerWidget}>
+            <IoIosTimer className='video-side-icon'/>
+          </div>
+        </div>
+      ) : null}
+
       {/* 쿠키 전체 음소거 */}
-      <div className='video-side-icon-wrap' onClick={() => handleCookieeAudio(publisher)}>
-        <BsVolumeMuteFill className='video-side-icon'/>
+      <div>
+        <div className='video-side-icon-wrap' onClick={() => handleCookieeAudio(publisher)}>
+          <BsVolumeMuteFill className='video-side-icon'/>
+        </div>
       </div>
     </div>
   );

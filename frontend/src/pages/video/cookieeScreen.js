@@ -7,11 +7,12 @@ import CookieeVideoSideBar from '../../component/Video/Cookiee/CookieeVideoSideB
 
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { audioMute, deleteSubscriber, enteredSubscriber, leaveSession, setAudioMute, setAudioOffStream, setAudioOnList, setAudioOnStream } from '../../store/video/video';
+import { audioMute, deleteSubscriber, enteredSubscriber, leaveSession, setAudioMute, setAudioOffStream, setAudioOnList, setAudioOnStream, setMainStreamManager, setMainVideo } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
 import { initCookieeVideo, resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
 import { setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
 import '../../style/video.css'
+import '../../style/video/cookieeScreen.css'
 import { initScreenShare } from '../../store/video/screenShare';
 import LessonReviewModal from '../../component/Video/Cookiee/LessonReviewModal';
 
@@ -59,6 +60,9 @@ function CookieeScreen() {
 
   /** 다른 쿠키 목록 기능 */
   const showOthers = useSelector((state) => state.cookieeVideo.showOthers)
+
+  /** 쿠커가 설정한 mainVideoStream */
+  const mainVideo = useSelector((state) => state.video.mainVideo)
 
   /** 자동 전체 화면 */
   useEffect(() => {
@@ -118,8 +122,8 @@ function CookieeScreen() {
       session.on('exception', handleException);
 
       /** 쿠커가 수업을 종료하면 스토어에 저장된 관련 정보 초기화 후 리뷰쓰러 */
-      // session.off('sessionDisconnected', () => {
       session.on('sessionDisconnected', () => {
+        // session.disconnect()  // 얘가 없어서 카메라가 계속 켜져있었나?
         dispatch(leaveSession())
         dispatch(initCookieeVideo())
         dispatch(initScreenShare())
@@ -180,6 +184,13 @@ function CookieeScreen() {
         setScreenShareStream(undefined)
       })
 
+      /** 쿠커가 설정한 mainVideoStream 이벤트 추가 */
+      session.on('signal:mainVideo', (e) => {
+        const connectionId = JSON.parse(e.data).connectionId
+        console.log(connectionId, "mainVideo 시그널 받음")
+        dispatch(setMainVideo(connectionId))
+      })
+
       console.log(4)
 
       /** 페이지 입장 후 세션에 연결 및 발행하기 */
@@ -234,12 +245,6 @@ function CookieeScreen() {
     }
   }, [videoLessonId])
 
-  // const handleMainVideoStream = (stream) => {
-  //   if (mainStreamManager !== stream) {
-  //     dispatch(setMainStreamManager(stream))
-  //   }
-  // }
-
   /** 소리 켠 참가자 리스트에 추가 */
   useEffect(() => {
     console.log('소리 켠 참가자 리스트에 추가', audioOnStream)
@@ -275,6 +280,12 @@ function CookieeScreen() {
     }
   }, [audioOffStream])
 
+  useEffect(() => {
+    if (mainVideo) {
+      setScreenShareStream(mainVideo)
+    }
+  }, [mainVideo])
+
   return (
     <div className='video-page'>
       <CookieeVideoSideBar/>
@@ -283,7 +294,7 @@ function CookieeScreen() {
           <LessonReviewModal/>
         ) : null}
         <div>
-          <VideoHeader/>
+          <VideoHeader size={'full'}/>
           <div className='cookiee-video-content'>
             <div>
               <div className='cookiee-sharing'>
@@ -306,7 +317,7 @@ function CookieeScreen() {
                   )}
                 </div>
               </div>
-              <CookieeLessonStep/>
+              <CookieeLessonStep size={'full'}/>
             </div>
             <div>
               {/* 쿠커 화면 */}
@@ -325,13 +336,14 @@ function CookieeScreen() {
                   <BsMicMuteFill className='cookiee-cookyer-audio-icon'/>
                 )}
               </div>
-              <Timer role='COOKIEE'/>
+              <Timer role='COOKIEE' size='full'/>
               {/* 쿠키 본인 화면 */}
               <div className='cookiee-content'>
                 {publisher !== undefined ? (
                   <UserVideoComponent
                     videoStyle='cookiee-content-video'
                     streamManager={publisher}
+                    gesture={true}
                   />
                 ) : (
                   <h1>쿠키 화면</h1>

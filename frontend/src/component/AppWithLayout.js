@@ -13,15 +13,12 @@ import { useDispatch } from 'react-redux';
 import { login, logout } from '../store/auth/auth'
 import LessonItem from '../pages/lessonDetail';
 import MyPageS from '../pages/myPageS';
-import Calendar from './MyPageS/Calendar';
 import ClassList from './MyPageS/ClassList';
-import LikeList from './MyPageS/LikeList';
 import Payment from './MyPageS/Payment';
 import RecipeBook from './MyPageS/RecipeBook';
 import Review from './MyPageS/Review';
 import Account from './MyPageS/Account';
 import MyPageT from '../pages/myPageT';
-import CalendarT from './MyPageT/Calendar';
 import ClassListT from './MyPageT/ClassList';
 import AccountT from './MyPageT/Account';
 import PayrollT from './MyPageT/Payroll';
@@ -31,6 +28,10 @@ import PaymentFailed from '../pages/paymentFailed';
 import PaymentSuccess from '../pages/paymentSuccess';
 import PaymentCancelld from '../pages/paymentCancelld';
 import EditLesson from '../pages/editLesson';
+import GestureTest from '../pages/video/gestureTest';
+
+import ChatList from '../pages/chatList';
+import ChatRoom from '../pages/chatRoom';
 
 function AppWithLayout({ match }) {
   // const dispatch = useDispatch();
@@ -56,7 +57,7 @@ function AppWithLayout({ match }) {
 
 
   return (
-    <div style={{padding : "0 15rem"}}>
+    <div className="container">
       <NavBar />
       <Routes>
         <Route path='/' element={<MainPage />} />
@@ -71,14 +72,16 @@ function AppWithLayout({ match }) {
         <Route path='/payment/success' element={<PaymentSuccess/>}></Route>
         <Route path='/payment/cancel' element={<PaymentCancelld/>}></Route>
         <Route path='/lesson/edit/:lessonId' element={<EditLesson/>}></Route>
+        {/* <Route path='/chatroom' element={<ChatRoom/>}></Route> */}
 
+        
+        {/* <Route path='/chatlist' element={<ChatList />} /> */}
+        <Route path='/chatroom' element={<ChatRoom />} />
+        {/* <Route path='/chatroom' element={<ChatRoom />} /> */}
 
         <Route path='/mypageS' element={<MyPageS />} />
         <Route path='/mypageT' element={<MyPageT />} />
-        <Route path="/calendar" element={<Calendar />}/>
-        <Route path="/calendarT" element={<CalendarT />}/>
         <Route path="/classList" element={<ClassList />}/>
-        <Route path="/likeList" element={<LikeList />}/>
         <Route path="/payment" element={<Payment />}/>
         <Route path="/recipeBook" element={<RecipeBook />}/>
         <Route path="/review" element={<Review />}/>
@@ -88,6 +91,7 @@ function AppWithLayout({ match }) {
         <Route path="/payrollT" element={<PayrollT />}/>
         <Route path="/reviewT" element={<ReviewT />}/>
         <Route path="/certificationT" element={<CertifyT />}/>
+        <Route path="/gestureTest" element={<GestureTest />}/>
       </Routes>
       <Footer />
     </div>
@@ -95,3 +99,4 @@ function AppWithLayout({ match }) {
 }
 
 export default AppWithLayout;
+

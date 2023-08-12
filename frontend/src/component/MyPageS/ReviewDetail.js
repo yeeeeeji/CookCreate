@@ -4,6 +4,9 @@ import { useSelector } from "react-redux";
 import axios from 'axios';
 import ReviewEdit from "./ReviewEdit";
 
+//별점표시
+import StarShow from "../MyPageT/StarShow";
+
 
 export default function ReviewDetail({ reviewId,onClose}) {
   const accessToken = useSelector((state) => state.auth.access_token);
@@ -13,10 +16,30 @@ export default function ReviewDetail({ reviewId,onClose}) {
 
 
   useEffect(() => {
-    handleViewDetail();
-  },  [reviewId] );
+    if (!isEditModalOpen) {
+      handleViewDetail();
+    }
+  }, [isEditModalOpen]);
+  // },  [reviewId] );
 
   
+    //시간 포맷
+    const displayTime = (dateTime) => {
+      if (!dateTime) return null;
+  
+      const localDate = new Date(dateTime);
+      const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        // second: '2-digit',
+        timeZone: 'Asia/Seoul', // 시간대를 UTC로 설정 (한국 시간으로 하는게 맞는 거 같다)
+      };
+      return localDate.toLocaleString(undefined, options);
+    };
+
   //리뷰상세정보 조회
   const handleViewDetail = () => {
     axios
@@ -56,7 +79,6 @@ export default function ReviewDetail({ reviewId,onClose}) {
   // 수정모달 열기
   const handleUpdateReview = () => {
     setIsEditModalOpen(true);
-    
   }
 
   // 수정모달 닫기
@@ -68,43 +90,51 @@ export default function ReviewDetail({ reviewId,onClose}) {
     <div className="modal-content">
       <button type="submit" onClick={onClose}>❌</button>
     <h2 className="modal-title">리뷰 상세 정보</h2>
+    
+    
     <div className="review-details">
       <div className="review-field">
-        <label htmlFor="lessonTitle">강좌 이름:{selectedReview.lessonTitle}</label>
+        <label htmlFor="lessonTitle">강의명: {selectedReview.lessonTitle}</label>
       </div>
       <div className="review-field">
-        <label htmlFor="lessonTitle">선생님 아이디:{selectedReview.cookyerId}/선생님 성함:{selectedReview.cookyerName}</label>
+        <label htmlFor="lessonTitle">선생님:{selectedReview.cookyerName}({selectedReview.cookyerId})</label>
       </div>
       <div className="review-field">
-        <label htmlFor="rating">평점:{selectedReview.rating}</label>
+        <label htmlFor="rating">작성자:{selectedReview.nickname}</label>
       </div>
       <div className="review-field">
-        <label htmlFor="rating">유저아이디:{selectedReview.userId}/유저닉네임:{selectedReview.nickname}</label>
+        {selectedReview ? <label htmlFor="reviewContents"> 생성일:{displayTime(selectedReview.createdDate)}</label>: null}
+        {/* <label htmlFor="reviewContents">생성날짜: {selectedReview ? new Date(selectedReview.createdDate).toISOString().split("T")[0] : null}</label> */}
       </div>
       <div className="review-field">
-        <label htmlFor="reviewContents">리뷰 내용:{selectedReview.reviewContents}</label>
+        {selectedReview ? <label htmlFor="reviewContents"> 수정일:{displayTime(selectedReview.modifiedDate)}</label>: null}
+        {/* <label htmlFor="reviewContents">수정날짜: {selectedReview ? new Date(selectedReview.modifiedDate).toISOString().split("T")[0] : null}</label> */}
       </div>
-      <div className="review-field">
-        <label htmlFor="reviewContents">생성날짜:{selectedReview.createdDate}</label>
-      </div>
-      <div className="review-field">
-        <label htmlFor="reviewContents">수정날짜:{selectedReview.modifiedDate}</label>
-      </div>
-      <div className="review-actions">
-        <button type="button" onClick={handleUpdateReview}>
-          수정하기
-        </button>
-        <button type="button" onClick={handleDeleteReview}>
-          삭제하기
-        </button>
-      </div>
-    </div>
-    {isEditModalOpen && (
+      {isEditModalOpen ? (
         <ReviewEdit
           selectedReview={selectedReview}
           onClose={handleCloseUpdateModal}
         />
+      ) : (
+        <div>
+          <div>
+            별점: {selectedReview.rating}
+            <StarShow rating={selectedReview.rating} size="1.4rem" color="gold" />
+          </div>
+          <div>
+            <label htmlFor="reviewContents">리뷰 내용: {selectedReview.reviewContents}</label>
+          </div>
+          <div className="review-actions">
+            <button type="button" onClick={handleUpdateReview}>
+              수정하기
+            </button>
+            <button type="button" onClick={handleDeleteReview}>
+              삭제하기
+            </button>
+          </div>
+        </div>
       )}
+    </div>
   </div>
 );
 }

@@ -14,6 +14,8 @@ import screenShareReducer from './store/video/screenShare'
 import cookyerVideoReducer from './store/video/cookyerVideo'
 import cookieeVideoReducer from './store/video/cookieeVideo'
 import videoLessonInfoReducer from './store/video/videoLessonInfo'
+import timerReducer from './store/video/timer'
+import gestureTestReducer from './store/video/gestureTest'
 
 /** redux-persist 설정 */
 const reducers = combineReducers({
@@ -28,7 +30,9 @@ const reducers = combineReducers({
   screenShare: screenShareReducer,
   cookyerVideo: cookyerVideoReducer,
   cookieeVideo: cookieeVideoReducer,
-  videoLessonInfo: videoLessonInfoReducer
+  videoLessonInfo: videoLessonInfoReducer,
+  timer: timerReducer,
+  gestureTest : gestureTestReducer
 })
 
 const setTransform = createTransform(
@@ -38,7 +42,7 @@ const setTransform = createTransform(
   (outboundState, key) => {
     return {...outboundState, mySet: new Set(outboundState.mySet)}
   },
-  { whitelist: ['video'] }
+  { whitelist: ['video', 'screenShare'] }
 )
 
 const persistConfig = {
@@ -46,8 +50,8 @@ const persistConfig = {
   storage,
   transforms: [setTransform],
   whitelist: [
-    'auth', 'api', 'lesson', 'lessonSearch', 'lessonInfo',
-    'accountS', 'screenShare', 'cookyerVideo', 'cookieeVideo', 'videoLessonInfo'
+    'auth', 'api', 'lesson', 'lessonSearch', 'lessonInfo', 'timer',
+    'accountS', 'cookyerVideo', 'cookieeVideo', 'videoLessonInfo'
   ],
   blacklist: []
 }

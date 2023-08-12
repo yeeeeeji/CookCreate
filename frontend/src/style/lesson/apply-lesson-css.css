@@ -1,0 +1,55 @@
+.applyLessonContainer{
+    height: 210px;
+    border-radius: 10px;
+    border: 0.7px solid #D9D9D9;
+    background: #FFF;
+    margin-bottom: 10px;
+}
+
+.applyLessonPrice{
+    text-align: left;
+    font-weight: 500;
+    font-size: 25px;
+    margin-top: 30px;
+    margin-left: 10px;
+}
+
+.applyLessonApplyButtonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; /* 원하는 여백을 추가하세요 */
+}
+  
+.applyLessonApplyButton{
+    display: flex;
+    width: 240px;
+    height: 40px;
+    padding: 15px 94px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background: #FF7A42;
+    color: #FFFDFD;
+    margin-top: 25px;
+}
+.applyLessonApplyButton.disabled {
+    background-color: gray;
+    cursor: not-allowed;
+  }
+.applyLessonApplyButton:hover {
+    background-color: #FF6060;
+}
+.applyLessonApplyButton:hover.disabled {
+    background-color: gray;
+}
+.applyLessonVideoUrl{
+    text-align: center;
+    margin-top: 15px;
+}
+.applyLessonVideoUrl a{
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+}

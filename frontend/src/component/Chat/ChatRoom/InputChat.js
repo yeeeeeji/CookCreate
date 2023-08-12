@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 // import { useDispatch } from "react-redux";
-// import { useSelector } from "react-redux";
-// import axios from "axios";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 const Wrapper = styled.footer`
-  display: flex;
-  justify-content: flex-end;
   position: fixed;
   bottom: 0px;
   left: 0px;
   right: 0px;
-  width: 70%;
+  width: 100%;
   min-height: 50px;
   max-height: 200px;
   overflow: auto;
@@ -53,8 +51,8 @@ const Wrapper = styled.footer`
   }
 `;
 
-const InputChat = ({ sendMessage }) => {
-  // const accessToken = useSelector((state) => state.auth.token);
+const InputChat = () => {
+  const accessToken = useSelector((state) => state.auth.token);
   const [contents, setContents] = useState("");
   const isCanSubmit = !!contents.replace(/ |\n/g, "");
   const btnClassName = isCanSubmit ? "canSubmit" : "cannotSubmit";
@@ -79,10 +77,23 @@ const InputChat = ({ sendMessage }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (isCanSubmit) {
-      sendMessage(contents);
-      setContents("");
-    }
+    const data = {
+      // lessonId,
+      // userId,
+      contents
+    };
+    axios
+      .put(`api/v1/send/{lessonId}`, data, {
+        headers: {
+          Access_Token: accessToken,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const onEnterPress = (event) => {

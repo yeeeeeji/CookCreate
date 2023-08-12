@@ -1,24 +1,28 @@
-import React, { useEffect } from 'react';
-import VideoHeader from '../../component/Video/VideoHeader';
-import UserVideoComponent from '../../component/Video/UserVideoComponent';
-import Timer from '../../component/Video/Timer';
-import CookyerLessonStep from '../../component/Video/Cookyer/CookyerLessonStep';
-import LessonStepModal from '../../component/Video/Cookyer/LessonStepModal';
-import CookyerVideoSideBar from '../../component/Video/Cookyer/CookyerVideoSideBar';
+import React, { useEffect } from "react";
+import { useMediaQuery } from "react-responsive";
+import CookyerFullScreen from "../../component/Video/Cookyer/CookyerFullScreen";
+import CookyerHalfScreen from "../../component/Video/Cookyer/CookyerHalfScreen";
 
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSubscriber, enteredSubscriber, setAudioOffStream, setAudioOnList, setAudioOnStream, setMainStreamManager } from '../../store/video/video';
 import { joinSession } from '../../store/video/video-thunk';
-import { setCheckCookiee, setCheckCookieeList, setHandsDownCookiee, setHandsUpCookiee, setHandsUpCookieeList, setUncheckCookiee } from '../../store/video/cookyerVideo';
+import { deleteCookiee, setCheckCookiee, setCheckCookieeList, setHandsDownCookiee, setHandsUpCookiee, setHandsUpCookieeList, setUncheckCookiee } from '../../store/video/cookyerVideo';
 import { setLessonInfo } from '../../store/video/videoLessonInfo';
 import '../../style/video.css'
-
-import { AiFillCheckCircle } from 'react-icons/ai'
-import { IoIosHand } from 'react-icons/io'
-import { BsMicFill, BsMicMuteFill } from "react-icons/bs";
+import '../../style/video/common.css'
+import '../../style/video/cookyerHalfScreen.css'
+import '../../style/video/cookyerFullScreen.css'
 
 function CookyerScreen() {
+  /** 반응형 웹 관련 */
+  const isFull = useMediaQuery({
+    query: "(min-width: 1201px)"
+  })
+  const isHalf = useMediaQuery({
+    query: "(max-width: 1200px"
+  })
+
   const dispatch = useDispatch()
   
   const OV = useSelector((state) => state.video.OV)
@@ -58,20 +62,6 @@ function CookyerScreen() {
   /** 메인비디오스트림 설정 */
   const mainStreamManager = useSelector((state) => state.video.mainStreamManager)
 
-  // /** 자동 전체 화면 */
-  // useEffect(() => {
-  //   const element = document.documentElement; // 전체 화면으로 변경하고자 하는 요소
-  //   if (element.requestFullscreen) {
-  //     element.requestFullscreen();
-  //   } else if (element.mozRequestFullScreen) {
-  //     element.mozRequestFullScreen();
-  //   } else if (element.webkitRequestFullscreen) {
-  //     element.webkitRequestFullscreen();
-  //   } else if (element.msRequestFullscreen) {
-  //     element.msRequestFullscreen();
-  //   }
-  // }, []);
-
   useEffect(() => {
     console.log(3, session)
     if (session) {
@@ -90,7 +80,9 @@ function CookyerScreen() {
 
       // On every Stream destroyed...
       const handleStreamDestroyed = (event) => {
+        console.log("나간 사람 제외", event)
         dispatch(deleteSubscriber(event.stream.streamManager))
+        dispatch(deleteCookiee(event.stream.connection.connectionId))
       };
 
       // On every asynchronous exception...
@@ -258,7 +250,8 @@ function CookyerScreen() {
     }
   }, [handsDownCookiee])
 
-  const resetHandsUpCookiee = (data) => {
+  const resetHandsUpCookiee = (e, data) => {
+    e.stopPropagation()
     const cookyer = data.cookyer  // 쿠커퍼블리셔와 쿠키섭스크라이버
     const cookiee = data.cookiee
     // 특정 쿠키를 찾아 리덕스에 저장된 리스트에서 해당 쿠키만 삭제하고
@@ -280,7 +273,8 @@ function CookyerScreen() {
     e.stopPropagation()
   }
 
-  const handleACookieeAudio = (data) => {
+  const handleACookieeAudio = (e, data) => {
+    e.stopPropagation()
     const cookyer = data.cookyer
     const cookiee = data.cookiee
     
@@ -329,96 +323,103 @@ function CookyerScreen() {
   const handleMainVideoStream = (stream) => {
     if (mainStreamManager !== stream) {
       dispatch(setMainStreamManager(stream))
+      const data = {
+        connectionId: stream.stream.connection.connectionId
+      }
+      publisher.stream.session.signal({
+        data: JSON.stringify(data),
+        type: 'mainVideo'
+      })
     } else {
       if (shareScreenPublisher) {
         dispatch(setMainStreamManager(shareScreenPublisher))
+        const data = {
+          connectionId: shareScreenPublisher.stream.connection.connectionId
+        }
+        publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'mainVideo'
+        })
       } else {
         dispatch(setMainStreamManager(publisher))
+        const data = {
+          connectionId: publisher.stream.connection.connectionId
+        }
+        publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'mainVideo'
+        })
       }
     }
   }
 
   useEffect(() => {
-    if (shareScreenPublisher) {
+    console.log(shareScreenPublisher, "화면공유 퍼블리셔 바뀜")
+    if (shareScreenPublisher !== null) {
       dispatch(setMainStreamManager(shareScreenPublisher))
+      const data = {
+        connectionId: shareScreenPublisher.stream.connection.connectionId
+      }
+      publisher.stream.session.signal({
+        data: JSON.stringify(data),
+        type: 'mainVideo'
+      })
+    } else {
+      if (publisher) {
+        dispatch(setMainStreamManager(publisher))
+        const data = {
+          connectionId: publisher.stream.connection.connectionId
+        }
+        publisher.stream.session.signal({
+          data: JSON.stringify(data),
+          type: 'mainVideo'
+        })
+      }
     }
   }, [shareScreenPublisher])
 
+  /** 이벤트 버블링 막기 */
+  const noneClick = (e) => {
+    e.stopPropagation()
+  }
+
   return (
-    <div className='video-page'>
-      <div className='video-page-main'>
-        {isSessionOpened ? null : (
-          <LessonStepModal onClick={handleModalClick}/>
-        )}
-        <div className='video-content'>
-          <VideoHeader/>
-          <div className='cookyer-components'>
-            <div className='cookyer-components-left'>
-              <div className='cookyer-sharing'>
-                <div className='cookyer-sharing-content' onClick={() => handleMainVideoStream(mainStreamManager)}>
-                  <UserVideoComponent
-                    videoStyle='cookyer-sharing-content'
-                    streamManager={mainStreamManager}
-                  />
-                  {/* {shareScreenPublisher === null ? (
-                    <UserVideoComponent
-                      videoStyle='cookyer-sharing-content'
-                      streamManager={publisher}
-                    />
-                  ) : (
-                    <UserVideoComponent
-                      videoStyle='cookyer-sharing-content'
-                      streamManager={shareScreenPublisher}
-                    />
-                  )} */}
-                </div>
-              </div>
-              <div className='cookyer-components-left-bottom'>
-                <div className='cookyer' onClick={() => handleMainVideoStream(publisher)}>
-                  <UserVideoComponent
-                    videoStyle='cookyer-video'
-                    streamManager={publisher}
-                  />
-                </div>
-                <Timer role='COOKYER'/>
-              </div>
-            </div>
-            <div className='cookyer-cookiees'>
-              {subscribers.map((sub, i) => (
-                // <div key={sub.id} onClick={() => handleMainVideoStream(sub)}>
-                <div key={i} className='cookyer-cookiee-content' onClick={() => handleMainVideoStream(sub)}>
-                  <UserVideoComponent
-                    videoStyle='cookyer-cookiee'
-                    streamManager={sub}
-                  />
-                  {audioOnList && audioOnList.find((item) => item === sub.stream.connection.connectionId) ? (
-                    <BsMicFill className='cookyer-cookiee-audio-icon-active' onClick={() => handleACookieeAudio({cookyer: publisher, cookiee: sub})}/>
-                  ) : (
-                    <BsMicMuteFill className='cookyer-cookiee-audio-icon' onClick={() => handleACookieeAudio({cookyer: publisher, cookiee: sub})}/>
-                  )}
-                  {checkCookieeList && checkCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
-                    <AiFillCheckCircle className='cookyer-check-icon-active'/>
-                  ) : (
-                    <AiFillCheckCircle className='cookyer-check-icon'/>
-                  )}
-                  {handsUpCookieeList && handsUpCookieeList.find((item) => item === sub.stream.connection.connectionId) ? (
-                    <IoIosHand
-                      className={`cookyer-handsup-icon-active-${handsUpCookieeList.indexOf(sub.stream.connection.connectionId)}`}
-                      onClick={() => resetHandsUpCookiee({cookyer: publisher, cookiee: sub})}
-                    />
-                  ) : (
-                    <IoIosHand className='cookyer-handsup-icon'/>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <CookyerLessonStep/>
-      </div>
-      <CookyerVideoSideBar/>
+    <div className="video-background">
+      {isFull && 
+        <CookyerFullScreen
+          publisher={publisher}
+          mainStreamManager={mainStreamManager}
+          subscribers={subscribers}
+          audioOnList={audioOnList}
+          checkCookieeList={checkCookieeList}
+          handsUpCookieeList={handsUpCookieeList}
+          isSessionOpened={isSessionOpened}
+          handleModalClick={handleModalClick}
+          handleMainVideoStream={handleMainVideoStream}
+          handleACookieeAudio={handleACookieeAudio}
+          resetHandsUpCookiee={resetHandsUpCookiee}
+          noneClick={noneClick}
+        />
+      }
+      {isHalf && 
+        <CookyerHalfScreen
+          publisher={publisher}
+          mainStreamManager={mainStreamManager}
+          subscribers={subscribers}
+          audioOnList={audioOnList}
+          checkCookieeList={checkCookieeList}
+          handsUpCookieeList={handsUpCookieeList}
+          isSessionOpened={isSessionOpened}
+          shareScreenPublisher={shareScreenPublisher}
+          handleModalClick={handleModalClick}
+          handleMainVideoStream={handleMainVideoStream}
+          handleACookieeAudio={handleACookieeAudio}
+          resetHandsUpCookiee={resetHandsUpCookiee}
+          noneClick={noneClick}
+        />
+      }
     </div>
-  );
+  )
 }
 
-export default CookyerScreen;
+export default CookyerScreen

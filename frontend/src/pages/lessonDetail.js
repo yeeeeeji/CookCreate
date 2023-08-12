@@ -12,97 +12,111 @@ import {
   setCategoryId, setCategoryName, setDescription, setDifficulty,
   setLessonDate, setLessonStepList, setLessonTitle, setRemaining,
   setMaterials, setMaximum, setPrice, setThumbnailUrl, setTimeTaken, setVideoUrl,
-  setIntroduce
+  setIntroduce, setCookyerName, setFood, setCookyerId, setBadge, setProfileImg
 } from '../store/lesson/lessonInfo';
+import '../style/lesson/lessonDetailCss.css';
+import { useParams } from 'react-router';
+
 
 function LessonDetail() {
   const dispatch = useDispatch();
-  
-  const lessonId = useSelector((state) => state.lessonInfo.lessonId)
-  const access_token = localStorage.getItem('access_token')
 
-  const userName = localStorage.getItem('nickname')
+  const lessonId = useSelector((state) => state.lessonInfo.lessonId);
+  const accessToken = localStorage.getItem('access_token');
   const categoryName = useSelector((state) => state.lessonInfo.categoryName);
+  const difficulty = useSelector((state) => state.lessonInfo.difficulty);
+  const userName = localStorage.getItem('nickname')
   const lessonTitle = useSelector((state) => state.lessonInfo.lessonTitle);
   const thumbnailUrl = useSelector((state) => state.lessonInfo.thumbnailUrl);
-
   const userType = localStorage.getItem('role');
-  const [disable, setDisable] = useState(false);
   const [disableEdit, setDisableEdit] = useState(false)
   const lessonDate = useSelector((state) => state.lessonInfo.lessonDate);
   const remaining = parseInt(useSelector((state) => state.lessonInfo.remaining));
-  // const lessonId = useSelector((state) => state.lessonInfo.lessonId);
 
   useEffect(() => {
     const DateTransformType = new Date(lessonDate);
     const currentTime = new Date();
     const futureTime = new Date(currentTime.getTime() + 12 * 60 * 60 * 1000); // 현재 시간 + 12시간
-    // const lessonId = useSelector((state) => state.lessonInfo.lessonId)
-    axios
-      .get(`/api/v1/lesson/${lessonId}`, {}, {
-      headers: {
-        Access_Token: access_token,
-      }
+    
+    axios.get(`/api/v1/lesson/${lessonId}`, {
+        headers: {
+            Access_Token: accessToken
+        }
     })
+    .then((res) => {
+      console.log(res.data)
+      dispatch(setCookyerId(res.data.cookyerId));
+      dispatch(setCookyerName(res.data.cookyerName));
+      dispatch(setFood(res.data.food));
+      dispatch(setCategoryName(res.data.categoryName));
+      dispatch(setCategoryId(res.data.categoryId));
+      dispatch(setDescription(res.data.description));
+      dispatch(setDifficulty(res.data.difficulty));
+      dispatch(setLessonTitle(res.data.lessonTitle));
+      dispatch(setLessonStepList(res.data.lessonStepList));
+      dispatch(setMaterials(res.data.materials));
+      dispatch(setMaximum(res.data.maximum));
+      dispatch(setPrice(res.data.price));
+      dispatch(setThumbnailUrl(res.data.thumbnailUrl));
+      dispatch(setRemaining(res.data.remaining));
+      dispatch(setVideoUrl(res.data.videoUrl));
+      dispatch(setLessonDate(res.data.lessonDate));
+      dispatch(setTimeTaken(res.data.timeTaken));
+      dispatch(setVideoUrl(res.data.videoUrl));
+      dispatch(setIntroduce(res.data.introduce));
+      dispatch(setProfileImg(res.data.profileImg));
+
+      // if (DateTransformType > futureTime && remaining > 0 && userType === 'COOKIEE') {
+      //     setDisable(false);
+      // } else {
+      //     setDisable(true);
+      // }
+
+      if (userName === res.data.cookyerName) {
+          setDisableEdit(false);
+      } else {
+          setDisableEdit(true);
+      }
+
+      axios.get(`/api/v1/lesson/badge/${res.data.cookyerId}`, {
+          headers: {
+              Access_Token: accessToken
+          }
+      })
       .then((res) => {
-        console.log(res.data);
-        console.log(DateTransformType > futureTime, ' 더 미래니?');
-        console.log(userType);
-        dispatch(setCategoryName(res.data.categoryName));
-        dispatch(setCategoryId(res.data.categoryId));
-        dispatch(setDescription(res.data.description));
-        dispatch(setDifficulty(res.data.difficulty));
-        dispatch(setLessonTitle(res.data.lessonTitle));
-        dispatch(setLessonStepList(res.data.lessonStepList));
-        dispatch(setMaterials(res.data.materials));
-        dispatch(setMaximum(res.data.maximum));
-        dispatch(setPrice(res.data.price));
-        dispatch(setThumbnailUrl(res.data.thumbnailUrl));
-        dispatch(setRemaining(res.data.remaining));
-        dispatch(setVideoUrl(res.data.videoUrl));
-        dispatch(setLessonDate(res.data.lessonDate));
-        dispatch(setTimeTaken(res.data.timeTaken));
-        dispatch(setVideoUrl(res.data.videoUrl));
-        dispatch(setIntroduce(res.data.introduce))
-        if (DateTransformType > futureTime && remaining > 0 && userType === 'COOKIEE') {
-          setDisable(false);
-        } else {
-          setDisable(true);
-        }
-        if (userName === res.data.cookyerName) { 
-          setDisableEdit(false)
-        } else {
-          setDisableEdit(true)
-        }
+          dispatch(setBadge(res.data.message))
       })
       .catch((err) => {
+          console.log(err);
+      });
+    })
+    .catch((err) => {
         console.log(err);
         alert(err.response.data.message);
       });
-  }, [disable, lessonId]);
+  }, [lessonId]);
 
   return (
-    <div>
-      <br />
-      {categoryName}
-      <h2>
-        {lessonTitle}
-      </h2>
-      <img src={thumbnailUrl} alt="" />
-      <IntroduceLesson />
-      <IntroduceCookyer />
-      <LessonReview />
+    <div className='lessonDetailContainer'>
+      <div className='detailLeftSection'>
+        <br />
+        <div className='detailCategoryContainer'> 
+          <span className='detailCategory'>{categoryName}</span> <span className='detailCategory'>{difficulty}</span>
+        </div>
+        <h2 className='detailLessonTitle'> {lessonTitle} </h2>
+        <img className='detailThumbnail' src={thumbnailUrl} alt="" />
+        <IntroduceLesson />
+        <hr />
+        <IntroduceCookyer />
+        <LessonReview />
+      </div>
 
-      <CookieeNumber />
-      <ApplyLesson
-        disable={disable}
-      />
-      <LessonSchedule />
-      <EditLesson 
-        lessonId={lessonId} 
-        disable={disableEdit} 
-      />
-
+      <div className='detailRightSection'>
+        <CookieeNumber />
+        <ApplyLesson/>
+        <LessonSchedule />
+        <EditLesson lessonId={lessonId} disable={disableEdit} />
+      </div>
     </div>
   );
 }

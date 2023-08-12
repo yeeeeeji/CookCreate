@@ -5,11 +5,11 @@
     justify-items: center; /* 가로 가운데 정렬 */
     align-items: center; /* 세로 가운데 정렬 */
     margin-top: 80px;
-    margin-bottom: 150px;
 }
   
 .lessonItemContainer {
     width: 100%;
     box-sizing: border-box;
     padding: 20px;
+    cursor: pointer;
 }

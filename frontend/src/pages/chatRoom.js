@@ -1,61 +1,38 @@
-// import axios from "axios";
-import React from "react";
-// import React,{useEffect} from "react";
-import * as StompJs from "@stomp/stompjs";
-import InputChat from "../component/Chat/ChatRoom/InputChat";
-import HeaderChat from "../component/Chat/ChatRoom/HeaderChat"
-import ChatList from "../component/Chat/ChatList/ChatList";
-import ShowChat from "../component/Chat/ChatRoom/ShowChat";
+import React, { useState } from "react";
+import ChatList from "../component/ChatList/ChatList";
+import ShowChat from "../component/ChatRoom/ShowChat";
+import "../style/chat/chatroom.css";
 
+function ChatRoom() {
+  //채팅받기
+  // const [chatinfo, setChatInfo] = useState([]);
+  // const [chatList, setChatList] = useState([]); // 화면에 표시될 채팅 기록
+  // const { lessonId } = useParams();
 
-function ChatPage() {
-  // const accessToken = localStorage.getItem('access_token')
-  const nick = localStorage.getItem('nickname')
-  const id = localStorage.getItem('id')
+  const [chatTitle, setChatTitle] = useState();
+  const [lessonId, setLessonId] = useState(null);
+  const [chatOver, setChatOver] = useState(false);
 
-
-  const client = new StompJs.Client({
-    brokerURL: `ws://localhost:8080/api/v1/message`,
-    onConnect: () => {
-      console.log("웹소켓 연결");
-    },
-  });
-
-  client.activate();
-
-  const sendMessage = (message) => {
-    if (client.connected) {
-      const destination = "/pub/chat/message";
-      // const headers = { accessToken };
-      const data = {
-        lessonId: 8,
-        // userId: "user33",
-        // nickname: "sdfsa",
-        userId: id,
-        nickname: nick,
-        content: message,
-      };
-      const body = JSON.stringify(data);
-
-      client.publish({ destination, body }).catch((error) => {
-        console.error("Error sending message:", error);
-      });
-      console.log("chat!");
-    }
+  const goChatRoom = ({ lessonId, chatTitle, chatOver }) => {
+    console.log("고챗룸", chatOver);
+    setLessonId(lessonId);
+    setChatTitle(chatTitle);
+    setChatOver(chatOver);
   };
 
   return (
-    
-    <div className="ChatRoomContainer">
-        <HeaderChat />
+    <div className="chatroom-container">
       <div className="ChatListContainer">
-        <ChatList />
+        <ChatList goChatRoom={goChatRoom} />
       </div>
-      <div className="ChatSpace">
-        <ShowChat />
-      </div>
-      <div className="InputChatContainer">
-        <InputChat sendMessage={sendMessage} />
+      <div className="chat-room-content">
+        {lessonId === null ? (
+          <p>채팅방을 선택해주세요.</p>
+        ) : (
+          <div className="ChatSpace">
+            <ShowChat lessonId={lessonId} chatTitle={chatTitle} chatOver={chatOver} />
+          </div>
+        )}
       </div>
     </div>
   );

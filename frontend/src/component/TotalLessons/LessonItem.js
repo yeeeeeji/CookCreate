@@ -3,7 +3,7 @@ import { setLessonId } from '../../store/lesson/lessonInfo';
 import { useDispatch } from 'react-redux';
 import '../../style/lesson/lessonItemCss.css';
 
-function LessonItem({ id, title, date, thumbnailUrl, reviewAvg, cookyerName, categoryId }) {
+function LessonItem({ id, title, date, thumbnailUrl, reviewAvg, cookyerName, categoryId, difficulty }) {
 
   const dispatch = useDispatch();
   const handleItemClick = () => {
@@ -21,7 +21,7 @@ function LessonItem({ id, title, date, thumbnailUrl, reviewAvg, cookyerName, cat
 
   let message = '';
   if (formattedDate < futureTime) {
-    message = '앞으로 12시간 이전에 열릴 과외이므로, 신청 불가능합니다.'
+    message = '앞으로 12시간 이내에 시작될 과외이므로, 신청 불가능합니다.'
   }
 
   return (
@@ -30,7 +30,7 @@ function LessonItem({ id, title, date, thumbnailUrl, reviewAvg, cookyerName, cat
       className='lessonItem'
     >
       <img className='thumbnail' src={thumbnailUrl} alt='image' />
-      <h3>{title}</h3>
+      <h3 className='lessonItemTitle'>{title}</h3>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>
           ⭐{reviewAvg}
@@ -39,9 +39,14 @@ function LessonItem({ id, title, date, thumbnailUrl, reviewAvg, cookyerName, cat
           {formattedDateString} | {cookyerName}
         </div>
       </div>
-      <button className='categoryBadge'>
-        {category}
-      </button>
+      <div className='badgeContainer'>
+        <button className='categoryBadge'>
+          {category}
+        </button>
+        <button className='difficultyBadge'>
+          {difficulty}
+        </button>
+      </div>
       {message && <div className='messageOverlay'>{message}</div>}
     </div>
   );

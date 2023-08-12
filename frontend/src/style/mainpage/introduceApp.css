@@ -1,0 +1,39 @@
+.mainTitle {
+    color: #FF7A42;
+    text-shadow: 1px 2px 1px rgba(0, 0, 0, 0.25);
+    font-size: 5.3rem;
+    font-weight: 900;
+    margin: 1rem 0;
+
+}
+
+.mainpageContent {
+    display : flex;
+    flex-direction: column;
+    align-items: center;  
+    padding: 9rem 0 21rem 0;   
+}
+
+.mainText {
+    color: #444;
+    font-size: 1rem;
+    font-weight: 400;
+    display: flex;
+    text-align: left;
+}
+
+.animation-container {
+    opacity: 0;
+    animation: fadeInAnimation 2s ease forwards;
+}
+  
+@keyframes fadeInAnimation {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+}

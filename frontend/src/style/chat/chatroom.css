@@ -1,0 +1,14 @@
+.InputChatContainerCentered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chatroom-container {
+  display: flex;
+}
+
+.ChatSpace {
+  width: 750px;
+  height: 800px;
+}

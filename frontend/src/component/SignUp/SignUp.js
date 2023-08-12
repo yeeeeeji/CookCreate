@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-import { login } from '../../store/auth/auth'
 
 import FoodList from './FoodList';
 function Signup() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [userId, setUserId] = useState('')
   const [userPw, setUserPw] = useState('')
   const [userPwCk, setUserPwCk] = useState('')
@@ -33,7 +30,7 @@ function Signup() {
   const [isUserPwCk, setIsUserPwCk] = useState(false)
   const [isNickname, setIsNickname] = useState(false)
   const [isNicknameDupli, setIsNNdup] = useState(false)
-  const [isPhoneNumber, setIsPhoneNumber] = useState(false)
+  const [isPhoneNumber, setIsPhoneNumber] = useState(true)
   const [isUserEmail, setIsUserEmail] = useState(true)
 
   //유효성 검사 구현
@@ -130,11 +127,11 @@ function Signup() {
     axios
     .get(`api/v1/auth/checkId/${userId}`)
     .then((res) => {
-      setUserIdDupMessage(res.data.message)
+      setUserIdMessage(res.data.message)
       setIsIddup(true)
     })
     .catch((err) => {
-      setUserIdDupMessage(err.response.data.message)
+      setUserIdMessage(err.response.data.message)
       setIsIddup(false)
     })
   }
@@ -142,11 +139,11 @@ function Signup() {
     axios
     .get(`api/v1/auth/checkNick/${nickname}`)
     .then((res) => {
-      setUserNNDupMessage(res.data.message)
+      setUserNicknameMessage(res.data.message)
       setIsNNdup(true)
     })
     .catch((err) => {
-      setUserNNDupMessage(err.response.data.message)
+      setUserNicknameMessage(err.response.data.message)
       setIsNNdup(false)
     })
   }
@@ -162,8 +159,6 @@ function Signup() {
     }
   };
   
-
-
   const handleSignup = (e) => {
     e.preventDefault()
     const foodString = food.join(',');
@@ -187,26 +182,31 @@ function Signup() {
       </div>
       <div className='contentWrap'>
         <div className='signupinputContainer'>
-          <div className='inputTitle'>아이디 <span className="required">*</span></div>
-          <div className='inputWrap'>
-            <input type="text" className='input'
-            value={userId}
-            onChange={
-              onChangeUserId
-            }
-            placeholder='아이디'/>
-            <button className='dupliButton' onClick={idDupliCheck}>중복확인</button>
+          <div className='signupinputTitle'>아이디 <span className="required">*</span></div>
+          <div className='signupinputWrap'>
+            <input 
+              type="text"
+              className='signupinput'
+              value={userId}
+              onChange={onChangeUserId}
+              placeholder='아이디'
+            />
+            <button className='signupdupliButton' onClick={idDupliCheck}>
+              중복확인
+            </button>
+            {isUserId && isIdDupli ? '✅' : '🔲'}
+
           </div>
         </div>
-        <div className='inputMessage'>
+        <div className='signupinputMessage'>
           {userIdMessage}
           {userIdDupMessage}
         </div>
 
         <div className='signupinputContainer'>
-          <div className='inputTitle'>비밀번호 <span className="required">*</span></div>
-          <div className='inputWrap'>
-            <input type="password" className='input'
+          <div className='signupinputTitle'>비밀번호 <span className="required">*</span></div>
+          <div className='signupinputWrap'>
+            <input type="password" className='signupinput'
             value={userPw}
             onChange={
               onChangeUserPw
@@ -215,14 +215,15 @@ function Signup() {
             />
           </div>
         </div>
-        <div className='inputMessage'>
+        <div className='signupinputMessage'>
           {userPwMessage}
+          {isUserPw ? '✅' : '🔲'}
         </div>
 
         <div className='signupinputContainer'>
-          <div className='inputTitle'>비밀번호 확인 <span className="required">*</span></div>
-          <div className='inputWrap'>
-            <input type="password" className='input'
+          <div className='signupinputTitle'>비밀번호 확인 <span className="required">*</span></div>
+          <div className='signupinputWrap'>
+            <input type="password" className='signupinput'
             value={userPwCk}
             onChange={
               onChangeUserPwCk
@@ -231,31 +232,33 @@ function Signup() {
             />
           </div>
         </div>
-        <div className='inputMessage'>
+        <div className='signupinputMessage'>
           {userPwCkMessage}
+          {isUserPwCk ? '✅' : '🔲'}
         </div>
         
         <div className='signupinputContainer'>
-          <div className='inputTitle'>닉네임 <span className="required">*</span></div>
-          <div className='inputWrap'>
-            <input type="nickname" className='input'
+          <div className='signupinputTitle'>닉네임 <span className="required">*</span></div>
+          <div className='signupinputWrap'>
+            <input type="nickname" className='signupinput'
             value={nickname}
             onChange={
               onChangeUserNickName
             }
             placeholder='닉네임'/>
-            <button  className='dupliButton' onClick={nicknameDupliCheck}>중복확인</button>
+            <button  className='signupdupliButton' onClick={nicknameDupliCheck}>중복확인</button>
           </div>
         </div>        
-        <div className='inputMessage'>
+        <div className='signupinputMessage'>
           {userNicknameMessage}
           {userNNDupMessage}
+          {isNickname && isNicknameDupli ? '✅' : '🔲'}
         </div>
 
         <div className='signupinputContainer'>
-          <div className='inputTitle'>전화번호 <span className="required">*</span></div>
-          <div className='inputWrap'>
-            <input type="phonenumber" className='input'
+          <div className='signupinputTitle'>전화번호</div>
+          <div className='signupinputWrap'>
+            <input type="phonenumber" className='signupinput'
             value={phoneNumber}
             onChange={
               onChangeUserPhonenumber
@@ -263,14 +266,14 @@ function Signup() {
             placeholder='전화번호 입력'/>
           </div>
         </div>
-        <div className='inputMessage'>
+        <div className='signupinputMessage'>
           {userPhoneNumberMessage}
         </div>
 
         <div className='signupinputContainer'>
-          <div className='inputTitle'>이메일</div>
-          <div className='inputWrap'>
-            <input type="email" className='input'
+          <div className='signupinputTitle'>이메일</div>
+          <div className='signupinputWrap'>
+            <input type="email" className='signupinput'
             value={userEmail}
             onChange={
               onChangeUserEmail
@@ -278,7 +281,7 @@ function Signup() {
             placeholder='이메일'/>
           </div>
         </div>
-        <div className='inputMessage'>
+        <div className='signupinputMessage'>
           {userEmailMessage}
         </div>
 

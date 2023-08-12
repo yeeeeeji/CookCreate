@@ -5,6 +5,9 @@ import axios from "axios";
 import Modal from 'react-modal';
 import ReviewDetailT from "./ReviewDetailT";
 
+//별점
+import StarShow from "./StarShow";
+
 
 
 function Review() {
@@ -93,10 +96,11 @@ function Review() {
                     <a href="dd" className="review_link">
                       {review.lessonTitle}
                     </a>
-                    <div className="review_star">⭐️⭐️⭐️⭐️ {review.rating}</div>
-                    <div className="review_author">작성자/아이디: {review.userId}</div>
+                    <StarShow rating={review.rating} size="1.4rem" color="gold" />
+                    <div>{review.rating}</div>
+                    <div className="review_author">작성자: {review.nickname}</div>
                     <div className="review_tutor">
-                      선생님닉네임/아이디: {review.cookyerName}/{review.cookyerId}
+                      선생님: {review.cookyerName}
                     </div>
                     <div className="review_cont">
                       리뷰내용:{review.reviewContents}
