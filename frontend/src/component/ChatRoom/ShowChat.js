@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { MyChat, FriendChat } from "./ChatBlock";
+import { MyChat, FriendChat, SeparationBlock } from "./ChatBlock";
 import HeaderChat from "./HeaderChat";
 import InputChat from "./InputChat"
 import * as StompJs from "@stomp/stompjs";
@@ -9,6 +9,7 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
   const accessToken = localStorage.getItem("access_token");
   const nick = localStorage.getItem("nickname");
   const id = localStorage.getItem("id");
+  const [EnterNickname, setEnterNickname] = useState([])
 
   const [messageList, setMessageList] = useState([])
 
@@ -37,6 +38,9 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
   
         const body = JSON.stringify(data);
         console.log("채팅입장", body);
+        const ParsedData = JSON.parse(body);
+        setEnterNickname(ParsedData.nickname);
+        console.log("닉넴",EnterNickname)
   
         client.current.publish({ destination, body });
         console.log("enter!");
@@ -104,6 +108,7 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
     <div>
       <HeaderChat lessonId={lessonId} chatTitle={chatTitle} chatOver={chatOver} />
       <div style={{ overflowY: "auto", height: "450px", background:"#fff9f2" }} id="ChatRoom" ref={scrollRef}>
+        <SeparationBlock EnterNickname={EnterNickname} />
         {messageList.map((chat, index) =>
           chat.userId !== id ? <FriendChat key={index} message={chat.content} author={chat.userId} /> : <MyChat key={index} message={chat.content} />
         )}

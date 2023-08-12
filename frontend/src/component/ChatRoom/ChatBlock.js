@@ -115,10 +115,10 @@ const Chat = ({ message, author}) => {
   );
 };
 
-const SeparationBlock = ({ content }) => {
+const SeparationBlock = ({ EnterNickname }) => {
   return (
     <BorderBlock>
-      <span>{content}</span>
+      <span>{EnterNickname}님이 입장하셨습니다.</span>
     </BorderBlock>
   );
 };
@@ -147,4 +147,4 @@ const FriendChat = ({ author, message }) => {
   );
 };
 
-export { Chat, MyChat, FriendChat };
+export { Chat, MyChat, FriendChat, SeparationBlock };
