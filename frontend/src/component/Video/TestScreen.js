@@ -1,10 +1,16 @@
 import React, { useEffect, useRef } from "react";
+import { useDispatch } from 'react-redux';
 import HandLandMarker from "./../../component/Gesture/HandLandMarker"; // 수정하기
 import { DrawingUtils, HandLandmarker as abc } from "@mediapipe/tasks-vision";
+import { startTimer, raiseHand, checkUp } from "./../../store/video/gestureTest";
+import { trigTimer } from "./../../store/video/timer";
+import '../../style/testVideo.css'
 
-const App = () => {
+const TestScreen = () => {
+  const dispatch = useDispatch();
+
   const canvasRef = useRef(null);
-  const contextRef = useRef(null);
+  // const contextRef = useRef(null);
   const inputVideoRef = useRef(null);
 
   // 탐지를 1번만 했을 때 함수 호출 시 너무 민감하게 작동하므로 count를 n 이상 했을때만 함수 호출
@@ -21,14 +27,14 @@ const App = () => {
     const videoRef = inputVideoRef.current;
     let gesture = "";
 
-    if (canvas) {
-      contextRef.current = canvas.getContext("2d");
-    }
+    // if (canvas) {
+    //   contextRef.current = canvas.getContext("2d");
+    // }
 
-    if (contextRef.current && canvas && videoRef) {
+    if ( canvas && videoRef ) {
       createHandLandmarker().then((handLandmarker) => {
         // console.log(handLandmarker);
-        const drawingUtils = new DrawingUtils(contextRef.current);
+        // const drawingUtils = new DrawingUtils(contextRef.current);
         let lastVideoTime = -1;
         let results = undefined;
 
@@ -42,32 +48,32 @@ const App = () => {
           if (lastVideoTime !== videoRef.currentTime) {
             lastVideoTime = videoRef.currentTime;
             results = handLandmarker.detectForVideo(videoRef, startTimeMs);
-            console.log(results);
+            // console.log(results);
             // Perform gesture recognition
             const recognizedGesture = recognizeGesture(results);
             gesture = recognizedGesture ? recognizedGesture : "";
           }
 
-          contextRef.current.save();
-          contextRef.current.clearRect(0, 0, canvas.width, canvas.height);
-          if (results.landmarks) {
-            for (const landmarks of results.landmarks) {
-              drawingUtils.drawConnectors(landmarks, abc.HAND_CONNECTIONS, {
-                color: "#FFF000",
-                lineWidth: 5,
-              });
+          // contextRef.current.save();
+          // contextRef.current.clearRect(0, 0, canvas.width, canvas.height);
+          // if (results.landmarks) {
+          //   for (const landmarks of results.landmarks) {
+          //     drawingUtils.drawConnectors(landmarks, abc.HAND_CONNECTIONS, {
+          //       color: "#FFF000",
+          //       lineWidth: 5,
+          //     });
 
-              drawingUtils.drawLandmarks(landmarks, {
-                color: "#00FF00",
-                lineWidth: 5,
-              });
-            }
-          }
+          //     drawingUtils.drawLandmarks(landmarks, {
+          //       color: "#00FF00",
+          //       lineWidth: 5,
+          //     });
+          //   }
+          // }
           // Display recognized gesture
-          contextRef.current.font = "50px Arial";
-          contextRef.current.fillStyle = "#00FF00";
-          contextRef.current.fillText(`${gesture}`, 10, 30);
-          contextRef.current.restore();
+          // contextRef.current.font = "50px Arial";
+          // contextRef.current.fillStyle = "#00FF00";
+          // contextRef.current.fillText(`${gesture}`, 10, 30);
+          // contextRef.current.restore();
 
           window.requestAnimationFrame(predict);
         }
@@ -104,41 +110,47 @@ const App = () => {
           isThumbIndexTouched = dist(landmarks[4].x, landmarks[4].y, landmarks[8].x, landmarks[8].y) < dist(landmarks[4].x, landmarks[4].y, landmarks[3].x, landmarks[3].y);
 
 					if (open[0] === true && open[1] === true && open[2] === false && open[3] === false && open[4] === false) {
-						ans = 0;
+						// dispatch(checkUp());
+            checkCount += 1;
 					}
 
 					if (isThumbIndexTouched === true && open[2] === true && open[3] === true && open[4] === true) {
-						ans = 1;
+						// dispatch(trigTimer());
+            okCount += 1;
 					}
 					else if (open[0] === true && open[1] === true && open[2] === true && open[3] === true && open[4] === true) {
-						ans = 2;
+						// dispatch(raiseHand());
+            handCount += 1;
 					}
-        } 
-      }
+        }
 
+        if (checkCount >= 8) dispatch(checkUp());
+        if (okCount >= 8) dispatch(trigTimer());
+        if (handCount >= 8) dispatch(raiseHand());
+      } else {
+        checkCount = 0;
+        okCount = 0;
+        handCount = 0;
+      }
       return gesture[ans];
     };
 
   return (
     <>
-      <div style={{ position: "relative" }}>
-        <video
-          id="webcam"
-          style={{ position: "absolute" }}
-          autoPlay
-          playsInline
-          ref={inputVideoRef}
-        ></video>
-<canvas
-          ref={canvasRef}
-          id="output_canvas"
-          style={{ position: "absolute", left: "0px", top: "0px" }}
-        ></canvas>
-      </div>
+      <video
+        className='test-video'
+        autoPlay
+        playsInline
+        ref={inputVideoRef}
+      ></video>
+        <canvas
+        ref={canvasRef}
+        style={{display:"none"}}
+      ></canvas>
     </>
   );
 };
 
-export default App;
+export default TestScreen;
 
 // 이제 여기에 
