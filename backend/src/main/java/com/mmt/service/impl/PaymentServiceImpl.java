@@ -73,9 +73,12 @@ public class PaymentServiceImpl {
         parameter.add("quantity", "1");
         parameter.add("total_amount", String.valueOf(paymentHistory.getTotalAmount()));
         parameter.add("tax_free_amount", "0");
-        parameter.add("approval_url", "http://localhost:8080/api/v1/pay/completed?paymentId=" + paymentHistory.getPaymentId());
-        parameter.add("cancel_url", "http://localhost:8080/api/v1/pay/cancel?paymentId=" + paymentHistory.getPaymentId());
-        parameter.add("fail_url", "http://localhost:8080/api/v1/pay/fail?paymentId=" + paymentHistory.getPaymentId());
+        // parameter.add("approval_url", "http://localhost:8080/api/v1/pay/completed?paymentId=" + paymentHistory.getPaymentId());
+        // parameter.add("cancel_url", "http://localhost:8080/api/v1/pay/cancel?paymentId=" + paymentHistory.getPaymentId());
+        // parameter.add("fail_url", "http://localhost:8080/api/v1/pay/fail?paymentId=" + paymentHistory.getPaymentId());
+        parameter.add("approval_url", "http://i9c111.p.ssafy.io/api/v1/pay/completed?paymentId=" + paymentHistory.getPaymentId());
+        parameter.add("cancel_url", "http://i9c111.p.ssafy.io/api/v1/pay/cancel?paymentId=" + paymentHistory.getPaymentId());
+        parameter.add("fail_url", "http://i9c111.p.ssafy.io/api/v1/pay/fail?paymentId=" + paymentHistory.getPaymentId());
 
         log.debug("use webClient before");
 
