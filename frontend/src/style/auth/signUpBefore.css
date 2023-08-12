@@ -61,7 +61,7 @@
 
 .user-type.active {
   background-color: #ffdec6;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 /* 사용자 이름 스타일 */

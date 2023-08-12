@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from 'axios';
 
+//별점
+import StarShow from "./StarShow";
+
 
 export default function ReviewDetailT({ reviewId,onClose}) {
   const accessToken = useSelector((state) => state.auth.access_token);
@@ -12,6 +15,23 @@ export default function ReviewDetailT({ reviewId,onClose}) {
   useEffect(() => {
     handleViewDetail();
   },  [reviewId] );
+
+  //시간 포맷
+  const displayTime = (dateTime) => {
+    if (!dateTime) return null;
+
+    const localDate = new Date(dateTime);
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      // second: '2-digit',
+      timeZone: 'Asia/Seoul', // 시간대를 UTC로 설정 (한국 시간으로 하는게 맞는 거 같다)
+    };
+    return localDate.toLocaleString(undefined, options);
+  };
 
   
   //리뷰상세정보 조회
@@ -43,22 +63,29 @@ export default function ReviewDetailT({ reviewId,onClose}) {
         <label htmlFor="lessonTitle">강좌 이름:{selectedReview.lessonTitle}</label>
       </div>
       <div className="review-field">
-        <label htmlFor="lessonTitle">선생님 아이디:{selectedReview.cookyerId}/선생님 성함:{selectedReview.cookyerName}</label>
-      </div>
-      <div className="review-field">
         <label htmlFor="rating">평점:{selectedReview.rating}</label>
       </div>
       <div className="review-field">
-        <label htmlFor="rating">유저아이디:{selectedReview.userId}/유저닉네임:{selectedReview.nickname}</label>
+        {/* <label htmlFor="rating">평점:{selectedReview.rating}</label> */}
+        <StarShow rating={selectedReview.rating} size="1.4rem" color="gold" />
+      </div>
+      <div className="review-field">
+        <label htmlFor="lessonTitle">선생님:{selectedReview.cookyerName}</label>
+      </div>
+      <div className="review-field">
+        <label htmlFor="rating">작성자:{selectedReview.userId}({selectedReview.nickname})</label>
       </div>
       <div className="review-field">
         <label htmlFor="reviewContents">리뷰 내용:{selectedReview.reviewContents}</label>
       </div>
       <div className="review-field">
-        <label htmlFor="reviewContents">생성날짜:{selectedReview.createdDate}</label>
+        {/* {selectedReview ? <div>생성일:{new Date(selectedReview.createdDate).toISOString().split("T")[0]}</div> : null} */}
+        {/* <label htmlFor="reviewContents">생성날짜:{selectedReview.createdDate}</label> */}
+        {selectedReview ? <label htmlFor="reviewContents"> 생성일:{displayTime(selectedReview.createdDate)}</label>: null}
       </div>
       <div className="review-field">
-        <label htmlFor="reviewContents">수정날짜:{selectedReview.modifiedDate}</label>
+        {/* <label htmlFor="reviewContents">수정일:{selectedReview.modifiedDate}</label> */}
+        {selectedReview ? <label htmlFor="reviewContents"> 수정일:{displayTime(selectedReview.modifiedDate)}</label>: null}
       </div>
     </div>
   </div>
