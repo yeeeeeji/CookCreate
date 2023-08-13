@@ -15,7 +15,7 @@ function CoreFunction() {
       
         if (elementTop < 400 && !animated[index]) {
           element.classList.add('visible');
-          animated = true;
+          animated[index] = true;
         }
       });
     });

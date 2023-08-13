@@ -32,9 +32,10 @@ a:not(:first-of-type) {
   align-items: center;
 }
 
-.nav-cookyer {
+.nav-lesson {
   display: flex;
   font-size: 0.9rem;
+  margin-left: 2rem;
 }
 
 .nav-user {
@@ -49,3 +50,19 @@ a:not(:first-of-type) {
   color : #656363;
 }
 
+/* 네브바 드롭다운메뉴 나중에 옮기기 */
+/* .dropdown {
+  display: flex;
+  position: relative;
+} */
+
+.dropdown-content {
+  /* display: none; */
+  padding: 1rem 1.5rem;
+  position: absolute;
+  top: 4.5rem;
+  color: black;
+  border-radius: 0.3rem;
+  border: 0.7px solid #8D9193;
+}
+/* 옮기기 */
