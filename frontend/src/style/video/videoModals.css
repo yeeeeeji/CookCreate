@@ -8,7 +8,8 @@
   background-color: #fff;
   padding: 20px;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); */
+  box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px;
   width: 517px;
   height: 533px;
   z-index: 2;
@@ -108,7 +109,8 @@
   background-color: #fff;
   padding: 20px;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); */
+  box-shadow : rgba(0,0,0,0.5) 0 0 0 9999px;
   width: 426px;
   height: 533px;
   z-index: 2;
