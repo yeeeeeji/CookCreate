@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPrice, setPriceValid, setMaximum, setMaximumValid, setDifficulty, setDescription, 
   setVideoUrl, setMaterials, setDifficultyValid, setDescriptionValid, setMaterialsValid } from '../../store/lesson/lesson';
+import '../../style/lesson/registerLessonDetailCss.css';
 
 function LessonDetail() {
   const dispatch = useDispatch();
@@ -97,111 +98,114 @@ function LessonDetail() {
 
   return (
     <div>
-      {/* 수강료 */}
-      <div style={{display : 'flex', alignItems : 'center'}}>
-        <div>
-          <div style={{display : 'flex', alignItems : 'center'}}>
-            <h3>수강료</h3>
-            <div style={{marginLeft : '5px'}}>{priceValid ? '✅' : '🔲'}</div>
-          </div>
-          <div> 
+      <div>
+        <div className="lessonInfoTopContainer">
+          <div className="lessonInfoTopTitleContainer">
+            <div className="lessonInfoText">수강료 <span className="required">*</span></div>
+            {/* <div>{priceValid ? '✅' : '🔲'}</div> */}
             <input
+              className='lessonInfoInputPrice'
               type="text"
               min="0"
               placeholder="수강료"
               value={lessonPrice}
               onChange={handleChangePrice}
-              />
+            />
+          </div>              
+          <div className="lessonInfoTopTitleContainer">
+            <div className="lessonInfoText">최대 수강 인원 <span className="required">*</span></div>
+            {/* <div>{maxValid ? '✅' : '🔲'}</div> */}
+            <select className='lessonInfoSelect' value={maximum} onChange={changeMaximum}>
+              <option value="">-</option>
+              {Array.from({ length: 6 }, (_, index) => index + 1).map((value) => (
+                <option key={value} value={value}>
+                  {value}명
+                </option>
+              ))}
+            </select>
           </div>
-          {errorMsg && <div style={{ color: 'red' }}>{errorMsg}</div>}
         </div>
-        {/* 최대 수강 인원 */}
-        <div>
-          <div style={{display : 'flex', alignItems : 'center'}}>
-            <h3>최대 수강 인원</h3>
-            <div style={{marginLeft : '5px'}}>{maxValid ? '✅' : '🔲'}</div>
+        {errorMsg && <div className='lessonDetailError'>{errorMsg}</div>}
+
+        <div className="lessonInfoTopContainer">
+          <div className="lessonInfoText">과외 난이도 <span className="required">*</span></div>
+          {/* <div>{difficultyValid ? '✅' : '🔲'}</div> */}
+          <div className='lessonInfoDifficultyContainer'>
+            <div
+              className='lessonInfoDifficulty'
+              onClick={() =>  handleDifficultyClick('EASY')}
+              style={{
+                paddingLeft: '15px',
+                paddingRight: '15px',
+                border: selectedDifficulty === 'EASY' ? '0.7px solid #FF7A42' : '0.7px solid #CBCBCB',
+                borderRadius: '50px',
+                color: selectedDifficulty === 'EASY' ? '#FF7A42' : '#333',
+                backgroundColor: selectedDifficulty === 'EASY' ? '#FFF4F0' : '#FFF',
+                padding : '5px',
+                marginRight : '5px',
+                cursor : 'pointer'
+              }}
+            >
+              EASY
+            </div>
+            <div
+              onClick={() => handleDifficultyClick('NORMAL')}
+              style={{ 
+                paddingLeft: '15px',
+                paddingRight: '15px',
+                border: selectedDifficulty === 'NORMAL' ? '0.7px solid #FF7A42' : '0.7px solid #CBCBCB',
+                borderRadius: '50px',
+                color: selectedDifficulty === 'NORMAL' ? '#FF7A42' : '#333',
+                backgroundColor: selectedDifficulty === 'NORMAL' ? '#FFF4F0' : '#FFF',
+                padding : '5px',
+                marginRight : '5px',
+                cursor : 'pointer' 
+              }}
+            >
+              NORMAL
+            </div>
+            <div
+              onClick={() => handleDifficultyClick('HARD')}
+              style={{ 
+                paddingLeft: '15px',
+                paddingRight: '15px',
+                border: selectedDifficulty === 'HARD' ? '0.7px solid #FF7A42' : '0.7px solid #CBCBCB',
+                borderRadius: '50px',
+                color: selectedDifficulty === 'HARD' ? '#FF7A42' : '#333',
+                backgroundColor: selectedDifficulty === 'HARD' ? '#FFF4F0' : '#FFF',
+                padding : '5px',
+                cursor : 'pointer'
+              }}
+            >
+              HARD
+            </div>
           </div>
-          <select value={maximum} onChange={changeMaximum}>
-            <option value="">-</option>
-            {Array.from({ length: 6 }, (_, index) => index + 1).map((value) => (
-              <option key={value} value={value}>
-                {value}명
-              </option>
-            ))}
-          </select>
         </div>
-      </div>
-      
-      {/* 난이도 */}
-      <div>
-        <div style={{display : 'flex', alignItems : 'center'}}>
-          <h3>과외 난이도</h3>
-          <div style={{marginLeft : '5px'}}>{difficultyValid ? '✅' : '🔲'}</div>
-        </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <div
-            onClick={() =>  handleDifficultyClick('EASY')}
-            style={{ 
-              backgroundColor: selectedDifficulty === 'EASY' ? 'lightgray' : 'white',
-              padding : '5px',
-              marginRight : '5px',
-              cursor : 'pointer'
-             }}
-          >
-            EASY
-          </div>
-          <div
-            onClick={() => handleDifficultyClick('NORMAL')}
-            style={{ 
-              backgroundColor: selectedDifficulty === 'NORMAL' ? 'lightgray' : 'white',
-              padding : '5px',
-              marginRight : '5px',
-              cursor : 'pointer' 
-            }}
-          >
-            NORMAL
-          </div>
-          <div
-            onClick={() => handleDifficultyClick('HARD')}
-            style={{ 
-              backgroundColor: selectedDifficulty === 'HARD' ? 'lightgray' : 'white',
-              padding : '5px',
-              cursor : 'pointer'
-            }}
-          >
-            HARD
-          </div>
+        <div className="lessonInfoDescContainer">
+          <div className="lessonInfoDesc">과외 설명 <span className="required">*</span></div>
+          {/* <div>{descriptionValid ? '✅' : '🔲'}</div> */}
+          <textarea 
+            className='lessonInfoInputDesc'
+            value={lessonDescription}
+            onChange={handleLessonDescription}
+            placeholder='과외 설명'
+          />
         </div>
       </div>
 
-      {/* 과외 설명 */}
-      <div>
-        <div style={{display : 'flex', alignItems : 'center'}}>
-          <h3>과외 설명</h3>
-          <div style={{marginLeft : '5px'}}>{descriptionValid ? '✅' : '🔲'}</div>
-        </div>
+      <div className="lessonInfoTopContainer">
+        <div className='lessonInfoText'>맛보기 영상 링크</div>
         <input type="text"
-          value={lessonDescription}
-          onChange={handleLessonDescription}
-          placeholder='과외 설명'
+          className='lessonInfoInput'
+          value={lessonVideoUrl}
+          onChange={handleVideoUrl}
+          placeholder='맛보기 영상의 주소를 올려주세요!'
         />
       </div>
-
-      {/* 유튜브 링크 */}
-      <div>
-        <h3>맛보기 영상 링크(선택사항)</h3>
-        <div>
-          <input type="text"
-            value={lessonVideoUrl}
-            onChange={handleVideoUrl}
-            placeholder='맛보기 영상의 주소를 올려주세요!'
-            />
-        </div>
-      </div>
       
-      <div style={{display : 'flex', alignItems : 'center'}}>
-      <h3>준비물 입력</h3>
-      <div style={{marginLeft : '5px'}}>{materialValid ? '✅' : '🔲'}</div>
+      <div className="lessonInfoTopContainer">
+        <div className='lessonInfoText'>준비물 입력 <span className="required">*</span></div>
+        {/* <div>{materialValid ? '✅' : '🔲'}</div> */}
       </div>
       <form onSubmit={handleSubmit}>
         <textarea
@@ -213,7 +217,6 @@ function LessonDetail() {
         />
         <button type="submit">입력 완료</button>
       </form>
-
       <div>
         <h3>준비물 리스트</h3>
         <div>
@@ -222,8 +225,6 @@ function LessonDetail() {
           ))}
         </div>
       </div>
-
-
 
     </div>
   );

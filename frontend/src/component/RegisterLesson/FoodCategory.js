@@ -1,7 +1,7 @@
   import React, { useState, useEffect, useMemo } from 'react';
   import { useDispatch, useSelector } from 'react-redux';
   import { setCategory, setCategoryValid } from "../../store/lesson/lesson";
-
+  
   function FoodCategory() {
     const dispatch = useDispatch();
     const reduxCategoryId = useSelector((state) => state.lesson.categoryId);
@@ -28,20 +28,18 @@
     }, [reduxCategoryId, selectedCategory]);
 
     return (
-      <div style={{ maxWidth: '120px' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h3>카테고리</h3>
-          <div style={{ marginLeft: '5px' }}>{categoryValid ? '✅' : '🔲'}</div>
+        <div className="lessonInfoTopCategoryContainer">
+          <div className="lessonInfoText">카테고리 <span className="required">*</span></div>
+          {/* <div className="lessonInfoIcon">{categoryValid ? '✅' : '🔲'}</div> */}
+          <select className="lessonInfoSelect" value={selectedCategory} onChange={handleCategoryChange}>
+            <option value="">-</option>
+            {categories.map((category, index) => (
+              <option key={index} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
         </div>
-        <select value={selectedCategory} onChange={handleCategoryChange}>
-          <option value="">-</option>
-          {categories.map((category, index) => (
-            <option key={index} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
     );
   }
 
