@@ -10,11 +10,11 @@ function OtherCookiees() {
 
   useEffect(() => {
     if (subscribers) {
-      // setCookiees(subscribers)
-      const newList = subscribers.filter((sub) => {
-        return JSON.parse(sub.stream.connection.data).clientData.role === 'COOKIEE'
-      })
-      setCookiees(newList)
+      setCookiees(subscribers)
+      // const newList = subscribers.filter((sub) => {
+      //   return JSON.parse(sub.stream.connection.data).clientData.role === 'COOKIEE'
+      // })
+      // setCookiees(newList)
     }
   }, [subscribers])
 
@@ -29,7 +29,10 @@ function OtherCookiees() {
             />
           </div>
         ))
-      ) : null}
+      ) : (
+        null
+        // <img src='../../../assets/noCookiees.png' alt='참가중인 쿠키가 없습니다'/>
+      )}
     </div>
   );
 }
