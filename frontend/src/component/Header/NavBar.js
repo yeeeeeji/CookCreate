@@ -53,7 +53,7 @@ function NavBar() {
             <div className='dropdown'>
               <button className='drop-btn' onClick={dropLessonMenu}>신청수업</button>
               { lessonDropdown ? (
-                <div onMouseLeave={() => dropLessonMenu(false)}>
+                <div onMouseLeave={() => dropLessonMenu(false)} className="drop-wrap">
                   <AppliedLessonMenu />
                 </div>
               ) : null}
@@ -64,7 +64,7 @@ function NavBar() {
               {nickname}
               님
             { userDropdown ? (
-              <div onMouseLeave={() => dropUserMenu(false)}>
+              <div onMouseLeave={() => dropUserMenu(false)} className="drop-wrap">
                 <UserDropMenu/>
               </div>
             ) : null}
