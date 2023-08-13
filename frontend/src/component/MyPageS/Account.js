@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import FoodList from "../../component/SignUp/FoodList";
 import SideBar from "./SideBar";
+import "./../../style/mypage/account.css";
 
 function Account() {
   const accessToken = useSelector((state) => state.auth.access_token);
@@ -146,7 +147,6 @@ function Account() {
       // setProfileImg(file)
     }
   };
-
   
 
   //기본 프로필로 변경
@@ -212,79 +212,95 @@ function Account() {
   };
 
   return (
-    <div className="mypage">
-      <SideBar />
-      <div className="mytitle">정보수정</div>
-      <div>가입일: {new Date(userData.createdDate).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
-      {/* {userData ? <div>가입일:{new Date(userData.createdDate).toISOString().split("T")[0]}</div> : null} */}
-      <div className="mysubtitle">프로필 변경</div>
-      <img
-        src={profileImgDef}
-        alt="Profile"
-        style={{ margin: "20px", width: "200px", height: "200px", objectFit: "cover" }}
-        onClick={() => {
-          fileInput.current.click();
-        }}
-      />
+    <div className="container">
+      <div className="mypage">
+        <SideBar />
+        <div className="mypage-title">정보수정</div>
+        <div className="mypage-container">
+          <div className="subtitle">프로필 이미지</div>
+          <div className="mypage-profile">
+            <img
+              className="mypage-profile-image"
+              src={profileImgDef}
+              alt="Profile"
+              style={{ margin: "20px", marginTop:"10px", width: "150px", height: "150px", objectFit: "cover" }}
+            />
+            <div className="mypage-profile-sidecontent">
+            <div className="joindate">가입일: {new Date(userData.createdDate).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
+            {/* {userData ? <div>가입일:{new Date(userData.createdDate).toISOString().split("T")[0]}</div> : null} */}
+            <div className="mypage-profile-buttongroup">
+              <button className="button orange" onClick={() => fileInput.current.click()}>변경</button>
+              <button className="button" onClick={handleProfile}>기본 프로필로 변경</button>
+            </div>
+            </div>
+            <input type="file" style={{ display: "none" }} accept="image/jpg,image/png,image/jpeg" name="profile_img" onChange={handleFileChange} ref={fileInput} />
+          </div>
+          <div className="mypage-nickname">
+            <div className="subtitle">닉네임</div>
+            <div className="inputWrap">
+              <input placeholder={userData.nickname} type="text" value={nicknameDef} onChange={onChangeUserNickName} />
+              <button className="button" onClick={nicknameDupliCheck}>중복확인</button>
+              </div>
+            <div className="validation">
+              {userNicknameMessage}
+              {userNNDupMessage}
+            </div>
+          </div>
 
-      <input type="file" style={{ display: "none" }} accept="image/jpg,image/png,image/jpeg" name="profile_img" onChange={handleFileChange} ref={fileInput} />
-      <button onClick={handleProfile}>기본 프로필로 변경</button>
+          {/* <div className="myinputTitle">아이디</div>
+          <div className="inputWrap">
+            <input placeholder={userIdDef} type="text" value={userIdDef} onChange={onChangeUserId} />
+            <button onClick={idDupliCheck}>중복확인</button>
+            <div>
+              {userIdMessage}
+              {userIdDupMessage}
+            </div>
+          </div> */}
+          <div className="mypage-introduce">
+            <div className="subtitle">자기소개</div>
+            <div className="mypage-introduce-container">
+              <textarea placeholder={userData.introduce} value={IntroduceDef} onChange={onChangeIntroduce}></textarea>
+              <div className="validation">{userIntroduceMessage}</div>
+            </div>
+          </div>
 
-      <div className="myinputTitle">닉네임</div>
-      <div className="inputWrap">
-        <input placeholder={userData.nickname} type="text" value={nicknameDef} onChange={onChangeUserNickName} />
-        <button onClick={nicknameDupliCheck}>중복확인</button>
-        <div>
-          {userNicknameMessage}
-          {userNNDupMessage}
+          <div className="mypage-phonenumber">
+            <div className="subtitle">휴대폰번호</div>
+            <div>
+              <input type="text" placeholder={userData.phoneNumber} value={phoneNumberDef} onChange={onChangeUserPhonenumber} />
+              <div>{userPhoneNumberMessage}</div>
+            </div>
+          </div>
+
+          <div className="mypage-email">
+            <div className="subtitle">이메일</div>
+            <div>
+              <input placeholder={userData.userEmail} type="text" value={userEmailDef} onChange={onChangeUserEmail} />
+              <div>{userEmailMessage}</div>
+            </div>
+          </div>
+
+          <div className="mypage-foodcategory">
+            {/* <div>관심있는 요리</div>
+            <div>{userData.food}</div> */}
+            <div className="subtitle">관심있는 요리</div>
+            <FoodList selectedFood={food} toggleFood={handleSelectedFood} />
+          </div>
+
+          <div>
         </div>
       </div>
-
-      {/* <div className="myinputTitle">아이디</div>
-      <div className="inputWrap">
-        <input placeholder={userIdDef} type="text" value={userIdDef} onChange={onChangeUserId} />
-        <button onClick={idDupliCheck}>중복확인</button>
-        <div>
-          {userIdMessage}
-          {userIdDupMessage}
-        </div>
-      </div> */}
-
-      <div className="myinputTitle">자기소개</div>
-      <div>
-        <textarea placeholder={userData.introduce} value={IntroduceDef} onChange={onChangeIntroduce}></textarea>
-        <div>{userIntroduceMessage}</div>
-      </div>
-
-      <div className="myinputTitle">휴대폰번호</div>
-      <div>
-        <input type="text" placeholder={userData.phoneNumber} value={phoneNumberDef} onChange={onChangeUserPhonenumber} />
-        <div>{userPhoneNumberMessage}</div>
-      </div>
-
-      <div className="myinputTitle">이메일</div>
-      <div>
-        <input placeholder={userData.userEmail} type="text" value={userEmailDef} onChange={onChangeUserEmail} />
-        <div>{userEmailMessage}</div>
-      </div>
-
-      <div className="food">
-        {/* <div>관심있는 요리</div>
-        <div>{userData.food}</div> */}
-
-        <FoodList selectedFood={food} toggleFood={handleSelectedFood} />
-      </div>
-
-      <div>
+      <div class="bottomBtn-container">
         <button
-          onClick={handleUpdate}
-          className="bottomBtn"
-          disabled={!( isNickname && isNicknameDupli && isPhoneNumber && isUserEmail && isIntroduce)}
-        >
-          정보수정
+              onClick={handleUpdate}
+              className="bottomBtn"
+              disabled={!( isNickname && isNicknameDupli && isPhoneNumber && isUserEmail && isIntroduce)}
+            >
+              정보수정
         </button>
       </div>
     </div>
+  </div>
   );
 }
 
