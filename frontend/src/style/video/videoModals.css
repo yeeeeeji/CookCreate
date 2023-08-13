@@ -13,6 +13,7 @@
   width: 517px;
   height: 533px;
   z-index: 2;
+  animation: modalFadeIn 0.2s;
 }
 
 .cookyer-lesson-step-modal-title-wrapper {
@@ -114,6 +115,7 @@
   width: 426px;
   height: 533px;
   z-index: 2;
+  animation: modalFadeIn 0.2s;
 }
 
 .cookiee-lesson-review-modal-info {
@@ -222,4 +224,13 @@
 .cookiee-lesson-review-modal-leave-btn {
   background-color: #F4F4F4;
   color: #656363;
+}
+
+@keyframes modalFadeIn {
+  from {  
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
