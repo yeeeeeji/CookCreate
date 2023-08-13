@@ -1,18 +1,23 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import FoodCategory from "./FoodCategory";
 import { useDispatch, useSelector } from "react-redux";
 import { setLessonTitle, setTitleValid } from "../../store/lesson/lessonEdit";
 
 function EditLessonDetail() {
   const dispatch = useDispatch();
-  const initLessonTitle = useSelector((state) => state.lessonInfo.lessonTitle)
+  const initLessonTitle = useSelector((state) => state.lessonEdit.lessonTitle)
   const titleValid = useSelector((state) => state.lessonEdit.titleValid)
   
-  const [lessonTitle, sLessonTitle] = useState(initLessonTitle);
+  const [lessonTitle, setLessonTitleState] = useState('');
   
+  useEffect(() => {
+    setLessonTitleState(initLessonTitle);
+  }, [initLessonTitle]);
+
+
   const titleChange = (e) => {
     const titleValue = e.target.value;
-    sLessonTitle(titleValue);
+    setLessonTitleState(titleValue);
     dispatch(setLessonTitle(titleValue));
     dispatch(setTitleValid(titleValue.trim() !== ""));
   };
