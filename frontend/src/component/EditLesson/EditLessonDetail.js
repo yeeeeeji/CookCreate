@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPrice, setPriceValid, setMaximum, setMaximumValid, setDifficulty, setDescription, 
+import { setMaximum, setMaximumValid, setDifficulty, setDescription, 
   setVideoUrl, setMaterials, setDifficultyValid, setDescriptionValid, setMaterialsValid } from '../../store/lesson/lessonEdit';
 
 function EditLessonDetail() {
   const dispatch = useDispatch();
-  const initPrice = useSelector((state) => state.lessonInfo.price)
-  const initMaximum = useSelector((state) => state.lessonInfo.maximum)
-  const initDifficulty = useSelector((state) => state.lessonInfo.difficulty)
-  const initVideoUrl = useSelector((state) => state.lessonInfo.videoUrl)
-  const initDescription = useSelector((state) => state.lessonInfo.description)
-  const initMaterial = useSelector((state) => state.lessonInfo.materials)
+  const initPrice = useSelector((state) => state.lessonEdit.price)
+  const initMaximum = useSelector((state) => state.lessonEdit.maximum)
+  const initDifficulty = useSelector((state) => state.lessonEdit.difficulty)
+  const initVideoUrl = useSelector((state) => state.lessonEdit.videoUrl)
+  const initDescription = useSelector((state) => state.lessonEdit.description)
+  const initMaterial = useSelector((state) => state.lessonEdit.materials)
 
   const [maximum, setLessonMaximum] = useState(initMaximum);
   const [lessonDifficulty, setLessonDifficulty] = useState(initDifficulty);

@@ -4,7 +4,7 @@ import { setCategory, setCategoryValid } from "../../store/lesson/lessonEdit";
 
 function FoodCategory() {
   const dispatch = useDispatch();
-  const initCategory = useSelector((state) => state.lessonInfo.categoryId)
+  const initCategory = useSelector((state) => state.lessonEdit.categoryId)
   const transformCategoryId = ['한식', '양식', '중식', '일식', '아시안', '건강식', '디저트'];
   const initCategoryName = transformCategoryId[initCategory - 1];
   const [selectedCategory, setSelectedCategory] = useState(initCategory); // categoryId 저장
@@ -18,11 +18,11 @@ function FoodCategory() {
   };
 
   useEffect(() => {
-    // const selectedIndex = categories.indexOf(selectedCategory) + 1;
-    // console.log(selectedCategory)
     dispatch(setCategory(selectedCategory));
   }, [dispatch, selectedCategory, categories]);
-
+  useEffect(() => {
+    setSelectedCategory(initCategory);
+  }, [initCategory]);
   return (
     <div style={{ maxWidth: '120px'}}>
       <div style={{display : 'flex', alignItems : 'center'}}>
