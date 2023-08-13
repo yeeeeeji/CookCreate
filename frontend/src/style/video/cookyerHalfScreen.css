@@ -79,7 +79,13 @@
 .half-cookyer-check-icon-active,
 .half-cookyer-check-icon,
 .half-cookyer-handsup-icon-active,
-.half-cookyer-handsup-icon {
+.half-cookyer-handsup-icon,
+.half-cookyer-handsup-icon-active-1,
+.half-cookyer-handsup-icon-active-2,
+.half-cookyer-handsup-icon-active-3,
+.half-cookyer-handsup-icon-active-0,
+.half-cookyer-handsup-icon-active-4,
+.half-cookyer-handsup-icon-active-5 {
   font-size: 20px;
   position: absolute;
 }
@@ -96,10 +102,50 @@
   right: 40px;
 }
 
-.half-cookyer-handsup-icon-active,
+.half-cookyer-check-icon-active{
+  color: rgb(33, 172, 33);
+}
+
+.half-cookyer-check-icon {
+  color: rgb(114, 114, 114);
+}
+
+.half-cookyer-handsup-icon-active-0,
+.half-cookyer-handsup-icon-active-1,
+.half-cookyer-handsup-icon-active-2,
+.half-cookyer-handsup-icon-active-3,
+.half-cookyer-handsup-icon-active-4,
+.half-cookyer-handsup-icon-active-5,
 .half-cookyer-handsup-icon {
   bottom: 15px;
   right: 15px;
+}
+
+.half-cookyer-handsup-icon{
+  color: rgb(114, 114, 114);
+}
+
+.half-cookyer-handsup-icon-active-0 {
+  color: rgb(255, 0, 0);
+}
+
+.half-cookyer-handsup-icon-active-1 {
+  color: rgb(255, 106, 42);
+}
+
+.half-cookyer-handsup-icon-active-2 {
+  color: rgb(255, 200, 0);
+}
+.half-cookyer-handsup-icon-active-3 {
+  color: rgb(27, 196, 12);
+}
+
+.half-cookyer-handsup-icon-active-4 {
+  color: rgb(0, 94, 255);
+}
+
+.half-cookyer-handsup-icon-active-5 {
+  color: rgb(89, 0, 134);
 }
 
 /* 반쪽화면 쿠커 진행단계 */

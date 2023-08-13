@@ -170,6 +170,51 @@
   object-fit: cover;
 }
 
+.cookiee-handsup-animation {
+  position: fixed;
+  top: 30%;
+  left: 40%;
+  transform-origin: 50% 100%;
+  animation-name: shake;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
+  animation-delay: 0.2s;
+  z-index: 2;
+  font-size: 300px;
+  color: rgb(255, 200, 0);
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); */
+}
+
+@keyframes shake{
+  0%{
+    transform: rotate(0deg);
+  }
+  10%{
+    transform: rotate(45deg);
+  }
+  20%{
+    transform: rotate(-45deg);
+  }
+  30%{
+    transform: rotate(30deg);
+  }
+  40%{
+    transform: rotate(-30deg);
+  }
+  50%{
+    transform: rotate(10deg);
+  }
+  60%{
+    transform: rotate(-10deg);
+  }
+  70%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(0deg);
+  }
+}
+
 @keyframes widgetFadeInAnimation {
   0% {
     opacity: 0;
