@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../../style/lesson/registerFormCss.css';
+
 function RegisterForm({ setContent, setShowAlert, setPath }) {
   const navigate = useNavigate()
   const [thumbnailUrl, setThumbnailUrl] = useState('')
@@ -90,30 +92,29 @@ function RegisterForm({ setContent, setShowAlert, setPath }) {
   
   return (
     <div>
-      {/* 썸네일 */}
       <div>
-        <div style={{display : 'flex', alignItems : 'center'}}>
-          <h3>과외 썸네일</h3>
-          <div>{thumbnailValid ? '✅' : '🔲'}</div>
-        </div>
-        <div>
+        <div className="lessonInfoDescContainer">
+          <div className="lessonInfoText">과외 썸네일 <span className="required">*</span></div>
+          {/* <div>{thumbnailValid ? '✅' : '🔲'}</div> */}
+          {thumbnailUrl && thumbnailValid && (
+            <img
+            src={thumbnailUrl}
+            alt="Selected Thumbnail"
+            style={{ maxWidth: '200px', marginTop: '10px', marginRight: '10px' }}
+            />
+          )}
           <input type="file"
             name = "filename"
             value={lessonThumbnailUrl}
             onChange={handleThumbnailUrl}
             accept="image/*"
           />
-          {thumbnailUrl && thumbnailValid && (
-            <img
-            src={thumbnailUrl}
-            alt="Selected Thumbnail"
-            style={{ maxWidth: '100px', marginTop: '10px' }}
-            />
-            )}
-
         </div>
       </div>
-    <button disabled={!isAllValid} onClick={register} >과외 등록하기</button>
+    <button 
+      className={`lessonRegisterButton ${!isAllValid ? 'disabled' : ''}`}
+      disabled={!isAllValid} 
+      onClick={register} >과외 등록하기</button>
   </div>
   );
 }

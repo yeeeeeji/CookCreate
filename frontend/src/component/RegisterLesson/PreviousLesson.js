@@ -5,7 +5,9 @@ import {
   setLessonTitle, setCategory, setTimeTaken,
   setPrice, setMaximum, setDifficulty, setDescription, 
   setMaterials, setLessonStepList, setVideoUrl
-  } from '../../store/lesson/lesson'
+  } from '../../store/lesson/lesson';
+import '../../style/lesson/previousLessonCss.css';
+
 function PreviousLesson() {
   const dispatch = useDispatch()
   const access_token = localStorage.getItem('access_token');
@@ -48,14 +50,19 @@ function PreviousLesson() {
 
   return (
     <div>
-      <div onClick={handlePreviousLesson}>직전에 예약한 과외 불러오기</div>
+      <div 
+        className='previousLessonTitle'
+        onClick={handlePreviousLesson}
+      >최근 예약 내역 불러오기</div>
 
       {showModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <div>정말 등록하시겠습니까?</div>
-            <button onClick={confirmRegistration}>예</button>
-            <button onClick={closeModal}>아니오</button>
+        <div className="alert-modal">
+          <div className="alert-content-container">
+            <div className='alert-content'>최근에 예약한 과외 내역을<br/>불러오시겠습니까?</div>
+            <div className='alert-button-container'>
+              <button className='alert-button' onClick={confirmRegistration}>예</button>
+              <button className='alert-cancel-button' onClick={closeModal}>아니오</button>
+            </div>
           </div>
         </div>
       )}

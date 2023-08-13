@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import PreviousLesson  from '../component/RegisterLesson/PreviousLesson'
 import { resetlessonReducer } from '../store/lesson/lesson';
 import AlertModal from '../component/Modal/AlertModal';
+import '../style/lesson/registerLessonCss.css';
 
 function RegisterLesson() {
   const dispatch = useDispatch();
@@ -20,10 +21,12 @@ function RegisterLesson() {
   }, []) // 페이지 렌더링시 lessonReducer 초기화
   return (
     <div>
-      <h2>
-        강의 개설하기
-      </h2>
-      <PreviousLesson/>
+      <div className='registerLessonTitleContainer'>
+        <div className='registerLessonTitle'>
+          강의 개설하기
+        </div>
+        <PreviousLesson/>
+      </div>
       <LessonInfoTop/>
       <LessonTime/>
       <LessonDetail/>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import FoodCategory from "./FoodCategory";
 import { useDispatch, useSelector } from "react-redux";
 import { setLessonTitle, setTitleValid } from "../../store/lesson/lesson";
+import '../../style/lesson/lessonInfoTopCss.css';
 
 function LessonInfoTop() {
   const dispatch = useDispatch();
@@ -19,21 +20,21 @@ function LessonInfoTop() {
     dispatch(setTitleValid(lessonTitle.trim() !== ""));
   }, [reduxLessonTitle, lessonTitle])
 
+  const inputClassName = titleValid ? "lessonInfoInput valid" : "lessonInfoInput";
 
   return (
-    <div style={{display : 'flex', alignItems : 'center'}}>
+    <div className="lessonInfoTopContainer">
       <FoodCategory />
-      <div>
-        <div style={{display : 'flex', alignItems : 'center'}}>
-          <h3>과외 제목</h3>
-          <div style={{marginLeft : '5px'}}>{titleValid ? '✅' : '🔲'}</div>
-        </div>
+      <div className="lessonInfoTopTitleContainer">
+        <div className="lessonInfoText">과외 제목 <span className="required">*</span></div>
+        {/* <div className="lessonInfoIcon">{titleValid ? '✅' : '🔲'}</div> */}
         <input
+          className={inputClassName}
           type="text"
           value={lessonTitle}
           onChange={titleChange}
-          placeholder="과외 제목을 입력해주세요!"
-          />
+          placeholder="과외 제목을 입력해주세요."
+        />
       </div>
     </div>
   );

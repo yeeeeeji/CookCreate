@@ -51,9 +51,12 @@ function LessonStep() {
 
   return (
     <div>
-      <div>
-        <h3>진행 단계</h3>
-        <div>{stepValid ? '✅' : '🔲'}</div>
+      <div className="lessonInfoTopContainer">
+        <div className="lessonInfoText">진행 단계 <span className="required">*</span></div>
+        {/* <div>{stepValid ? '✅' : '🔲'}</div> */}
+        <div className='lessonInfoStepContainer'>
+          
+        </div>
         {stepList.map((step, index) => (
           <div key={index}>
             <input
