@@ -6,9 +6,22 @@ function GoToGesture() {
   const gotoGesture = () => {
     navigate("/gestureTest");
   }
+  const style = {
+    borderRadius: '3.125rem',
+    border: '0.7px solid #8D9193',
+    backgroundColor: '#FFFFFF',
+    display: 'inline-flex',
+    padding: '0.8rem 2rem',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '0.625rem',
+    color: '#656363',
+    fontSize: '1rem',
+    fontWeight: '400'
+  }
   return (
     <div>
-      <button onClick={gotoGesture}>제스처 동작 체험 해보기</button>
+      <button onClick={gotoGesture} style={style}>제스처 동작 체험 해보기</button>
     </div>
   );
 }

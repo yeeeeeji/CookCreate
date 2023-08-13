@@ -32,14 +32,16 @@ a:not(:first-of-type) {
   align-items: center;
 }
 
-.nav-cookyer {
+.nav-lesson {
   display: flex;
   font-size: 0.9rem;
+  margin-left: 2rem;
 }
 
 .nav-user {
   margin-left: 2rem;
-  
+  display: flex;
+  justify-content: flex-end;
 }
 
 .drop-btn {
@@ -47,5 +49,26 @@ a:not(:first-of-type) {
   border: none; /* 테두리 제거 */
   font-size: 0.9rem; 
   color : #656363;
+  padding : 0;
 }
 
+/* 네브바 드롭다운메뉴 나중에 옮기기 */
+.dropdown {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dropdown-content {
+  /* display: none; */
+  padding: 1rem 1.5rem;
+  position: absolute;
+  top: 4.3rem;
+  border-radius: 0.3rem;
+  border: 0.7px solid #8D9193;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+}
+/* 옮기기 */

@@ -47,7 +47,7 @@ function NavBar() {
       {isLogin ? (
         <div className="rightNav">
           <Link to='/chatroom' >채팅</Link>
-          <div className="nav-cookyer">
+          <div className="nav-lesson">
             {role === 'COOKYER' ? <Link to='registerlesson'>과외 등록</Link> : null} 
             {role === 'COOKIEE' ? (
             <div className='dropdown'>
