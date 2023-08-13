@@ -1,0 +1,96 @@
+.cookyer-lesson-step-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  width: 517px;
+  height: 533px;
+  z-index: 2;
+}
+
+.cookyer-lesson-step-modal-title-wrapper {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.cookyer-lesson-step-modal-title {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.cookyer-lesson-step-modal-desc {
+  font-size: 13px;
+  color: #969696;
+  margin-top: 5px;
+}
+
+.cookyer-lesson-step-modal-steps {
+  margin: 25px auto 25px;
+  width: 408px;
+  height: 310px;
+  overflow-y: scroll;
+}
+
+.cookyer-lesson-step-modal-steps::-webkit-scrollbar {
+  width: 5px;
+}
+
+.cookyer-lesson-step-modal-steps::-webkit-scrollbar-thumb {
+  height: 100px;
+  background: #CBCBCB;
+  border-radius: 10px;
+}
+
+.cookyer-lesson-step-modal-steps::-webkit-scrollbar-track {
+  background: #ededed;
+  border-radius: 10px;
+}
+
+.cookyer-lesson-step-modal-step {
+  display: flex;
+  word-break: break-all;
+  margin-bottom: 10px;
+}
+
+.cookyer-lesson-step-modal-step-content {
+  margin-left: 15px;
+  margin-right: 20px;
+}
+
+.cookyer-lesson-step-modal-step textarea {
+  width: 100%;
+  /* height: 24px; */
+  border: none;
+  border-bottom: 1px solid #656363;
+  resize: none;
+}
+
+.cookyer-lesson-step-modal-step button {
+  width: 38px;
+  height: 18px;
+  font-size: 7px;
+  color: #656363;
+  border: #CBCBCB solid 0.7px;
+  border-radius: 50px;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+.cookyer-lesson-step-modal-btn {
+  margin: 0px auto;
+  width: 174px;
+  height: 36px;
+}
+
+.cookyer-lesson-step-modal-btn button {
+  width: 100%;
+  height: 100%;
+  background-color: #FF7A42;
+  color: white;
+  border-radius: 5px;
+  border: none;
+}
