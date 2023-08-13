@@ -38,4 +38,4 @@ function ChatRoom() {
   );
 }
 
-export default ChatRoom;
+export default ChatPage;

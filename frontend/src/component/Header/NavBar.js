@@ -80,6 +80,9 @@ function NavBar() {
             </div>
         </React.Fragment>
       )} 
+      <Link to='/chatroom'>
+        채팅
+      </Link>
       {/* {role === 'COOKYER' ? <button onClick={() => createRoom(5)}>쿠커화면</button> : null} */}
     </div>
   );

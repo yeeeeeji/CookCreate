@@ -1,12 +1,12 @@
 import React from "react";
-import SideBar from "../component/MyPageS/SideBar";
+// import SideBar from "../component/MyPageS/SideBar";
 
 
 function MyPageS() {
   return (
     <div>
       <div>
-        <SideBar />
+        {/* <SideBar /> */}
       </div>
       <section>
         {/* <ReviewForm /> */}

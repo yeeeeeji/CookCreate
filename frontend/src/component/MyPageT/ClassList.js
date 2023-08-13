@@ -243,7 +243,7 @@ function ClassList() {
 
   return (
     <div>
-        <SideBar />
+        {/* <SideBar /> */}
         <div className="column is-10 main_container">
           <div className="header">
             <div className="summary">

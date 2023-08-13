@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 // import { useDispatch } from "react-redux";
-// import { useSelector } from "react-redux";
-// import axios from "axios";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 const Wrapper = styled.footer`
-  display: flex;
-  position: relative;
+  position: fixed;
   bottom: 0px;
   left: 0px;
   right: 0px;
@@ -16,43 +15,34 @@ const Wrapper = styled.footer`
   overflow: auto;
   padding: 6px;
   z-index: 100;
-  background-color: #f5f2f2;
-  // display: flex;
-  justify-content: flex-end; /* Align to the right */
-  
+  background-color: #eeeeee;
   & form {
     position: relative;
     display: flex;
     width: 100%;
     height: 100%;
-    
     & textarea,
     button {
       display: inline-block;
       border: none;
       outline: none;
     }
-    
     & textarea {
       width: 100%;
       resize: none;
-      height: 90%;
+      height: 100%;
       margin: 0;
       padding: 5px 20px;
     }
-    
     & button {
-      width: 52px;
-      height: 47.5px;
-      // background: #ff8a00;
-      
+      width: 50px;
+      height: 40px;
+      background: #ff8a00;
       &.canSubmit {
         cursor: pointer;
         pointer-events: all;
         color: #ffffff;
-        background: #ff8a00;
       }
-      
       &.cannotSubmit {
         pointer-events: none;
         color: #b4b4b4;
@@ -61,17 +51,16 @@ const Wrapper = styled.footer`
   }
 `;
 
-
-const InputChat = ({ sendMessage }) => {
-  // const accessToken = useSelector((state) => state.auth.token);
-  const [messages, setMessages] = useState("");
-  const isCanSubmit = !!messages.replace(/ |\n/g, "");
+const InputChat = () => {
+  const accessToken = useSelector((state) => state.auth.token);
+  const [contents, setContents] = useState("");
+  const isCanSubmit = !!contents.replace(/ |\n/g, "");
   const btnClassName = isCanSubmit ? "canSubmit" : "cannotSubmit";
 
   const onMessageChange = (e) => {
     e.preventDefault();
     const value = e.target.value;
-    setMessages(value);
+    setContents(value);
   };
 
   // const dispatch = useDispatch();
@@ -87,16 +76,29 @@ const InputChat = ({ sendMessage }) => {
   // };
 
   const onSubmit = (e) => {
-    // e.preventDefault();
-    if (isCanSubmit) {
-      sendMessage(messages);
-      setMessages("");
-    }
+    e.preventDefault();
+    const data = {
+      // lessonId,
+      // userId,
+      contents
+    };
+    axios
+      .put(`api/v1/send/{lessonId}`, data, {
+        headers: {
+          Access_Token: accessToken,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const onEnterPress = (event) => {
     if (!event.shiftKey && event.key === "Enter") {
-      // event.preventDefault();
+      event.preventDefault();
       onSubmit();
     }
   };
@@ -104,7 +106,7 @@ const InputChat = ({ sendMessage }) => {
   return (
     <Wrapper>
       <form onSubmit={onSubmit}>
-        <textarea value={messages} autoFocus={true} onChange={onMessageChange} onKeyPress={onEnterPress} />
+        <textarea value={contents} autoFocus={true} onChange={onMessageChange} onKeyPress={onEnterPress} />
         <button className={btnClassName} type="submit">
           전송
         </button>
