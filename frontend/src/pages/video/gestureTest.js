@@ -21,15 +21,16 @@ function GestureTest() {
     return (
         <>
         <div className='test-content-video'>
-            <TestScreen/>
+            <TestScreen>
+                {handRdx ? (<IoIosHand className='test-handsup-icon-active'/>) : (<IoIosHand className='test-handsup-icon'/>)}
+                {checkRdx ? (<AiFillCheckCircle className='test-check-icon-active'/>) : (<AiFillCheckCircle className='test-check-icon'/>)}
+            </TestScreen>
             <div className="right-column">
                 <div className="timer-reset-container">
-                    <Timer role={"COOKIEE"} isGestureTest={true}/> {/**Timer와 ResetButton 한 행 */}
+                    <Timer role={"COOKIEE"} size={"full"}isGestureTest={true}/> {/**Timer와 ResetButton 한 행 */}
                     <ResetButton/>
                     <TestExplain/>
                 </div>
-                {handRdx ? (<IoIosHand className='test-handsup-icon-active'/>) : (<IoIosHand className='test-handsup-icon'/>)}
-                {checkRdx ? (<AiFillCheckCircle className='test-check-icon-active'/>) : (<AiFillCheckCircle className='test-check-icon'/>)}
                 <GoBackMain/> {/**얘만 한 행 */}
             </div>
         </div>

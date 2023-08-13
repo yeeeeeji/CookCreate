@@ -29,12 +29,12 @@
 
 .test-reset {
     background-color: white;
-    height: 120px;
-    width: 332px;
+    height: 100px;
+    width: 383px;
     padding: 20px;
     border-radius: 5px;
     margin: 5px;
-    position: relative;
+    /* position: relative; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -44,33 +44,33 @@
 
 
 .test-check-icon-active {
-    font-size: 35px;
-    position: absolute;
-    top: 530px;
-    right: 660px;
-    color: rgb(33, 172, 33);
+font-size: 35px;
+position: absolute;
+bottom: 10px;
+right: 65px;
+color: rgb(33, 172, 33);
 }
   
 .test-check-icon {
 font-size: 35px;
 position: absolute;
-top: 530px;
-right: 660px;
+bottom: 10px;
+right: 65px;
 color: rgb(114, 114, 114);
 }
 
 .test-handsup-icon-active {
-    font-size: 35px;
-    position: absolute;
-    top: 530px;
-    right: 620px;
-    color: rgb(27, 196, 12);
+font-size: 35px;
+position: absolute;
+bottom: 10px;
+right: 20px;
+color: rgb(27, 196, 12);
 }
 
 .test-handsup-icon {
-    font-size: 35px;
-    position: absolute;
-    top: 530px;
-    right: 620px;
-    color: rgb(114, 114, 114);
+font-size: 35px;
+position: absolute;
+bottom: 10px;
+right: 20px;
+color: rgb(114, 114, 114);
 }

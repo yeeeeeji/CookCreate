@@ -6,7 +6,7 @@ import { startTimer, raiseHand, checkUp } from "./../../store/video/gestureTest"
 import { trigTimer } from "./../../store/video/timer";
 import '../../style/testVideo.css'
 
-const TestScreen = () => {
+const TestScreen = (props) => {
   const dispatch = useDispatch();
 
   const canvasRef = useRef(null);
@@ -137,12 +137,15 @@ const TestScreen = () => {
 
   return (
     <>
+      <div className='test-video'>
       <video
-        className='test-video'
         autoPlay
         playsInline
         ref={inputVideoRef}
-      ></video>
+      >
+      </video>
+      {props.children}
+      </div>
         <canvas
         ref={canvasRef}
         style={{display:"none"}}
