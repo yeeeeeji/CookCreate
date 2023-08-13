@@ -107,54 +107,6 @@
 //   }
 // `;
 
-// const Chat = ({ message, author}) => {
-//   return (
-//     <ChatWrapper>
-//       <span className="username">{author}</span>
-//       {message}
-//       {/* <span className="time">{localeTime}</span> */}
-//       {/* <span className="not-read">{notRead > 1 ? notRead : ""}</span> */}
-//     </ChatWrapper>
-//   );
-// };
-
-// const SeparationBlock = ({ EnterNickname }) => {
-//   return (
-//     <BorderBlock>
-//       <span>{EnterNickname}님이 입장하셨습니다.</span>
-//     </BorderBlock>
-//   );
-// };
-
-// const MyChat = ({ content, ...props }) => {
-//   return (
-//     <React.Fragment>
-//       {content ? <SeparationBlock content={content} /> : null}
-//       <RightBlock>
-//         <div>
-//           <Chat {...props} />
-//         </div>
-//       </RightBlock>
-//     </React.Fragment>
-//   );
-// };
-
-// const FriendChat = ({ author, message }) => {
-//   return (
-//     <LeftBlock>
-//       <div>
-//         <span className="username">{author}</span>
-//         <Chat message={message} />
-//       </div>
-//     </LeftBlock>
-//   );
-// };
-
-// export { Chat, MyChat, FriendChat, SeparationBlock };
-
-
-
-
 
 
 
@@ -171,8 +123,7 @@ const BorderBlock = styled.div`
     display: inline-block;
     // background-color: #b2c7d9;
     // background-color: #d1cfca;
-    // background-color: #ffd3a1;
-    color:#9b6324;
+    background-color: #ffd3a1;
     padding: 0 10px;
   }
   // &:before {
@@ -206,8 +157,7 @@ const RightBlock = styled.div`
 
   & ${ChatWrapper} {
     // background-color: #ffec42;
-    // background-color: #ffffff;
-    background-color: #ffeee2;
+    background-color: #ffffff;
 
     text-align: left;
     & span {
@@ -248,15 +198,6 @@ const LeftBlock = styled.div`
         bottom: 0;
         right: -70px;
       }
-      &span.username {
-        position: absolute;
-        display: inline-block;
-        top: 0; 
-        left: 0;
-        padding: 3px 8px;
-
-      }
-
       &.not-read {
         color: #ffec42;
         min-width: 30px;
@@ -278,11 +219,15 @@ const LeftBlock = styled.div`
   }
 `;
 
+
+
+
+
 const Chat = ({ message, author}) => {
   return (
     <ChatWrapper>
-      <span className="username" >{author}</span>
-      {message}
+      <span className="username" style={{ display: 'inherit' }}> {author}</span>
+      <div className="message">{message}</div>
       {/* <span className="time">{localeTime}</span> */}
       {/* <span className="not-read">{notRead > 1 ? notRead : ""}</span> */}
     </ChatWrapper>
@@ -314,7 +259,7 @@ const FriendChat = ({ author, message }) => {
   return (
     <LeftBlock>
       <div>
-        <span className="username">{author}</span>
+        <span className="username" style={{ display: 'inherit' }} >{author}</span>
         <Chat message={message} />
       </div>
     </LeftBlock>
