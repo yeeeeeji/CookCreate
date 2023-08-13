@@ -20,6 +20,7 @@ function LessonList() {
   
   const handleLessonDetail = (lessonId) => {
     navigate(`/lesson/${lessonId}`)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   const gotoLogin = () => {

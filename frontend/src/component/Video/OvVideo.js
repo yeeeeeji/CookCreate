@@ -162,7 +162,7 @@ function OpenViduVideoComponent(props) {
           if (okCount >= 10 && okCalled === false) {
             startTimer(publisher);
             console.log('debug: startTimer 호출시도');
-            handSetter(true);
+            okSetter(true); // 이 세터들 안필요한거 같은데 기술부채 갚을 때 지우는거 고려해보자
           }
           console.log(open)
           console.log(isThumbIndexTouched)

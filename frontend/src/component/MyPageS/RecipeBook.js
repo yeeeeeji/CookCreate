@@ -2,14 +2,24 @@ import React, {useState, useEffect} from "react";
 import "../../style/recipebook.css";
 import SideBar from "./SideBar";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import RecipeBookModal from "./RecipeBookModal";
+import { useNavigate } from "react-router";
+import { setLessonId } from "../../store/lesson/lessonInfo";
 
 function RecipeBook() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const accessToken = useSelector((state) => state.auth.access_token);
   // console.log(accessToken);
   const [ recipeBookData, setRecipeBookData ] = useState(null);
   const [ showRecipe, setShowRecipe ] = useState(false)
+  const [ recipeModalData, setRecipeModalData ] = useState(null)
+
+  /** 이동할 과외 아이디 */
+  const [ goLessonDetail, setGoLessonDetail ] = useState(false)
+  const lessonId = useSelector((state) => state.lessonInfo.lessonId)
 
   useEffect(() => {
     axios
@@ -32,8 +42,21 @@ function RecipeBook() {
   }, []);
 
   const handleShowRecipe = ( data ) => {
-    setShowRecipe(data)
+    setShowRecipe(data.showRecipe)
+    setRecipeModalData(data.recipe) 
   }
+
+  const goLesson = (lessonId) => {
+    setGoLessonDetail(true)
+    dispatch(setLessonId(lessonId))
+    navigate(`/lesson/${lessonId}`)
+  }
+
+  useEffect(() => {
+    if (goLessonDetail && lessonId !== null) {
+      navigate(`/lesson/${lessonId}`)
+    }
+  }, [lessonId])
 
   return (
     <div className="recipe_container">
@@ -54,8 +77,8 @@ function RecipeBook() {
                     {/* <img src="https://recipe1.ezmember.co.kr/cache/recipe/2019/08/21/f51404dc513ccc76be4b5668f5dd350b1_m.jpg" /> */}
                     {/* </a> */}
                   </div>
-                  <div>
-                    <div>강좌명: {recipe.lessonTitle}</div>
+                  <div  onClick={() => goLesson(recipe.lessonId)}>
+                    <div>과외명: {recipe.lessonTitle}</div>
                   </div>
                   <div>
                     <p>
@@ -87,10 +110,10 @@ function RecipeBook() {
                   </div>
                   <div>
                     {/* <div>과외 날짜:{recipe.lessonDate}</div> */}
-                    <div>과외 날짜: {new Date(recipe.lessonDate).toISOString().split("T")[0]}</div>
+                    <div>과외 날짜: {new Date(recipe.lessonDate).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
                   </div>
                   <div>
-                    <button onClick={() => handleShowRecipe(true)}>레시피 보기</button>
+                    <button key={recipe.lessonId} onClick={() => handleShowRecipe({showRecipe: true, recipe: recipe.lessonStepList})}>레시피 보기</button>
                     {/* <div>진행단계</div>
                     <div>{recipe.lessonStepList}</div> */}
                   </div>
@@ -99,7 +122,7 @@ function RecipeBook() {
             </div>
             {showRecipe ? (
               <RecipeBookModal
-                lessonStepList={recipe.lessonStepList}
+                lessonStepList={recipeModalData}
                 handleShowRecipe={handleShowRecipe}
               />
             ) : null}

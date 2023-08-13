@@ -9,17 +9,15 @@ function LessonSchedule() {
   const displayTime = (dateTime) => {
     if (!dateTime) return null;
 
-    const localDate = new Date(dateTime);
-    const options = {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      // second: '2-digit',
-      // timeZone: 'UTC', // 시간대를 UTC로 설정 (한국 시간으로 하는게 맞는 거 같다)
-    };
-    return localDate.toLocaleString(undefined, options);
+    const [datePart, timePart] = dateTime.split('T');
+    const [year, month, day] = datePart.split('-');
+    const [hour, minute] = timePart.split(':');
+
+    const meridiem = Number(hour) >= 12 ? '오후' : '오전';
+    const formattedHour = (Number(hour) % 12) || 12; // 12시는 12로 표시
+    const formattedTime = `${meridiem} ${formattedHour}:${minute}`;
+
+    return `${year}.${month}.${day}. ${formattedTime}`;
   };
 
   return (

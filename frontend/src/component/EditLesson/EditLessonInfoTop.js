@@ -21,14 +21,14 @@ function EditLessonDetail() {
       <FoodCategory />
       <div>
         <div style={{display : 'flex', alignItems : 'center'}}>
-          <h3>강의 제목</h3>
+          <h3>과외 제목</h3>
           <div style={{marginLeft : '5px'}}>{titleValid ? '✅' : '🔲'}</div>
         </div>
         <input
           type="text"
           value={lessonTitle}
           onChange={titleChange}
-          placeholder="강의 제목을 입력해주세요!"
+          placeholder="과외 제목을 입력해주세요!"
           />
       </div>
     </div>

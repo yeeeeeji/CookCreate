@@ -1,8 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function GoToGesture() {
+  const navigate = useNavigate();
   const gotoGesture = () => {
-    console.log('제스처 체험 해보는 곳. 아직 구현 안 했어요')
+    navigate("/gestureTest");
   }
   return (
     <div>
