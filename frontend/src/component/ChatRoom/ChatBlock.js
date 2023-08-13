@@ -184,7 +184,7 @@ const LeftBlock = styled.div`
   margin-top: 10px;
   margin-left: 10px;
   margin-right: 10px;
-  padding-left: 50px;
+  padding-left: 10px;
   & ${ChatWrapper} {
     // background-color: #fff;
     background-color: #ffe3b0;

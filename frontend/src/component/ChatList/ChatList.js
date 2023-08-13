@@ -47,7 +47,7 @@ const ChatList = (props) => {
   return (
     <div>
       <ChatListContainer>
-        <h3>참여중인 채팅방</h3>
+        <h3 style={{ fontSize: 20 }}>참여중인 채팅방</h3>
         <div>
           {chatlist.map((chatRoom) => (
             <div key={chatRoom.lessonId}>
@@ -78,7 +78,7 @@ const ChatList = (props) => {
               )}
               {chatRoom.chatRoomOver === true && (
                 <>
-                  <h3>완료된 채팅방</h3>
+                  <h3 style={{ fontSize: 20 }} >완료된 채팅방</h3>
                   <div onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.leastContent, chatOver: chatRoom.chatRoomOver })}>
                     {/* <Link to={`/chatroom`}> */}
                     <strong>{chatRoom.lessonTitle}</strong>

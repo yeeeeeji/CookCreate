@@ -17,13 +17,18 @@ const Wrapper = styled.header`
   & span {
     color:wheat;
     font-weight: bold;
-    font-size: 20px;
-    margin-right: 50px;
+    font-size: 25px;
+    // margin-right: 50px;
     text-align: center;
     flex-grow: 1;
+    justify-content: center;
+    display:flex;
   }
 
   & button {
+    justify-content: center;
+    display:flex;
+
     font-size: 15px;
     background-color: #ff9416;
     // background-color: #FF7A42;
