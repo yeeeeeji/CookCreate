@@ -1,16 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch } from 'react-redux';
 import HandLandMarker from "./../../component/Gesture/HandLandMarker"; // 수정하기
-import { DrawingUtils, HandLandmarker as abc } from "@mediapipe/tasks-vision";
-import { startTimer, raiseHand, checkUp } from "./../../store/video/gestureTest";
+import { raiseHand, checkUp } from "./../../store/video/gestureTest";
 import { trigTimer } from "./../../store/video/timer";
+import { resetAll } from "./../../store/video/gestureTest";
+
 import '../../style/testVideo.css'
 
 const TestScreen = (props) => {
   const dispatch = useDispatch();
 
   const canvasRef = useRef(null);
-  // const contextRef = useRef(null);
   const inputVideoRef = useRef(null);
 
   // 탐지를 1번만 했을 때 함수 호출 시 너무 민감하게 작동하므로 count를 n 이상 했을때만 함수 호출
@@ -22,19 +22,24 @@ const TestScreen = (props) => {
     return Math.sqrt(Math.pow(x1 - x2, 2)) + Math.sqrt(Math.pow(y1 - y2, 2));
   }
 
+  const stopStreamedVideo = (videoElem) => { // 페이지 이탈 시 웹캠 종료
+    const stream = videoElem.srcObject;
+    const tracks = stream.getTracks();
+
+    tracks.forEach(function(track) {
+        track.stop();
+    });
+
+    videoElem.srcObject = null;
+  }
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const videoRef = inputVideoRef.current;
     let gesture = "";
 
-    // if (canvas) {
-    //   contextRef.current = canvas.getContext("2d");
-    // }
-
     if ( canvas && videoRef ) {
       createHandLandmarker().then((handLandmarker) => {
-        // console.log(handLandmarker);
-        // const drawingUtils = new DrawingUtils(contextRef.current);
         let lastVideoTime = -1;
         let results = undefined;
 
@@ -48,32 +53,9 @@ const TestScreen = (props) => {
           if (lastVideoTime !== videoRef.currentTime) {
             lastVideoTime = videoRef.currentTime;
             results = handLandmarker.detectForVideo(videoRef, startTimeMs);
-            // console.log(results);
-            // Perform gesture recognition
             const recognizedGesture = recognizeGesture(results);
             gesture = recognizedGesture ? recognizedGesture : "";
           }
-
-          // contextRef.current.save();
-          // contextRef.current.clearRect(0, 0, canvas.width, canvas.height);
-          // if (results.landmarks) {
-          //   for (const landmarks of results.landmarks) {
-          //     drawingUtils.drawConnectors(landmarks, abc.HAND_CONNECTIONS, {
-          //       color: "#FFF000",
-          //       lineWidth: 5,
-          //     });
-
-          //     drawingUtils.drawLandmarks(landmarks, {
-          //       color: "#00FF00",
-          //       lineWidth: 5,
-          //     });
-          //   }
-          // }
-          // Display recognized gesture
-          // contextRef.current.font = "50px Arial";
-          // contextRef.current.fillStyle = "#00FF00";
-          // contextRef.current.fillText(`${gesture}`, 10, 30);
-          // contextRef.current.restore();
 
           window.requestAnimationFrame(predict);
         }
@@ -84,6 +66,11 @@ const TestScreen = (props) => {
         });
       });
     }
+
+    return () => {
+      stopStreamedVideo(videoRef); // 컴포넌트가 언마운트 될 때 실행할 클린업 함수 (웹캠 종료)
+      dispatch(resetAll()); // 페이지 나갈 때 제스처 작동한것 다 reset
+  };
   }, []);
 
   const createHandLandmarker = async () => {
@@ -134,6 +121,8 @@ const TestScreen = (props) => {
       }
       return gesture[ans];
     };
+
+
 
   return (
     <>

@@ -15,6 +15,10 @@
     position: relative;
 }
 
+.test-video video {
+    border-radius: 5px;
+}
+
 .right-column {
     display: flex;
     flex-direction: column; /* 수직 레이아웃으로 설정 */
@@ -25,6 +29,7 @@
     display: flex;
     flex-direction: column; /* 수직 방향으로 아이템을 배치 */
     gap: 5px;
+    height: 100%;
 }
 
 .test-reset {
@@ -44,33 +49,50 @@
 
 
 .test-check-icon-active {
-font-size: 35px;
-position: absolute;
-bottom: 10px;
-right: 65px;
-color: rgb(33, 172, 33);
+    font-size: 35px;
+    position: absolute;
+    bottom: 10px;
+    right: 65px;
+    color: rgb(33, 172, 33);
 }
   
 .test-check-icon {
-font-size: 35px;
-position: absolute;
-bottom: 10px;
-right: 65px;
-color: rgb(114, 114, 114);
+    font-size: 35px;
+    position: absolute;
+    bottom: 10px;
+    right: 65px;
+    color: rgb(114, 114, 114);
 }
 
 .test-handsup-icon-active {
-font-size: 35px;
-position: absolute;
-bottom: 10px;
-right: 20px;
-color: rgb(27, 196, 12);
+    font-size: 35px;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    color: rgb(27, 196, 12);
 }
 
 .test-handsup-icon {
-font-size: 35px;
-position: absolute;
-bottom: 10px;
-right: 20px;
-color: rgb(114, 114, 114);
+    font-size: 35px;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    color: rgb(114, 114, 114);
+}
+
+.test-explain {
+    background-color: white;
+    flex-grow: 1;
+    border-radius: 5px;
+    margin: 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.test-explain-text {
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.6;
 }

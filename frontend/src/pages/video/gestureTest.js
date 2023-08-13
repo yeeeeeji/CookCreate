@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useSelector } from 'react-redux';
 import TestScreen from "../../component/Video/TestScreen";
 import Timer from "../../component/Video/Timer";
@@ -11,8 +11,6 @@ import { AiFillCheckCircle } from "react-icons/ai";
 import '../../style/testVideo.css'
 
 function GestureTest() {
-    const [ handState, handSetter ] = useState(false); // 안쓰니까 없앨까
-    const [ checkState, checkSetter ] = useState(false);
     
     // const timerRdx = useSelector((state) => state.gestureTest.timer);
     const handRdx = useSelector((state) => state.gestureTest.hand);
