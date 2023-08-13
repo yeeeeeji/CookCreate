@@ -217,14 +217,11 @@ function LessonDetail() {
       <div>
         <h3>준비물 리스트</h3>
         <div>
-          {lessonMaterialList.map((str, index) => (
+          {lessonMaterialList && lessonMaterialList.map((str, index) => (
             <div key={index}>{str}</div>
-          ))}
+            ))}
         </div>
       </div>
-
-
-
     </div>
   );
 }

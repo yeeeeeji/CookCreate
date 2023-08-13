@@ -5,11 +5,9 @@ import axios from 'axios';
 import '../../style/lesson/lessonListCss.css';
 
 import { useNavigate } from 'react-router-dom';
-// import { setLessonId } from '../../store/lesson/lessonInfo';
 
 function LessonList() {
   const navigate = useNavigate()
-  // const dispatch = useDispatch()
   const [lessons, setLessons] = useState([]);
   const type = useSelector((state) => state.lessonSearch.type);
   const deadline = useSelector((state) => state.lessonSearch.deadline);
@@ -47,36 +45,40 @@ function LessonList() {
   
   return (
     <div className='lessonListContainer'>
-      {lessons.map((lesson) => (
-        <div 
-          key={lesson.lessonId}
-          className="lessonItemContainer"
-          style={{
-            padding: '20px',
-            marginTop: '20px'
-          }}
-          onClick={() => {
-            if (isLogin) {
-              handleLessonDetail(lesson.lessonId);
-            } else {
-              gotoLogin();
-            }
-          }}  
-        >
-          <LessonItem
-            id={lesson.lessonId}
-            title={lesson.lessonTitle}
-            date={lesson.lessonDate}
-            thumbnailUrl={lesson.thumbnailUrl}
-            reviewAvg={lesson.reviewAvg}
-            cookyerName={lesson.cookyerName}
-            categoryId={lesson.categoryId} 
-            difficulty={lesson.difficulty} 
-          />
-        </div>
-      ))}
+      {lessons.length > 0 ? (
+        lessons.map((lesson) => (
+          <div 
+            key={lesson.lessonId}
+            className="lessonItemContainer"
+            style={{
+              padding: '20px',
+              marginTop: '20px'
+            }}
+            onClick={() => {
+              if (isLogin) {
+                handleLessonDetail(lesson.lessonId);
+              } else {
+                gotoLogin();
+              }
+            }}  
+          >
+            <LessonItem
+              id={lesson.lessonId}
+              title={lesson.lessonTitle}
+              date={lesson.lessonDate}
+              thumbnailUrl={lesson.thumbnailUrl}
+              reviewAvg={lesson.reviewAvg}
+              cookyerName={lesson.cookyerName}
+              categoryId={lesson.categoryId} 
+              difficulty={lesson.difficulty} 
+            />
+          </div>
+        ))
+      ) : (
+        <p>아직 과외가 개설되지 않았습니다.</p>
+      )}
     </div>
-  );
+  );  
 }
 
 export default LessonList;

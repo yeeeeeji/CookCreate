@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMaximum, setMaximumValid, setDifficulty, setDescription, 
+import {setMaximum, setMaximumValid, setDifficulty, setDescription, 
   setVideoUrl, setMaterials, setDifficultyValid, setDescriptionValid, setMaterialsValid } from '../../store/lesson/lessonEdit';
 
 function EditLessonDetail() {
@@ -26,6 +26,17 @@ function EditLessonDetail() {
   const descriptionValid = useSelector((state) => state.lessonEdit.descriptionValid)
   const materialValid = useSelector((state) => state.lessonEdit.materialsValid)
 
+  useEffect(() => {
+    setLessonMaximum(initMaximum);
+    setLessonDifficulty(initDifficulty)
+    setDifficulty(initDifficulty)
+    setSelectedDifficulty(initDifficulty);
+    setLessonDescription(initDescription)
+    setLessonVideoUrl(initVideoUrl)
+    setLessonMaterialList(initMaterial)
+  }, [initMaximum, initDifficulty, initDescription, initVideoUrl, initMaterial]);
+
+  
   const changeMaximum = (e) => {
     const input = e.target.value
     setLessonMaximum(input)
@@ -56,7 +67,6 @@ function EditLessonDetail() {
     const newList = lessonMaterial.split('\n').map((str) => str.trim()).filter((str) => str !== '');
     setLessonMaterialList(newList)
     dispatch(setMaterialsValid(lessonDescription.trim() !== '' || newList.length > 0));
-
   }
 
 
