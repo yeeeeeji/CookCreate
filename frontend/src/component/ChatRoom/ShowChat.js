@@ -38,9 +38,9 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
   
         const body = JSON.stringify(data);
         console.log("채팅입장", body);
-        const ParsedData = JSON.parse(body);
-        setEnterNickname(ParsedData.nickname);
-        console.log("닉넴",EnterNickname)
+        // const ParsedData = JSON.parse(body);
+        // setEnterNickname(ParsedData.nickname);
+        // console.log("닉넴",EnterNickname)
   
         client.current.publish({ destination, body });
         console.log("enter!");
@@ -108,10 +108,14 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
     <div>
       <HeaderChat lessonId={lessonId} chatTitle={chatTitle} chatOver={chatOver} />
       <div style={{ overflowY: "auto", height: "450px", background:"#fff9f2" }} id="ChatRoom" ref={scrollRef}>
-        <SeparationBlock EnterNickname={EnterNickname} />
-        {messageList.map((chat, index) =>
-          chat.userId !== id ? <FriendChat key={index} message={chat.content} author={chat.userId} /> : <MyChat key={index} message={chat.content} />
-        )}
+        {messageList.map((chat, index) =>{
+          if (chat.type === "ENTER" || chat.type === "OUT") {
+            return <SeparationBlock key={index} EnterMessage={chat.content} />
+          } else{
+            chat.userId !== id ? (<FriendChat key={index} message={chat.content} author={chat.userId} />) 
+            : (<MyChat key={index} message={chat.content} />)
+          }
+        })}
       </div>
       {!chatOver && (
         <div className="InputChatContainer" >

@@ -39,7 +39,7 @@ const ChatList = (props) => {
   return (
     <div>
       <h3>참여중인 채팅방</h3>
-      <div>
+      <div> 
         {chatlist.map((chatRoom) => (
           <div key={chatRoom.lessonId}>
             {chatRoom.chatRoomOver === false && (
@@ -51,12 +51,14 @@ const ChatList = (props) => {
                   ) : (
                     <p>참여중인 채팅방이 없습니다.</p>
                   )}
-                  {chatRoom.leastContent && (
+                  {chatRoom.leastContent !== null ? (
                     <div>
                       <p>{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 7) + ".." : chatRoom.leastContent}</p>
                       {/* <span>{formatTime(chatRoom.lestCreateTime)}</span> */}
                       <span style={{ fontSize: '10px' }}  >{new Date(chatRoom.lestCreateTime).toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', minute: '2-digit' })}</span>  
                     </div>
+                    ) : (
+                      <p>""</p>
                     )}
                 </div>
               </>
