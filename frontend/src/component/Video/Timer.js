@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { trigTimer } from './../../store/video/timer';
 import { startTimer } from './../../store/video/gestureTest';
 
 
