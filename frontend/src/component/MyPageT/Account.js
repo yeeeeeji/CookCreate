@@ -4,6 +4,7 @@ import axios from "axios";
 // import { useSelector } from "react-redux";
 import FoodList from "../../component/SignUp/FoodList";
 import SideBar from "./SideBar";
+import "./../../style/mypage/account.css";
 
 function Account() {
   const accessToken = localStorage.getItem("access_token");
