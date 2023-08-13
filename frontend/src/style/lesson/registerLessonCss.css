@@ -1,0 +1,10 @@
+.registerLessonTitleContainer{
+    display: flex;
+    margin-top: 30px;
+}
+
+.registerLessonTitle{
+    text-align: left;
+    font-weight: 500;
+    font-size: 25px;
+}
