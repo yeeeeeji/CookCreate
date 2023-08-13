@@ -27,7 +27,7 @@ function ChatRoom() {
       </div>
       <div className="chat-room-content">
         {lessonId === null ? (
-          <p>채팅방을 선택해주세요.</p>
+          <p className="Emptychat">채팅방을 선택해주세요.</p>
         ) : (
           <div className="ChatSpace">
             <ShowChat lessonId={lessonId} chatTitle={chatTitle} chatOver={chatOver} />
