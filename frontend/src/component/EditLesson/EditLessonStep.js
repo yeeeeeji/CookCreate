@@ -4,7 +4,7 @@ import { setLessonStepList, setStepValid } from '../../store/lesson/lessonEdit';
 
 function EditLessonStep() {
   const dispatch = useDispatch();
-  const initStepList = useSelector((state) => state.lessonInfo.lessonStepList)
+  const initStepList = useSelector((state) => state.lessonEdit.lessonStepList);
   const [stepList, setStepList] = useState(initStepList);
   const [errMsg, setErrMsg] = useState('');
   const stepValid = useSelector((state) => state.lessonEdit.stepValid);
@@ -49,6 +49,10 @@ function EditLessonStep() {
       return stepList.every((step) => step.stepContent.trim() !== '');
     }
   }, [stepList]);
+
+  useEffect(() => {
+    setStepList(initStepList);
+  }, [initStepList]);
 
   useEffect(() => {
     dispatch(setLessonStepList(stepList));

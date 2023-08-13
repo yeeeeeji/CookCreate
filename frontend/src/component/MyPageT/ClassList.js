@@ -32,8 +32,6 @@ function ClassList() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-
-  // const accessToken = useSelector((state) => state.auth.access_token);
   const accessToken = localStorage.getItem('access_token')
 
   const classData = useSelector((state) => state.accountS.classData)
@@ -53,7 +51,7 @@ function ClassList() {
   /** 이동할 과외 아이디 */
   const [ goLessonDetail, setGoLessonDetail ] = useState(false)
   const lessonId = useSelector((state) => state.lessonInfo.lessonId)
-
+  
   /** 삭제 전 알림 모달 관련 */
   const [ showAlert, setShowAlert ] = useState(false)
   const [ deleteAction, setDeleteAction ] = useState(false)
@@ -174,6 +172,8 @@ function ClassList() {
   /** 과외 수정 */
   const updateClass = ( lessonId ) => {
     navigate(`/lesson/edit/${lessonId}`)
+    dispatch(setLessonId(lessonId))
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   /** 과외 삭제 */
@@ -289,19 +289,19 @@ function ClassList() {
                               <dd>
                                 {(() => {
                                   switch (lesson.categoryId) {
-                                    case 0:
-                                      return "한식";
                                     case 1:
-                                      return "양식";
+                                      return "한식";
                                     case 2:
-                                      return "중식";
+                                      return "양식";
                                     case 3:
-                                      return "일식";
+                                      return "중식";
                                     case 4:
-                                      return "아시안";
+                                      return "일식";
                                     case 5:
-                                      return "건강식";
+                                      return "아시안";
                                     case 6:
+                                      return "건강식";
+                                    case 7:
                                       return "디저트";
                                     default:
                                       return "알 수 없음";

@@ -23,6 +23,8 @@ const initialState = {
   lessonStepList: [],
   stepValid : true,
   videoUrl: "",
+  thumbnailUrl : '',
+
 };
 
 const lessonEdit = createSlice({
@@ -91,7 +93,11 @@ const lessonEdit = createSlice({
     },
     setVideoUrl : (state, action) => {
       state.videoUrl = action.payload
-    }
+    },
+    setThumbnailUrl : (state, action) => {
+      console.log('여기 오니?')
+      state.thumbnailUrl = action.payload
+    },
   },
 });
 
@@ -106,5 +112,5 @@ export const {
   setDescription, setDescriptionValid,
   setMaterials, setMaterialsValid,
   setLessonStepList, setStepValid,
-  setVideoUrl} = lessonEdit.actions;
+  setVideoUrl, setThumbnailUrl} = lessonEdit.actions;
 export default lessonEdit.reducer;

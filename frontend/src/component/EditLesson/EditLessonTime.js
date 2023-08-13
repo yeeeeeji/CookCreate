@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import 'react-datepicker/dist/react-datepicker.css';
 import { setTimeTaken, setTimeTakenVaild } from '../../store/lesson/lessonEdit';
 
 function EditLessonTime() {
   const dispatch = useDispatch();
-  const lessonDate = useSelector((state) => state.lessonInfo.lessonDate);
-  const initTimeTaken = useSelector((state) => state.lessonInfo.timeTaken);
+  const initlessonDate = useSelector((state) => state.lessonEdit.lessonDate);
+  const initTimeTaken = useSelector((state) => state.lessonEdit.timeTaken);
+  const [lessonDate, setLessonDate] = useState('')
   const [lessonTakenTime, setLessonTakenTime] = useState(initTimeTaken);
 
   // 유효성 검사
@@ -18,6 +19,10 @@ function EditLessonTime() {
     dispatch(setTimeTakenVaild(e.target.value !== ''));
     dispatch(setTimeTaken(e.target.value));
   };
+  useEffect(() => {
+    setLessonTakenTime(initTimeTaken)
+    setLessonDate(initlessonDate);
+  }, [initTimeTaken, initlessonDate]);
 
   const formatAMPM = (date) => {
     const hours = date.getHours();
@@ -35,7 +40,11 @@ function EditLessonTime() {
     hour: '2-digit',
     minute: '2-digit',
   };
-  const formattedDate = new Intl.DateTimeFormat('ko-KR', options).format(new Date(lessonDate));
+  let formattedDate = ""; // 초기화
+
+  if (lessonDate !== "") {
+    formattedDate = new Intl.DateTimeFormat('ko-KR', options).format(new Date(lessonDate));
+  }
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>

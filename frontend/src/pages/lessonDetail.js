@@ -15,7 +15,6 @@ import {
   setIntroduce, setCookyerName, setFood, setCookyerId, setBadge, setProfileImg
 } from '../store/lesson/lessonInfo';
 import '../style/lesson/lessonDetailCss.css';
-import { useParams } from 'react-router';
 
 
 function LessonDetail() {
@@ -25,11 +24,8 @@ function LessonDetail() {
   const accessToken = localStorage.getItem('access_token');
   const categoryName = useSelector((state) => state.lessonInfo.categoryName);
   const difficulty = useSelector((state) => state.lessonInfo.difficulty);
-  const userName = localStorage.getItem('nickname')
   const lessonTitle = useSelector((state) => state.lessonInfo.lessonTitle);
   const thumbnailUrl = useSelector((state) => state.lessonInfo.thumbnailUrl);
-  const userType = localStorage.getItem('role');
-  const [disableEdit, setDisableEdit] = useState(false)
   const lessonDate = useSelector((state) => state.lessonInfo.lessonDate);
   const remaining = parseInt(useSelector((state) => state.lessonInfo.remaining));
 
@@ -44,7 +40,7 @@ function LessonDetail() {
         }
     })
     .then((res) => {
-      console.log(res.data)
+      console.log(res.data, '디테일 데이터')
       dispatch(setCookyerId(res.data.cookyerId));
       dispatch(setCookyerName(res.data.cookyerName));
       dispatch(setFood(res.data.food));
@@ -65,18 +61,6 @@ function LessonDetail() {
       dispatch(setVideoUrl(res.data.videoUrl));
       dispatch(setIntroduce(res.data.introduce));
       dispatch(setProfileImg(res.data.profileImg));
-
-      // if (DateTransformType > futureTime && remaining > 0 && userType === 'COOKIEE') {
-      //     setDisable(false);
-      // } else {
-      //     setDisable(true);
-      // }
-
-      if (userName === res.data.cookyerName) {
-          setDisableEdit(false);
-      } else {
-          setDisableEdit(true);
-      }
 
       axios.get(`/api/v1/lesson/badge/${res.data.cookyerId}`, {
           headers: {
@@ -115,7 +99,7 @@ function LessonDetail() {
         <CookieeNumber />
         <ApplyLesson/>
         <LessonSchedule />
-        <EditLesson lessonId={lessonId} disable={disableEdit} />
+        <EditLesson lessonId={lessonId}/>
       </div>
     </div>
   );

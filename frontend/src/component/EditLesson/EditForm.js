@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -7,9 +7,8 @@ function EditForm() {
   const navigate = useNavigate();
   const lessonId = useSelector((state) => state.lessonInfo.lessonId);
   const [filename, setFileName] = useState('');
-  const initThumbnail = useSelector((state) => state.lessonInfo.thumbnailUrl);
+  const initThumbnail = useSelector((state) => state.lessonEdit.thumbnailUrl);
   const [thumbnailUrl, setThumbnailUrl] = useState(initThumbnail)
-
 
   const [ThumbnailFile, setThumbnailFile] = useState(null); // 수정한 파일 정보 넣어줄 것
   const accessToken = localStorage.getItem('access_token');
@@ -37,7 +36,10 @@ function EditForm() {
   const descriptionValid = useSelector((state) => state.lessonEdit.descriptionValid);
   const [thumbnailValid, setThumbnailValid] = useState(true);
   
-  
+  useEffect(() => {
+    setThumbnailUrl(initThumbnail);
+  }, [initThumbnail]);
+
   const isAllValid = [
     categoryValid,
     titleValid,
