@@ -1,7 +1,7 @@
   import React, { useState, useEffect, useMemo } from 'react';
   import { useDispatch, useSelector } from 'react-redux';
   import { setCategory, setCategoryValid } from "../../store/lesson/lesson";
-
+  
   function FoodCategory() {
     const dispatch = useDispatch();
     const reduxCategoryId = useSelector((state) => state.lesson.categoryId);
@@ -9,39 +9,33 @@
     const [selectedIndex, setSelectedIndex] = useState(''); // 카테고리 idx 저장
 
     const categories = useMemo(() => ['한식', '양식', '중식', '일식', '아시안', '건강식', '디저트'], []);
-    const categoryValid = useSelector((state) => state.lesson.categoryValid);
 
     const handleCategoryChange = (e) => {
       const selectedIndex = e.target.selectedIndex;
       setSelectedIndex(selectedIndex);
-      console.log(categories[selectedIndex])
-      setSelectedCategory(categories[selectedIndex]);
+      setSelectedCategory(categories[selectedIndex]); // 선택한 인덱스에 해당하는 카테고리 값을 저장
       dispatch(setCategory(selectedIndex));
     };
 
     useEffect(() => {
       setSelectedIndex(reduxCategoryId);
       setSelectedCategory(categories[reduxCategoryId -1]);
-      console.log(selectedIndex)
       dispatch(setCategoryValid(selectedIndex !== '' && selectedIndex !== 0))
 
-    }, [reduxCategoryId, selectedCategory]);
-
+    }, [reduxCategoryId, selectedCategory, selectedIndex]);
+    
     return (
-      <div style={{ maxWidth: '120px' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h3>카테고리</h3>
-          <div style={{ marginLeft: '5px' }}>{categoryValid ? '✅' : '🔲'}</div>
+        <div className="lessonInfoTopCategoryContainer">
+          <div className="lessonInfoText">카테고리 <span className="required">*</span></div>
+          <select className="lessonInfoSelect" value={selectedCategory} onChange={handleCategoryChange}>
+            <option value="">-</option>
+            {categories.map((category, index) => (
+              <option key={index}>
+                {category}
+              </option>
+            ))}
+          </select>
         </div>
-        <select value={selectedCategory} onChange={handleCategoryChange}>
-          <option value="">-</option>
-          {categories.map((category, index) => (
-            <option key={index} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
     );
   }
 

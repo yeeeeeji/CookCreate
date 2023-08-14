@@ -2,8 +2,10 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import '../../style/lesson/apply-lesson-css.css';
+import { useNavigate } from 'react-router';
 
 function ApplyLesson() {
+  const navigate = useNavigate()
   const [disable, setDisable] = useState(false);
   const [disableMsg, setDisableMsg] = useState('');
   const [errMsg, setErrMsg] = useState('');
@@ -71,8 +73,8 @@ function ApplyLesson() {
               },
             })
             .then((res) => {
-              console.log(res);
-              console.log('결제 후 신청 완료');
+              alert('결제가 성공적으로 완료되었습니다!')
+              navigate('/classList')
             })
             .catch((err) => {
               console.log(err);
@@ -82,7 +84,7 @@ function ApplyLesson() {
           alert('다시 결제를 시도해주세요!');
           clearInterval(timer);
         }
-      }, 500);
+      }, 100);
       return () => {
         clearInterval(timer);
       };

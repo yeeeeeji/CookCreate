@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import { useSelector } from "react-redux";
 import '../../style/navbar.css'
@@ -33,8 +33,11 @@ function NavBar() {
     // setUserDropdown((prev) => !prev)
   }
 
+  const location = useLocation();
+  const mainPageStyle = location.pathname === '/';
+
   return (
-    <div className='navbar'>
+    <div className={`navbar ${mainPageStyle ? 'navbar-main' : ''}`}>
       <div className="leftNav">
         <Link to='/' className='logo'>
           <img src= "/logo.png" alt="로고" className='logo' />
@@ -53,7 +56,7 @@ function NavBar() {
             <div className='dropdown'>
               <button className='drop-btn' onClick={dropLessonMenu}>신청수업</button>
               { lessonDropdown ? (
-                <div onMouseLeave={() => dropLessonMenu(false)}>
+                <div onMouseLeave={() => dropLessonMenu(false)} className="drop-wrap">
                   <AppliedLessonMenu />
                 </div>
               ) : null}
@@ -64,7 +67,7 @@ function NavBar() {
               {nickname}
               님
             { userDropdown ? (
-              <div onMouseLeave={() => dropUserMenu(false)}>
+              <div onMouseLeave={() => dropUserMenu(false)} className="drop-wrap">
                 <UserDropMenu/>
               </div>
             ) : null}

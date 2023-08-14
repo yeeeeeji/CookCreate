@@ -17,49 +17,59 @@ function formatDateTime(dateTimeString) {
 }
 
 function Payment() {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [errMsg, setErrMsg] = useState("");
   const accessToken = useSelector((state) => state.auth.access_token);
   const [userPayment, setUserPayments] = useState([]);
-  const [state, setState] = useState('') //결제 상태
-  const paymentMessage = userPayment[0]?.lessonId === 0 ? "결제 내역이 없습니다." : "";
+  const [state, setState] = useState(""); // 결제 상태
+  const paymentMessage =
+    userPayment[0]?.lessonId === 0 ? "결제 내역이 없습니다." : "";
 
   /** 이동할 과외 아이디 */
-  const [ goLessonDetail, setGoLessonDetail ] = useState(false)
-  const lessonId = useSelector((state) => state.lessonInfo.lessonId)
+  const [goLessonDetail, setGoLessonDetail] = useState(false);
+  const lessonId = useSelector((state) => state.lessonInfo.lessonId);
 
-  const handleRefund = (lessonId) => {
-    axios
-      .put(`api/v1/pay/refund/${lessonId}`, {}, {
+  const handleRefund = async (lessonId) => {
+    try {
+      // 결제 환불 먼저 진행
+      const refundResponse = await axios.put(
+        `api/v1/pay/refund/${lessonId}`,
+        {},
+        {
+          headers: {
+            Access_Token: accessToken,
+          },
+        }
+      );
+
+      console.log(refundResponse);
+      console.log("환불 성공!");
+
+      // 과외 취소
+      const cancelResponse = await axios.delete(`api/v1/lesson/cancel/${lessonId}`, {
         headers: {
           Access_Token: accessToken,
         },
-      })
-      .then((res) => {
-        console.log(res);
-        console.log('환불 성공!');
-
-        // 환불 성공 후에 환불 시간을 업데이트하고 결제 정보를 다시 가져와서 화면에 표시
-        axios
-          .get(`api/v1/my/cookiee`, {
-            headers: {
-              Access_Token: accessToken,
-            },
-          })
-          .then((res) => {
-            setUserPayments(res.data);
-            console.log(res.data);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-        console.log('환불 실패');
       });
-  }
+
+      console.log(cancelResponse);
+      console.log("과외 취소!");
+
+      // 환불 성공 후에 환불 시간을 업데이트하고 결제 정보를 다시 가져와서 화면에 표시
+      const paymentResponse = await axios.get(`api/v1/my/cookiee`, {
+        headers: {
+          Access_Token: accessToken,
+        },
+      });
+
+      setUserPayments(paymentResponse.data);
+      console.log(paymentResponse.data);
+    } catch (error) {
+      console.log(error);
+      console.log("환불 실패");
+    }
+  };
 
   useEffect(() => {
     axios
@@ -75,19 +85,20 @@ function Payment() {
       .catch((err) => {
         console.log(err);
       });
-  }, [accessToken]);
+  }, [accessToken, userPayment]);
 
   const goLesson = (lessonId) => {
-    setGoLessonDetail(true)
-    dispatch(setLessonId(lessonId))
-    navigate(`/lesson/${lessonId}`)
-  }
+    setGoLessonDetail(true);
+    dispatch(setLessonId(lessonId));
+    navigate(`/lesson/${lessonId}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     if (goLessonDetail && lessonId !== null) {
-      navigate(`/lesson/${lessonId}`)
+      navigate(`/lesson/${lessonId}`);
     }
-  }, [lessonId])
+  }, [lessonId]);
 
   return (
     <div className="mypage">
@@ -108,18 +119,18 @@ function Payment() {
                     <div>
                       {(() => {
                         switch (payment.payStatus) {
-                          case 'READY':
-                            return '결제 준비중';
-                          case 'FAIL':
-                            return '결제 실패'
-                          case 'CANCEL':
-                            return '결제 취소'
-                          case 'COMPLETED':
-                            return '결제 완료'
-                          case 'REFUND':
-                            return '환불 처리'
+                          case "READY":
+                            return "결제 준비중";
+                          case "FAIL":
+                            return "결제 실패";
+                          case "CANCEL":
+                            return "결제 취소";
+                          case "COMPLETED":
+                            return "결제 완료";
+                          case "REFUND":
+                            return "환불 처리";
                           default:
-                            return '알 수 없음'
+                            return "알 수 없음";
                         }
                       })()}
                     </div>
@@ -136,16 +147,27 @@ function Payment() {
                     </div>
                     <div>
                       <div>결제일</div>
-                      <div>{new Date(payment.approvedAt).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
-                      {/* <div>{formatDateTime(payment.approvedAt)}</div> */}
+                      <div>
+                        {new Date(payment.approvedAt).toLocaleDateString(
+                          "ko-KR",
+                          {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </div>
                     </div>
                     <div>
                       <div>환불 시간</div>
                       {payment.canceledAt !== null ? (
                         <div>{formatDateTime(payment.canceledAt)}</div>
-                      ) : <div>-</div>}
+                      ) : (
+                        <div>-</div>
+                      )}
                     </div>
-                    
                   </div>
                   <div className="info-price">
                     <div>결제 금액</div>
@@ -153,20 +175,22 @@ function Payment() {
                       {payment.totalAmount} 원
                       {payment.payStatus !== "REFUND" && (
                         <div
-                        style={{
-                          backgroundColor: 'orange',
-                          color: 'white',
-                          border: 'none',
-                          padding: '8px 16px',
-                          borderRadius: '4px',
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => handleRefund(payment.lessonId)}>
-                        강의 취소(환불하기)
-                      </div>
+                          style={{
+                            backgroundColor: "orange",
+                            color: "white",
+                            border: "none",
+                            padding: "8px 16px",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => handleRefund(payment.lessonId)}
+                        >
+                          강의 취소(환불하기)
+                        </div>
                       )}
                     </div>
                   </div>
+                  {errMsg}
                 </div>
               </div>
               <hr />

@@ -57,43 +57,45 @@ function AppWithLayout({ match }) {
 
 
   return (
-    <div className="container">
+    <div>
       <NavBar />
-      <Routes>
-        <Route path='/' element={<MainPage />} />
-        <Route path='/signup' element={<SignUp />} />
-        <Route path='login' element={<LogIn />} />
-        <Route path='/lesson' element={<TotalLessons />} />
-        <Route path='/signupbefore' element={<SignUpBefore/>}/>
-        <Route path='/registerlesson' element={<RegisterLesson/>}></Route>
-        <Route path='/lesson/:id' element={<LessonItem/>}></Route>
-        <Route path="/lesson/:lessonId" element={<LessonDetail/>} />
-        <Route path='/payment/fail' element={<PaymentFailed/>}></Route>
-        <Route path='/payment/success' element={<PaymentSuccess/>}></Route>
-        <Route path='/payment/cancel' element={<PaymentCancelld/>}></Route>
-        <Route path='/lesson/edit/:lessonId' element={<EditLesson/>}></Route>
-        {/* <Route path='/chatroom' element={<ChatRoom/>}></Route> */}
+      <div className="container">
+        <Routes>
+          <Route path='/' element={<MainPage />} />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='login' element={<LogIn />} />
+          <Route path='/lesson' element={<TotalLessons />} />
+          <Route path='/signupbefore' element={<SignUpBefore/>}/>
+          <Route path='/registerlesson' element={<RegisterLesson/>}></Route>
+          <Route path='/lesson/:id' element={<LessonItem/>}></Route>
+          <Route path="/lesson/:lessonId" element={<LessonDetail/>} />
+          <Route path='/payment/fail' element={<PaymentFailed/>}></Route>
+          <Route path='/payment/success' element={<PaymentSuccess/>}></Route>
+          <Route path='/payment/cancel' element={<PaymentCancelld/>}></Route>
+          <Route path='/lesson/edit/:lessonId' element={<EditLesson/>}></Route>
+          {/* <Route path='/chatroom' element={<ChatRoom/>}></Route> */}
 
-        
-        {/* <Route path='/chatlist' element={<ChatList />} /> */}
-        <Route path='/chatroom' element={<ChatRoom />} />
-        {/* <Route path='/chatroom' element={<ChatRoom />} /> */}
+          
+          {/* <Route path='/chatlist' element={<ChatList />} /> */}
+          <Route path='/chatroom' element={<ChatRoom />} />
+          {/* <Route path='/chatroom' element={<ChatRoom />} /> */}
 
-        <Route path='/mypageS' element={<MyPageS />} />
-        <Route path='/mypageT' element={<MyPageT />} />
-        <Route path="/classList" element={<ClassList />}/>
-        <Route path="/payment" element={<Payment />}/>
-        <Route path="/recipeBook" element={<RecipeBook />}/>
-        <Route path="/review" element={<Review />}/>
-        <Route path="/account" element={<Account />}/>
-        <Route path="/accountT" element={<AccountT />}/>
-        <Route path="/classlistT" element={<ClassListT />}/>
-        <Route path="/payrollT" element={<PayrollT />}/>
-        <Route path="/reviewT" element={<ReviewT />}/>
-        <Route path="/certificationT" element={<CertifyT />}/>
-        <Route path="/gestureTest" element={<GestureTest />}/>
-      </Routes>
-      <Footer />
+          <Route path='/mypageS' element={<MyPageS />} />
+          <Route path='/mypageT' element={<MyPageT />} />
+          <Route path="/classList" element={<ClassList />}/>
+          <Route path="/payment" element={<Payment />}/>
+          <Route path="/recipeBook" element={<RecipeBook />}/>
+          <Route path="/review" element={<Review />}/>
+          <Route path="/account" element={<Account />}/>
+          <Route path="/accountT" element={<AccountT />}/>
+          <Route path="/classlistT" element={<ClassListT />}/>
+          <Route path="/payrollT" element={<PayrollT />}/>
+          <Route path="/reviewT" element={<ReviewT />}/>
+          <Route path="/certificationT" element={<CertifyT />}/>
+          <Route path="/gestureTest" element={<GestureTest />}/>
+        </Routes>
+        <Footer />
+      </div>
     </div>
   );
 }
