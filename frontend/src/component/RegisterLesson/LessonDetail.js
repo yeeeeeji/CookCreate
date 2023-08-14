@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPrice, setPriceValid, setMaximum, setMaximumValid, setDifficulty, setDescription, 
-  setVideoUrl, setMaterials, setDifficultyValid, setDescriptionValid, setMaterialsValid } from '../../store/lesson/lesson';
+  setMaterials, setDifficultyValid, setDescriptionValid, setMaterialsValid } from '../../store/lesson/lesson';
 import '../../style/lesson/registerLessonDetailCss.css';
 
 function LessonDetail() {
@@ -11,22 +11,20 @@ function LessonDetail() {
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
   const [lessonPrice, setLessonPrice] = useState('');
   const [lessonDescription, setLessonDescription] = useState('')
-  const [lessonVideoUrl, setLessonVideoUrl] = useState('')
   const [lessonMaterialList, setLessonMaterialList] = useState([])
   const [lessonMaterial, setLessonMaterial] = useState('')
   //불러오기
   const reduxPrice = useSelector((state) => state.lesson.price)
   const reduxMaximum = useSelector((state) => state.lesson.maximum)
   const reduxDescribe = useSelector((state) => state.lesson.description)
-  const reduxVideoUrl = useSelector((state) => state.lesson.videoUrl)
   const reduxDifficulty = useSelector((state) => state.lesson.difficulty)
   const reduxMaterialList = useSelector((state) => state.lesson.materials)
   //유효성
-  const priceValid = useSelector((state) => state.lesson.priceValid)
-  const maxValid = useSelector((state) => state.lesson.maxValid)
-  const difficultyValid = useSelector((state) => state.lesson.difficultyValid)
-  const descriptionValid = useSelector((state) => state.lesson.descriptionValid)
-  const materialValid = useSelector((state) => state.lesson.materialsValid)
+  // const priceValid = useSelector((state) => state.lesson.priceValid)
+  // const maxValid = useSelector((state) => state.lesson.maxValid)
+  // const difficultyValid = useSelector((state) => state.lesson.difficultyValid)
+  // const descriptionValid = useSelector((state) => state.lesson.descriptionValid)
+  // const materialValid = useSelector((state) => state.lesson.materialsValid)
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleChangePrice = (e) => {
@@ -53,11 +51,7 @@ function LessonDetail() {
     setLessonDescription(input)
     dispatch(setDescription(input))
   }
-  const handleVideoUrl = (e) => {
-    const url = e.target.value
-    dispatch(setVideoUrl(url))
-    setLessonVideoUrl(url)
-  }
+
   const handleChange = (e) => {
     setLessonMaterial(e.target.value)
   }
@@ -76,10 +70,6 @@ function LessonDetail() {
     setLessonDescription(reduxDescribe)
     dispatch(setDescriptionValid((lessonDescription.trim() !== '')))
   }, [lessonDescription, reduxDescribe])
-
-  useEffect(() => {
-    setLessonVideoUrl(reduxVideoUrl)
-  }, [reduxVideoUrl, lessonVideoUrl])
 
   useEffect(() => {
     setLessonMaximum(reduxMaximum)
@@ -102,7 +92,6 @@ function LessonDetail() {
         <div className="lessonInfoTopContainer">
           <div className="lessonInfoTopTitleContainer">
             <div className="lessonInfoText">수강료 <span className="required">*</span></div>
-            {/* <div>{priceValid ? '✅' : '🔲'}</div> */}
             <input
               className='lessonInfoInputPrice'
               type="text"
@@ -111,10 +100,12 @@ function LessonDetail() {
               value={lessonPrice}
               onChange={handleChangePrice}
             />
+            <div className='price-unit'>
+              원
+            </div>
           </div>              
           <div className="lessonInfoTopTitleContainer">
             <div className="lessonInfoText">최대 수강 인원 <span className="required">*</span></div>
-            {/* <div>{maxValid ? '✅' : '🔲'}</div> */}
             <select className='lessonInfoSelect' value={maximum} onChange={changeMaximum}>
               <option value="">-</option>
               {Array.from({ length: 6 }, (_, index) => index + 1).map((value) => (
@@ -129,7 +120,6 @@ function LessonDetail() {
 
         <div className="lessonInfoTopContainer">
           <div className="lessonInfoText">과외 난이도 <span className="required">*</span></div>
-          {/* <div>{difficultyValid ? '✅' : '🔲'}</div> */}
           <div className='lessonInfoDifficultyContainer'>
             <div
               className='lessonInfoDifficulty'
@@ -180,7 +170,6 @@ function LessonDetail() {
         </div>
         <div className="lessonInfoDescContainer">
           <div className="lessonInfoDesc">과외 설명 <span className="required">*</span></div>
-          {/* <div>{descriptionValid ? '✅' : '🔲'}</div> */}
           <textarea 
             className='lessonInfoInputDesc'
             value={lessonDescription}
@@ -189,20 +178,9 @@ function LessonDetail() {
           />
         </div>
       </div>
-
-      <div className="lessonInfoTopContainer">
-        <div className='lessonInfoText'>맛보기 영상 링크</div>
-        <input type="text"
-          className='lessonInfoInput'
-          value={lessonVideoUrl}
-          onChange={handleVideoUrl}
-          placeholder='맛보기 영상의 주소를 올려주세요!'
-        />
-      </div>
       
       <div className="lessonInfoDescContainer">
         <div className='lessonInfoMate'>준비물 입력 <span className="required">*</span> <div className='lessonInfoMateDesc'>준비물을 입력하고<br/>화살표 버튼을 눌러서<br/>추가해주세요.</div></div>
-        {/* <div>{materialValid ? '✅' : '🔲'}</div> */}
         <form onSubmit={handleSubmit}>
           <div className="mateInputContainer">
             <textarea

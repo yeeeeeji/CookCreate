@@ -9,32 +9,28 @@
     const [selectedIndex, setSelectedIndex] = useState(''); // 카테고리 idx 저장
 
     const categories = useMemo(() => ['한식', '양식', '중식', '일식', '아시안', '건강식', '디저트'], []);
-    const categoryValid = useSelector((state) => state.lesson.categoryValid);
 
     const handleCategoryChange = (e) => {
       const selectedIndex = e.target.selectedIndex;
       setSelectedIndex(selectedIndex);
-      console.log(categories[selectedIndex])
-      setSelectedCategory(categories[selectedIndex]);
+      setSelectedCategory(categories[selectedIndex]); // 선택한 인덱스에 해당하는 카테고리 값을 저장
       dispatch(setCategory(selectedIndex));
     };
 
     useEffect(() => {
       setSelectedIndex(reduxCategoryId);
       setSelectedCategory(categories[reduxCategoryId -1]);
-      console.log(selectedIndex)
       dispatch(setCategoryValid(selectedIndex !== '' && selectedIndex !== 0))
 
-    }, [reduxCategoryId, selectedCategory]);
-
+    }, [reduxCategoryId, selectedCategory, selectedIndex]);
+    
     return (
         <div className="lessonInfoTopCategoryContainer">
           <div className="lessonInfoText">카테고리 <span className="required">*</span></div>
-          {/* <div className="lessonInfoIcon">{categoryValid ? '✅' : '🔲'}</div> */}
           <select className="lessonInfoSelect" value={selectedCategory} onChange={handleCategoryChange}>
             <option value="">-</option>
             {categories.map((category, index) => (
-              <option key={index} value={category}>
+              <option key={index}>
                 {category}
               </option>
             ))}

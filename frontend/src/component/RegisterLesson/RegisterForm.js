@@ -1,12 +1,13 @@
-import React, {useState} from 'react';
-import { useSelector } from 'react-redux';
+import React, {useState, useEffect} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../style/lesson/registerFormCss.css';
-
+import {setVideoUrl} from '../../store/lesson/lesson'
 function RegisterForm({ setContent, setShowAlert, setPath }) {
   const navigate = useNavigate()
   const [thumbnailUrl, setThumbnailUrl] = useState('')
+  const [lessonVideoUrl, setLessonVideoUrl] = useState('')
 
   const [lessonThumbnailUrl, setLessonThumbnailUrl] = useState('')
   const [ThumbnailFile, setThumbnailFile] = useState(null)
@@ -35,7 +36,15 @@ function RegisterForm({ setContent, setShowAlert, setPath }) {
   const descriptionValid = useSelector((state) => state.lesson.descriptionValid)
   const [thumbnailValid, setThumbnailValid] = useState(false);
   const isAllValid = [categoryValid, titleValid, maxValid, priceValid, dateValid, difficultyValid, timeTakenValid, materialsValid, stepValid, descriptionValid, thumbnailValid].every((isValid) => isValid);
+  
+  //불러오기
+  const reduxVideoUrl = useSelector((state) => state.lesson.videoUrl)
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setLessonVideoUrl(reduxVideoUrl)
+  }, [reduxVideoUrl, lessonVideoUrl])
 
   const handleThumbnailUrl = (e) => {
     setLessonThumbnailUrl(e.target.value) // 파일명 유저들에게 보여주기
@@ -44,7 +53,11 @@ function RegisterForm({ setContent, setShowAlert, setPath }) {
     setThumbnailValid(!!file)
     setThumbnailUrl(URL.createObjectURL(file))
   };
-
+  const handleVideoUrl = (e) => {
+    const url = e.target.value
+    dispatch(setVideoUrl(url))
+    setLessonVideoUrl(url)
+  }
   const register = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -112,6 +125,15 @@ function RegisterForm({ setContent, setShowAlert, setPath }) {
             accept="image/*"
           />
         </div>
+        <div className="lessonInfoTopContainer">
+        <div className='lessonInfoText'>맛보기 영상 링크</div>
+        <input type="text"
+          className='lessonInfoInput'
+          value={lessonVideoUrl}
+          onChange={handleVideoUrl}
+          placeholder='맛보기 영상의 주소를 올려주세요!'
+        />
+      </div>
       </div>
     <button 
       className={`lessonRegisterButton ${!isAllValid ? 'disabled' : ''}`}

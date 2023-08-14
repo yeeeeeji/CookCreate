@@ -38,11 +38,9 @@ const lesson = createSlice({
     },
     setCategory : (state, action) => {
       state.categoryId = action.payload
-      console.log(action)
     },
     setCategoryValid : (state, action) => {
       state.categoryValid = action.payload
-      console.log(action)
     },
     setTimeTaken : (state, action) => {
       state.timeTaken = action.payload
