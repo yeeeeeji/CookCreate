@@ -4,6 +4,7 @@ import '../../style/mainpage/introduceApp.css'
 function IntroduceApp() {
   return (
     <div>
+      <div className='bg'></div>
       <div className='mainpageContent'>  
         <div className='animation-container'>
           <div className='topContent'>     
