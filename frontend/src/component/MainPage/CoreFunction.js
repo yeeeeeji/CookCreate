@@ -32,36 +32,63 @@ function CoreFunction() {
   
   return (
     <div className="coreContainer">
+    <div className="core-wrap-wrap">
       <div className="coreWrap">
-        <div className="coreTitle">
+        <div className="coreSubTitle">
           체크
         </div>
+        <div className="coreTitle">
+          화면에 대고 브이자 한번으로
+          <br />
+          완료 사실을 알려보세요.
+        </div>
         <div className="coreDescription">
+          현재 진행 중인 단계를 모두 수행했다면
+          <br/>
           체크 제스쳐를 해보세요.
           <br/>
           선생님께 내 진행 상황을 손 쉽게 알릴 수 있어요.
         </div>
-      </div>
-      <div className="coreWrap">
-        <div className="coreTitle">
-          손들기
-        </div>
-        <div className="coreDescription">
-          직접 손을 들어보세요.
-          <br />
-          도움이 필요할 때 바로 선생님을 부를 수 있어요.
         </div>
       </div>
-      <div className="coreWrap">
-        <div className="coreTitle">
-          타이머
-        </div>
-        <div className="coreDescription">
-          요리 도중 타이머가 필요하신가요?
-          <br/>
-          손에 음식이 묻어있어도 바로 타이머를 맞출 수 있어요.
+      <div className="core-wrap-wrap">
+        <div className="coreWrap">
+          <div className="coreSubTitle">
+            손들기
+          </div>
+          <div className="coreTitle">
+            선생님의 도움이 필요할 때,
+            <br />
+            더 이상 채팅을 칠 필요 없어요.
+          </div>
+          <div className="coreDescription">
+            직접 손을 들어보세요.
+            <br />
+            도움이 필요할 때 바로 선생님을 부를 수 있어요.
+          </div>
         </div>
       </div>
+      <div className="core-wrap-wrap">
+        <div className="coreWrap">
+          <div className="coreSubTitle">
+            타이머
+          </div>
+          <div className="coreTitle">
+            째깍째깍...
+            <br />
+            타이머를 맞춰보세요.
+          </div>
+          <div className="coreDescription">
+            요리 도중 타이머가 필요하신가요?
+            <br/>
+            손에 음식이 묻어있어도 바로 타이머를 사용할 수 있어요.
+          </div>
+        </div>
+        <div className="core-img-wrap">
+          <img src="/timer.png" alt="타이머" className="core-img" />
+        </div>
+      </div>
+      
     </div>
   );
 }

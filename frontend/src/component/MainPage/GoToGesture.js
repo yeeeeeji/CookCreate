@@ -11,7 +11,7 @@ function GoToGesture() {
     border: '0.7px solid #8D9193',
     backgroundColor: '#FFFFFF',
     display: 'inline-flex',
-    padding: '0.8rem 2rem',
+    padding: '0.6rem 1.7rem',
     justifyContent: 'center',
     alignItems: 'center',
     gap: '0.625rem',
