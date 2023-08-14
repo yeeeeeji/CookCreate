@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../store/auth/auth';
 import '../../style/auth/login.css';
+import sessionStorage from 'redux-persist/es/storage/session';
 
 function Login() {
   const navigate = useNavigate();
@@ -20,7 +21,6 @@ function Login() {
         { userId, userPw }
         )
       .then((res) => {
-        // 로그인 성공 처리
         const { access_token, refresh_token } = res.headers;
         dispatch(
           login({
@@ -33,6 +33,7 @@ function Login() {
         );
         localStorage.setItem('access_token', access_token);
         localStorage.setItem('refresh_token', refresh_token);
+        sessionStorage.setItem('access_token', access_token) // 창 닫으면 로그아웃 구현
 
         if (rememberMe) {
           localStorage.setItem('remembered_userId', userId);
