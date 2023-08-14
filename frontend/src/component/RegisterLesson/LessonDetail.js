@@ -135,14 +135,13 @@ function LessonDetail() {
               className='lessonInfoDifficulty'
               onClick={() =>  handleDifficultyClick('EASY')}
               style={{
-                paddingLeft: '15px',
-                paddingRight: '15px',
                 border: selectedDifficulty === 'EASY' ? '0.7px solid #FF7A42' : '0.7px solid #CBCBCB',
                 borderRadius: '50px',
                 color: selectedDifficulty === 'EASY' ? '#FF7A42' : '#333',
                 backgroundColor: selectedDifficulty === 'EASY' ? '#FFF4F0' : '#FFF',
-                padding : '5px',
+                padding: '8px',
                 marginRight : '5px',
+                fontSize: '15px',
                 cursor : 'pointer'
               }}
             >
@@ -151,14 +150,13 @@ function LessonDetail() {
             <div
               onClick={() => handleDifficultyClick('NORMAL')}
               style={{ 
-                paddingLeft: '15px',
-                paddingRight: '15px',
                 border: selectedDifficulty === 'NORMAL' ? '0.7px solid #FF7A42' : '0.7px solid #CBCBCB',
                 borderRadius: '50px',
                 color: selectedDifficulty === 'NORMAL' ? '#FF7A42' : '#333',
                 backgroundColor: selectedDifficulty === 'NORMAL' ? '#FFF4F0' : '#FFF',
-                padding : '5px',
+                padding: '8px',
                 marginRight : '5px',
+                fontSize: '15px',
                 cursor : 'pointer' 
               }}
             >
@@ -167,13 +165,12 @@ function LessonDetail() {
             <div
               onClick={() => handleDifficultyClick('HARD')}
               style={{ 
-                paddingLeft: '15px',
-                paddingRight: '15px',
                 border: selectedDifficulty === 'HARD' ? '0.7px solid #FF7A42' : '0.7px solid #CBCBCB',
                 borderRadius: '50px',
                 color: selectedDifficulty === 'HARD' ? '#FF7A42' : '#333',
                 backgroundColor: selectedDifficulty === 'HARD' ? '#FFF4F0' : '#FFF',
-                padding : '5px',
+                padding: '8px',
+                fontSize: '15px',
                 cursor : 'pointer'
               }}
             >
@@ -203,23 +200,25 @@ function LessonDetail() {
         />
       </div>
       
-      <div className="lessonInfoTopContainer">
-        <div className='lessonInfoText'>준비물 입력 <span className="required">*</span></div>
+      <div className="lessonInfoDescContainer">
+        <div className='lessonInfoMate'>준비물 입력 <span className="required">*</span> <div className='lessonInfoMateDesc'>준비물을 입력하고<br/>화살표 버튼을 눌러서<br/>추가해주세요.</div></div>
         {/* <div>{materialValid ? '✅' : '🔲'}</div> */}
-      </div>
-      <form onSubmit={handleSubmit}>
-        <textarea
-          value={lessonMaterial}
-          onChange={handleChange}
-          placeholder="재료를 입력하세요. 각 재료들을 새 줄로 입력해주시면 됩니다."
-          rows={5}
-          cols={40}
-        />
-        <button type="submit">입력 완료</button>
-      </form>
-      <div>
-        <h3>준비물 리스트</h3>
-        <div>
+        <form onSubmit={handleSubmit}>
+          <div className="mateInputContainer">
+            <textarea
+              className='lessonInfoInputMate'
+              value={lessonMaterial}
+              onChange={handleChange}
+              placeholder="재료를 입력하세요. 각 재료들을 새 줄로 입력해주시면 됩니다."
+              rows={5}
+              cols={40}
+            />
+            <button className="mateSubmitButton" type="submit">
+              &gt;
+            </button>
+          </div>
+        </form>
+        <div className='lessonInfoInputMate'>
           {lessonMaterialList && lessonMaterialList.map((str, index) => (
             <div key={index}>{str}</div>
             ))}

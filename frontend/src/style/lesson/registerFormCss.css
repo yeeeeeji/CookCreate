@@ -1,3 +1,8 @@
+.fileInputThumbnail{
+  border: none;
+  border-radius: 0;
+}
+
 .lessonRegisterButton{
   display: flex;
   width: 200px;

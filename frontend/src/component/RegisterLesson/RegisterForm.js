@@ -103,7 +103,9 @@ function RegisterForm({ setContent, setShowAlert, setPath }) {
             style={{ maxWidth: '200px', marginTop: '10px', marginRight: '10px' }}
             />
           )}
-          <input type="file"
+          <input 
+            className='fileInputThumbnail'
+            type="file"
             name = "filename"
             value={lessonThumbnailUrl}
             onChange={handleThumbnailUrl}

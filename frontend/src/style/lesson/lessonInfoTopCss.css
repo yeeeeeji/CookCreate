@@ -7,12 +7,13 @@
 .lessonInfoTopCategoryContainer{
     display: flex;
     align-items: center; /* 가로 정렬 시 세로 정렬 설정 */
-    margin-right: 100px;
+    width: 400px;
 }
 
 .lessonInfoTopTitleContainer{
     display: flex;
     align-items: center; /* 가로 정렬 시 세로 정렬 설정 */
+    width: 400px;
 }
 
 
@@ -20,6 +21,7 @@
     margin-right: 10px; /* 아이콘과 텍스트 사이 간격 */
     font-size: 15px;
     font-weight: 500;
+    width: 130px;
 }
   
 .lessonInfoIcon {
