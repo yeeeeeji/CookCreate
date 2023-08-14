@@ -3,14 +3,14 @@
     margin: 0 auto;
 }
 
-input {
+.mypage input {
     border-radius: 7px;
     border: 0.7px solid #D9D9D9;
     background: #FFF;
     height: 30px;
 }
 
-textarea {
+.mypage textarea {
     border-radius: 7px;
     border: 0.7px solid #D9D9D9;
     background: #FFF;
