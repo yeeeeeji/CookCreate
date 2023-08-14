@@ -23,7 +23,6 @@ function PreviousLesson() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         dispatch(setLessonTitle(res.data.lessonTitle))
         dispatch(setCategory(res.data.categoryId))
         dispatch(setTimeTaken(res.data.timeTaken))

@@ -4,7 +4,7 @@ import '../../style/lesson/cookieeNumberCss.css';
 
 function CookieeNumber() {
   const maximum = parseInt(useSelector((state) => state.lessonInfo.maximum))
-  const remaining = parseInt(useSelector((state) => state.lessonInfo.remaining))
+  const remaining = parseInt(useSelector((state) => state.lessonInfo.remaining)) //남은 인원 수
   const current = maximum - remaining
   const currentStyle = {
     fontSize: '24px', // 크기를 키우려면 적절한 값을 설정하세요
