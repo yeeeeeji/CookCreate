@@ -39,18 +39,21 @@ function Account() {
   const [isIntroduce, setIsIntroduce] = useState(true);
 
 
+  //닉네임 중복검사
   const nicknameDupliCheck = () => {
     axios
       .get(`api/v1/auth/checkNick/${nicknameDef}`)
       .then((res) => {
-        setUserNNDupMessage(res.data.message);
+        setUserNicknameMessage(res.data.message);
         setIsNNdup(true);
       })
       .catch((err) => {
-        setUserNNDupMessage(err.response.data.message);
+        setUserNicknameMessage(err.response.data.message);
         setIsNNdup(false);
       });
   };
+
+  
 
   //유효성 검사 구현
   const onChangeIntroduce = async (e) => {
@@ -67,17 +70,35 @@ function Account() {
 
 
 
+  //닉네임변경
+  // const onChangeUserNickName = async (e) => {
+  //   const value = e.target.value;
+  //   await setNickName(value);
+  //   if (value.length < 2 || value.length > 8) {
+  //     setUserNicknameMessage("2글자 이상 8글자 이하로 입력해주세요");
+  //     setIsNickname(false);
+  //   } else {
+  //     setUserNicknameMessage("적합한 닉네임 형식입니다! 🤗");
+  //     setIsNickname(true);
+  //   }
+  // };
+
+
+
   const onChangeUserNickName = async (e) => {
-    const value = e.target.value;
-    await setNickName(value);
+    const value = e.target.value
+    await setNickName(value)
     if (value.length < 2 || value.length > 8) {
-      setUserNicknameMessage("2글자 이상 8글자 이하로 입력해주세요");
-      setIsNickname(false);
+      setUserNicknameMessage('2글자 이상 8글자 이하로 입력해주세요')
+      setIsNickname(false)
     } else {
-      setUserNicknameMessage("적합한 닉네임 형식입니다! 🤗");
-      setIsNickname(true);
+      setUserNicknameMessage('적합한 닉네임 형식입니다! 🤗')
+      setIsNickname(true)
     }
-  };
+    setUserNNDupMessage('')
+  }
+
+
   const onChangeUserPhonenumber = async (e) => {
     const value = e.target.value;
     await setPhoneNumber(value);
