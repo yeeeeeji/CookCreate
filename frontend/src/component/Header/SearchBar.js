@@ -59,11 +59,36 @@ function SearchBar() {
     setKeyword('')
   };
 
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchResult = document.getElementById('searchResult');
+    const searchInput = document.getElementById('searchInput');
+
+    searchInput.addEventListener('input', () => {
+      const inputValue = searchInput.value.trim();
+
+      if (inputValue) {
+        searchResult.style.display = 'block';
+        searchInput.textContent = inputValue;
+      } else {
+        searchResult.style.display = 'none';
+      }  
+    });
+
+    document.addEventListener('click', (event) => {
+      // 클릭된 요소와 targetDiv가 부모-자식 관계인지 확인
+      if (!searchResult.contains(event.target) && event.target !== searchInput) {
+        searchResult.style.display = 'none';
+      }
+    });
+  });
+  
+
   return (
     <div className="mainSearchContainer">
       <div className="mainSearch-wrap">
         <BiSearch className="mainSearchIcon" />
         <input
+          id ="searchInput"
           type="text"
           className="searchBar"
           placeholder="요리를 검색해보세요!"
@@ -73,11 +98,11 @@ function SearchBar() {
           }}
         />
       </div>
-      <div>
+      <div className="search-result" id="searchResult">
         {isexist &&
           isOpen &&
           result.map((obj, idx) => (
-            <div onClick={() => searchResClick(obj.lessonId)} key={idx}>
+            <div className="search-result-item" onClick={() => searchResClick(obj.lessonId)} key={idx}>
               <SearchResModal key={idx} lessonTitle={obj.lessonTitle} lessonId={obj.lessonId} />
             </div>
           ))}

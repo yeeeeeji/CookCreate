@@ -13,7 +13,7 @@
 }
 
 .coreWrap {
-    margin-top: 10rem;
+    margin: 25rem 0;
     opacity: 0; /* 처음에는 숨겨진 상태로 시작 */
     
   }
@@ -29,9 +29,8 @@
     flex-wrap: wrap;
 }
   
-  .visible {
+.visible {
     animation: scrollAnimation 2s ease forwards;
-    transition: transform 0.5s; /* 애니메이션 효과를 주기 위한 설정 */
 }
   
 @keyframes scrollAnimation {
