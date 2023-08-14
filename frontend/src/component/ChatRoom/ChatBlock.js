@@ -123,7 +123,7 @@ const BorderBlock = styled.div`
     display: inline-block;
     // background-color: #b2c7d9;
     // background-color: #d1cfca;
-    background-color: #ffd3a1;
+    // background-color: #ffd3a1;
     padding: 0 10px;
   }
   // &:before {
@@ -157,7 +157,9 @@ const RightBlock = styled.div`
 
   & ${ChatWrapper} {
     // background-color: #ffec42;
-    background-color: #ffffff;
+    // background-color: #ffffff;
+    background-color: #fffcf9;
+    
 
     text-align: left;
     & span {
@@ -187,7 +189,8 @@ const LeftBlock = styled.div`
   padding-left: 10px;
   & ${ChatWrapper} {
     // background-color: #fff;
-    background-color: #ffe3b0;
+    // background-color: #ffebd7;
+    background-color: rgb(255, 227, 176);
 
     & span {
       position: absolute;
@@ -227,7 +230,7 @@ const Chat = ({ message, author}) => {
   return (
     <ChatWrapper>
       <span className="username" style={{ display: 'inherit' }}> {author}</span>
-      <div className="message">{message}</div>
+      <div className="message"  >{message}</div>
       {/* <span className="time">{localeTime}</span> */}
       {/* <span className="not-read">{notRead > 1 ? notRead : ""}</span> */}
     </ChatWrapper>
@@ -236,7 +239,7 @@ const Chat = ({ message, author}) => {
 
 const SeparationBlock = ({ EnterNickname }) => {
   return (
-    <BorderBlock>
+    <BorderBlock style={{ color:'rgb(87, 49, 14)' }}>
       <span>{EnterNickname}</span>
     </BorderBlock>
   );
@@ -259,8 +262,8 @@ const FriendChat = ({ author, message }) => {
   return (
     <LeftBlock>
       <div>
-        <span className="username" style={{ display: 'inherit' }} >{author}</span>
-        <Chat message={message} />
+        <span className="username" style={{ display: 'inherit',color: '#57310e' }} >{author}</span>
+        <Chat message={message}  style={{ color:'rgb(92, 82, 73)'}} />
       </div>
     </LeftBlock>
   );

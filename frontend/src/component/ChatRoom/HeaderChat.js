@@ -125,10 +125,6 @@ const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
         <i className="fas fa-arrow-left" />
       </button>
     ) : null}
-    {/* <button type="button" onClick={onBefore}>
-      <p>HOME</p>
-      <i className="fas fa-arrow-left" />
-    </button> */}
     <span>{chatTitle}</span>
     </Wrapper>
   );

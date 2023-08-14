@@ -16,9 +16,13 @@ const Wrapper = styled.footer`
   overflow: auto;
   padding: 6px;
   z-index: 100;
-  background-color: #f5f2f2;
+  // background-color: #f5f2f2;
   // display: flex;
-  justify-content: flex-end; /* Align to the right */
+  justify-content: flex-end;
+
+  border: 1px solid rgb(255 239 221);
+  
+
   
   & form {
     position: relative;
@@ -49,13 +53,15 @@ const Wrapper = styled.footer`
       &.canSubmit {
         cursor: pointer;
         pointer-events: all;
-        color: #ffffff;
-        background: #ff8a00;
+        color: #ffedca;
+        background: #ff9416;
+        border-radius: 10%;
       }
       
       &.cannotSubmit {
         pointer-events: none;
         color: #b4b4b4;
+        border-radius: 10%;
       }
     }
   }
@@ -96,7 +102,7 @@ const InputChat = ({ sendMessage }) => {
 
   const onEnterPress = (event) => {
     if (!event.shiftKey && event.key === "Enter") {
-      // event.preventDefault();
+      event.preventDefault();
       onSubmit();
     }
   };
