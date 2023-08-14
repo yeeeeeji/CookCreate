@@ -1,26 +1,35 @@
-import React from 'react';
+import React, { useEffect} from 'react';
 import '../../style/mainpage/coreFunction.css'
 
 function CoreFunction() {
-  document.addEventListener('DOMContentLoaded', () => {
-    const elements = document.querySelectorAll('.coreWrap');
-    let animated = Array.from(elements).fill(false);
+  useEffect(() => {
+    // 페이지 전환 시 실행할 초기화 코드
 
-    window.addEventListener('scroll', () => {
+    function handleScroll() {
+      const elements = document.querySelectorAll('.coreWrap');
+      let animated = Array.from(elements).fill(false);
+
       elements.forEach((element, index) => {
         // 요소가 화면 중앙에 보일 때 클래스를 추가하여 나타나게 함
         const elementTop = element.getBoundingClientRect().top;
         // const windowHeight = window.innerHeight;
-        // console.log(coreWrapTop + " " + windowHeight);
+        // console.log(elementTop + " " + windowHeight);
       
-        if (elementTop < 400 && !animated[index]) {
+        if (elementTop < 450 && !animated[index]) {
           element.classList.add('visible');
           animated[index] = true;
         }
       });
-    });
-  });
-
+    };
+    window.addEventListener('scroll', handleScroll);
+    // 반환된 함수는 컴포넌트가 언마운트되거나 업데이트되기 직전에 실행됨
+    return () => {
+      // 스크롤 이벤트 리스너 제거
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  
+  
   return (
     <div className="coreContainer">
       <div className="coreWrap">

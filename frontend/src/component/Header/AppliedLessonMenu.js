@@ -4,6 +4,7 @@ import { initOVSession, setSessionId, setVideoLessonId } from '../../store/video
 import { useDispatch, useSelector } from 'react-redux';
 import { OpenVidu } from 'openvidu-browser';
 import { useNavigate } from 'react-router-dom';
+import '../../style/appliedLessonMenu.css'
 
 function AppliedLessonMenu() {
   const dispatch = useDispatch()
@@ -100,13 +101,15 @@ function AppliedLessonMenu() {
     <div className='dropdown-content'>
       {myLessons ? (
         myLessons.map((lesson, i) => (
-          <div key={lesson.lessonId}>
-            <p>{lesson.lessonTitle}</p>
-            <p>{lesson.cookyerName}</p>
+          <div key={lesson.lessonId} className="drop-lesson">
+            <div>
+              <div className="drop-title">{lesson.lessonTitle}</div>
+              <div>{lesson.cookyerName}</div>
+            </div>
             {lesson.sessionId === null ? (
-              <button disabled='disabled'>수업예정</button>
+              <button disabled='disabled' className="drop-lesson-btn">수업예정</button>
             ) : (
-              <button onClick={() => joinLesson(lesson.lessonId)}>참여하기</button>
+              <button onClick={() => joinLesson(lesson.lessonId)} className="drop-lesson-btn">참여하기</button>
             )}
           </div>
         ))
