@@ -1,10 +1,14 @@
 .navbar {
   background-color: #ffffff;
-  padding: 0.9rem 0;
+  padding: 0.9rem 15rem;
   display: flex; 
   align-items: center;
   justify-content: space-between;
   color: #656363;
+}
+
+.navbar-main {
+  background-color: #ffffff00;
 }
 
 .logo {
@@ -78,3 +82,21 @@ a:not(:first-of-type) {
   box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
 }
 /* 옮기기 */
+
+@media screen and (max-width: 1350px) {
+  .navbar {
+    padding: 0.9rem 8rem;
+  }
+}
+
+/* @media screen and (max-width: 1000px) {
+  .container {
+    padding: 0 7rem;
+  }
+} */
+
+@media screen and (max-width: 646px) {
+  .navbar {
+    padding: 0.9rem 3rem;
+  }
+}
