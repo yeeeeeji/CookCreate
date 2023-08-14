@@ -98,3 +98,47 @@ input[type="number"]::-webkit-inner-spin-button {
   background-color: rgb(255, 136, 0);
   border-radius: 15px;
 }
+
+/* 비디오 사이드바 */
+.video-sidebar {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  bottom: -120px;
+  width: 60px;
+  background-color: white;
+}
+
+.video-side-icon-wrap {
+  margin: 20px auto;
+  width: 30px;
+}
+
+.video-side-icon {
+  font-size: 30px;
+  transition: all 0.2s linear;
+}
+
+.video-side-icon:hover {
+  transform: scale(1.1);
+}
+
+.video-exit-icon {
+  color: rgb(223, 0, 0);
+}
+
+/* 쿠커 타이머 */
+
+.full-video-timer-title {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.full-video-timer-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: auto 30px;
+}
