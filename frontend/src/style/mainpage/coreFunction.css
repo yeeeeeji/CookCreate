@@ -1,3 +1,8 @@
+.coreSubTitle {
+  font-size: 1.1rem;
+  color: #FF7A42;
+}
+
 .coreTitle {
     font-weight: 500;
     font-size: 1.7rem;
@@ -13,14 +18,8 @@
 }
 
 .coreWrap {
-    margin: 25rem 0;
-    opacity: 0; /* 처음에는 숨겨진 상태로 시작 */
-    
+    opacity: 0; /* 처음에는 숨겨진 상태로 시작 */  
   }
-
-.coreWep :first-of-type {
-    margin-top: 3rem;
-}
 
 .coreContainer > :nth-child(2) {
     display: flex;
@@ -31,6 +30,25 @@
   
 .visible {
     animation: scrollAnimation 2s ease forwards;
+}
+
+.core-img {
+  width: 25rem;
+}
+
+.core-img-wrap {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+  flex-wrap: wrap;  
+  opacity: 0;
+}
+
+.core-wrap-wrap {
+  display: flex;
+  margin: 15rem 0 25rem 0;
+  align-items: flex-end;
+  justify-content: space-between;
 }
   
 @keyframes scrollAnimation {
