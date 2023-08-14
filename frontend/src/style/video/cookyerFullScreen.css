@@ -37,8 +37,6 @@
   width: 551px;
   height: 548px;
   overflow: hidden;
-  border: 1px solid orange;
-
 }
 
 .cookyer-cookiee {
@@ -126,7 +124,7 @@
 }
 
 .cookyer-handsup-icon-active-3 {
-  color: rgb(27, 196, 12);
+  color: rgb(12, 142, 0);
 }
 
 .cookyer-handsup-icon-active-4 {
