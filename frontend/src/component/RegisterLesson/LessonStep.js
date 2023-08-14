@@ -51,38 +51,37 @@ function LessonStep() {
 
   return (
     <div>
-      <div className="lessonInfoTopContainer">
-        <div className="lessonInfoText">진행 단계 <span className="required">*</span></div>
+      <div className="lessonInfoDescContainer">
+        <div className="lessonInfoMate">진행 단계 <span className="required">*</span></div>
         {/* <div>{stepValid ? '✅' : '🔲'}</div> */}
-        <div className='lessonInfoStepContainer'>
-          
-        </div>
-        {stepList.map((step, index) => (
-          <div key={index}>
-            <input
-              type="text"
-              value={step.stepContent}
-              onChange={(e) => handleChange(index, e.target.value)}
-              placeholder={`요리 진행 단계를 입력하세요`}
-            />
-            {stepList.length > 1 && (
-              <button onClick={() => handleRemoveInput(index)}>
-                삭제
-              </button>
-            )}
-          </div>
+        <div className='stepInputContainer'>
+          {stepList.map((step, index) => (
+            <div key={index} className="stepInputWrapper">
+              <input
+                className='lessonInfoInput'
+                type="text"
+                value={step.stepContent}
+                onChange={(e) => handleChange(index, e.target.value)}
+                placeholder={`요리 진행 단계를 입력하세요`}
+              />
+              {stepList.length > 1 && (
+                <button className='stepCancelButton' onClick={() => handleRemoveInput(index)}>
+                  삭제
+                </button>
+              )}
+            </div>
           ))}
-          <button onClick={handleAddInput}>
+          <button className='stepPlusButton' onClick={handleAddInput}>
             +
           </button>
-          {errMsg && <p>{errMsg}</p>}
-          <p>
-            {checkStepContentFilled() ? '모든 단계가 찼습니다.' : '단계를 모두 입력해주세요.'}
+          {errMsg && <p className='stepMsg'>{errMsg}</p>}
+          <p className='stepMsg'>
+            {checkStepContentFilled() ? '' : '단계를 모두 입력해주세요.'}
           </p>
+        </div>
       </div>
     </div>
   );
 }
 
 export default LessonStep;
-    
