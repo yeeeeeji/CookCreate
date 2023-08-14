@@ -1,5 +1,5 @@
 .recipe-book-page-title-wrapper {
-  margin-top: 15px;
+  margin-top: 40px;
   text-align: center;
 }
 
@@ -11,7 +11,7 @@
 .recipe-book-desc {
   font-size: 13px;
   color: #969696;
-  margin-top: 5px;
+  margin-top: 23px;
 }
 
 .recipe-books {
@@ -20,7 +20,7 @@
   gap: 30px;
   justify-items: center; /* 가로 가운데 정렬 */
   align-items: center; /* 세로 가운데 정렬 */
-  margin-top: 80px;
+  margin: 80px 50px;
 }
 
 .recipe-book-background {
