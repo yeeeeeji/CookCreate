@@ -1,16 +1,11 @@
-.mypage {
-    max-width: 620px;
-    margin: 0 auto;
-}
-
-.mypage input {
+.account input {
     border-radius: 7px;
     border: 0.7px solid #D9D9D9;
     background: #FFF;
     height: 30px;
 }
 
-.mypage textarea {
+.account textarea {
     border-radius: 7px;
     border: 0.7px solid #D9D9D9;
     background: #FFF;
