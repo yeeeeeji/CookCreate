@@ -4,11 +4,13 @@ import '../../../style/video.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { audioMute, leaveSession, videoMute } from '../../../store/video/video';
-import { setCheck, setHandsUp, setShowOthers } from '../../../store/video/cookieeVideo';
+import { initCookieeVideo, setCheck, setHandsUp, setShowOthers } from '../../../store/video/cookieeVideo';
 import { BsMicFill, BsMicMute, BsCameraVideoFill, BsCameraVideoOff, BsPeopleFill } from "react-icons/bs"
 import { RxExit } from "react-icons/rx"
 import { AiFillCheckCircle } from 'react-icons/ai'
 import { IoIosHand } from 'react-icons/io'
+import { initVideoLessonInfo } from '../../../store/video/videoLessonInfo';
+import { initScreenShare } from '../../../store/video/screenShare';
 
 function CookieeVideoSideBar() {
   const dispatch = useDispatch()
@@ -34,6 +36,9 @@ function CookieeVideoSideBar() {
     }
     session.disconnect()
     dispatch(leaveSession())
+    dispatch(initCookieeVideo())
+    dispatch(initScreenShare())
+    dispatch(initVideoLessonInfo())
     navigate(-1)
   }
   
