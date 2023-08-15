@@ -29,32 +29,12 @@ import PaymentSuccess from '../pages/paymentSuccess';
 import PaymentCancelld from '../pages/paymentCancelld';
 import EditLesson from '../pages/editLesson';
 import GestureTest from '../pages/video/gestureTest';
+import NotFound from "../pages/notFound";
 
 import ChatList from '../pages/chatList';
 import ChatRoom from '../pages/chatRoom';
 
 function AppWithLayout({ match }) {
-  // const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   const storedNickname = localStorage.getItem('nickname');
-  //   const storedRole = localStorage.getItem('role')
-  //   const access_token = localStorage.getItem('access_token')
-  //   const refresh_token = localStorage.getItem('refresh_token')
-  //   const userId = localStorage.getItem('id')
-  //   if (access_token) {
-  //     dispatch(login({
-  //       'access_token' : access_token,
-  //       'refresh_token' : refresh_token,
-  //       'nickname' : storedNickname, 
-  //       'role' : storedRole,
-  //       'userId' : userId
-  //     }));
-  //   } else {
-  //     dispatch(logout());
-  //   }
-  // }, [dispatch]);
-
 
   return (
     <div>
@@ -73,12 +53,8 @@ function AppWithLayout({ match }) {
           <Route path='/payment/success' element={<PaymentSuccess/>}></Route>
           <Route path='/payment/cancel' element={<PaymentCancelld/>}></Route>
           <Route path='/lesson/edit/:lessonId' element={<EditLesson/>}></Route>
-          {/* <Route path='/chatroom' element={<ChatRoom/>}></Route> */}
-
-          
-          {/* <Route path='/chatlist' element={<ChatList />} /> */}
+         
           <Route path='/chatroom' element={<ChatRoom />} />
-          {/* <Route path='/chatroom' element={<ChatRoom />} /> */}
 
           <Route path='/mypageS' element={<MyPageS />} />
           <Route path='/mypageT' element={<MyPageT />} />
@@ -93,6 +69,9 @@ function AppWithLayout({ match }) {
           <Route path="/reviewT" element={<ReviewT />}/>
           <Route path="/certificationT" element={<CertifyT />}/>
           <Route path="/gestureTest" element={<GestureTest />}/>
+
+          <Route path='*' element={<NotFound />} />
+
         </Routes>
         <Footer />
       </div>

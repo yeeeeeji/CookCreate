@@ -9,3 +9,7 @@
     padding-left: 15px;
     cursor: pointer;
 }
+.date-pick-err{
+    color: red;
+    font-size: 10px;
+}

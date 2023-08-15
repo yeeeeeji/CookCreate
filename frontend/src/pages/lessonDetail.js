@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useParams } from 'react-router-dom';
+
 import IntroduceLesson from "../component/LessonDetail/IntroduceLesson";
 import IntroduceCookyer from "../component/LessonDetail/IntroduceCookyer";
 import LessonReview from "../component/LessonDetail/LessonReview";
@@ -34,14 +36,16 @@ import "../style/lesson/lessonDetailCss.css";
 
 function LessonDetail() {
   const dispatch = useDispatch();
-
-  const lessonId = useSelector((state) => state.lessonInfo.lessonId);
+  const { id } = useParams();
+  const lessonId = id;
+  // const lessonId = useSelector((state) => state.lessonInfo.lessonId);
   const accessToken = localStorage.getItem("access_token");
   const categoryName = useSelector((state) => state.lessonInfo.categoryName);
   const difficulty = useSelector((state) => state.lessonInfo.difficulty);
   const lessonTitle = useSelector((state) => state.lessonInfo.lessonTitle);
   const thumbnailUrl = useSelector((state) => state.lessonInfo.thumbnailUrl);
   const lessonDate = useSelector((state) => state.lessonInfo.lessonDate);
+  const userType = localStorage.getItem('role')
   const remaining = parseInt(
     useSelector((state) => state.lessonInfo.remaining)
   );
@@ -50,52 +54,54 @@ function LessonDetail() {
     const DateTransformType = new Date(lessonDate);
     const currentTime = new Date();
     const futureTime = new Date(currentTime.getTime() + 12 * 60 * 60 * 1000); // 현재 시간 + 12시간
+    if (lessonId) {
+      axios
+        .get(`/api/v1/lesson/${lessonId}`, {
+          headers: {
+            Access_Token: accessToken,
+          },
+        })
+        .then((res) => {
+          dispatch(setCookyerId(res.data.cookyerId));
+          dispatch(setCookyerName(res.data.cookyerName));
+          dispatch(setFood(res.data.food));
+          dispatch(setCategoryName(res.data.categoryName));
+          dispatch(setCategoryId(res.data.categoryId));
+          dispatch(setDescription(res.data.description));
+          dispatch(setDifficulty(res.data.difficulty));
+          dispatch(setLessonTitle(res.data.lessonTitle));
+          dispatch(setLessonStepList(res.data.lessonStepList));
+          dispatch(setMaterials(res.data.materials));
+          dispatch(setMaximum(res.data.maximum));
+          dispatch(setPrice(res.data.price));
+          dispatch(setThumbnailUrl(res.data.thumbnailUrl));
+          dispatch(setRemaining(res.data.remaining));
+          dispatch(setVideoUrl(res.data.videoUrl));
+          dispatch(setLessonDate(res.data.lessonDate));
+          dispatch(setTimeTaken(res.data.timeTaken));
+          dispatch(setVideoUrl(res.data.videoUrl));
+          dispatch(setIntroduce(res.data.introduce));
+          dispatch(setProfileImg(res.data.profileImg));
 
-    axios
-      .get(`/api/v1/lesson/${lessonId}`, {
-        headers: {
-          Access_Token: accessToken,
-        },
-      })
-      .then((res) => {
-        dispatch(setCookyerId(res.data.cookyerId));
-        dispatch(setCookyerName(res.data.cookyerName));
-        dispatch(setFood(res.data.food));
-        dispatch(setCategoryName(res.data.categoryName));
-        dispatch(setCategoryId(res.data.categoryId));
-        dispatch(setDescription(res.data.description));
-        dispatch(setDifficulty(res.data.difficulty));
-        dispatch(setLessonTitle(res.data.lessonTitle));
-        dispatch(setLessonStepList(res.data.lessonStepList));
-        dispatch(setMaterials(res.data.materials));
-        dispatch(setMaximum(res.data.maximum));
-        dispatch(setPrice(res.data.price));
-        dispatch(setThumbnailUrl(res.data.thumbnailUrl));
-        dispatch(setRemaining(res.data.remaining));
-        dispatch(setVideoUrl(res.data.videoUrl));
-        dispatch(setLessonDate(res.data.lessonDate));
-        dispatch(setTimeTaken(res.data.timeTaken));
-        dispatch(setVideoUrl(res.data.videoUrl));
-        dispatch(setIntroduce(res.data.introduce));
-        dispatch(setProfileImg(res.data.profileImg));
-
-        axios
-          .get(`/api/v1/lesson/badge/${res.data.cookyerId}`, {
-            headers: {
-              Access_Token: accessToken,
-            },
-          })
-          .then((res) => {
-            dispatch(setBadge(res.data.message));
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-        alert(err.response.data.message);
-      });
+          axios
+            .get(`/api/v1/lesson/badge/${res.data.cookyerId}`, {
+              headers: {
+                Access_Token: accessToken,
+              },
+            })
+            .then((res) => {
+              dispatch(setBadge(res.data.message));
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log(lessonId)
+          alert(err.response.data.message);
+        });
+    }
   }, [lessonId]);
 
   return (
@@ -118,7 +124,7 @@ function LessonDetail() {
         <CookieeNumber />
         <ApplyLesson />
         <LessonSchedule />
-        <EditLesson lessonId={lessonId} />
+        {userType !== 'COOKIEE' && <EditLesson lessonId={lessonId} />}
       </div>
     </div>
   );
