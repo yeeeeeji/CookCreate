@@ -17,7 +17,8 @@ function GoToGesture() {
     gap: '0.625rem',
     color: '#656363',
     fontSize: '1rem',
-    fontWeight: '400'
+    fontWeight: '400',
+    marginTop: '1.5rem'
   }
   return (
     <div>

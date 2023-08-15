@@ -1,5 +1,6 @@
 import React, { useEffect} from 'react';
 import '../../style/mainpage/coreFunction.css'
+import GoToGesture from './GoToGesture';
 
 function CoreFunction() {
   useEffect(() => {
@@ -7,7 +8,10 @@ function CoreFunction() {
 
     function handleScroll() {
       const elements = document.querySelectorAll('.coreWrap');
+      const imgElements = document.querySelectorAll('.core-img-wrap');
+
       let animated = Array.from(elements).fill(false);
+      let imgAnimated = Array.from(imgElements).fill(false);
 
       elements.forEach((element, index) => {
         // 요소가 화면 중앙에 보일 때 클래스를 추가하여 나타나게 함
@@ -20,6 +24,20 @@ function CoreFunction() {
           animated[index] = true;
         }
       });
+
+      imgElements.forEach((element, index) => {
+        // 요소가 화면 중앙에 보일 때 클래스를 추가하여 나타나게 함
+        const elementTop = element.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        console.log(elementTop + " " + windowHeight);
+      
+        if (elementTop < 400 && !imgAnimated[index]) {
+          element.classList.add('visible');
+          imgAnimated[index] = true;
+        }
+      });
+
+
     };
     window.addEventListener('scroll', handleScroll);
     // 반환된 함수는 컴포넌트가 언마운트되거나 업데이트되기 직전에 실행됨
@@ -32,23 +50,38 @@ function CoreFunction() {
   
   return (
     <div className="coreContainer">
-    <div className="core-wrap-wrap">
-      <div className="coreWrap">
-        <div className="coreSubTitle">
-          체크
-        </div>
-        <div className="coreTitle">
-          화면에 대고 브이자 한번으로
-          <br />
-          완료 사실을 알려보세요.
-        </div>
-        <div className="coreDescription">
-          현재 진행 중인 단계를 모두 수행했다면
-          <br/>
-          체크 제스쳐를 해보세요.
-          <br/>
-          선생님께 내 진행 상황을 손 쉽게 알릴 수 있어요.
-        </div>
+      <div className="core-wrap-wrap">
+        <div className="coreWrap">
+          {/* <div className="function-sub-title">
+            제스처
+          </div> */}
+          <div className="function-title">
+            마우스 클릭없이
+            <br/>
+            제스처 하나로 간편하게,
+            <br/>
+            이런 화상 과외 써보셨나요?
+          </div>
+          <GoToGesture/>
+        </div>  
+      </div>
+      <div className="core-wrap-wrap">
+        <div className="coreWrap">
+          <div className="coreSubTitle">
+            체크
+          </div>
+          <div className="coreTitle">
+            브이자 한번으로
+            <br />
+            완료 사실을 알려보세요.
+          </div>
+          <div className="coreDescription">
+            현재 진행 중인 단계를 모두 수행했다면
+            <br/>
+            체크 제스쳐를 해보세요.
+            <br/>
+            선생님께 내 진행 상황을 손 쉽게 알릴 수 있어요.
+          </div>
         </div>
       </div>
       <div className="core-wrap-wrap">
@@ -59,7 +92,7 @@ function CoreFunction() {
           <div className="coreTitle">
             선생님의 도움이 필요할 때,
             <br />
-            더 이상 채팅을 칠 필요 없어요.
+            더 이상 채팅을 치지 않아도 돼요.
           </div>
           <div className="coreDescription">
             직접 손을 들어보세요.
