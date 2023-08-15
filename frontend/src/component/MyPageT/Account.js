@@ -5,6 +5,7 @@ import axios from "axios";
 import FoodList from "../../component/SignUp/FoodList";
 import SideBar from "./SideBar";
 import "./../../style/mypage/account.css";
+import "./../../style/mypage/mypage.css";
 
 function Account() {
   const accessToken = localStorage.getItem("access_token");
