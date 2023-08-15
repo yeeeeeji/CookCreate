@@ -17,6 +17,7 @@ function CookieeVideoSideBar() {
   const publisher = useSelector((state) => state.video.publisher)
   const isVideoPublished = useSelector((state) => state.video.isVideoPublished)
   const isAudioPublished = useSelector((state) => state.video.isAudioPublished)
+  const session = useSelector((state) => state.video.session)
 
   /** 체크 기능 */
   const check = useSelector((state) => state.cookieeVideo.check)
@@ -31,6 +32,8 @@ function CookieeVideoSideBar() {
         .then(() => console.log("Document Exited from Full screen mode"))
         .catch((err) => console.error(err));
     }
+    session.disconnect()
+    dispatch(leaveSession())
     navigate(-1)
   }
   
