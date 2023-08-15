@@ -53,6 +53,7 @@ const Wrapper = styled.header`
     justify-content: center;
     display:flex;
     // margin-left: 60px;
+
   }
 
   & button {
@@ -83,6 +84,8 @@ const ChatList = (props) => {
   console.log("props", props);
   const accessToken = localStorage.getItem("access_token");
   const [chatlist, setChatList] = useState([]);
+  const [selectedChatRoom, setSelectedChatRoom] = useState([]);
+
 
   useEffect(() => {
     console.log(chatlist);
@@ -110,7 +113,15 @@ const ChatList = (props) => {
   const handleChatRoom = ({ chatTitle, lessonId, chatOver }) => {
     console.log(chatTitle, lessonId, chatOver);
     props.goChatRoom({ chatTitle, lessonId, chatOver });
+    // setSelectedChatRoom(chatRoom.lessonId)}
+    // onMouseEnter={() => setSelectedChatRoom(chatRoom.lessonId)}
+    // onMouseLeave={() => setSelectedChatRoom(null)}
   };
+
+
+  // const selectRoom = (lessonId) => {
+  //   setSelectedChatRoom(lessonId);
+  // }
 
   return (
     <div>
@@ -123,7 +134,7 @@ const ChatList = (props) => {
             <div key={chatRoom.lessonId}>
               {chatRoom.chatRoomOver === false && (
                 <>
-                  <div style={{  marginLeft: '40px' }} onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.lessonTitle, chatOver: chatRoom.chatRoomOver })}>
+                  <div style={{  marginLeft: '40px'}} onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.lessonTitle, chatOver: chatRoom.chatRoomOver })}>
                     {/* <Link to={`/chatroom`}> */}
                     {chatRoom.lessonTitle ? <strong style={{ color: '#414141' }} >{chatRoom.lessonTitle}</strong> : <p>참여중인 채팅방이 없습니다.</p>}
                     {chatRoom.leastContent !== null ? (
