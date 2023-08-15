@@ -84,7 +84,7 @@ const ChatList = (props) => {
   console.log("props", props);
   const accessToken = localStorage.getItem("access_token");
   const [chatlist, setChatList] = useState([]);
-  const [selectedChatRoom, setSelectedChatRoom] = useState([]);
+  // const [selectedChatRoom, setSelectedChatRoom] = useState([]);
 
 
   useEffect(() => {
