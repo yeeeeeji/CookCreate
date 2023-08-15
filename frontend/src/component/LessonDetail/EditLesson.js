@@ -53,6 +53,14 @@ function EditLesson({ lessonId }) {
     }
   };
 
+  const style = {
+    fontSize: '0.9rem',
+    color: '#666',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  };
+
   return (
     <>
       <div 
@@ -64,17 +72,19 @@ function EditLesson({ lessonId }) {
       >
       <button
         style={{
-          width: '240px',
-          height: '40px',
-          backgroundColor: cookyerDisable || dateDisable ? '#ccc' : (isHovered ? '#FF6060' : '#FF7A42'),
+          backgroundColor: cookyerDisable || dateDisable ? '#ccc' : (isHovered ? '#FF6060' : '#fd621f'),
           color: '#FFFDFD',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          borderRadius: '5px',
+          borderRadius: '3px',
+          padding: '0.7rem 6.6rem',
+          fontWeight: '500',
           border: 'none',
           cursor: cookyerDisable || dateDisable ? 'not-allowed' : 'pointer',
-          textDecoration: 'none'
+          textDecoration: 'none',
+          marginBottom: '0.9rem',
+      
         }}
         disabled={cookyerDisable || dateDisable}
         onClick={handleEditClick}
@@ -84,7 +94,7 @@ function EditLesson({ lessonId }) {
         수정하기
       </button>
     </div>
-    {disableMsg && <p>{disableMsg}</p>}
+    {disableMsg && <div style={style}>{disableMsg}</div>}
     </>
   );
 }

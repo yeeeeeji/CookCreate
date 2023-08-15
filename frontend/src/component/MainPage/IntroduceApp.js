@@ -1,5 +1,6 @@
 import React from 'react';
 import '../../style/mainpage/introduceApp.css'
+import { RiArrowDropDownLine } from 'react-icons/ri'
 
 function IntroduceApp() {
   return (
@@ -13,6 +14,7 @@ function IntroduceApp() {
             <div className='mainText'>실시간으로 피드백을 해주는 내 옆의 선생님, 쿡크</div>
           </div>
         </div>
+        {/* <RiArrowDropDownLine className="down-icon"/> */}
       </div>
     </div>
   );

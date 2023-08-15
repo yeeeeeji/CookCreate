@@ -32,8 +32,8 @@ function LessonItem({ id, title, date, thumbnailUrl, reviewAvg, cookyerName, cat
       <img className='thumbnail' src={thumbnailUrl} alt='image' />
       <h3 className='lessonItemTitle'>{title}</h3>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>
-          ⭐{reviewAvg}
+        <div className="jjim">
+          ⭐ {reviewAvg}
         </div>
         <div className='datename'>
           {formattedDateString} | {cookyerName}

@@ -1,33 +1,32 @@
 .categoryContainer{
-    margin-top: 20px;
+    margin-top: 2.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 50px; /* 컨테이너의 높이 설정 */
+    gap : 0.5rem;
 }
 
 .categoryItem{
-    margin: 5px;
+    margin: 4px;
     display: flex;
-    padding: 10px 20px;
+    padding: 0.5rem 1rem;
     justify-content: center;
     align-items: center;
     border-radius: 50px;
     cursor: pointer;
 
-    border: 1px solid #CBCBCB;
+    border: 0.7px solid #CBCBCB;
     background: #FFF;
     color: #656363;
 
     text-align: center;
     font-size: 15px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
+    font-weight: 400;
 }
 
 .categoryItem.selected {
-    border: 1px solid #FF7A42;
+    border: 0.7px solid #FF7A42;
     background: #FFF;
     color: #FF7A42;
   }
