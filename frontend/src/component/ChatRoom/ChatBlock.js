@@ -113,30 +113,31 @@
 import React from "react";
 import styled from "styled-components";
 
-const BorderBlock = styled.div`
-  position: relative;
-  text-align: center;
-  width: 100%;
-  padding: 13px 0;
-  & span {
-    position: relative;
-    display: inline-block;
-    // background-color: #b2c7d9;
-    // background-color: #d1cfca;
-    // background-color: #ffd3a1;
-    padding: 0 10px;
-  }
-  // &:before {
-  //   content: "";
-  //   display: block;
-  //   position: absolute;
-  //   left: 2%;
-  //   top: 50%;
-  //   width: 96%;
-  //   height: 1px;
-  //   background-color: #727b83;
-  // }
-`;
+// const BorderBlock = styled.div`
+//   position: relative;
+//   text-align: center;
+//   width: 100%;
+//   padding: 13px 0;
+//   & span {
+//     position: relative;
+//     display: inline-block;
+//     // background-color: #b2c7d9;
+//     // background-color: #d1cfca;
+//     // background-color: #ffd3a1;
+//     // background-color: #e8e8e8;
+//     padding: 0 10px;
+//   }
+//   // &:before {
+//   //   content: "";
+//   //   display: block;
+//   //   position: absolute;
+//   //   left: 2%;
+//   //   top: 50%;
+//   //   width: 96%;
+//   //   height: 1px;
+//   //   background-color: #727b83;
+//   // }
+// `;
 
 const ChatWrapper = styled.div`
   position: relative;
@@ -158,7 +159,9 @@ const RightBlock = styled.div`
   & ${ChatWrapper} {
     // background-color: #ffec42;
     // background-color: #ffffff;
-    background-color: #fffcf9;
+    // background-color: #fffcf9;
+    background-color: #FFB697;
+
     
 
     text-align: left;
@@ -190,7 +193,8 @@ const LeftBlock = styled.div`
   & ${ChatWrapper} {
     // background-color: #fff;
     // background-color: #ffebd7;
-    background-color: rgb(255, 227, 176);
+    // background-color: #FFB697;
+    background-color: #ffffff;
 
     & span {
       position: absolute;
@@ -231,24 +235,22 @@ const Chat = ({ message, author}) => {
     <ChatWrapper>
       <span className="username" style={{ display: 'inherit' }}> {author}</span>
       <div className="message"  >{message}</div>
-      {/* <span className="time">{localeTime}</span> */}
-      {/* <span className="not-read">{notRead > 1 ? notRead : ""}</span> */}
     </ChatWrapper>
   );
 };
 
-const SeparationBlock = ({ EnterNickname }) => {
-  return (
-    <BorderBlock style={{ color:'rgb(87, 49, 14)' }}>
-      <span>{EnterNickname}</span>
-    </BorderBlock>
-  );
-};
+// const SeparationBlock = ({ EnterNickname }) => {
+//   return (
+//     <BorderBlock style={{ color:'rgb(61 37 14)' }}>
+//       <span>{EnterNickname}</span>
+//     </BorderBlock>
+//   );
+// };
 
 const MyChat = ({ content, ...props }) => {
   return (
     <React.Fragment>
-      {content ? <SeparationBlock content={content} /> : null}
+      {/* {content ? <SeparationBlock content={content} /> : null} */}
       <RightBlock>
         <div>
           <Chat {...props} />
@@ -262,11 +264,12 @@ const FriendChat = ({ author, message }) => {
   return (
     <LeftBlock>
       <div>
-        <span className="username" style={{ display: 'inherit',color: '#57310e' }} >{author}</span>
+        <span className="username" style={{ display: 'inherit', color: '#666666' }} >{author}</span>
         <Chat message={message}  style={{ color:'rgb(92, 82, 73)'}} />
       </div>
     </LeftBlock>
   );
 };
 
-export { Chat, MyChat, FriendChat, SeparationBlock };
+// export { Chat, MyChat, FriendChat, SeparationBlock };
+export { Chat, MyChat, FriendChat };

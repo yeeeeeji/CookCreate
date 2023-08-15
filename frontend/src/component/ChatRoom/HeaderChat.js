@@ -4,8 +4,10 @@ import axios from "axios";
 
 const Wrapper = styled.header`
   width: 100%;
+  border: 1px solid #D9D9D9;
   // background-color: #ff8a00;
-  background-color: #ff9416;
+  // background-color: #ff9416;
+  background-color: #FFB697;
   height: 70px;
   position: relative;
   display: flex;
@@ -23,23 +25,28 @@ const Wrapper = styled.header`
     flex-grow: 1;
     justify-content: center;
     display:flex;
+    // margin-left: 60px;
   }
 
   & button {
+    align-items: center;
     justify-content: center;
     display:flex;
+    width: 60px;
+    height: 30px;
 
     font-size: 15px;
-    background-color: #ff9416;
+    background-color: #FF7A42;
+    // background-color: #ff9416;
     // background-color: #FF7A42;
     outline: none;
     cursor: pointer;
     border-radius: 3px;
     border: none;
     color: wheat;
-    &:hover {
-      background-color: #FF7A42;
-    }
+    // &:hover {
+    //   background-color: #FF7A42;
+    // }
   }
 `;
 
@@ -86,6 +93,7 @@ const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
       });
 
       alert("채팅이 종료되었습니다.")
+      window.location.href = '/';
   };
 
   const ExitS = () => {
@@ -105,6 +113,7 @@ const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
       });
 
       alert("채팅방나가기 성공")
+      window.location.href = '/';
   };
 
   // const onBefore = () => {
@@ -122,7 +131,6 @@ const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
     {role === 'COOKIEE' && chatOver === false ? (
       <button type="button" onClick={ExitS}>
         <p>나가기</p>
-        <i className="fas fa-arrow-left" />
       </button>
     ) : null}
     <span>{chatTitle}</span>
