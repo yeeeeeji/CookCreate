@@ -313,11 +313,11 @@ function Account() {
       </div>
       <div class="bottomBtn-container">
         <button
-              onClick={handleUpdate}
-              className="bottomBtn"
-              disabled={!( isNickname && isNicknameDupli && isPhoneNumber && isUserEmail && isIntroduce)}
-            >
-              정보수정
+          onClick={handleUpdate}
+          className="bottomBtn"
+          disabled={!( isNickname && isNicknameDupli && isPhoneNumber && isUserEmail && isIntroduce)}
+        >
+          정보수정
         </button>
       </div>
     </div>

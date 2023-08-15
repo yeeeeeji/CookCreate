@@ -7,6 +7,7 @@ import '../../style/video.css'
 import AppliedLessonMenu from './AppliedLessonMenu';
 import UserDropMenu from './UserDropMenu';
 import axios from 'axios';
+import { RiArrowDropDownLine } from 'react-icons/ri'
 
 function NavBar() {
   const isLogin = useSelector((state) => state.auth.isLogin)
@@ -83,7 +84,8 @@ function NavBar() {
             {role === 'COOKYER' ? <Link to='registerlesson'>과외 등록</Link> : null} 
             {role === 'COOKIEE' ? (
             <div className='dropdown'>
-              <button className='drop-btn' onClick={dropLessonMenu}>신청수업</button>
+                <button role="link" className='drop-btn' onClick={dropLessonMenu}>신청수업</button>
+                <RiArrowDropDownLine className="dropdown-icon"/>
               { lessonDropdown ? (
                 <div onMouseLeave={() => dropLessonMenu(false)} className="drop-wrap">
                   <AppliedLessonMenu myLessons={myLessons}/>
@@ -92,9 +94,8 @@ function NavBar() {
             </div>
         ) : null}
             <div onClick={() => dropUserMenu(true)} className="nav-user">
-              {emoji}
-              {nickname}
-              님
+              {emoji}{nickname}님
+              <RiArrowDropDownLine className="dropdown-icon" />
             { userDropdown ? (
               <div onMouseLeave={() => dropUserMenu(false)} className="drop-wrap">
                 <UserDropMenu/>
