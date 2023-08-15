@@ -5,10 +5,12 @@
   align-items: center;
   justify-content: space-between;
   color: #656363;
+  border-bottom: #d9d9d9 solid 0.7px;
 }
 
 .navbar-main {
   background-color: #ffffff00;
+  border-bottom: #ffffff00 solid 0.7px;
 }
 
 .logo {
@@ -26,6 +28,12 @@ a:not(:first-of-type) {
   margin-left: 2rem;
 }
 
+a:hover, .nav-user:hover, .drop-btn:hover {
+  font-weight: 500;
+  /* background-color: #f9f9f9;
+  padding: 0.8rem 0.5rem;
+  border-radius: 2px; */
+}
 
 .leftNav {
   display: flex;
@@ -44,9 +52,10 @@ a:not(:first-of-type) {
 }
 
 .nav-user {
-  margin-left: 2rem;
+  margin-left: 1.7rem;
   display: flex;
   justify-content: flex-end;
+  cursor: pointer;
 }
 
 .drop-btn {
@@ -55,6 +64,7 @@ a:not(:first-of-type) {
   font-size: 0.9rem; 
   color : #656363;
   padding : 0;
+  cursor: pointer;
 }
 
 .drop-wrap {
@@ -74,7 +84,7 @@ a:not(:first-of-type) {
   position: absolute;
   top: 4.3rem;
   border-radius: 0.2rem;
-  border: 0.7px solid #8D9193;
+  /* border: 0.7px solid #8D9193; */
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -82,6 +92,10 @@ a:not(:first-of-type) {
   box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
 }
 /* 옮기기 */
+
+.dropdown-icon {
+  font-size: 1.3rem;
+}
 
 @media screen and (max-width: 1350px) {
   .navbar {

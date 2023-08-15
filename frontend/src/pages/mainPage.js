@@ -9,11 +9,8 @@ function mainPage() {
     <div>
       <IntroduceApp />
       <IntroduceSub/>
-      <CoreFunction/>
-      <br/>
-      <IntroduceCC/>
-      <br/>
-      <GoToGesture/>
+      <CoreFunction />
+      {/* <GoToGesture/> */}
     </div>
   );
 }
