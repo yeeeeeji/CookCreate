@@ -4,6 +4,8 @@ import SideBar from "./SideBar";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { setLessonId } from "../../store/lesson/lessonInfo";
+import "./../../style/mypage/mypage.css";
+import "./../../style/mypage/payment.css";
 
 function formatDateTime(dateTimeString) {
   const options = {
@@ -105,7 +107,7 @@ function Payment() {
       <SideBar />
       <section className="pay-box">
         <div className="pay-header">
-          <div>결제내역</div>
+          <div className="mypage-title">결제내역</div>
         </div>
         {paymentMessage ? (
           <div className="no-payment">{paymentMessage}</div>
@@ -113,87 +115,79 @@ function Payment() {
           userPayment.map((payment) => (
             <div className="pay-item" key={payment.lessonId}>
               <div className="pay-list">
-                <div className="pay-label">
-                  <div className="pay-state">
-                    <div>결제상태</div>
-                    <div>
-                      {(() => {
-                        switch (payment.payStatus) {
-                          case "READY":
-                            return "결제 준비중";
-                          case "FAIL":
-                            return "결제 실패";
-                          case "CANCEL":
-                            return "결제 취소";
-                          case "COMPLETED":
-                            return "결제 완료";
-                          case "REFUND":
-                            return "환불 처리";
-                          default:
-                            return "알 수 없음";
-                        }
-                      })()}
-                    </div>
-                  </div>
-                </div>
-                <div className="pay-info">
+                
+                {/* <div className="pay-info">
                   <div className="pay-label">결제정보</div>
-                </div>
-                <div className="class-info">
-                  <div className="info-details">
-                    <div>
-                      <div onClick={() => goLesson(payment.lessonId)}>과외명</div>
-                      <div>{payment.lessonTitle}</div>
+                </div> */}
+                <div className="info-details">
+                  <div className="pay-row lesson-title">
+                    <div className="pay-col1">과외명</div>
+                    <div className="pay-col2" onClick={() => goLesson(payment.lessonId)}>{payment.lessonTitle}</div>
+                  </div>
+                  <div className="pay-row state">
+                    <div className="pay-col1">결제상태</div>
+                    <div className="pay-col2">
+                    {(() => {
+                      switch (payment.payStatus) {
+                        case "READY":
+                          return "결제 준비중";
+                        case "FAIL":
+                          return "결제 실패";
+                        case "CANCEL":
+                          return "결제 취소";
+                        case "COMPLETED":
+                          return "결제 완료";
+                        case "REFUND":
+                          return "환불 처리";
+                        default:
+                          return "알 수 없음";
+                      }
+                    })()}
                     </div>
-                    <div>
-                      <div>결제일</div>
-                      <div>
-                        {new Date(payment.approvedAt).toLocaleDateString(
-                          "ko-KR",
-                          {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
-                      </div>
-                    </div>
-                    <div>
-                      <div>환불 시간</div>
-                      {payment.canceledAt !== null ? (
-                        <div>{formatDateTime(payment.canceledAt)}</div>
-                      ) : (
-                        <div>-</div>
+                  </div>
+                  <div className="pay-row payment-date">
+                    <div className="pay-col1">결제일</div>
+                    <div className="pay-col2">
+                      {new Date(payment.approvedAt).toLocaleDateString(
+                        "ko-KR",
+                        {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
                       )}
                     </div>
                   </div>
-                  <div className="info-price">
-                    <div>결제 금액</div>
-                    <div>
+                  <div className="pay-row refund-date">
+                    <div className="pay-col1">환불 시간</div>
+                    <div className="pay-col2">
+                    {payment.canceledAt !== null ? (
+                      <div>{formatDateTime(payment.canceledAt)}</div>
+                    ) : (
+                      <div>-</div>
+                    )}
+                    </div>
+                  </div>
+                  <div className="pay-row price">
+                    <div className="pay-col1">결제 금액</div>
+                    <div className="pay-col2">
                       {payment.totalAmount} 원
-                      {payment.payStatus !== "REFUND" && (
-                        <div
-                          style={{
-                            backgroundColor: "orange",
-                            color: "white",
-                            border: "none",
-                            padding: "8px 16px",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => handleRefund(payment.lessonId)}
-                        >
-                          강의 취소(환불하기)
-                        </div>
-                      )}
                     </div>
                   </div>
-                  {errMsg}
                 </div>
               </div>
-              <hr />
+              {payment.payStatus !== "REFUND" && (
+                <div
+                  className="refund-button"
+                  onClick={() => handleRefund(payment.lessonId)}
+                > 
+                  강의 취소(환불하기)
+                </div>
+              )}
+              {errMsg}
+              {/* <hr /> */}
             </div>
           ))
         )}

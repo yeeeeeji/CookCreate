@@ -29,16 +29,6 @@
     margin-top: 10px;
 }
 
-.mypage-title {
-    color: #404040;
-    text-align: center;
-    font-size: 23px;
-    font-style: bold;
-    font-weight: 500;
-    line-height: normal;
-    margin-top: 40px;
-}
-
 .mypage-profile {
     display: flex;
 }
