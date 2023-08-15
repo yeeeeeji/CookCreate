@@ -6,7 +6,7 @@ import "../../style/searchBar.css";
 import { setLessonId } from "../../store/lesson/lessonInfo";
 import { useNavigate } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
-
+import { setSearchBarKeyword } from "../../store/lesson/searchBarKeyword";
 function SearchBar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,7 +33,6 @@ function SearchBar() {
       })
       .then((res) => {
         setResult(res.data);
-        console.log(result);
         if (result.length > 0 && keyword !== "") {
           setIsExist(true);
           setIsOpen(true);
@@ -56,9 +55,15 @@ function SearchBar() {
     dispatch(setLessonId(lessonId));
     setIsOpen(false);
     navigate(`lesson/${lessonId}`);
-    setKeyword('')
+    setKeyword(keyword)
   };
-
+  const handleSearchEnter = (e) => {
+    if (e.key === 'Enter') {
+      navigate(`/lesson`)
+      dispatch(setSearchBarKeyword(keyword))
+      setKeyword('')
+    }
+  };
   document.addEventListener('DOMContentLoaded', () => {
     const searchResult = document.getElementById('searchResult');
     const searchInput = document.getElementById('searchInput');
@@ -96,6 +101,7 @@ function SearchBar() {
           onChange={(e) => {
             setKeyword(e.target.value);
           }}
+          onKeyDown={handleSearchEnter}
         />
       </div>
       <div className="search-result" id="searchResult">

@@ -26,8 +26,10 @@ function LessonInfoTop() {
     <div className="lessonInfoTopContainer">
       <FoodCategory />
       <div className="lessonInfoTopTitleContainer">
-        <div className="lessonInfoText">과외 제목 <span className="required">*</span></div>
-        {/* <div className="lessonInfoIcon">{titleValid ? '✅' : '🔲'}</div> */}
+        <div className="lessonInfoText">
+          과외 제목 
+          <span className="required">*</span>
+        </div>
         <input
           className={inputClassName}
           type="text"

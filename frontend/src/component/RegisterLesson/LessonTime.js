@@ -55,7 +55,6 @@ function LessonTime() {
       <div className="lessonInfoTopContainer">
         <div className="lessonInfoTopTitleContainer">
           <div className="lessonInfoText">과외 일시 <span className="required">*</span></div>
-          {/* <div>{dateValid ? '✅' : '🔲'}</div> */}
           <DatePicker
             className='lessonInfoDatePicker'
             selected={selectedDateTime}
@@ -74,7 +73,6 @@ function LessonTime() {
         </div>
         <div className="lessonInfoTopTitleContainer">
           <div className="lessonInfoText">예상 소요 시간 <span className="required">*</span></div>
-          {/* <div>{timeTakenValid ? '✅' : '🔲'}</div> */}
           <select className='lessonInfoSelect' value={lessonTakenTime} onChange={handleTakenTime}>
             <option value="">-</option>
             <option value="60">60분</option>
