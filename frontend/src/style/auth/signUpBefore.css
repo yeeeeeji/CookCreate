@@ -8,17 +8,19 @@
 
 /* 회원가입 헤더 스타일 */
 .signup-header {
+  color: #404040;
   text-align: center;
-  font-size: 23px;
-  margin-top: 60px;
-  margin-bottom: 10px;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-top: 40px;
 }
 
 /* 회원가입 설명 스타일 */
 .signup-description {
+  color: #666;
   text-align: center;
-  font-size: 15px;
-  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: 400;
 }
 
 /* 사용자 유형 컨테이너 스타일 */
@@ -44,10 +46,10 @@
 .user-type {
   height: 250px;
   text-align: center;
-  border: 1px solid #ccc;
+  border: 1px solid #d9d9d9;
   /* font-size: 15px; */
   padding: 10px;
-  width: 280px;
+  width: 300px;
   cursor: pointer;
   transition: border-color 0.3s, background-color 0.3s;
   border-radius: 20px;
@@ -61,16 +63,14 @@
 
 .user-type.active {
   background-color: #ffdec6;
-  font-weight: 500;
 }
 
 /* 사용자 이름 스타일 */
 .user-name {
   display: flex;
-  font-weight: bold;
   justify-content: center;
   margin-bottom: 8px;
-  color: rgb(255, 77, 0);
+  color: #FF7A42;
 }
 
 /* 텍스트 가운데 정렬 스타일 */
@@ -78,7 +78,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 25px;
+  font-size: 1.3rem;
   margin-top: 10px;
 }
 
@@ -86,12 +86,13 @@
 .description {
   text-align: center;
   margin-top: 20px;
-  font-size: 15px;
+  font-size: 1rem;
+  color: #666;
 }
 
 .signup-button {  
   display: flex;
-  width: 250px;
+  width: 299px;
   height: 40px;
   padding: 15px 94px;
   justify-content: center;
@@ -105,10 +106,11 @@
   color: #FFFDFD;
   margin: 0 auto;
   font-size: 13px;
+  font-weight: 500;
 }
 
 .signup-button:hover {
-  background-color: #FF6060;
+  background-color: #fd621f;
 }
 
 .view {

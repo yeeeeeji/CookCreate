@@ -22,9 +22,9 @@ function SignUpBefore() {
   }
   return (
     <div className='view'>
-      <div className="signup-header">
+      <h3 className="signup-header">
         회원가입
-      </div>
+      </h3>
       <div className="signup-description">
         나에게 맞는 회원 유형을 선택해보세요!
       </div>

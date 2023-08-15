@@ -4,13 +4,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 5px 16px;
+  padding: 7px 13px;
   border-radius: 50px;
   border: 0.7px solid #CBCBCB;
   background: #FFF;
   margin-right: 8px;
   cursor: pointer;
-  color: #333;
+  color: #666;
   transition: background-color 0.3s, color 0.3s;
 }
 
