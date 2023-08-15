@@ -10,9 +10,8 @@ function LessonStep() {
   const reduxStepList = useSelector((state) => state.lesson.lessonStepList);
 
   const handleChange = (index, value) => {
-    const updatedList = stepList.map((step, i) =>
-      i === index ? { ...step, stepContent: value } : step
-    );
+    const updatedList = [...stepList];
+    updatedList[index] = { ...updatedList[index], stepContent: value };
     setStepList(updatedList);
     dispatch(setLessonStepList(updatedList)); // Redux 스토어 업데이트
   };
@@ -22,27 +21,26 @@ function LessonStep() {
       setErrMsg('마지막 단계를 채워주세요.');
       return;
     }
-    const updatedList = [
-      ...stepList,
-      {
-        stepOrder: stepList.length + 1, // 새로운 단계의 순서
-        stepContent: '',
-      },
-    ];
+    const newStep = {
+      stepOrder: stepList.length + 1,
+      stepContent: '',
+    };
+    const updatedList = [...stepList, newStep];
     setStepList(updatedList);
-    dispatch(setLessonStepList(updatedList)); // Redux 스토어 업데이트
+    dispatch(setLessonStepList(updatedList));
   };
 
   const handleRemoveInput = (index) => {
     if (stepList.length > 1) {
-      const updatedList = stepList
-        .filter((_, i) => i !== index)
-        .map((step, i) => ({
-          ...step,
-          stepOrder: i + 1,
-        }));
-      setStepList(updatedList);
-      dispatch(setLessonStepList(updatedList)); // Redux 스토어 업데이트
+      setStepList((prevList) => {
+        const updatedList = prevList
+          .filter((_, i) => i !== index)
+          .map((step, i) => ({
+            ...step,
+            stepOrder: i + 1,
+          }));
+        return updatedList;
+      });
     }
   };
 
@@ -52,6 +50,7 @@ function LessonStep() {
 
   useEffect(() => {
     setStepList(reduxStepList);
+    dispatch(setLessonStepList(stepList));
     dispatch(setStepValid(checkStepContentFilled()));
   }, [reduxStepList, checkStepContentFilled, dispatch]);
 

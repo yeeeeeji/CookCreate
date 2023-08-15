@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import axios from 'axios'; // axios를 임포트해야 함
+import axios from 'axios';
 import CookyerScreen from './pages/video/cookyerScreen';
 import CookieeScreen from './pages/video/cookieeScreen';
 import AppWithLayout from './component/AppWithLayout';
+import NotFound from "./pages/notFound";
 
 function App() {
   useEffect(() => {
@@ -33,6 +34,7 @@ function App() {
         <Route path='*' element={<AppWithLayout/>}/>
         <Route path='/videoLesson/COOKYER' element={<CookyerScreen/>}></Route>
         <Route path='/videoLesson/COOKIEE' element={<CookieeScreen/>}></Route>
+        <Route path='/*' element={<NotFound />} />
       </Routes>
     </div>
   );
