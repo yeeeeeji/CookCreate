@@ -23,7 +23,7 @@ function RegisterLesson() {
     <div>
       <div className='registerLessonTitleContainer'>
         <div className='registerLessonTitle'>
-          강의 개설하기
+          과외 개설하기
         </div>
         <PreviousLesson/>
       </div>

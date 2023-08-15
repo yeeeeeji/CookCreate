@@ -3,9 +3,7 @@ import LessonItem from './LessonItem';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import '../../style/lesson/lessonListCss.css';
-
 import { useNavigate } from 'react-router-dom';
-
 function LessonList() {
   const navigate = useNavigate()
   const [lessons, setLessons] = useState([]);
@@ -15,6 +13,7 @@ function LessonList() {
   const category = useSelector((state) => state.lessonSearch.category);
   const keyword = useSelector((state) => state.lessonSearch.keyword);
   const isLogin = useSelector((state) => state.auth.isLogin)
+  const keywordFromSearchBar = useSelector((state) => state.searchBarKeyword.keyword)
   
   const handleLessonDetail = (lessonId) => {
     navigate(`/lesson/${lessonId}`)
@@ -42,6 +41,25 @@ function LessonList() {
       console.error(err)
     });
   }, [type, keyword, category, order, deadline])
+
+  //서치바 검색
+  useEffect(() => {
+    axios.get(`/api/v1/lesson`, {
+      params: {
+        deadline : true,
+        type : "title",
+        order : "title",
+        category : [],
+        keyword : keywordFromSearchBar
+      }
+    })
+    .then((res) => {
+      setLessons(res.data)
+    })
+    .catch((err) => {
+      console.error(err)
+    });
+  }, [keywordFromSearchBar])
   
   return (
     <div className='lessonListContainer'>

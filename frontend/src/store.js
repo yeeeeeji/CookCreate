@@ -16,6 +16,7 @@ import cookieeVideoReducer from './store/video/cookieeVideo'
 import videoLessonInfoReducer from './store/video/videoLessonInfo'
 import timerReducer from './store/video/timer'
 import gestureTestReducer from './store/video/gestureTest'
+import searchBarKeywordReducer from './store/lesson/searchBarKeyword';
 
 /** redux-persist 설정 */
 const reducers = combineReducers({
@@ -32,7 +33,8 @@ const reducers = combineReducers({
   cookieeVideo: cookieeVideoReducer,
   videoLessonInfo: videoLessonInfoReducer,
   timer: timerReducer,
-  gestureTest : gestureTestReducer
+  gestureTest : gestureTestReducer,
+  searchBarKeyword : searchBarKeywordReducer
 })
 
 const setTransform = createTransform(
@@ -50,7 +52,7 @@ const persistConfig = {
   storage,
   transforms: [setTransform],
   whitelist: [
-    'auth', 'api', 'lesson', 'lessonSearch', 'lessonInfo', 'timer',
+    'auth', 'api', 'lesson', 'lessonSearch', 'lessonInfo', 'timer', 'searchBarKeyword',
     'accountS', 'cookyerVideo', 'cookieeVideo', 'videoLessonInfo'
   ],
   blacklist: []
