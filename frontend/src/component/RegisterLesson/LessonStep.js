@@ -17,9 +17,11 @@ function LessonStep() {
   };
 
   const handleAddInput = () => {
-    if (stepList[stepList.length - 1].stepContent.trim() === '') {
-      setErrMsg('마지막 단계를 채워주세요.');
-      return;
+    if (stepList) {
+      if (stepList[stepList.length - 1].stepContent.trim() === '') {
+        setErrMsg('마지막 단계를 채워주세요.');
+        return;
+      }
     }
     const newStep = {
       stepOrder: stepList.length + 1,

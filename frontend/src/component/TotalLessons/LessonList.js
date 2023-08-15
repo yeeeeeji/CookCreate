@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import '../../style/lesson/lessonListCss.css';
 import { useNavigate } from 'react-router-dom';
+import { setLessonId } from '../../store/lesson/lessonInfo';
 function LessonList() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [lessons, setLessons] = useState([]);
   const type = useSelector((state) => state.lessonSearch.type);
   const deadline = useSelector((state) => state.lessonSearch.deadline);
@@ -74,6 +76,7 @@ function LessonList() {
             }}
             onClick={() => {
               if (isLogin) {
+                dispatch(setLessonId(lesson.lessonId))
                 handleLessonDetail(lesson.lessonId);
               } else {
                 gotoLogin();
