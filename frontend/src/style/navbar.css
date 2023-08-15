@@ -80,6 +80,7 @@ a:hover, .nav-user:hover, .drop-btn:hover {
 
 .dropdown-content {
   /* display: none; */
+  cursor: pointer;
   padding: 1rem 1.5rem;
   position: absolute;
   top: 4.3rem;

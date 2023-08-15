@@ -32,7 +32,7 @@ function CoreFunction() {
         console.log(elementTop + " " + windowHeight);
       
         if (elementTop < 400 && !imgAnimated[index]) {
-          element.classList.add('visible');
+          element.classList.add('visibleImg');
           imgAnimated[index] = true;
         }
       });
@@ -83,8 +83,14 @@ function CoreFunction() {
             선생님께 내 진행 상황을 손 쉽게 알릴 수 있어요.
           </div>
         </div>
+        <div className="core-img-wrap">
+          <img src="/check.png" alt="진행 단계 체크" className="core-img" />
+        </div>
       </div>
       <div className="core-wrap-wrap">
+        <div className="core-img-wrap">
+          <img src="/hand.png" alt="진행 단계 체크" className="core-img" />
+        </div>
         <div className="coreWrap">
           <div className="coreSubTitle">
             손들기
