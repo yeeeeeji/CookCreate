@@ -16,9 +16,14 @@ const Wrapper = styled.footer`
   overflow: auto;
   padding: 6px;
   z-index: 100;
-  background-color: #f5f2f2;
+  // background-color: #f5f2f2;
   // display: flex;
-  justify-content: flex-end; /* Align to the right */
+  justify-content: flex-end;
+
+  // border: 1px solid rgb(255 239 221);
+  border: 1px solid #D9D9D9;
+  
+
   
   & form {
     position: relative;
@@ -49,13 +54,16 @@ const Wrapper = styled.footer`
       &.canSubmit {
         cursor: pointer;
         pointer-events: all;
-        color: #ffffff;
-        background: #ff8a00;
+        color: #ffedca;
+        // background: #ff9416;
+        background: #FF7A42;
+        border-radius: 10%;
       }
       
       &.cannotSubmit {
         pointer-events: none;
         color: #b4b4b4;
+        border-radius: 10%;
       }
     }
   }
@@ -64,6 +72,7 @@ const Wrapper = styled.footer`
 
 const InputChat = ({ sendMessage }) => {
   // const accessToken = useSelector((state) => state.auth.token);
+  const role = localStorage.getItem("role");
   const [messages, setMessages] = useState("");
   const isCanSubmit = !!messages.replace(/ |\n/g, "");
   const btnClassName = isCanSubmit ? "canSubmit" : "cannotSubmit";
@@ -96,17 +105,21 @@ const InputChat = ({ sendMessage }) => {
 
   const onEnterPress = (event) => {
     if (!event.shiftKey && event.key === "Enter") {
-      // event.preventDefault();
+      event.preventDefault();
       onSubmit();
     }
   };
+
+  const buttonContent = role === "COOKIEE" ? "🍪" : "🍳"; // 버튼 내용 설정
+
 
   return (
     <Wrapper>
       <form onSubmit={onSubmit}>
         <textarea value={messages} autoFocus={true} onChange={onMessageChange} onKeyPress={onEnterPress} />
         <button className={btnClassName} type="submit">
-          전송
+          <p style={{ fontSize: '20px' }} >{buttonContent}</p>
+          {/* <p style={{ fontSize: '20px' }} >🍳</p> */}
         </button>
       </form>
     </Wrapper>
