@@ -49,6 +49,7 @@ function Signup() {
       setUserIdMessage('적합한 아이디 형식입니다! 🤗')
       setIsUserId(true)
     }
+    setIsIddup(false)
     setUserIdDupMessage('')
   }
   const onChangeUserPw = async (e) => {
@@ -96,6 +97,7 @@ function Signup() {
       setUserNicknameMessage('적합한 닉네임 형식입니다! 🤗')
       setIsNickname(true)
     }
+    setIsNNdup(false)
     setUserNNDupMessage('')
   }
   const onChangeUserPhonenumber = async (e) => {
@@ -206,8 +208,6 @@ function Signup() {
             <button className='signupdupliButton' onClick={idDupliCheck}>
               중복확인
             </button>
-            {/* {isUserId && isIdDupli ? '✅' : '🔲'} */}
-
           </div>
         </div>
         <div className='signupinputMessage'>
