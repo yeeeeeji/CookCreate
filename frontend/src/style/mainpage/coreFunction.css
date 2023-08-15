@@ -67,6 +67,10 @@
   width: 10rem;
 }
 
+.coreContainer > :nth-child(4) {
+  margin-bottom: 33rem;
+}
+
 /* .coreContainer > :nth-child(3) > .core-img-wrap {
 } */
 

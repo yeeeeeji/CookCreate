@@ -36,6 +36,12 @@
     justify-content: center;
 }
 
+.down-icon {
+    position: absolute;
+    top: 90vh;
+    font-size: 4rem;    
+}
+
 .animation-container {
     opacity: 0;
     animation: fadeInAnimation 2s ease forwards;
