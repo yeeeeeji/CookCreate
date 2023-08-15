@@ -113,31 +113,31 @@
 import React from "react";
 import styled from "styled-components";
 
-// const BorderBlock = styled.div`
-//   position: relative;
-//   text-align: center;
-//   width: 100%;
-//   padding: 13px 0;
-//   & span {
-//     position: relative;
-//     display: inline-block;
-//     // background-color: #b2c7d9;
-//     // background-color: #d1cfca;
-//     // background-color: #ffd3a1;
-//     // background-color: #e8e8e8;
-//     padding: 0 10px;
-//   }
-//   // &:before {
-//   //   content: "";
-//   //   display: block;
-//   //   position: absolute;
-//   //   left: 2%;
-//   //   top: 50%;
-//   //   width: 96%;
-//   //   height: 1px;
-//   //   background-color: #727b83;
-//   // }
-// `;
+const BorderBlock = styled.div`
+  position: relative;
+  text-align: center;
+  width: 100%;
+  padding: 13px 0;
+  & span {
+    position: relative;
+    display: inline-block;
+    // background-color: #b2c7d9;
+    // background-color: #d1cfca;
+    // background-color: #ffd3a1;
+    // background-color: #e8e8e8;
+    padding: 0 10px;
+  }
+  // &:before {
+  //   content: "";
+  //   display: block;
+  //   position: absolute;
+  //   left: 2%;
+  //   top: 50%;
+  //   width: 96%;
+  //   height: 1px;
+  //   background-color: #727b83;
+  // }
+`;
 
 const ChatWrapper = styled.div`
   position: relative;
@@ -233,24 +233,24 @@ const LeftBlock = styled.div`
 const Chat = ({ message, author}) => {
   return (
     <ChatWrapper>
-      <span className="username" style={{ display: 'inherit' }}> {author}</span>
+      <span className="username" style={{ display: 'inherit', color: '#666666' }}> {author}</span>
       <div className="message"  >{message}</div>
     </ChatWrapper>
   );
 };
 
-// const SeparationBlock = ({ EnterNickname }) => {
-//   return (
-//     <BorderBlock style={{ color:'rgb(61 37 14)' }}>
-//       <span>{EnterNickname}</span>
-//     </BorderBlock>
-//   );
-// };
+const SeparationBlock = ({ EnterNickname }) => {
+  return (
+    <BorderBlock style={{ color:'rgb(61 37 14)' }}>
+      <span>{EnterNickname}</span>
+    </BorderBlock>
+  );
+};
 
 const MyChat = ({ content, ...props }) => {
   return (
     <React.Fragment>
-      {/* {content ? <SeparationBlock content={content} /> : null} */}
+      {content ? <SeparationBlock content={content} /> : null}
       <RightBlock>
         <div>
           <Chat {...props} />
