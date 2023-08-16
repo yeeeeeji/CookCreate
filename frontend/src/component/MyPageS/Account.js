@@ -8,7 +8,7 @@ import "./../../style/mypage/account.css";
 import "./../../style/mypage/mypage.css";
 
 function Account() {
-  const accessToken = useSelector((state) => state.auth.access_token);
+  const accessToken = localStorage.getItem("access_token");
 
   const [userData, setUserData] = useState({});
   const [food, setFood] = useState([]);
