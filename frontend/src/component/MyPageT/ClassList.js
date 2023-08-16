@@ -167,12 +167,15 @@ function ClassList() {
     if (isSessionOpened && sessionId) {
       console.log(isSessionOpened, "방이 열렸어요")
       navigate(`/videoLesson/COOKYER`)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
     }
   }, [isSessionOpened])
 
   /** 과외 수정 */
   const updateClass = ( lessonId ) => {
     navigate(`/lesson/edit/${lessonId}`)
+
     dispatch(setLessonId(lessonId))
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -208,11 +211,15 @@ function ClassList() {
     setGoLessonDetail(true)
     dispatch(setLessonId(lessonId))
     navigate(`/lesson/${lessonId}`)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
   }
 
   useEffect(() => {
     if (goLessonDetail && lessonId !== null) {
       navigate(`/lesson/${lessonId}`)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
     }
   }, [lessonId])
 

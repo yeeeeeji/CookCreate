@@ -165,6 +165,8 @@ function ClassList() {
     if (session) {
       if (sessionId) {
         navigate(`/videoLesson/COOKIEE`)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
       } else {
         console.log("쿠키 세션아이디 없어서 입장 불가")
       }
@@ -175,11 +177,15 @@ function ClassList() {
     setGoLessonDetail(true)
     dispatch(setLessonId(lessonId))
     navigate(`/lesson/${lessonId}`)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
   }
 
   useEffect(() => {
     if (goLessonDetail && lessonId !== null) {
       navigate(`/lesson/${lessonId}`)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
     }
   }, [lessonId])
 
