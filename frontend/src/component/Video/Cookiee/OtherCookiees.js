@@ -10,11 +10,11 @@ function OtherCookiees() {
 
   useEffect(() => {
     if (subscribers) {
-      // setCookiees(subscribers)
-      const newList = subscribers.filter((sub) => {
-        return JSON.parse(sub.stream.connection.data).clientData.role === 'COOKIEE'
-      })
-      setCookiees(newList)
+      setCookiees(subscribers)
+      // const newList = subscribers.filter((sub) => {
+      //   return JSON.parse(sub.stream.connection.data).clientData.role === 'COOKIEE'
+      // })
+      // setCookiees(newList)
     }
   }, [subscribers])
 
@@ -22,7 +22,7 @@ function OtherCookiees() {
     <div className='other-cookiees'>
       {cookiees && Object.keys(cookiees).length ? (
         cookiees.map((sub, i) => (
-          <div key={i}>
+          <div key={i} className='other-cookiee'>
             <UserVideoComponent
               videoStyle='other-cookiees-video'
               streamManager={sub}
