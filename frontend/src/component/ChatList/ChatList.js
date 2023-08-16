@@ -102,7 +102,7 @@ const ChatList = (props) => {
       .catch((err) => {
         console.log("채팅목록 조회못함", err);
       });
-  }, []);
+  }, [chatlist]);
 
   // const formatTime = (dateTimeString) => {
   //   const dateObject = new Date(dateTimeString);
