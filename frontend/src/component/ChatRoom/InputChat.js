@@ -14,7 +14,7 @@ const Wrapper = styled.footer`
   min-height: 100px;
   max-height: 200px;
   overflow: auto;
-  padding: 6px 20px 6px 6px;
+  padding: 6px 30px 6px 6px;
   z-index: 1;
   // background-color: #f5f2f2;
   // display: flex;

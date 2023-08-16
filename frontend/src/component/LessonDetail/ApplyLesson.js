@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router';
 import ApplyCompleteModal from './ApplyCompleteModal';
 import AlertModal from '../Modal/AlertModal'
 
-function ApplyLesson() {
+function ApplyLesson({showModal, setShowModal}) {
   const navigate = useNavigate();
   const [disable, setDisable] = useState(false);
   const [disableMsg, setDisableMsg] = useState("");
@@ -27,7 +27,7 @@ function ApplyLesson() {
   const futureTime = new Date(currentTime.getTime() + 12 * 60 * 60 * 1000);
 
   /** 과외 신청 완료 및 실패 모달 */
-  const [ showModal, setShowModal ] = useState(false)
+  // const [ showModal, setShowModal ] = useState(false)
   const [ modalInfo, setModalInfo ] = useState(null)
   const [ showFailModal, setShowFailModal ] = useState(false)
 
