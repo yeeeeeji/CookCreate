@@ -168,6 +168,15 @@ function Payment() {
                     ) : (
                       <div>-</div>
                     )}
+                    {payment.payStatus !== "REFUND" && (
+                <div
+                  className="refund-button"
+                  onClick={() => handleRefund(payment.lessonId)}
+                > 
+                  강의 취소(환불하기)
+                </div>
+              )}
+              {errMsg}
                     </div>
                   </div>
                   <div className="pay-row price">
@@ -178,15 +187,6 @@ function Payment() {
                   </div>
                 </div>
               </div>
-              {payment.payStatus !== "REFUND" && (
-                <div
-                  className="refund-button"
-                  onClick={() => handleRefund(payment.lessonId)}
-                > 
-                  강의 취소(환불하기)
-                </div>
-              )}
-              {errMsg}
               {/* <hr /> */}
             </div>
           ))
