@@ -22,7 +22,6 @@ const Wrapper = styled.footer`
 
   // border: 1px solid rgb(255 239 221);
   border-top: 0.7px solid #D9D9D9;
-  border-bottom: 0.7px solid #D9D9D9;
   align-items: center;
   
 

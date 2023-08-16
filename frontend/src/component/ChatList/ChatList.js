@@ -134,7 +134,7 @@ const ChatList = (props) => {
           {chatlist.map((chatRoom) => (
             <div key={chatRoom.lessonId}>
               {chatRoom.chatRoomOver === false && (
-                <>
+                <div>
                   <div style={{ marginBottom: '10px', cursor: 'pointer'}} onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.lessonTitle, chatOver: chatRoom.chatRoomOver })}>
                     {/* <Link to={`/chatroom`}> */}
                     {chatRoom.lessonTitle ? <strong style={{color: selectedRoom === chatRoom.lessonId ? "#FF7A42" : "#414141", fontWeight: '400'}} onClick={() => setSelectedRoom(chatRoom.lessonId)} >{chatRoom.lessonTitle}</strong> : <p>참여중인 채팅방이 없습니다.</p>}
@@ -156,7 +156,7 @@ const ChatList = (props) => {
                       <p></p>
                     )}
                   </div>
-                </>
+                </div>
               )}
 
               {chatRoom.chatRoomOver === true && (
