@@ -56,7 +56,7 @@ function Payment() {
       });
 
       console.log(cancelResponse);
-      console.log("과외 취소!");
+      console.log("과외 취소! 성공!");
 
       // 환불 성공 후에 환불 시간을 업데이트하고 결제 정보를 다시 가져와서 화면에 표시
       const paymentResponse = await axios.get(`api/v1/my/cookiee`, {
