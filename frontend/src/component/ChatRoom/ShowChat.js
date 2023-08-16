@@ -32,24 +32,25 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
       onConnect: () => {
         console.log("웹소켓 연결");
   
-        const destination = "/pub/chat/enter";
-        const data = {
-          lessonId: lessonId,
-          userId: id,
-          nickname: nick,
-        };
+        // const destination = "/pub/chat/enter";
+        // const data = {
+        //   lessonId: lessonId,
+        //   userId: id,
+        //   nickname: nick,
+        // };
   
-        const body = JSON.stringify(data);
-        console.log("채팅입장", body);
+        // const body = JSON.stringify(data);
+        // console.log("채팅입장", body);
         // const ParsedData = JSON.parse(body);
         // console.log("PD",ParsedData.nickname)
         // setEnterNickname(ParsedData.nickname);
         // console.log("닉넴",EnterNickname)
         
 
-        client.current.publish({ destination, body });
-        console.log("enter!");
+        // client.current.publish({ destination, body });
+        // console.log("enter!");
   
+
         //입장시 채팅내용조회
         axios
           .get(`/api/v1/chat/${lessonId}`, {

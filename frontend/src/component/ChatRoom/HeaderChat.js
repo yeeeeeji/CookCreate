@@ -17,7 +17,7 @@ const Wrapper = styled.header`
   flex-direction: row-reverse;
 
   & span {
-    color:wheat;
+    color:#FFFFFF;
     font-weight: bold;
     font-size: 25px;
     // margin-right: 50px;
