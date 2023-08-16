@@ -1,3 +1,10 @@
+.nav-wrap {
+  position: fixed;  
+  z-index: 1001;
+  right: 0%;
+  left: 0%;
+}
+
 .navbar {
   background-color: #ffffff;
   padding: 0.9rem 15rem;
@@ -9,7 +16,6 @@
 }
 
 .navbar-main {
-  background-color: #ffffff00;
   border-bottom: #ffffff00 solid 0.7px;
 }
 

@@ -36,9 +36,30 @@ function NavBar() {
     setUserDropdown(data)
     // setUserDropdown((prev) => !prev)
   }
-
+  
   const location = useLocation();
   const mainPageStyle = location.pathname === '/';
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      
+      if (mainPageStyle) {
+        const navbarMain = document.querySelector(".navbar-main");
+        if (scrollY > 1) {
+          navbarMain.style.borderBottom = "#d9d9d9 solid 0.7px";
+        } else {
+          navbarMain.style.borderBottom = "none";
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [mainPageStyle]);
 
   useEffect(() => {  // 레슨 정보 받아오는 부분  // 누를때마다 요청되므로 나중에 스토어에 저장하던지 위치 바꿔주기
     if (access_token && role === 'COOKIEE') {
@@ -67,6 +88,7 @@ function NavBar() {
   }, [access_token, role])
 
   return (
+    <div className="nav-wrap">
     <div className={`navbar ${mainPageStyle ? 'navbar-main' : ''}`}>
       <div className="leftNav">
         <Link to='/' className='logo'>
@@ -119,6 +141,7 @@ function NavBar() {
         </React.Fragment>
       )} 
       {/* {role === 'COOKYER' ? <button onClick={() => createRoom(5)}>쿠커화면</button> : null} */}
+    </div>
     </div>
   );
 }
