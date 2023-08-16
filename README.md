@@ -41,10 +41,10 @@
 - [카카오페이 API](https://developers.kakao.com/docs/latest/ko/kakaopay/common)
 
 ## :fork_and_knife: 시스템 아키텍쳐 
-[아키텍쳐 캡쳐본](images/architecture.png)
+![](images/architecture.png)
 
 ## :fork_and_knife: ERD 다이어그램
-[ERD 캡쳐본](images/erd.png)
+![](images/erd.png)
 
 ## :fork_and_knife: 문서 링크
 - [MMT 팀의 노션](https://cottony-brass-90a.notion.site/23bd4357ec2e4df2a96beefb5d1cdd2a?pvs=4)
