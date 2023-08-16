@@ -48,12 +48,15 @@
 }
 
 .refund-button {
-    width: 200px;
-    background-color: orange;
-    color: white;
-    border: none;
+    /* width: 200px; */
+    /* background-color: orange; */
+    border: 0.7px solid #FF7A42;
+    background: #FFF4F0;
+    color: #FF7A42;
+    /* border: none; */
     padding: 8px 16px;
-    border-radius: 4px;
+    /* border-radius: 4px; */
+    border-radius: 50px;
     cursor: pointer;
     margin-left: auto;
 }
