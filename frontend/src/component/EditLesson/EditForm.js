@@ -115,6 +115,8 @@ function EditForm() {
         console.log(res);
         alert("과외 수정에 성공했습니다!");
         navigate("/lesson");
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
       })
       .catch((err) => {
         console.log(err);

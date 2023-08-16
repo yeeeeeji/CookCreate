@@ -18,6 +18,8 @@ function SignUpBefore() {
       alert('회원 유형을 선택해주세요.')
     } else {
       navigate("/signup");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
     }
   }
   return (
