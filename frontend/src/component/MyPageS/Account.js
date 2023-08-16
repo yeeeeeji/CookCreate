@@ -76,20 +76,6 @@ function Account() {
 
 
 
-  //닉네임변경
-  // const onChangeUserNickName = async (e) => {
-  //   const value = e.target.value;
-  //   await setNickName(value);
-  //   if (value.length < 2 || value.length > 8) {
-  //     setUserNicknameMessage("2글자 이상 8글자 이하로 입력해주세요");
-  //     setIsNickname(false);
-  //   } else {
-  //     setUserNicknameMessage("적합한 닉네임 형식입니다! 🤗");
-  //     setIsNickname(true);
-  //   }
-  // };
-
-
 
   const onChangeUserNickName = async (e) => {
     const value = e.target.value
