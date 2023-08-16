@@ -84,7 +84,18 @@ const ChatList = (props) => {
   console.log("props", props);
   const accessToken = localStorage.getItem("access_token");
   const [chatlist, setChatList] = useState([]);
-  // const [selectedChatRoom, setSelectedChatRoom] = useState([]);
+  const [selected, setSelected] = useState(false);
+
+
+//선택한 채팅방 색 바꾸기
+  const handleClick = () => {
+    setSelected(!selected);
+  };
+
+  const textStyle = {
+    color: selected ? '#FF7A42' : '#414141',
+  };
+
 
 
   useEffect(() => {
@@ -102,7 +113,7 @@ const ChatList = (props) => {
       .catch((err) => {
         console.log("채팅목록 조회못함", err);
       });
-  }, []);
+  }, [chatlist]);
 
   // const formatTime = (dateTimeString) => {
   //   const dateObject = new Date(dateTimeString);
@@ -136,7 +147,7 @@ const ChatList = (props) => {
                 <>
                   <div style={{  marginLeft: '40px'}} onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.lessonTitle, chatOver: chatRoom.chatRoomOver })}>
                     {/* <Link to={`/chatroom`}> */}
-                    {chatRoom.lessonTitle ? <strong style={{ color: '#414141' }} >{chatRoom.lessonTitle}</strong> : <p>참여중인 채팅방이 없습니다.</p>}
+                    {chatRoom.lessonTitle ? <strong style={textStyle} onClick={handleClick} >{chatRoom.lessonTitle}</strong> : <p>참여중인 채팅방이 없습니다.</p>}
                     {chatRoom.leastContent !== null ? (
                       <div>
                         <p style={{ color:'#B5B4B4'}} >{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 12) + ".." : chatRoom.leastContent}</p>
@@ -164,7 +175,7 @@ const ChatList = (props) => {
                   <StyledChatH3>종료된 채팅방</StyledChatH3>
                   <div  style={{ marginLeft: '40px' }} onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.leastContent, chatOver: chatRoom.chatRoomOver })}>
                     {/* <Link to={`/chatroom`}> */}
-                    <strong style={{ color: '#414141' }} >{chatRoom.lessonTitle}</strong>
+                    <strong  style={textStyle} onClick={handleClick} >{chatRoom.lessonTitle}</strong>
                     {/* <h2>{chatRoom.lessonTitle}</h2> */}
                     {/* <p>마지막 메세지: {chatRoom.leastContent}</p> */}
                     <p style={{ color:'#B5B4B4' }}>{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 12) + "..." : chatRoom.leastContent}</p>
