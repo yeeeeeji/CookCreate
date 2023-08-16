@@ -10,18 +10,17 @@ function EditForm() {
   const [filename, setFileName] = useState("");
   const initVideoUrl = useSelector((state) => state.lessonEdit.videoUrl);
   const [videoUrl, setVideoUrl] = useState(initVideoUrl);
-  // const [lessonVideoUrl, setLessonVideoUrl] = useState(initVideoUrl)
 
   const initThumbnail = useSelector((state) => state.lessonEdit.thumbnailUrl);
   const [thumbnailUrl, setThumbnailUrl] = useState(initThumbnail);
-  const [ThumbnailFile, setThumbnailFile] = useState(null); // 수정한 파일 정보 넣어줄 것
+  const [ThumbnailFile, setThumbnailFile] = useState(''); // 수정한 파일 정보 넣어줄 것
 
   const accessToken = localStorage.getItem("access_token");
   const lessonTitle = useSelector((state) => state.lessonEdit.lessonTitle);
   const categoryId = useSelector((state) =>
     parseInt(state.lessonEdit.categoryId)
   );
-  const maximum = useSelector((state) => parseInt(state.lessonEdit.maximum));
+  // const maximum = useSelector((state) => parseInt(state.lessonEdit.maximum));
   const price = useSelector((state) => parseInt(state.lessonEdit.price));
   const difficulty = useSelector((state) => state.lessonEdit.difficulty);
   const timeTaken = useSelector((state) =>
@@ -35,7 +34,6 @@ function EditForm() {
 
   const categoryValid = useSelector((state) => state.lessonEdit.categoryValid);
   const titleValid = useSelector((state) => state.lessonEdit.titleValid);
-  const maxValid = useSelector((state) => state.lessonEdit.maxValid);
   const priceValid = useSelector((state) => state.lessonEdit.priceValid);
   const dateValid = useSelector((state) => state.lessonEdit.dateValid);
   const difficultyValid = useSelector(
@@ -52,7 +50,7 @@ function EditForm() {
     (state) => state.lessonEdit.descriptionValid
   );
   const [thumbnailValid, setThumbnailValid] = useState(true);
-
+  
   useEffect(() => {
     setThumbnailUrl(initThumbnail);
     setVideoUrl(initVideoUrl);
@@ -61,7 +59,6 @@ function EditForm() {
   const isAllValid = [
     categoryValid,
     titleValid,
-    maxValid,
     priceValid,
     dateValid,
     difficultyValid,
@@ -85,13 +82,10 @@ function EditForm() {
   const register = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    if (ThumbnailFile !== null) {
-      formData.append("thumbnailUrl", ThumbnailFile);
-    }
+    formData.append("thumbnailUrl", ThumbnailFile);  
     formData.append("lessonId", lessonId);
     formData.append("lessonTitle", lessonTitle);
     formData.append("categoryId", categoryId);
-    formData.append("maximum", maximum);
     formData.append("price", price);
     formData.append("difficulty", difficulty);
     formData.append("timeTaken", timeTaken);
