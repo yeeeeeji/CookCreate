@@ -35,8 +35,8 @@ function Account() {
   const [isNickname, setIsNickname] = useState(false);
   const [isNicknameDupli, setIsNNdup] = useState(false);
   const [isPhoneNumber, setIsPhoneNumber] = useState(false);
-  const [isUserEmail, setIsUserEmail] = useState(true);
-  const [isIntroduce, setIsIntroduce] = useState(true);
+  const [isUserEmail, setIsUserEmail] = useState(false);
+  const [isIntroduce, setIsIntroduce] = useState(false);
 
 
 
@@ -176,23 +176,45 @@ function Account() {
   
 
   //프로필 삭제
+  // const handleProfile = (e) => {
+  //   e.preventDefault();
+  //   setPreviewImage("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+  //   if (profileImgDef) {
+  //     axios
+  //       .delete(`api/v1/my/profile`, {
+  //         headers: {
+  //           Access_Token: accessToken,
+  //         },
+  //       })
+  //       .then((res) => {
+  //         console.log("프로필삭제성공",res.data);
+  //       })
+  //       .catch((err) => {
+  //         console.log("프로필삭제못함", err);
+  //       });
+  //   }
+  // };
+
   const handleProfile = (e) => {
-    if (profileImgDef) {
+    e.preventDefault();
+    
       axios
-        .get(`api/v1/my/profile`, {
+        .delete(`api/v1/my/profile`, {
           headers: {
             Access_Token: accessToken,
           },
         })
         .then((res) => {
+          console.log("프로필삭제성공", res.data);
           setPreviewImage("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
-          console.log(res.data);
         })
         .catch((err) => {
           console.log("프로필삭제못함", err);
         });
-    }
+
   };
+
+
 
   //음식추가 제거
   const handleSelectedFood = (selectedFood) => {
