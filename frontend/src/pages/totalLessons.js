@@ -17,7 +17,7 @@ function TotalLessons() {
   return (
     <div>
       <div>
-        <h3 className='title'>
+        <h3 className='total-lesson-title'>
           수업 전체
         </h3>
         <div className='desc'>
