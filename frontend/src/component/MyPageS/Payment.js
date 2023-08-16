@@ -114,6 +114,8 @@ function Payment() {
   useEffect(() => {
     if (goLessonDetail && lessonId !== null) {
       navigate(`/lesson/${lessonId}`);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
     }
   }, [lessonId]);
 

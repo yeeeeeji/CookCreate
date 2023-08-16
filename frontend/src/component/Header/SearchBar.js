@@ -60,6 +60,8 @@ function SearchBar() {
   const handleSearchEnter = (e) => {
     if (e.key === 'Enter') {
       navigate(`/lesson`)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
       dispatch(setSearchBarKeyword(keyword))
       setKeyword('')
     }
