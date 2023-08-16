@@ -10,6 +10,33 @@ import "./../../style/mypage/mypage.css";
 function Account() {
   const accessToken = localStorage.getItem("access_token");
 
+
+    //회원정보조회
+    useEffect(() => {
+      axios
+        .get(`api/v1/member`, {
+          headers: {
+            Access_Token: accessToken,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setUserData(res.data);
+          console.log("userData", userData);
+        })
+        .catch((err) => {
+          console.log("회원정보조회못함", err);
+        });
+  
+        const storedPreviewImage = localStorage.getItem('previewImage');
+        if (storedPreviewImage) {
+          setPreviewImage(storedPreviewImage);
+        }
+        
+    }, []);
+
+
+
   const [userData, setUserData] = useState("");
   const [food, setFood] = useState([]);
 
@@ -32,9 +59,9 @@ function Account() {
   const [userIntroduceMessage, setIntroduceMessage] = useState("");
 
   //유효성 검사
-  const [isNickname, setIsNickname] = useState(false);
-  const [isNicknameDupli, setIsNNdup] = useState(false);
-  const [isPhoneNumber, setIsPhoneNumber] = useState(false);
+  const [isNickname, setIsNickname] = useState(true);
+  const [isNicknameDupli, setIsNNdup] = useState(true);
+  const [isPhoneNumber, setIsPhoneNumber] = useState(true);
   const [isUserEmail, setIsUserEmail] = useState(true);
   const [isIntroduce, setIsIntroduce] = useState(true);
 
@@ -113,35 +140,7 @@ function Account() {
     }
   };
 
-  //introUrl
-  // const onChangeintroUrl = async (e) => {
-  //   const value = e.target.value;
-  //   await setIntroUrl(value);
-  // };
 
-  //회원정보조회
-  useEffect(() => {
-    axios
-      .get(`api/v1/member`, {
-        headers: {
-          Access_Token: accessToken,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        setUserData(res.data);
-        console.log("userData", userData);
-      })
-      .catch((err) => {
-        console.log("회원정보조회못함", err);
-      });
-
-      const storedPreviewImage = localStorage.getItem('previewImage');
-      if (storedPreviewImage) {
-        setPreviewImage(storedPreviewImage);
-      }
-      
-  }, []);
 
   useEffect(() => {
     if (userData.food) {
@@ -176,23 +175,45 @@ function Account() {
   
 
   //프로필 삭제
+  // const handleProfile = (e) => {
+  //   e.preventDefault();
+  //   setPreviewImage("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+  //   if (profileImgDef) {
+  //     axios
+  //       .delete(`api/v1/my/profile`, {
+  //         headers: {
+  //           Access_Token: accessToken,
+  //         },
+  //       })
+  //       .then((res) => {
+  //         console.log("프로필삭제성공",res.data);
+  //       })
+  //       .catch((err) => {
+  //         console.log("프로필삭제못함", err);
+  //       });
+  //   }
+  // };
+
   const handleProfile = (e) => {
-    if (profileImgDef) {
+    e.preventDefault();
+    
       axios
-        .get(`api/v1/my/profile`, {
+        .delete(`api/v1/my/profile`, {
           headers: {
             Access_Token: accessToken,
           },
         })
         .then((res) => {
+          console.log("프로필삭제성공", res.data);
           setPreviewImage("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
-          console.log(res.data);
         })
         .catch((err) => {
           console.log("프로필삭제못함", err);
         });
-    }
+
   };
+
+
 
   //음식추가 제거
   const handleSelectedFood = (selectedFood) => {
