@@ -8,7 +8,7 @@ function RegisterForm({ setContent, setShowAlert, setPath }) {
   const [lessonVideoUrl, setLessonVideoUrl] = useState("");
 
   const [lessonThumbnailUrl, setLessonThumbnailUrl] = useState("");
-  const [ThumbnailFile, setThumbnailFile] = useState(null);
+  const [ThumbnailFile, setThumbnailFile] = useState("");
   const accessToken = localStorage.getItem("access_token");
   const lessonTitle = useSelector((state) => state.lesson.lessonTitle);
   const categoryId = useSelector((state) => parseInt(state.lesson.categoryId));
@@ -38,6 +38,7 @@ function RegisterForm({ setContent, setShowAlert, setPath }) {
     (state) => state.lesson.descriptionValid
   );
   const [thumbnailValid, setThumbnailValid] = useState(false);
+
   const isAllValid = [
     categoryValid,
     titleValid,
@@ -62,11 +63,12 @@ function RegisterForm({ setContent, setShowAlert, setPath }) {
   }, [reduxVideoUrl, lessonVideoUrl]);
 
   const handleThumbnailUrl = (e) => {
-    setLessonThumbnailUrl(e.target.value); // 파일명 유저들에게 보여주기
     const file = e.target.files[0];
     setThumbnailFile(file);
     setThumbnailValid(!!file);
-    setThumbnailUrl(URL.createObjectURL(file));
+    if (file) {
+      setThumbnailUrl(URL.createObjectURL(file));
+    }
   };
   const handleVideoUrl = (e) => {
     const url = e.target.value;
