@@ -13,7 +13,6 @@ function Account() {
   const [userData, setUserData] = useState({});
   const [food, setFood] = useState([]);
 
-  // const [userIdDef, setUserId] = useState(userData.userId);
   const [nicknameDef, setNickName] = useState(userData.nickname);
   const [phoneNumberDef, setPhoneNumber] = useState(userData.phoneNumber);
   const [userEmailDef, setUserEmail] = useState(userData.userEmail);
@@ -25,6 +24,36 @@ function Account() {
   const [profileImgDef, setProfileImg] = useState(userData.profileImg);
 
   const fileInput = useRef(null);
+
+
+
+
+    //회원정보조회
+    useEffect(() => {
+      axios
+        .get(`api/v1/member`, {
+          headers: {
+            Access_Token: accessToken,
+          },
+        })
+        .then((res) => {
+          setUserData(res.data);
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log("회원정보조회못함",err);
+        });
+  
+        const storedPreviewImage = localStorage.getItem('previewImage');
+        if (storedPreviewImage) {
+          setPreviewImage(storedPreviewImage);
+        }
+        
+    }, [userData]);
+
+
+
+    
 
   //오류 메세지 저장
   // const [userIdMessage, setUserIdMessage] = useState("");
@@ -118,28 +147,6 @@ function Account() {
     }
   };
 
-  //회원정보조회
-  useEffect(() => {
-    axios
-      .get(`api/v1/member`, {
-        headers: {
-          Access_Token: accessToken,
-        },
-      })
-      .then((res) => {
-        setUserData(res.data);
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log("회원정보조회못함",err);
-      });
-
-      const storedPreviewImage = localStorage.getItem('previewImage');
-      if (storedPreviewImage) {
-        setPreviewImage(storedPreviewImage);
-      }
-      
-  }, []);
 
 
 
@@ -221,11 +228,11 @@ function Account() {
 
     const formData = new FormData();
     formData.append("nickname", nicknameDef);
-    console.log("폼데이터닉네임", typeof formData.get("nickname"));
+    console.log("폼데이터닉네임", formData.get("nickname"));
     formData.append("phoneNumber", phoneNumberDef);
-    console.log("폼데이터폰", typeof formData.get("phoneNumber"));
+    console.log("폼데이터폰", formData.get("phoneNumber"));
     formData.append("userEmail", userEmailDef);
-    console.log("폼데이터이메일", typeof formData.get("phoneNumber"));
+    console.log("폼데이터이메일", formData.get("userEmail"));
 
     formData.append("food", food);
     console.log("폼데이터푸드", formData.get("food"));
