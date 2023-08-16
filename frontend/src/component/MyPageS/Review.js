@@ -56,7 +56,7 @@ function Review() {
       })
       .then((res) => {
         // console.log("리뷰목록",res.data);
-        setReviews(res.data);
+        setReviews("리뷰목록",res.data);
       })
       .catch((err) => {
         console.log(err);
