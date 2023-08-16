@@ -192,10 +192,10 @@ function ClassList() {
         </div>
       ) : null}
           <div className="title">과외목록</div>
-          <div>
-            <div className="subtitle">신청한 과외</div>
-            {classData !== null && classData !== undefined && classData ? (
-              classData.map((lesson)=> (
+            <div>
+              <div className="subtitle">신청한 과외</div>
+              {classData !== null && classData !== undefined && classData ? (
+                classData.map((lesson)=> (
                 <div key={lesson.lessonId} className="classlist-list">
                   <img
                     loading="lazy"

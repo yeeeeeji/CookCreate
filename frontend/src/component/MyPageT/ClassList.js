@@ -270,28 +270,28 @@ function ClassList() {
                     alt="course_title.png"
                   />
                   <div className="describe">
-                  <div className="row class_title">
-                  <div className="col1">과외명</div>
-                  <div className="col2" onClick={() => goLesson(lesson.lessonId)}>{lesson.lessonTitle}</div>
-                  </div>
-                  <div className="row class_category">
+                    <div className="row class_title">
+                      <div className="col1">과외명</div>
+                      <div className="col2" onClick={() => goLesson(lesson.lessonId)}>{lesson.lessonTitle}</div>
+                    </div>
+                    <div className="row class_category">
                     <div className="col1">카테고리</div>
                       <div className="col2">
                         {(() => {
                           switch (lesson.categoryId) {
-                            case 1:
+                            case 0:
                               return "한식";
-                            case 2:
+                            case 1:
                               return "양식";
-                            case 3:
+                            case 2:
                               return "중식";
-                            case 4:
+                            case 3:
                               return "일식";
-                            case 5:
+                            case 4:
                               return "아시안";
-                            case 6:
+                            case 5:
                               return "건강식";
-                            case 7:
+                            case 6:
                               return "디저트";
                             default:
                               return "알 수 없음";
@@ -306,7 +306,10 @@ function ClassList() {
                   <div className="row class_date">
                     <div className="col1">과외 날짜</div>
                       {/* <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_calendar.png" alt="기간아이콘" width="29" /> */}
-                    <div className="col2">{lesson.lessonDate} 예정</div>
+                    <div className="col2">
+                      {lesson.lessonDate} 예정
+                    </div>
+                  </div>
                   </div>
                   {lesson ? 
                   <dd>
