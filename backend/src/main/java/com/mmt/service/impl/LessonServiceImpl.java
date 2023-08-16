@@ -351,7 +351,7 @@ public class LessonServiceImpl implements LessonService {
             Optional<Member> cookyer = memberRepository.findByUserId(result.getCookyerId());
             result.setPhoneNumber(cookyer.get().getPhoneNumber());
             result.setUserEmail(cookyer.get().getUserEmail());
-            if(cookyer.get().getFood() != null){
+            if(cookyer.get().getFood() != null && !cookyer.get().getFood().equals("")){
                 result.setFood(Arrays.stream(cookyer.get().getFood().split(","))
                         .map(Integer::parseInt)
                         .collect(Collectors.toList()));
