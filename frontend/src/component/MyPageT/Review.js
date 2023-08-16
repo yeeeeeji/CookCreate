@@ -78,7 +78,7 @@ function Review() {
       .catch((err) => {
         console.log("리뷰에러", err);
       });
-  }, [accessToken]);
+  }, [accessToken,reviews]);
 
   const goLesson = (lessonId) => {
     setGoLessonDetail(true)

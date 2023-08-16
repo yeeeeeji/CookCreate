@@ -34,9 +34,10 @@ function SignUpBefore() {
             className={`user-type ${activeUserType === 'COOKYER' ? 'active' : ''}`}
             onClick={() => handleUserType("COOKYER")}
           >
-            <div className='emoji'>
+            {/* <div className='emoji'>
               👩‍🍳
-            </div>
+            </div> */}
+            <img src= "/cookyer.png" className='role-icon'/>
             <div className='user-name'>
               <div className='centered'>Cookyer</div>
             </div>
@@ -51,9 +52,10 @@ function SignUpBefore() {
             className={`user-type ${activeUserType === 'COOKIEE' ? 'active' : ''}`}
             onClick={() => handleUserType("COOKIEE")}
           >
-            <div className='emoji'>
+            {/* <div className='emoji'>
               🍪
-            </div>
+            </div> */}
+              <img src= "/cookiee-user.png" className='role-icon'/>
             <div className='user-name'>
               <div className='centered'>Cookiee</div>
             </div>

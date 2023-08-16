@@ -17,11 +17,11 @@ function Account() {
   const [phoneNumberDef, setPhoneNumber] = useState(userData.phoneNumber);
   const [userEmailDef, setUserEmail] = useState(userData.userEmail);
   const [IntroduceDef, setIntroduce] = useState(userData.introduce);
-  const [IntroUrlDef, setIntroUrl] = useState(userData.introUrl);
-  // const defaultProfileImgUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+  
+    // const [profileImgDef, setProfileImg] = useState(userData.profileImg);
+    // const [profileImgUrl, setProfileImgUrl] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+  const [previewImage, setPreviewImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
   const [profileImgDef, setProfileImg] = useState(userData.profileImg);
-  const [profileImgUrl, setProfileImgUrl] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
-  // const [profileImgDef, setProfileImg] = useState(userData.profileImg || defaultProfileImgUrl );
   const fileInput = useRef(null);
 
   //오류 메세지 저장
@@ -114,10 +114,10 @@ function Account() {
   };
 
   //introUrl
-  const onChangeintroUrl = async (e) => {
-    const value = e.target.value;
-    await setIntroUrl(value);
-  };
+  // const onChangeintroUrl = async (e) => {
+  //   const value = e.target.value;
+  //   await setIntroUrl(value);
+  // };
 
   //회원정보조회
   useEffect(() => {
@@ -135,6 +135,12 @@ function Account() {
       .catch((err) => {
         console.log("회원정보조회못함", err);
       });
+
+      const storedPreviewImage = localStorage.getItem('previewImage');
+      if (storedPreviewImage) {
+        setPreviewImage(storedPreviewImage);
+      }
+      
   }, []);
 
   useEffect(() => {
@@ -150,8 +156,11 @@ function Account() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImgUrl(reader.result);
+        setPreviewImage(reader.result);
         setProfileImg(file);
+
+        localStorage.setItem('previewImage', reader.result);
+
       };
       reader.readAsDataURL(file);
     }
@@ -164,6 +173,7 @@ function Account() {
   //     setProfileImg(file);
   //   }
   // };
+  
 
   //프로필 삭제
   const handleProfile = (e) => {
@@ -175,7 +185,7 @@ function Account() {
           },
         })
         .then((res) => {
-          setProfileImgUrl("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+          setPreviewImage("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
           console.log(res.data);
         })
         .catch((err) => {
@@ -220,7 +230,6 @@ function Account() {
 
     formData.append("introduce", IntroduceDef);
     formData.append("profileImg", profileImgDef);
-    formData.append("introUrl", IntroUrlDef);
     console.log("폼데이터소개", formData.get("introduce"));
     console.log("폼데이터이미지", formData.get("profileImg"));
     console.log("폼데이터이미지타입", typeof formData.get("profileImg"));
@@ -251,7 +260,7 @@ function Account() {
           <div className="mypage-profile">
             <img
               className="mypage-profile-image"
-              src={profileImgUrl}
+              src={previewImage}
               alt="Profile"
               style={{ margin: "20px", marginTop:"10px", width: "150px", height: "150px", objectFit: "cover" }}
               // onClick={() => {
@@ -288,10 +297,11 @@ function Account() {
               </div>
             </div>
 
-            <div className="mypage-url"> {/* 쿠커에게만 있는 태그 */}
+            {/* 쿠커에게만 있는 태그 */}
+            {/* <div className="mypage-url"> 
               <div className="subtitle">소개영상url</div>
               <input placeholder={userData.introUrl} type="text" value={IntroUrlDef} onChange={onChangeintroUrl} />
-            </div>
+            </div> */}
 
             <div className="mypage-phonenumber">
               <div className="subtitle">휴대폰번호</div>

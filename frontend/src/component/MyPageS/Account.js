@@ -18,8 +18,12 @@ function Account() {
   const [phoneNumberDef, setPhoneNumber] = useState(userData.phoneNumber);
   const [userEmailDef, setUserEmail] = useState(userData.userEmail);
   const [IntroduceDef, setIntroduce] = useState(userData.introduce);
-  const defaultProfileImgUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-  const [profileImgDef, setProfileImg] = useState(userData.profileImg || defaultProfileImgUrl);
+  // const defaultProfileImgUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+  // const [profileImgDef, setProfileImg] = useState(userData.profileImg || defaultProfileImgUrl);
+  
+  const [previewImage, setPreviewImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+  const [profileImgDef, setProfileImg] = useState(userData.profileImg);
+
   const fileInput = useRef(null);
 
   //오류 메세지 저장
@@ -70,20 +74,6 @@ function Account() {
     }
   };
 
-
-
-  //닉네임변경
-  // const onChangeUserNickName = async (e) => {
-  //   const value = e.target.value;
-  //   await setNickName(value);
-  //   if (value.length < 2 || value.length > 8) {
-  //     setUserNicknameMessage("2글자 이상 8글자 이하로 입력해주세요");
-  //     setIsNickname(false);
-  //   } else {
-  //     setUserNicknameMessage("적합한 닉네임 형식입니다! 🤗");
-  //     setIsNickname(true);
-  //   }
-  // };
 
 
 
@@ -145,6 +135,12 @@ function Account() {
       .catch((err) => {
         console.log("회원정보조회못함",err);
       });
+
+      const storedPreviewImage = localStorage.getItem('previewImage');
+      if (storedPreviewImage) {
+        setPreviewImage(storedPreviewImage);
+      }
+      
   }, []);
 
 
@@ -163,7 +159,10 @@ function Account() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
+        setPreviewImage(reader.result);
         setProfileImg(file);
+
+        localStorage.setItem('previewImage', reader.result);
       };
       reader.readAsDataURL(file);
       // setProfileImg(file)
@@ -217,7 +216,7 @@ function Account() {
     formData.append("profileImg", profileImgDef);
     console.log("폼데이터소개", formData.get("introduce"));
     console.log("폼데이터이미지", formData.get("profileImg"));
-    //console.log("폼데이터이미지", typeof formData.get("profileImg"));
+    console.log("폼데이터이미지", typeof formData.get("profileImg"));
 
     axios
       .put(`api/v1/member`, formData, {
@@ -243,7 +242,7 @@ function Account() {
           <div className="mypage-profile">
             <img
               className="mypage-profile-image"
-              src={profileImgDef}
+              src={previewImage}
               alt="Profile"
               style={{ margin: "20px", marginTop:"10px", width: "150px", height: "150px", objectFit: "cover" }}
             />
