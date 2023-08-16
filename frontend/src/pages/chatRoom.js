@@ -23,8 +23,7 @@ function ChatRoom() {
   const emptyHeader = {
     width: '100%',
     backgroundColor: '#FFB697',
-    height: '70px',
-    position: 'relative'
+    height: '70px'
   };
 
   const emptyRoom = {
