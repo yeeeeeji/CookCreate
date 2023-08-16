@@ -46,9 +46,7 @@ function LessonDetail() {
   const thumbnailUrl = useSelector((state) => state.lessonInfo.thumbnailUrl);
   const lessonDate = useSelector((state) => state.lessonInfo.lessonDate);
   const userType = localStorage.getItem('role')
-  const remaining = parseInt(
-    useSelector((state) => state.lessonInfo.remaining)
-  );
+
 
   useEffect(() => {
     const DateTransformType = new Date(lessonDate);
@@ -62,6 +60,7 @@ function LessonDetail() {
           },
         })
         .then((res) => {
+          console.log(res)
           dispatch(setCookyerId(res.data.cookyerId));
           dispatch(setCookyerName(res.data.cookyerName));
           dispatch(setFood(res.data.food));
@@ -102,7 +101,7 @@ function LessonDetail() {
           alert(err.response.data.message);
         });
     }
-  }, [lessonId]);
+  }, [lessonId])
 
   return (
     <div className="lessonDetailContainer">
