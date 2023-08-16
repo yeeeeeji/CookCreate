@@ -70,6 +70,7 @@ function ApplyLesson() {
       const timer = setInterval(() => {
         const searchParams = new URL(popupWindow.location.href).searchParams;
         const payStatus = searchParams.get('payStatus');
+        console.log(payStatus)
         if (payStatus === 'COMPLETED') {
           popupWindow.close();
           console.log('결제 성공');
@@ -82,6 +83,7 @@ function ApplyLesson() {
             .then((res) => {
               setShowModal(true)
               setModalInfo(res.data)
+              console.log(res.data)
               // alert('결제가 성공적으로 완료되었습니다!')
               // navigate('/classList')
             })
