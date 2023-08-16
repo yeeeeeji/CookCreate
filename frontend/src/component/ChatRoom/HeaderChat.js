@@ -4,7 +4,7 @@ import axios from "axios";
 
 const Wrapper = styled.header`
   width: 100%;
-  border: 1px solid #D9D9D9;
+  // border-right: 0.7px solid #D9D9D9;
   // background-color: #ff8a00;
   // background-color: #ff9416;
   background-color: #FFB697;
@@ -13,8 +13,7 @@ const Wrapper = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
-  flex-direction: row-reverse;
+  padding: 0 20px;
 
   & span {
     color:#FFFFFF;
@@ -29,7 +28,6 @@ const Wrapper = styled.header`
   }
 
   & button {
-    position: absolute;
     align-items: center;
     justify-content: center;
     display:flex;
@@ -44,12 +42,19 @@ const Wrapper = styled.header`
     cursor: pointer;
     border-radius: 3px;
     border: none;
-    color: wheat;
+    color : #ffffff;
     // &:hover {
     //   background-color: #FF7A42;
     // }
   }
 `;
+
+const style = {
+  fontSize: '1.0rem',
+  fontWeight : '500',
+  color: '#FFFFFF',
+  textAlign: 'center', 
+};
 
 const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
   const accessToken = localStorage.getItem("access_token");
@@ -123,18 +128,20 @@ const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
 
   return (
     <Wrapper>
-      {role === 'COOKYER' && chatOver === false ? (
-      <button type="button" onClick={ExitT}>
-        <p>종료</p>
-        <i className="fas fa-arrow-left" />
-      </button>
-    ) : null}
-    {role === 'COOKIEE' && chatOver === false ? (
-      <button type="button" onClick={ExitS}>
-        <p>나가기</p>
-      </button>
-    ) : null}
-    <span>{chatTitle}</span>
+      <div style={style}>{chatTitle}</div>
+        <div>
+          {role === 'COOKYER' && chatOver === false ? (
+          <button type="button" onClick={ExitT}>
+            <p>종료</p>
+            <i className="fas fa-arrow-left" />
+          </button>
+        ) : null}
+        {role === 'COOKIEE' && chatOver === false ? (
+          <button type="button" onClick={ExitS}>
+            <p>나가기</p>
+          </button>
+        ) : null}
+      </div>
     </Wrapper>
   );
 };
