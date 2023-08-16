@@ -13,14 +13,13 @@ function EditForm() {
 
   const initThumbnail = useSelector((state) => state.lessonEdit.thumbnailUrl);
   const [thumbnailUrl, setThumbnailUrl] = useState(initThumbnail);
-  const [ThumbnailFile, setThumbnailFile] = useState(''); // 수정한 파일 정보 넣어줄 것
+  const [ThumbnailFile, setThumbnailFile] = useState(""); // 파일 이름 넣을 것
 
   const accessToken = localStorage.getItem("access_token");
   const lessonTitle = useSelector((state) => state.lessonEdit.lessonTitle);
   const categoryId = useSelector((state) =>
     parseInt(state.lessonEdit.categoryId)
   );
-  // const maximum = useSelector((state) => parseInt(state.lessonEdit.maximum));
   const price = useSelector((state) => parseInt(state.lessonEdit.price));
   const difficulty = useSelector((state) => state.lessonEdit.difficulty);
   const timeTaken = useSelector((state) =>
@@ -50,7 +49,7 @@ function EditForm() {
     (state) => state.lessonEdit.descriptionValid
   );
   const [thumbnailValid, setThumbnailValid] = useState(true);
-  
+
   useEffect(() => {
     setThumbnailUrl(initThumbnail);
     setVideoUrl(initVideoUrl);
@@ -66,23 +65,28 @@ function EditForm() {
     materialsValid,
     stepValid,
     descriptionValid,
-    thumbnailValid,
   ].every((isValid) => isValid);
 
   const handleThumbnailUrl = (e) => {
     setFileName(e.target.value); // 파일명 유저들에게 보여주기
     const file = e.target.files[0];
-    setThumbnailFile(file);
+    setThumbnailFile(file); //파일명 넣어주기
     setThumbnailUrl(URL.createObjectURL(file));
     setThumbnailValid(!!file);
+    console.log(file, ThumbnailFile, thumbnailUrl)
   };
+
   const handleVideoUrl = (e) => {
     setVideoUrl(e.target.value);
   };
   const register = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("thumbnailUrl", ThumbnailFile);  
+    if (ThumbnailFile !== '') {
+      formData.append("thumbnailUrl", ThumbnailFile);
+    }
+
+    // formData.append("thumbnailUrl", ThumbnailFile);
     formData.append("lessonId", lessonId);
     formData.append("lessonTitle", lessonTitle);
     formData.append("categoryId", categoryId);

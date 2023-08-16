@@ -8,15 +8,15 @@ import "./../../style/mypage/account.css";
 import "./../../style/mypage/mypage.css";
 
 function Account() {
-  const accessToken = useSelector((state) => state.auth.access_token);
+  const accessToken = localStorage.getItem("access_token");
 
   const [userData, setUserData] = useState({});
   const [food, setFood] = useState([]);
 
-  const [nicknameDef, setNickName] = useState(userData.nickname);
-  const [phoneNumberDef, setPhoneNumber] = useState(userData.phoneNumber);
-  const [userEmailDef, setUserEmail] = useState(userData.userEmail);
-  const [IntroduceDef, setIntroduce] = useState(userData.introduce);
+  const [nicknameDef, setNickName] = useState("");
+  const [phoneNumberDef, setPhoneNumber] = useState("");
+  const [userEmailDef, setUserEmail] = useState("");
+  const [IntroduceDef, setIntroduce] = useState("");
   // const defaultProfileImgUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
   // const [profileImgDef, setProfileImg] = useState(userData.profileImg || defaultProfileImgUrl);
   
@@ -39,6 +39,12 @@ function Account() {
         .then((res) => {
           setUserData(res.data);
           console.log(res.data);
+          setNickName(res.data.nickname)
+          setPhoneNumber(res.data.phoneNumber)
+          setUserEmail(res.data.userEmail)
+          setIntroduce(res.data.introduce)
+
+
         })
         .catch((err) => {
           console.log("회원정보조회못함",err);
@@ -49,7 +55,7 @@ function Account() {
           setPreviewImage(storedPreviewImage);
         }
         
-    }, [userData]);
+    }, [accessToken]);
 
 
 
