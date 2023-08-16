@@ -31,9 +31,13 @@
   display: flex;
   justify-content: center; /* 수평 가운데 정렬 */
 }
-.emoji {
+/* .emoji {
   font-size: 60px;
   margin-top: 20px;
+} */
+.role-icon {
+  margin-top: 30px;
+  height: 70px;
 }
 .user-type-container {
   display: flex;
@@ -49,20 +53,22 @@
   border: 1px solid #d9d9d9;
   /* font-size: 15px; */
   padding: 10px;
-  width: 300px;
+  width: 290px;
+  height: 260px;
   cursor: pointer;
   transition: border-color 0.3s, background-color 0.3s;
   border-radius: 20px;
-  margin: 0 40px; /* 상하로 10px 간격을 주기 위해 margin 추가 */
+  margin: 0 80px; /* 상하로 10px 간격을 주기 위해 margin 추가 */
 }
 
 .user-type:hover {
-  background-color: #fff2ed;
+  background-color: #fff5f1;
   border: 1px solid rgb(255, 213, 195);
 }
 
 .user-type.active {
-  background-color: #ffdec6;
+  background-color: #fff1e8;
+  border: 1px solid #FF7A42;
 }
 
 /* 사용자 이름 스타일 */
@@ -78,15 +84,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.3rem;
-  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 30px;
 }
 
 /* 설명 텍스트 스타일 */
 .description {
   text-align: center;
-  margin-top: 20px;
-  font-size: 1rem;
+  margin-top: 10px;
+  font-size: 0.9rem;
   color: #666;
 }
 
