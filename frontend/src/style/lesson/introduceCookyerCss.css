@@ -4,10 +4,11 @@
 }
 
 .introduceCookyerTitle{
-    font-size: 22px;
+    font-size: 1.4rem;
     margin-bottom: 15px;
     font-weight: 500;
     margin-bottom: 30px;
+    color:#414141;
 }
 
 .introduceCookyerNameContainer{
@@ -26,12 +27,13 @@
   
 .introduceCookyerName {
     font-weight: 500;
-    font-size: 24px;
+    font-size: 1.7rem;
     margin-right: 50px;
+    color:#414141;
 }
 
 .introduceCookyerFood {
-    font-size: 13px;
+    font-size: 0.9rem;
     color: #666;
 }
 
@@ -59,5 +61,6 @@
 }
 
 .introduceCookyerIntroduce {
-    font-size: 16px;
+    font-size: 0.9rem;
+    color: #666;
 }

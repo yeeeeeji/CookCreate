@@ -7,9 +7,11 @@
 
 .titleWrap{
   text-align: center;
-  font-size: 23px;
   margin-top: 5px;
   margin-bottom: 35px;
+  color: #404040;
+  font-size: 1.5rem;
+  font-weight: 400;
 }
 
 .signupinputContainer{
@@ -51,16 +53,17 @@
 }
 
 .signupdupliButton{
-  width: 110px;
+  width: 90px;
   margin-left: 20px;
   display: inline-flex;
-  padding: 8px 20px;
+  padding: 8px 10px;
   justify-content: center;
   align-items: center;
   border-radius: 50px;
   border: 0.7px solid #CBCBCB;
   background: #FFF;
   cursor: pointer;
+  color: #666
 }
 
 .signupinputMessage{
@@ -82,7 +85,7 @@
 /* 활성화됐을 때 스타일 */
 .activeBtn {
   display: flex;
-  width: 250px;
+  width: 299px;
   height: 40px;
   padding: 15px 94px;
   justify-content: center;
@@ -95,15 +98,17 @@
   background: #FF7A42;
   color: #FFFDFD;
   margin-top: 25px;
+  font-size: 13px;
+  font-weight: 500;
 }
 .activeBtn:hover {
-  background-color: #FF6060;
+  background-color: #fd621f;
 }
 
 /* 비활성화됐을 때 스타일 */
 .disabledBtn {
   display: flex;
-  width: 250px;
+  width: 299px;
   height: 40px;
   padding: 15px 94px;
   justify-content: center;
@@ -117,6 +122,8 @@
   color: #FFFDFD;
   margin-top: 25px;
   cursor: not-allowed;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .bottomBtn{

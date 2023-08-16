@@ -62,7 +62,7 @@ function RecipeBook() {
     <div className="recipe-book-container">
       <SideBar />
       <div className="recipe-book-page-title-wrapper">
-        <p className="recipe-book-page-title">레시피북</p>
+        <h3 className="recipe-book-page-title">레시피북</h3>
         <div className="recipe-book-desc">
           <p>레시피북을 클릭하면 요리 진행단계를 볼 수 있습니다.</p>
           <p>과외가 끝난 후에도 요리를 즐겨보세요!</p>

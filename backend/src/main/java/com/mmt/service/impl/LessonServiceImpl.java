@@ -16,11 +16,8 @@ import com.mmt.domain.request.lesson.LessonPutReq;
 import com.mmt.domain.request.lesson.LessonSearchReq;
 import com.mmt.domain.request.lesson.LessonStepPutReq;
 import com.mmt.domain.request.session.SessionPostReq;
-import com.mmt.domain.response.lesson.LessonDetailRes;
-import com.mmt.domain.response.lesson.LessonLatestRes;
+import com.mmt.domain.response.lesson.*;
 import com.mmt.domain.response.ResponseDto;
-import com.mmt.domain.response.lesson.LessonSearchRes;
-import com.mmt.domain.response.lesson.LessonStepRes;
 import com.mmt.domain.response.review.ReviewAvgRes;
 import com.mmt.repository.*;
 import com.mmt.repository.lesson.LessonCategoryRepository;
@@ -110,17 +107,30 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public ResponseDto apply(int lessonId, String userId) {
-        Optional<Lesson> lesson = lessonRepository.findByLessonId(lessonId);
-        if(lesson.isEmpty()) return new ResponseDto(HttpStatus.NOT_FOUND, "존재하지 않는 과외입니다.");
+    public LessonApplyRes apply(int lessonId, String userId) {
+        LessonApplyRes lessonApplyRes = new LessonApplyRes();
 
-        if(lesson.get().getIsOver()) return new ResponseDto(HttpStatus.BAD_REQUEST, "이미 마감된 과외입니다.");
+        Optional<Lesson> lesson = lessonRepository.findByLessonId(lessonId);
+        if(lesson.isEmpty()) {
+            lessonApplyRes.setStatusCode(HttpStatus.NOT_FOUND);
+            lessonApplyRes.setMessage("존재하지 않는 과외입니다.");
+            return lessonApplyRes;
+        }
+
+        if(lesson.get().getIsOver()) {
+            lessonApplyRes.setStatusCode(HttpStatus.BAD_REQUEST);
+            lessonApplyRes.setMessage("이미 마감된 과외입니다.");
+            return lessonApplyRes;
+        }
 
         // 추가하기 전 결제 완료 확인
         Optional<PaymentHistory> paymentHistory = paymentRepository.findFirstByLesson_LessonIdAndMember_UserIdOrderByApprovedAtDesc(lessonId, userId);
         if(!paymentHistory.isPresent() || paymentHistory.get().getPayStatus() != PayStatus.COMPLETED) {
-            return new ResponseDto(HttpStatus.FORBIDDEN, "결제 한 사용자만 신청할 수 있습니다.");
+            lessonApplyRes.setStatusCode(HttpStatus.FORBIDDEN);
+            lessonApplyRes.setMessage("결제 한 사용자만 신청할 수 있습니다.");
+            return lessonApplyRes;
         }
+
         LessonParticipant lessonParticipant = new LessonParticipant();
         lessonParticipant.setLesson(lesson.get());
         Optional<Member> member = memberRepository.findByUserId(userId);
@@ -136,9 +146,12 @@ public class LessonServiceImpl implements LessonService {
             lessonRepository.save(lesson.get());
         }
 
-        // TODO: 채팅방 입장
+        // 결과값 세팅
+        lessonApplyRes = new LessonApplyRes(lesson.get());
+        lessonApplyRes.setStatusCode(HttpStatus.OK);
+        lessonApplyRes.setMessage("Success");
 
-        return new ResponseDto(HttpStatus.OK, "Success");
+        return lessonApplyRes;
     }
 
     @Transactional

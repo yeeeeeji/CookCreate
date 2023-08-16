@@ -4,34 +4,39 @@
 }
 
 .introduceLessonTitle {
-    font-size: 22px;
+    font-size: 1.4rem;
     margin-bottom: 15px;
     font-weight: 500;
+    color:#414141;
 }
 
 .introduceLessonDescription {
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 0.9rem;
     margin-bottom: 50px;
+    color:#474646;
 }
 
 .introduceLessonMateTitle {
-    font-size: 18px;
+    font-size: 1.2rem;
     font-weight: 500;
     margin-bottom: 13px;
+    color:#414141;
 }
 
 .introduceLessonMateDesc {
-    font-size: 14px;
+    font-size: 0.9rem;
     margin-bottom: 9px;
+    color:#474646;
 }
 
 .introduceLessonMateItems {
-    font-size: 14px;
+    font-size: 0.9rem;
     margin-bottom: 50px;
+    color:#474646;
 }
 
 .introduceLessonMateItem {
-    font-size: 14px;
+    font-size: 0.9rem;
     margin-bottom: 7px;
+    color:#474646;
 }

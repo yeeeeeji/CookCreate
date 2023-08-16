@@ -56,7 +56,6 @@ function SearchBar() {
           <option value="cookyer">Cookyer 이름</option>
           <option value="ingre">재료</option>
         </select>
-
         <div className='inputContainer'>
           <input type="text"
             placeholder='배우고 싶은 요리를 검색해보세요!'
@@ -65,9 +64,7 @@ function SearchBar() {
             value={keyword}
             className='searchInput'
           />
-          <div className='searchIcon'>
-            <BiSearch/>
-          </div>
+          <BiSearch className='searchIcon'/>
         </div>
       </div>
     </div>
