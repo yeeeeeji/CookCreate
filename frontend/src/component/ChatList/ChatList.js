@@ -134,10 +134,20 @@ const ChatList = (props) => {
           {chatlist.map((chatRoom) => (
             <div key={chatRoom.lessonId}>
               {chatRoom.chatRoomOver === false && (
-                <div>
-                  <div style={{ marginBottom: '10px', cursor: 'pointer'}} onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.lessonTitle, chatOver: chatRoom.chatRoomOver })}>
-                    {/* <Link to={`/chatroom`}> */}
-                    {chatRoom.lessonTitle ? <strong style={{color: selectedRoom === chatRoom.lessonId ? "#FF7A42" : "#414141", fontWeight: '400'}} onClick={() => setSelectedRoom(chatRoom.lessonId)} >{chatRoom.lessonTitle}</strong> : <p>참여중인 채팅방이 없습니다.</p>}
+                <>
+                  <div style={{ backgroundColor: selectedRoom === chatRoom.lessonId ? "rgb(255 235 227)" : "none", marginLeft: '40px'}} 
+                  // onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.lessonTitle, chatOver: chatRoom.chatRoomOver }),setSelectedRoom(chatRoom.lessonId)}>
+                  onClick={() => {
+                    handleChatRoom({
+                      lessonId: chatRoom.lessonId,
+                      chatTitle: chatRoom.lessonTitle,
+                      chatOver: chatRoom.chatRoomOver
+                    });
+                    setSelectedRoom(chatRoom.lessonId);
+                  }}
+                  >  
+                  {/* <Link to={`/chatroom`}> */}
+                    {chatRoom.lessonTitle ? <strong style={{color: "#414141"}} >{chatRoom.lessonTitle}</strong> : <p>참여중인 채팅방이 없습니다.</p>}
                     {chatRoom.leastContent !== null ? (
                       <div>
                         <p style={{ color:'#B5B4B4', fontSize : '1rem', marginTop : '0.4rem'}} >{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 12) + ".." : chatRoom.leastContent}</p>
@@ -161,13 +171,19 @@ const ChatList = (props) => {
 
               {chatRoom.chatRoomOver === true && (
                 <>
-                  {/* <h3 className="ChatH3" style={{ fontSize: 17, color: 'rgb(87, 49, 14)',textAlign:'center' }} >종료된 채팅방</h3> */}
                   <StyledChatH3>종료된 채팅방</StyledChatH3>
-                  <div  style={{ marginLeft: '40px' }} onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.leastContent, chatOver: chatRoom.chatRoomOver })}>
-                    {/* <Link to={`/chatroom`}> */}
-                    <strong  style={{color: selectedRoom === chatRoom.lessonId ? "#FF7A42" : "#414141"}} onClick={() => setSelectedRoom(chatRoom.lessonId)} >{chatRoom.lessonTitle}</strong>
-                    {/* <h2>{chatRoom.lessonTitle}</h2> */}
-                    {/* <p>마지막 메세지: {chatRoom.leastContent}</p> */}
+                  <div  style={{ backgroundColor: selectedRoom === chatRoom.lessonId ? "rgb(255 235 227)" : "none", marginLeft: '40px' }}
+                  // onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.leastContent, chatOver: chatRoom.chatRoomOver })}>
+                    onClick={() => {
+                      handleChatRoom({
+                        lessonId: chatRoom.lessonId,
+                        chatTitle: chatRoom.lessonTitle,
+                        chatOver: chatRoom.chatRoomOver
+                      });
+                      setSelectedRoom(chatRoom.lessonId);
+                    }}
+                    >  
+                    <strong  style={{color:"#414141"}} onClick={() => setSelectedRoom(chatRoom.lessonId)} >{chatRoom.lessonTitle}</strong>
                     <p style={{ color:'#B5B4B4' }}>{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 12) + "..." : chatRoom.leastContent}</p>
                     {/* <span>종료 시간: {formatTime(chatRoom.lestCreateTime)}</span> */}
                     <span style={{ fontSize: "10px",color:'#B5B4B4' }}>
