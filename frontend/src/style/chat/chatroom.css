@@ -8,12 +8,21 @@
   display: flex;
 }
 
+.ChatListContainer {
+  flex: 1;
+}
+
+.chat-room-content {
+  flex: 3;
+}
+
 .ChatSpace {
-  width: 750px;
-  height: 800px;
+  border-right: 0.7px solid #D9D9D9;
 }
 
 .Emptychat {
   margin-left: 40px;
   margin-top: 40px;
+  font-size: 1rem;
+  color : #656363;
 }
