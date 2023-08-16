@@ -135,6 +135,12 @@ function Account() {
       .catch((err) => {
         console.log("회원정보조회못함", err);
       });
+
+      const storedPreviewImage = localStorage.getItem('previewImage');
+      if (storedPreviewImage) {
+        setPreviewImage(storedPreviewImage);
+      }
+      
   }, []);
 
   useEffect(() => {
@@ -152,6 +158,9 @@ function Account() {
       reader.onloadend = () => {
         setPreviewImage(reader.result);
         setProfileImg(file);
+
+        localStorage.setItem('previewImage', reader.result);
+
       };
       reader.readAsDataURL(file);
     }
