@@ -56,7 +56,7 @@ function Payment() {
       });
 
       console.log(cancelResponse);
-      console.log("과외 취소!");
+      console.log("과외 취소! 성공!");
 
       // 환불 성공 후에 환불 시간을 업데이트하고 결제 정보를 다시 가져와서 화면에 표시
       const paymentResponse = await axios.get(`api/v1/my/cookiee`, {
@@ -74,20 +74,22 @@ function Payment() {
   };
 
   useEffect(() => {
-    axios
-      .get(`api/v1/my/cookiee`, {
-        headers: {
-          Access_Token: accessToken,
-        },
-      })
-      .then((res) => {
-        setUserPayments(res.data);
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [accessToken, userPayment]);
+    if (accessToken) {
+      axios
+        .get(`api/v1/my/cookiee`, {
+          headers: {
+            Access_Token: accessToken,
+          },
+        })
+        .then((res) => {
+          setUserPayments(res.data);
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [accessToken]);
 
   const goLesson = (lessonId) => {
     setGoLessonDetail(true);
@@ -113,7 +115,7 @@ function Payment() {
           <div className="no-payment">{paymentMessage}</div>
         ) : (
           userPayment.map((payment) => (
-            <div className="pay-item" key={payment.lessonId}>
+            <div className="pay-item" key={payment.paymentId}>
               <div className="pay-list">
                 
                 {/* <div className="pay-info">
@@ -168,6 +170,15 @@ function Payment() {
                     ) : (
                       <div>-</div>
                     )}
+                    {payment.payStatus !== "REFUND" && (
+                <div
+                  className="refund-button"
+                  onClick={() => handleRefund(payment.lessonId)}
+                > 
+                  강의 취소(환불하기)
+                </div>
+              )}
+              {errMsg}
                     </div>
                   </div>
                   <div className="pay-row price">
@@ -178,15 +189,6 @@ function Payment() {
                   </div>
                 </div>
               </div>
-              {payment.payStatus !== "REFUND" && (
-                <div
-                  className="refund-button"
-                  onClick={() => handleRefund(payment.lessonId)}
-                > 
-                  강의 취소(환불하기)
-                </div>
-              )}
-              {errMsg}
               {/* <hr /> */}
             </div>
           ))
