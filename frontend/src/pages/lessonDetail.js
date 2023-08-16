@@ -33,12 +33,12 @@ import {
   setProfileImg,
 } from "../store/lesson/lessonInfo";
 import "../style/lesson/lessonDetailCss.css";
+import defaultThumbnail from '../assets/non-image.png'
 
 function LessonDetail() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const lessonId = id;
-  // const lessonId = useSelector((state) => state.lessonInfo.lessonId);
   const accessToken = localStorage.getItem("access_token");
   const categoryName = useSelector((state) => state.lessonInfo.categoryName);
   const difficulty = useSelector((state) => state.lessonInfo.difficulty);
@@ -60,7 +60,6 @@ function LessonDetail() {
           },
         })
         .then((res) => {
-          console.log(res)
           dispatch(setCookyerId(res.data.cookyerId));
           dispatch(setCookyerName(res.data.cookyerName));
           dispatch(setFood(res.data.food));
@@ -112,7 +111,12 @@ function LessonDetail() {
           <span className="detailCategory">{difficulty}</span>
         </div>
         <h2 className="detailLessonTitle"> {lessonTitle} </h2>
-        <img className="detailThumbnail" src={thumbnailUrl} alt="" />
+        {thumbnailUrl ? (
+          <img className="detailThumbnail" src={thumbnailUrl} alt="" />
+        ) : (
+          <img className="detailThumbnail" src={defaultThumbnail} alt="image" />
+
+        )}
         <IntroduceLesson />
         <hr />
         <IntroduceCookyer />
