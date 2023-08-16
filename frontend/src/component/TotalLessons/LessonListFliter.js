@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setDeadLine, setOrder } from '../../store/lesson/lessonSearch';
 import '../../style/lesson/lessonListFilterCss.css';
+import { FiChevronDown } from 'react-icons/fi';
 
 function LessonListFliter() {
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ function LessonListFliter() {
           <option value="avg">평점순</option>
           <option value="review">리뷰순</option>
         </select>
+        <FiChevronDown className="sort-icon"/>
       </div>
       <div className='deadlineContainer'>
         <input

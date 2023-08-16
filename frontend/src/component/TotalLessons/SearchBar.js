@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import '../../style/lesson/searchBarCss.css';
 import { BiSearch } from 'react-icons/bi';
+import { FiChevronDown } from 'react-icons/fi';
 
 function SearchBar() {
   const dispatch = useDispatch()
@@ -45,17 +46,20 @@ function SearchBar() {
   return (
     <div>
       <div className='searchContainer'>
-        <select
-          onChange={handleTypeChange}
-          value={type}
-          style={{ marginLeft: '10px' }}
-          className='categorySelect'
-        >
-          <option value="all">전체보기</option>
-          <option value="title">과외 제목</option>
-          <option value="cookyer">Cookyer 이름</option>
-          <option value="ingre">재료</option>
-        </select>
+        <div className="category-select-wrap">
+          <select
+            onChange={handleTypeChange}
+            value={type}
+            style={{ marginLeft: '10px' }}
+            className='categorySelect'
+          >
+            <option value="all">전체보기</option>
+            <option value="title">과외 제목</option>
+            <option value="cookyer">Cookyer 이름</option>
+            <option value="ingre">재료</option>
+          </select>
+          <FiChevronDown className="select-icon"/>
+        </div>
         <div className='inputContainer'>
           <input type="text"
             placeholder='배우고 싶은 요리를 검색해보세요!'
