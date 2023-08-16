@@ -167,15 +167,12 @@ function ClassList() {
     if (isSessionOpened && sessionId) {
       console.log(isSessionOpened, "방이 열렸어요")
       navigate(`/videoLesson/COOKYER`)
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
     }
   }, [isSessionOpened])
 
   /** 과외 수정 */
   const updateClass = ( lessonId ) => {
     navigate(`/lesson/edit/${lessonId}`)
-
     dispatch(setLessonId(lessonId))
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -211,15 +208,11 @@ function ClassList() {
     setGoLessonDetail(true)
     dispatch(setLessonId(lessonId))
     navigate(`/lesson/${lessonId}`)
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
   }
 
   useEffect(() => {
     if (goLessonDetail && lessonId !== null) {
       navigate(`/lesson/${lessonId}`)
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
     }
   }, [lessonId])
 
@@ -417,19 +410,19 @@ function ClassList() {
                               <dd>
                                 {(() => {
                                   switch (lesson.categoryId) {
-                                    case 1:
+                                    case 0:
                                       return "한식";
-                                    case 2:
+                                    case 1:
                                       return "양식";
-                                    case 3:
+                                    case 2:
                                       return "중식";
-                                    case 4:
+                                    case 3:
                                       return "일식";
-                                    case 5:
+                                    case 4:
                                       return "아시안";
-                                    case 6:
+                                    case 5:
                                       return "건강식";
-                                    case 7:
+                                    case 6:
                                       return "디저트";
                                     default:
                                       return "알 수 없음";
