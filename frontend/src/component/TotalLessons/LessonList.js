@@ -25,6 +25,7 @@ function LessonList() {
   const gotoLogin = () => {
     alert('로그인 후 확인할 수 있습니다!')
     navigate('/login')
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   useEffect(() => {
     axios.get(`/api/v1/lesson`, {
