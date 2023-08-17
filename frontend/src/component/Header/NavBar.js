@@ -96,15 +96,22 @@ function NavBar() {
   const gotoSignUp = () => {
     navigator("/signupbefore");
     window.scrollTo({ top: 0, behavior: "smooth" });
+
   };
+  const handleLogo = () => {
+    navigator("/")
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
   return (
     <div className="nav-wrap">
       {/* <div className='navbar'> */}
       <div className={`navbar ${mainPageStyle ? "navbar-main" : ""}`}>
         <div className="leftNav">
-          <Link to="/" className="logo">
+          {/* <Link to="/" className="logo"> */}
+          <span onClick={handleLogo} style={{marginRight : '32px', marginTop : '5px'}}>
             <img src="/logo.png" alt="로고" className="logo" />
-          </Link>
+          </span>
+          {/* </Link> */}
           <Link to="/lesson">수업 전체</Link>
           <SearchBar />
         </div>
