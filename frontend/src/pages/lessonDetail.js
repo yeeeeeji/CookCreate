@@ -99,7 +99,6 @@ function LessonDetail() {
         .catch((err) => {
           console.log(err);
           console.log(lessonId)
-          alert(err.response.data.message);
         });
     }
   }, [lessonId, showModal])

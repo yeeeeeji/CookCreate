@@ -196,7 +196,6 @@ function ClassList() {
       console.log('쿠커 과외 삭제 실패', err)
       let error = Object.assign({}, err)
       if (error?.response?.status === 409) {
-        // alert('신청한 쿠키가 있어 수업을 삭제할 수 없습니다.')
         setDeleteContent("신청한 쿠키가 있어 과외를 삭제할 수 없습니다.")
       } else {
         setDeleteContent("과외를 삭제할 수 없습니다.")

@@ -109,8 +109,6 @@ function RegisterForm({ setContent, setShowAlert, setPath }) {
         setContent("과외가 등록되었습니다.");
         setShowAlert(true);
         setPath("/lesson");
-        // alert('과외 생성에 성공했습니다!')
-        // navigate('/lesson')
       })
       .catch((err) => {
         setContent("과외를 등록할 수 없습니다. 다시 한 번 확인해주세요.");
