@@ -1,18 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import { setKeyword, setType } from '../../store/lesson/lessonSearch';
+import React, { useEffect, useState } from 'react';
+import { setKeyword, setType, resetlessonSearch, setResult } from '../../store/lesson/lessonSearch';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import '../../style/lesson/searchBarCss.css';
 import { BiSearch } from 'react-icons/bi';
 import { FiChevronDown } from 'react-icons/fi';
+import { setSearchBarKeyword } from '../../store/lesson/searchBarKeyword';
 
 function SearchBar() {
   const dispatch = useDispatch()
   const [keyword, setInputKeyword] = useState('')
   const [type, setInputType] = useState('all')
-  const order = useSelector((state) => state.lessonSearch.order)
-  const deadline = useSelector((state) => state.lessonSearch.deadline)
-  const category = useSelector((state) => state.lessonSearch.category)
 
   const handleSearchBar = (e) => {
     const newKeyword = e.target.value;
@@ -24,25 +22,9 @@ function SearchBar() {
     const newType = e.target.value;
     setInputType(newType);
     dispatch(setType(newType))
+    dispatch(setSearchBarKeyword(''))
   }
 
-  useEffect(() => {
-    axios.get(`/api/v1/lesson`, {
-      params : {
-        type,
-        keyword,
-        category,
-        order,
-        deadline
-      }
-    })
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }, [type, keyword, category, order, deadline])
   return (
     <div>
       <div className='searchContainer'>
@@ -61,14 +43,16 @@ function SearchBar() {
           <FiChevronDown className="select-icon"/>
         </div>
         <div className='inputContainer'>
-          <input type="text"
+          <input
+            type="text"
             placeholder='배우고 싶은 요리를 검색해보세요!'
-            style={{width : '400px'}}
+            style={{ width: '400px' }}
             onChange={handleSearchBar}
+            // onMouseEnter={handleInputMouseEnter} // 마우스가 요소에 올라갈 때 실행
             value={keyword}
             className='searchInput'
           />
-          <BiSearch className='searchIcon'/>
+          <BiSearch className='searchIcon' />
         </div>
       </div>
     </div>
