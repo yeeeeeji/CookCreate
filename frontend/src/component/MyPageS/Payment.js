@@ -74,7 +74,7 @@ function Payment() {
           Access_Token: accessToken,
         },
       });
-
+      
       setUserPayments(paymentResponse.data);
       console.log(paymentResponse.data);
     } catch (error) {
