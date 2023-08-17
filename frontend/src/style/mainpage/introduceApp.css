@@ -12,6 +12,7 @@
     flex-direction: column;
     align-items: center;  
     padding: 9rem 0 21rem 0;  
+    height: 100vh; /* 뷰포트 높이에 맞게 조절 */
 }
 
 .bg {
