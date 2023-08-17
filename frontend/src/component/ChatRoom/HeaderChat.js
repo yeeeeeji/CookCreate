@@ -1,7 +1,7 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import axios from "axios";
-
+import AlertModal from "../Modal/AlertModal";
 const Wrapper = styled.header`
   width: 100%;
   // border-right: 0.7px solid #D9D9D9;
@@ -58,6 +58,7 @@ const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
   const accessToken = localStorage.getItem("access_token");
   const role = localStorage.getItem("role");
   // const history = useHistory();
+  const [modalOpen, setModalOpen] = useState(false);
 
   //채팅종료여부
   console.log("chatOver", chatOver);
@@ -95,7 +96,7 @@ const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
       .catch((err) => {
         console.log("채팅나가기못함", err);
       });
-
+      // setModalOpen(true)
       alert("채팅이 종료되었습니다.")
       window.location.href = '/';
   };
@@ -117,6 +118,7 @@ const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
       });
 
       alert("채팅방나가기 성공")
+      // setModalOpen(true)
       window.location.href = '/';
   };
 

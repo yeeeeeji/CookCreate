@@ -6,7 +6,7 @@ import "../../style/lesson/lessonListCss.css";
 import { useNavigate } from "react-router-dom";
 import { setLessonId } from "../../store/lesson/lessonInfo";
 import { resetlessonSearch, setResult } from "../../store/lesson/lessonSearch";
-
+import AlertModal from "../Modal/AlertModal";
 function LessonList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -17,36 +17,27 @@ function LessonList() {
   const category = useSelector((state) => state.lessonSearch.category);
   const keyword = useSelector((state) => state.lessonSearch.keyword);
   const isLogin = useSelector((state) => state.auth.isLogin);
-  const lessons = useSelector((state) => state.lessonSearch.result)
+  const lessons = useSelector((state) => state.lessonSearch.result);
+
+  const [modalOpen, setModalOpen] = useState(false);
+
   const keywordFromSearchBar = useSelector(
     (state) => state.searchBarKeyword.keyword
   );
-  // const typeFromSearchBar = useSelector((state) => state.searchBarKeyword.type);
-
-  // const categoryFromSearchBar = useSelector(
-  //   (state) => state.searchBarKeyword.category
-  // );
-  // const orderFromSearchBar = useSelector(
-  //   (state) => state.searchBarKeyword.order
-  // );
-  // const deadlineFromSearchBar = useSelector(
-  //   (state) => state.searchBarKeyword.deadline
-  // );
 
   const handleLessonDetail = (lessonId) => {
     navigate(`/lesson/${lessonId}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
+  const closeModal = () => {
+    setModalOpen(false);
+  };
   const gotoLogin = () => {
-    alert("로그인 후 확인할 수 있습니다!");
-    navigate("/login");
     window.scrollTo({ top: 0, behavior: "smooth" });
+    setModalOpen(true);
   };
   useEffect(() => {
-    if (
-      keywordFromSearchBar !== ''
-    ) {
+    if (keywordFromSearchBar !== "") {
       axios
         .get(`/api/v1/lesson`, {
           params: {
@@ -58,7 +49,7 @@ function LessonList() {
           },
         })
         .then((res) => {
-          console.log('내브바 서치바')
+          console.log("내브바 서치바");
           dispatch(setResult(res.data));
         })
         .catch((err) => {
@@ -77,8 +68,7 @@ function LessonList() {
         })
         .then((res) => {
           dispatch(setResult(res.data));
-          console.log('메인 서치바')
-
+          console.log("메인 서치바");
         })
         .catch((err) => {
           console.error(err);
@@ -88,6 +78,14 @@ function LessonList() {
 
   return (
     <div className="lessonListContainer">
+      {modalOpen && (
+        <AlertModal
+          content={"로그인 후 시도해주세요!"}
+          path={"/login"}
+          actions={closeModal}
+          data={false}
+        />
+      )}
       {lessons.length > 0 ? (
         lessons.map((lesson) => (
           <div
