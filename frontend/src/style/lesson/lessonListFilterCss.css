@@ -1,4 +1,4 @@
-.sortSelect {
+.lessonSortSelect {
     width: 150px;
     height: 40px;
     flex-shrink: 0;
@@ -20,18 +20,18 @@
     color: #4b4b4b;
 }
 
-.sortSelectContainer {
+.lessonSortSelectContainer {
     display: flex;
     align-items: center;    
 }
 
-.deadlineContainer {
+.lessonDeadlineContainer {
     display: flex;
     align-items: center;
     margin-top: 1rem;
 }
 
-.deadlineCheckbox {
+.lessonDeadlineCheckbox {
     appearance: none;
     width: 14px;
     height: 14px;
@@ -42,7 +42,7 @@
     position: relative;
     vertical-align: middle;
 }
-.deadlineCheckbox:checked::before {
+.lessonDeadlineCheckbox:checked::before {
     content: '\2713';
     margin: -1px;
     width: 14px;
@@ -56,7 +56,7 @@
     justify-content: center;
 }
 
-.deadlineLabel {
+.lessonDeadlineLabel {
     font-size: 0.9rem;
     color: #4b4b4b;
     cursor: pointer;

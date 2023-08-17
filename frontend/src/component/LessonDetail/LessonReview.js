@@ -7,6 +7,7 @@ function LessonReview() {
   const lessonId = useSelector((state) => state.lessonInfo.lessonId);
   const [ReviewGrade, setReviewGrade] = useState("");
   const [Reviews, setReveiws] = useState([]);
+  const [cookyerId, setCookyerId] = useState(null);
 
   //평점 불러오기
   // useEffect(() => {
@@ -27,8 +28,13 @@ function LessonReview() {
   //   }
   // }, [lessonId]);
 
-  const cookyerId = ReviewGrade.cookyerId;
+  useEffect(() => {
+    if (ReviewGrade) {
+      setCookyerId(ReviewGrade.cookyerId);
+    }
+  }, [ReviewGrade]);
 
+  // const cookyerId = ReviewGrade.cookyerId;
 
   useEffect(() => {
     if (lessonId) {
@@ -53,27 +59,23 @@ function LessonReview() {
 
   //리뷰불러오기
   useEffect(() => {
-
-    if (cookyerId) {
-
+    if (accessToken && cookyerId) {
       axios
-        .get(`api/v1/review/${cookyerId}`, {
+        .get(`/api/v1/review/${cookyerId}`, {
           headers: {
             Access_Token: accessToken,
           },
         })
         .then((res) => {
           setReveiws(res.data);
-          console.log("리뷰리스트",res)
         })
         .catch((err) => {
           console.log("리뷰에러", err);
         });
-    }
-  }, [accessToken, Reviews]);
-
-  
-
+      }
+    }, [accessToken, cookyerId]);
+    
+    console.log("리뷰리스트", Reviews);
 
   return (
     <div
@@ -92,8 +94,14 @@ function LessonReview() {
       >
         리뷰
       </h3>
-      <div>리뷰평균:{ReviewGrade.reviewAvg}</div>
-      <div>리뷰갯수:{ReviewGrade.reviewCnt}</div>
+      <div>리뷰평균: {ReviewGrade.reviewAvg}점</div>
+      <div>리뷰갯수: {ReviewGrade.reviewCnt}개</div>
+      <div>리뷰목록</div>
+        <div>
+          {Reviews.map((content, reviewId)=>(
+            <div key={reviewId}>{content.reviewContents}</div>
+          ))}
+        </div>
     </div>
   );
 }

@@ -25,9 +25,9 @@ function LessonListFliter() {
 
   return (
     <div>
-      <div className='sortSelectContainer'>
+      <div className='lessonSortSelectContainer'>
         <select
-          className='sortSelect'
+          className='lessonSortSelect'
           value={sortBy}
           onChange={handleSortChange}
         >
@@ -39,16 +39,16 @@ function LessonListFliter() {
         </select>
         <FiChevronDown className="sort-icon"/>
       </div>
-      <div className='deadlineContainer'>
+      <div className='lessonDeadlineContainer'>
         <input
           type="checkbox"
           checked={deadlineCheck}
           onChange={handleDeadLine}
-          className='deadlineCheckbox'
+          className='lessonDeadlineCheckbox'
           id='deadlineCheckbox'
         />
         
-        <label htmlFor='deadlineCheckbox' className='deadlineLabel'>
+        <label htmlFor='lessonDeadlineCheckbox' className='lessonDeadlineLabel'>
           마감 과외 보여주기
         </label>
       </div>
