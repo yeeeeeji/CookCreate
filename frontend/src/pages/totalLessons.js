@@ -9,7 +9,10 @@ import { setLessonId } from '../store/lesson/lessonInfo';
 import '../style/lesson/totalLessonsCss.css';
 
 function TotalLessons() {
-
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(resetlessonSearch())
+  }, [])
   return (
     <div>
       <div>

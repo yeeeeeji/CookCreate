@@ -16,13 +16,14 @@ function SearchBar() {
     const newKeyword = e.target.value;
     setInputKeyword(newKeyword);
     dispatch(setKeyword(newKeyword))
+    dispatch(setSearchBarKeyword(''))
   }
 
   const handleTypeChange = (e) => {
     const newType = e.target.value;
     setInputType(newType);
     dispatch(setType(newType))
-    dispatch(setSearchBarKeyword(''))
+    // dispatch(setSearchBarKeyword(''))
   }
 
   return (

@@ -45,11 +45,7 @@ function LessonList() {
   };
   useEffect(() => {
     if (
-      type === "all" &&
-      order === "title" &&
-      deadline === true &&
-      category.length === 0 &&
-      keyword === ""
+      keywordFromSearchBar !== ''
     ) {
       axios
         .get(`/api/v1/lesson`, {
@@ -62,7 +58,7 @@ function LessonList() {
           },
         })
         .then((res) => {
-          console.log(res.data)
+          console.log('내브바 서치바')
           dispatch(setResult(res.data));
         })
         .catch((err) => {
@@ -81,6 +77,7 @@ function LessonList() {
         })
         .then((res) => {
           dispatch(setResult(res.data));
+          console.log('메인 서치바')
 
         })
         .catch((err) => {
