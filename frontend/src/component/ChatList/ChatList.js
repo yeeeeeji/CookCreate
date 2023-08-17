@@ -134,7 +134,7 @@ const ChatList = (props) => {
           {chatlist.map((chatRoom) => (
             <div key={chatRoom.lessonId}>
               {chatRoom.chatRoomOver === false && (
-                <>
+                <div>
                   <div style={{ backgroundColor: selectedRoom === chatRoom.lessonId ? "rgb(243 243 243)" : "none", 
                   // marginLeft: '40px',
                   padding: '10px',
