@@ -129,10 +129,12 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
         }
         )}
       </div>
-      {!chatOver && (
+      {!chatOver ? (
         <div className="InputChatContainer" >
           <InputChat sendMessage={sendMessage} />
         </div>
+      ) : (
+        <p style={{ marginLeft: '30px', marginTop: '20px',fontSize: '1rem', color : '#656363'}}>종료된 채팅방입니다.</p>
       )}
     </div>
   );

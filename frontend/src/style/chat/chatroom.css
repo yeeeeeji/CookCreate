@@ -6,14 +6,15 @@
 
 .chatroom-container {
   display: flex;
+  height: 620px;
 }
 
 .ChatListContainer {
-  flex: 1;
+  flex: 2;
 }
 
 .chat-room-content {
-  flex: 3;
+  flex: 4;
   border-bottom: 0.7px solid #d9d9d9;
   border-right: 0.7px solid #d9d9d9;
 }

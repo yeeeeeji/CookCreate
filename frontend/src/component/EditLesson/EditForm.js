@@ -3,9 +3,12 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../../style/lesson/editForm.css";
-
+import AlertModal from "../Modal/AlertModal";
 function EditForm() {
   const navigate = useNavigate();
+
+  const [modalOpen, setModalOpen] = useState(false);
+
   const lessonId = useSelector((state) => state.lessonInfo.lessonId);
   const [filename, setFileName] = useState("");
   const initVideoUrl = useSelector((state) => state.lessonEdit.videoUrl);
@@ -73,16 +76,19 @@ function EditForm() {
     setThumbnailFile(file); //파일명 넣어주기
     setThumbnailUrl(URL.createObjectURL(file));
     setThumbnailValid(!!file);
-    console.log(file, ThumbnailFile, thumbnailUrl)
+    console.log(file, ThumbnailFile, thumbnailUrl);
   };
 
   const handleVideoUrl = (e) => {
     setVideoUrl(e.target.value);
   };
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
   const register = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    if (ThumbnailFile !== '') {
+    if (ThumbnailFile !== "") {
       formData.append("thumbnailUrl", ThumbnailFile);
     }
 
@@ -112,11 +118,8 @@ function EditForm() {
         },
       })
       .then((res) => {
-        console.log(res);
-        alert("과외 수정에 성공했습니다!");
-        navigate("/lesson");
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
+        window.scrollTo({ top: 0 });
+        setModalOpen(true);
       })
       .catch((err) => {
         console.log(err);
@@ -168,6 +171,15 @@ function EditForm() {
       >
         과외 수정하기
       </button>
+      {modalOpen && (
+        <AlertModal
+          content="과외 수정이 성공적으로 이루어졌습니다."
+          path="/lesson"
+          data={false}
+          // actions={null}
+          actions={handleCloseModal}
+        />
+      )}
     </div>
   );
 }

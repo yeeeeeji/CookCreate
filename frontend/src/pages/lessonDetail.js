@@ -49,6 +49,7 @@ function LessonDetail() {
 
   const [ showModal, setShowModal ] = useState(false)
 
+  const categories = ["-", "한식", "양식", "중식", "일식", "아시안", "건강식", "디저트"]
   useEffect(() => {
     const DateTransformType = new Date(lessonDate);
     const currentTime = new Date();
@@ -62,6 +63,7 @@ function LessonDetail() {
           },
         })
         .then((res) => {
+          console.log(res.data)
           dispatch(setCookyerId(res.data.cookyerId));
           dispatch(setCookyerName(res.data.cookyerName));
           dispatch(setFood(res.data.food));
@@ -99,7 +101,6 @@ function LessonDetail() {
         .catch((err) => {
           console.log(err);
           console.log(lessonId)
-          alert(err.response.data.message);
         });
     }
   }, [lessonId, showModal])
@@ -109,7 +110,7 @@ function LessonDetail() {
       <div className="detailLeftSection">
         <br />
         <div className="detailCategoryContainer">
-          <span className="detailCategory">{categoryName}</span>{" "}
+          <span className="detailCategory">{categories[categoryName]}</span>{" "}
           <span className="detailCategory">{difficulty}</span>
         </div>
         <h2 className="detailLessonTitle"> {lessonTitle} </h2>

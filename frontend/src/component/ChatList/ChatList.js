@@ -6,16 +6,16 @@ import styled from "styled-components";
 
 const ChatListContainer = styled.div`
   // flex: 1;
-  // padding: 20px;
   background-color: #ffffff;
-  border: 1px solid #D9D9D9;
+  border-left: 0.7px solid #D9D9D9;
+  border-right: 0.7px solid #D9D9D9;
+  border-bottom : 0.7px solid #D9D9D9;
   // overflow-y: auto;
   // margin-right: 1px;
 
   flex: none;
-  height: 512px; 
-  width: 230px;
-  padding: 20px;
+  width: 100%;
+  height: 550px; 
   // background-color: rgb(255 239 221);
   // border-right: 2px solid #ccc;
   overflow-y: auto;
@@ -23,15 +23,17 @@ const ChatListContainer = styled.div`
 `;
 
 const StyledChatH3 = styled.h3`
-  font-size: 17px;
-  color: #414141;
+  font-size: 1.0rem;
+  font-weight : 500;  
+  color: #FFFFFF;
   text-align: center; 
 `;
 
 
 const Wrapper = styled.header`
   width: 100%;
-  border: 1px solid #D9D9D9;
+  border-left: 0.9px solid #D9D9D9;
+  border-right: 0.9px solid #D9D9D9;
   // background-color: #ff8a00;
   // background-color: #ff9416;
   background-color: #FFB697;
@@ -39,9 +41,7 @@ const Wrapper = styled.header`
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 10px;
-  flex-direction: row-reverse;
+  padding: 10px 30px;
 
   & span {
     color:#FFFFFF;
@@ -122,9 +122,9 @@ const ChatList = (props) => {
   return (
     <div>
       <Wrapper>
-      </Wrapper>
-      <ChatListContainer>
         <StyledChatH3>참여중인 채팅방</StyledChatH3>
+      </Wrapper>
+      <ChatListContainer>  
         <div>
           {chatlist.map((chatRoom) => (
             <div key={chatRoom.lessonId}>
@@ -132,7 +132,8 @@ const ChatList = (props) => {
                 <>
                   <div style={{ backgroundColor: selectedRoom === chatRoom.lessonId ? "rgb(243 243 243)" : "#FFFFFF", 
                   // marginLeft: '40px',
-                  padding: '10px',
+                  cursor: 'pointer',
+                  padding: '20px 30px',
                   alignItems: 'center', 
                   justifyContent: 'center', 
                 }} 
@@ -149,9 +150,9 @@ const ChatList = (props) => {
                     {chatRoom.lessonTitle ? <strong style={{color: "#414141", cursor: "pointer"}}>{chatRoom.lessonTitle}</strong> : <p>참여중인 채팅방이 없습니다.</p>}
                     {chatRoom.leastContent !== null ? (
                       <div>
-                        <p style={{ color:'#B5B4B4'}} >{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 12) + ".." : chatRoom.leastContent}</p>
+                        <p style={{ color:'#B5B4B4', fontSize : '1rem', marginTop : '0.4rem'}} >{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 12) + ".." : chatRoom.leastContent}</p>
                         {/* <span>{formatTime(chatRoom.lestCreateTime)}</span> */}
-                        <span style={{ fontSize: "10px", color:'#B5B4B4' }}>
+                        <span style={{ fontSize: "0.8rem", color:'#B5B4B4' }}>
                           {new Date(chatRoom.lestCreateTime).toLocaleDateString("ko-KR", {
                             month: "2-digit",
                             day: "2-digit",
@@ -162,7 +163,13 @@ const ChatList = (props) => {
                         </span>
                       </div>
                     ) : (
-                      <p></p>
+                      <div>
+                        <p style={{ color:'#B5B4B4', fontSize : '1rem', marginTop : '0.4rem'}} >아직 채팅 내용이 없어요.</p>
+                        {/* <span>{formatTime(chatRoom.lestCreateTime)}</span> */}
+                        <span style={{ fontSize: "0.8rem", color:'#ffffff00' }}>
+                          '' 
+                        </span>  
+                      </div>
                     )}
                   </div>
                 </>
@@ -170,10 +177,9 @@ const ChatList = (props) => {
 
               {chatRoom.chatRoomOver === true && (
                 <>
-                  <StyledChatH3>종료된 채팅방</StyledChatH3>
                   <div  style={{ backgroundColor: selectedRoom === chatRoom.lessonId ? "rgb(243 243 243)" : "#FFFFFF", 
-                  marginLeft: '40px',
-                  padding: '10px',
+                  cursor: 'pointer',
+                  padding: '20px 30px',
                   alignItems: 'center', 
                   justifyContent: 'center', 
                 
@@ -189,9 +195,9 @@ const ChatList = (props) => {
                     }}
                     >  
                     <strong  style={{color:"#414141",cursor: "pointer"}} onClick={() => setSelectedRoom(chatRoom.lessonId)} >{chatRoom.lessonTitle}</strong>
-                    <p style={{ color:'#B5B4B4' }}>{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 12) + "..." : chatRoom.leastContent}</p>
+                    <p style={{ color:'#B5B4B4', fontSize : '1rem', marginTop : '0.4rem' }}>{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 12) + "..." : chatRoom.leastContent}</p>
                     {/* <span>종료 시간: {formatTime(chatRoom.lestCreateTime)}</span> */}
-                    <span style={{ fontSize: "10px",color:'#B5B4B4' }}>
+                    <span style={{ fontSize: "0.8rem", color:'#B5B4B4'  }}>
                       {new Date(chatRoom.lestCreateTime).toLocaleDateString("ko-KR", {
                         month: "2-digit",
                         day: "2-digit",
