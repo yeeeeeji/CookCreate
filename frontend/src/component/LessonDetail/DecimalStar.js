@@ -173,7 +173,7 @@ const StarRateWrap = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  margin: 100px 0 0 15px;
+  margin: 2px 0 0 15px;
 
   .star_icon {
     display: inline-flex;
