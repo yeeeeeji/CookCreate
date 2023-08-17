@@ -76,7 +76,7 @@ function Review() {
 
   return (
     <div>
-      {/* <SideBar /> */}
+      <SideBar />
       <section>
         <div className="header">
           <h2 className="header_title">작성한 리뷰</h2>
