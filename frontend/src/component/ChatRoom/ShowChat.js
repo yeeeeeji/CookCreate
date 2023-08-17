@@ -122,7 +122,7 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
         {messageList.map((chat, index) => {
           if (chat.type === "CHAT")  {
             // return <SeparationBlock  key={index} EnterNickname={chat.content} />
-             return chat.userId !== id ? (<FriendChat key={index} message={chat.content} author={chat.userId} />)
+             return chat.userId !== id ? (<FriendChat key={index} message={chat.content} author={chat.nickname} />)
              : (<MyChat key={index} message={chat.content} />
              )
           }

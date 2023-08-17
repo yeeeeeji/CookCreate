@@ -30,8 +30,7 @@ const Wrapper = styled.header`
     align-items: center;
     justify-content: center;
     display:flex;
-    width: 60px;
-    height: 30px;
+    padding: 0.3rem 0.7rem;
 
     font-size: 15px;
     background-color: #FF7A42;

@@ -31,7 +31,6 @@ function ChatRoom() {
     backgroundColor: '#FFFFFF',
     height: '510px',
     position: 'relative',
-    borderBottom: '0.7px solid #d9d9d9'
   };
 
   return (

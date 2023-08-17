@@ -9,11 +9,10 @@ import { setLessonId } from '../store/lesson/lessonInfo';
 import '../style/lesson/totalLessonsCss.css';
 
 function TotalLessons() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   useEffect(() => {
     dispatch(resetlessonSearch())
-  })
-
+  }, [])
   return (
     <div>
       <div>
@@ -30,7 +29,7 @@ function TotalLessons() {
           <LessonFoodCategory/>
           <LessonList/>
         </div>
-        <div className='sidebar'>
+        <div className='lessonSidebar'>
           <LessonListFliter/>
         </div>
       </div>
