@@ -69,7 +69,7 @@ function LessonReview() {
           <h3 className="review-title">리뷰</h3>
           {ReviewGrade.reviewCnt > 0 ? (
             <div className="review-avg-container">
-              <div>
+              <div className="review-star" >
                 <DecimalStar rating={ReviewGrade.reviewAvg} />
               </div>
               <div className="review-avg">
