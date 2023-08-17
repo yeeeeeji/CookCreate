@@ -81,27 +81,44 @@ function LessonReview() {
     <div
       style={{
         width: "300px",
-        height: "100px",
+        height: "400px",
         border: "0.7px solid #ccc",
         borderRadius: "3px",
         padding: "1rem",
       }}
     >
-      <h3
-        style={{
-          fontWeight: "500",
-        }}
-      >
-        리뷰
-      </h3>
-      <div>리뷰평균: {ReviewGrade.reviewAvg}점</div>
-      <div>리뷰갯수: {ReviewGrade.reviewCnt}개</div>
-      <div>리뷰목록</div>
+      <div>
+        <h3
+          style={{
+            fontWeight: "500",
+          }}
+        >
+          리뷰
+        </h3>
         <div>
-          {Reviews.map((content, reviewId)=>(
-            <div key={reviewId}>{content.reviewContents}</div>
-          ))}
+            {ReviewGrade.reviewCnt > 0 ? (
+          <div>
+            <div>평균: {ReviewGrade.reviewAvg.toFixed(2)}점</div>
+            <div>갯수: {ReviewGrade.reviewCnt}개</div>
+          </div>
+        ) : null }
         </div>
+      </div>
+      <div>
+        {ReviewGrade.reviewCnt > 0 ? (
+          <div>
+            {Reviews.map((content, reviewId)=>(
+              // <div key={reviewId}>{content.nickname}</div>
+              <div key={reviewId}>
+                <div>{content.nickname}</div>
+                <div>{content.reviewContents}</div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div>작성된 리뷰가 없습니다.</div>
+        )}
+      </div>
     </div>
   );
 }
