@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import '../../style/lesson/lessonReviewCss.css';
 
 function LessonReview() {
   const accessToken = localStorage.getItem("access_token");
@@ -9,24 +10,7 @@ function LessonReview() {
   const [Reviews, setReveiws] = useState([]);
   const [cookyerId, setCookyerId] = useState(null);
 
-  //평점 불러오기
-  // useEffect(() => {
-  //   if (lessonId) {
-  //     axios
-  //       .get(`/api/v1/lesson/${lessonId}`, {
-  //         headers: {
-  //           Access_Token: accessToken,
-  //         },
-  //       })
-  //       .then((res) => {
-  //         console.log('리뷰평점1', res.data);
-  //         setReviewGrade(res.data)
-  //       })
-  //       .catch((err) => {
-  //         console.log('평점 에러', err);
-  //       });
-  //   }
-  // }, [lessonId]);
+
 
   useEffect(() => {
     if (ReviewGrade) {
@@ -77,50 +61,40 @@ function LessonReview() {
     
     console.log("리뷰리스트", Reviews);
 
-  return (
-    <div
-      style={{
-        width: "300px",
-        height: "400px",
-        border: "0.7px solid #ccc",
-        borderRadius: "3px",
-        padding: "1rem",
-      }}
-    >
-      <div>
-        <h3
-          style={{
-            fontWeight: "500",
-          }}
-        >
-          리뷰
-        </h3>
-        <div>
-            {ReviewGrade.reviewCnt > 0 ? (
-          <div>
-            <div>평균: {ReviewGrade.reviewAvg.toFixed(2)}점</div>
-            <div>갯수: {ReviewGrade.reviewCnt}개</div>
-          </div>
-        ) : null }
+    return (
+      <div className="review-container">
+        <div className="review-header">
+          <h3 className="review-title">리뷰</h3>
+          {ReviewGrade.reviewCnt > 0 ? (
+            <div className="review-avg-container">
+              <div className="review-avg">
+                <div>평균: {ReviewGrade.reviewAvg.toFixed(2)}점</div>
+              </div>
+              <div className="review-cnt">
+                <div>
+                  {ReviewGrade.reviewCnt}개의 리뷰가 존재합니다.
+                </div>
+              </div>
+            </div>
+          ) : null}
+        </div>
+        <div className="review-list">
+          {ReviewGrade.reviewCnt > 0 ? (
+            <div>
+              {Reviews.map((content, reviewId) => (
+                <div key={reviewId} className="review-item">
+                  <div className="review-nickname">{content.nickname}</div>
+                  <div className="review-content">{content.reviewContents}</div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="no-reviews">작성된 리뷰가 없습니다.</div>
+          )}
         </div>
       </div>
-      <div>
-        {ReviewGrade.reviewCnt > 0 ? (
-          <div>
-            {Reviews.map((content, reviewId)=>(
-              // <div key={reviewId}>{content.nickname}</div>
-              <div key={reviewId}>
-                <div>{content.nickname}</div>
-                <div>{content.reviewContents}</div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div>작성된 리뷰가 없습니다.</div>
-        )}
-      </div>
-    </div>
-  );
-}
+    );
+  }
 
 export default LessonReview;
+
