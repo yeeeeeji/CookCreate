@@ -154,8 +154,8 @@ function NavBar() {
         ) : (
           <React.Fragment>
             <div style={{display : 'flex'}}>
-              <div onClick={gotoLogin} style={{marginRight : '10px'}}>로그인</div>
-              <div onClick={gotoSignUp} style={{marginLeft : '10px'}}>회원가입</div>
+              <div className="nav-sign" onClick={gotoLogin} style={{marginRight : '10px'}}>로그인</div>
+              <div className="nav-sign" onClick={gotoSignUp} style={{marginLeft : '10px'}}>회원가입</div>
             </div>
           </React.Fragment>
         )}
