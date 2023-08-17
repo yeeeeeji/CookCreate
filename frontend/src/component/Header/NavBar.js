@@ -38,13 +38,14 @@ function NavBar() {
   }
   
   const location = useLocation();
+  const mainPageStyle = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const navbarMain = document.querySelector(".navbar");
+      const navbarMain = document.querySelector(".navbar-main");
 
-      if (location.pathname === '/' && scrollY < 1) {
+      if (location.pathname === '/' && scrollY > 1) {
         navbarMain.classList.add("scroll");
       } else {
         navbarMain.classList.remove("scroll");
@@ -88,8 +89,8 @@ function NavBar() {
 
   return (
     <div className="nav-wrap">
-      <div className='navbar'>
-    {/* <div className={`navbar ${mainPageStyle ? 'navbar-main' : ''}`}> */}
+      {/* <div className='navbar'> */}
+    <div className={`navbar ${mainPageStyle ? 'navbar-main' : ''}`}>
       <div className="leftNav">
         <Link to='/' className='logo'>
           <img src= "/logo.png" alt="로고" className='logo' />

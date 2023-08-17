@@ -172,7 +172,7 @@ const ChatList = (props) => {
                       <p></p>
                     )}
                   </div>
-                </>
+                </div>
               )}
 
               {chatRoom.chatRoomOver === true && (
