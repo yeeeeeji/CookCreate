@@ -231,10 +231,13 @@ const LeftBlock = styled.div`
 
 
 const Chat = ({ message, author}) => {
+  // const localeTime = 
+
   return (
     <ChatWrapper>
       <span className="username" style={{ display: 'inherit', color: '#666666' }}> {author}</span>
       <div className="message"  >{message}</div>
+      {/* <span className="time">{localeTime}</span> */}
     </ChatWrapper>
   );
 };
