@@ -94,8 +94,6 @@ function ApplyLesson({showModal, setShowModal}) {
               setShowModal(true)
               setModalInfo(res.data)
               console.log(res.data)
-              // alert('결제가 성공적으로 완료되었습니다!')
-              // navigate('/classList')
             })
             .catch((err) => {
               console.log(err);
