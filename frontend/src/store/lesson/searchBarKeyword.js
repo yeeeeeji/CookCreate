@@ -1,9 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  keyword: "",
-};
-
+  type : 'all',
+  order : "title",
+  deadline : true,
+  category : [],
+  keyword : "",
+  lessonId : ""
+}
 const searchBarKeyword = createSlice({
   name: 'searchBarKeyword',
   initialState,
