@@ -74,9 +74,23 @@ function Payment() {
           Access_Token: accessToken,
         },
       });
-
+      
       setUserPayments(paymentResponse.data);
       console.log(paymentResponse.data);
+
+      await axios.put(`api/v1/chat/${lessonId}`,{}, {
+        headers : {
+          Access_Token : accessToken
+        }
+      })
+      .then((res) => {
+        console.log('채팅방 나가짐')
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log('채팅방 나가기 실패')
+        console.log(err)
+      })
     } catch (error) {
       console.log(error);
       console.log("환불 실패");
