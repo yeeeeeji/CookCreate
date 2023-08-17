@@ -26,3 +26,9 @@
 .mainContent {
     flex: 1;
 }  
+
+.lessonSidebar {
+    position: fixed;
+    margin-top: 140px;
+    margin-left: 1000px;
+}

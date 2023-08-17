@@ -30,7 +30,7 @@ function TotalLessons() {
           <LessonFoodCategory/>
           <LessonList/>
         </div>
-        <div className='sidebar'>
+        <div className='lessonSidebar'>
           <LessonListFliter/>
         </div>
       </div>
