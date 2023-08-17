@@ -11,7 +11,7 @@ import { OpenVidu } from "openvidu-browser";
 import { setClassData, setCompletedData } from "../../store/mypageS/accountS";
 import { setLessonId } from "../../store/lesson/lessonInfo";
 import "./../../style/mypage/mypage.css";
-import '../../style/classlist.css'
+import '../../style/mypage/classlist.css'
 
 function ClassList() {
   const dispatch = useDispatch()
@@ -190,6 +190,8 @@ function ClassList() {
   }, [lessonId])
 
   return (
+    <>
+    <div className="mypage-title">과외목록</div>
     <div className="container classlist">
       <SideBar />
       {isModalOpen ? (
@@ -197,64 +199,50 @@ function ClassList() {
           <ReviewForm onClose={handleCloseModal} rating={rating} onClickRating={handleClickRating} reviewLessonData={reviewLessonData} />
         </div>
       ) : null}
-          <div className="title">과외목록</div>
-            <div>
-              <div className="subtitle">신청한 과외</div>
+              <div className="subtitle" style={{marginTop:"50px"}}>신청한 과외</div>
+            <div className="lesson-section">
               {classData !== null && classData !== undefined && classData ? (
                 classData.map((lesson)=> (
-                <div key={lesson.lessonId} className="classlist-list">
+                <div key={lesson.lessonId} className="classlist-item-container">
                   <img
                     loading="lazy"
                     src={lesson.thumbnailUrl}
-                    className="swiper-lazy"
+                    className="thumbnail"
                     alt="course_title.png"
                   />
-                  <div className="describe">
-                    <div className="row class_title">
-                      <div className="col1">과외명</div>
-                      <div className="col2" onClick={() => goLesson(lesson.lessonId)}>{lesson.lessonTitle}</div>
-                    </div>
-                    <div className="row class_category">
-                    <div className="col1">카테고리</div>
-                      <div className="col2">
-                        {(() => {
-                          switch (lesson.categoryId) {
-                            case 1:
-                              return "한식";
-                            case 2:
-                              return "양식";
-                            case 3:
-                              return "중식";
-                            case 4:
-                              return "일식";
-                            case 5:
-                              return "아시안";
-                            case 6:
-                              return "건강식";
-                            case 7:
-                              return "디저트";
-                            default:
-                              return "알 수 없음";
-                          }
-                        })()}
-                      </div>
-                    </div>
-                    <div className="row class_cookyer">
-                      <div className="col1">쿠커</div>
-                      <div className="col2">{lesson.cookyerName}</div>
-                    </div>
-                    <div className="row class_date">
-                      <div className="col1">과외 날짜</div>
-                      <div className="col2">
-                        {new Date(lesson.lessonDate).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', minute: '2-digit' })} 예정
-                      </div>
-                    </div>
+                  <div className="cl-title" onClick={() => goLesson(lesson.lessonId)}>{lesson.lessonTitle}</div>
+                  <div className="cl-cookyerdate">
+                    {lesson.cookyerName} | {new Date(lesson.lessonDate).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', minute: '2-digit' })} 예정
                   </div>
-                    {lesson.sessionId === null ? (
-                      <button className="button" disabled="disabled">수업예정</button>
-                    ) : (
-                      <button className="button orange" onClick={() => joinLesson(lesson.lessonId)}>참가하기</button>
-                    )}
+                  <div className="flex-container">
+                  <div className="cl-category">
+                    {(() => {
+                      switch (lesson.categoryId) {
+                        case 1:
+                          return "한식";
+                        case 2:
+                          return "양식";
+                        case 3:
+                          return "중식";
+                        case 4:
+                          return "일식";
+                        case 5:
+                          return "아시안";
+                        case 6:
+                          return "건강식";
+                        case 7:
+                          return "디저트";
+                        default:
+                          return "알 수 없음";
+                      }
+                    })()}
+                  </div>
+                  {lesson.sessionId === null ? (
+                  <button className="button disabled" disabled="disabled" style={{cursor: "default"}}>수업예정</button>
+                ) : (
+                  <button className="button orange" onClick={() => joinLesson(lesson.lessonId)}>참가하기</button>
+                )}
+                  </div>
                 </div>
               ))
             ) : (
@@ -262,62 +250,44 @@ function ClassList() {
             )}
           </div>
 
-          <div>
-            <div className="subtitle">완료한 과외</div>
+            <div className="subtitle classlist" style={{marginTop:"50px"}}>완료한 과외</div>
+          <div className="lesson-section">
             {completedData !== null && completedData !== undefined && completedData ? (
               completedData.map((lesson)=> (
-                <div key={lesson.lessonId}>
+                <div key={lesson.lessonId} className="classlist-item-container">
                   <img
                     loading="lazy"
                     src={lesson.thumbnailUrl}
-                    className="swiper-lazy"
+                    className="thumbnail"
                     alt="course_title.png"
                   />
-                  <div>
-                    <div className="course_title" onClick={() => goLesson(lesson.lessonId)}>과외명: {lesson.lessonTitle}</div>
-                    <div className="course_title">
-                    <div>카테고리</div>
-                      <div>
-                        {(() => {
-                          switch (lesson.categoryId) {
-                            case 0:
-                              return "한식";
-                            case 1:
-                              return "양식";
-                            case 2:
-                              return "중식";
-                            case 3:
-                              return "일식";
-                            case 4:
-                              return "아시안";
-                            case 5:
-                              return "건강식";
-                            case 6:
-                              return "디저트";
-                            default:
-                              return "알 수 없음";
-                          }
-                        })()}
-                      </div>
-                    </div>
-                    <div className="instructor">쿠커: {lesson.cookyerName}({lesson.cookyerId})</div>
-                    <div>
-                      <div className="info_delivery">
-                        <div>
-                          <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_calendar.png" alt="기간아이콘" width="29" />
-                          "과외 날짜"
-                        </div>
-                        <div>{new Date(lesson.lessonDate).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', minute: '2-digit' })} 예정</div>
-                      </div>
-                    </div>
-                    <div className="rating">
-                      <div className="rating_star">
-                        <div className="star_solid" style={{ width: "98.26086956521738%" }}>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="cl-title" onClick={() => goLesson(lesson.lessonId)}>{lesson.lessonTitle}</div>
+                  <div className="cl-cookyerdate">{lesson.cookyerName} | {new Date(lesson.lessonDate).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', minute: '2-digit' })}</div>
+                  <div className="flex-container">
+                  <div className="cl-category">
+                  {(() => {
+                    switch (lesson.categoryId) {
+                      case 0:
+                        return "한식";
+                      case 1:
+                        return "양식";
+                      case 2:
+                        return "중식";
+                      case 3:
+                        return "일식";
+                      case 4:
+                        return "아시안";
+                      case 5:
+                        return "건강식";
+                      case 6:
+                        return "디저트";
+                      default:
+                        return "알 수 없음";
+                    }
+                  })()}
                   </div>
-                  <button onClick={() => handleOpenModal(lesson)}>리뷰작성</button>
+                  <button className="button orange" onClick={() => handleOpenModal(lesson)}>리뷰작성</button>
+                </div>
                 </div>
               ))
             ) : (
@@ -325,6 +295,7 @@ function ClassList() {
             )}
           </div>
     </div>
+    </>
   );
 }
 

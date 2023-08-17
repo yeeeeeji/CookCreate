@@ -257,26 +257,23 @@ function ClassList() {
       <SideBar />
         <div className="title">과외목록</div>
           <div>
-            <div className="subtitle">신청한 과외</div>
+            <div className="subtitle classlist" style={{marginTop:"50px"}}>신청한 과외</div>
             {/* {classData !== null && classData !== undefined && classData ? ( */}
+            <div className="lesson-section">
             {classData ? (
 
               classData.map((lesson)=> (
-                <div key={lesson.lessonId} className="classlist-list">
+                <div key={lesson.lessonId} className="classlist-item-container">
                   <img
                     loading="lazy"
                     src={lesson.thumbnailUrl}
-                    className="swiper-lazy" // swiper-lazy가 className이면 안될거같은데
+                    className="thumbnail" // swiper-lazy가 className이면 안될거같은데
                     alt="course_title.png"
                   />
-                  <div className="describe">
-                    <div className="row class_title">
-                      <div className="col1">과외명</div>
-                      <div className="col2" onClick={() => goLesson(lesson.lessonId)}>{lesson.lessonTitle}</div>
-                    </div>
-                    <div className="row class_category">
-                    <div className="col1">카테고리</div>
-                      <div className="col2">
+                  <div className="cl-title" onClick={() => goLesson(lesson.lessonId)}>{lesson.lessonTitle}</div>
+                  <div className="cl-cookyerdate">{lesson.cookyerName} | {new Date(lesson.lessonDate).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', minute: '2-digit' })}</div>
+                    <div className="flex-container">
+                      <div className="cl-category">
                         {(() => {
                           switch (lesson.categoryId) {
                             case 0:
@@ -298,30 +295,12 @@ function ClassList() {
                           }
                         })()}
                     </div>
+                    {new Date(lesson.lessonDate) <= new Date((new Date()).setHours(new Date().getHours() + 1)) ? (
+                      <button className="button orange" onClick={() => createRoom(lesson.lessonId)}>수업시작</button>
+                    ) : (
+                      <button className="button" disabled={true}>수업시작</button>
+                    )}
                   </div>
-                  <div className="row class_cookyer">
-                    <div className="col1">쿠커</div> 
-                    <div className="col2">{lesson.cookyerName}</div>
-                  </div>
-                  <div className="row class_date">
-                    <div className="col1">과외 날짜</div>
-                      {/* <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_calendar.png" alt="기간아이콘" width="29" /> */}
-                    <div className="col2">
-                      {lesson.lessonDate} 예정
-                    </div>
-                  </div>
-                  </div> {/**descibe 태그 끝 */}
-                  {lesson ? (
-                    <div>{displayTime(lesson.lessonDate)}</div>
-                  ) : (
-                    null
-                  )}
-
-                  {new Date(lesson.lessonDate) <= new Date((new Date()).setHours(new Date().getHours() + 1)) ? (
-                    <button onClick={() => createRoom(lesson.lessonId)}>수업시작</button>
-                  ) : (
-                    <button disabled={true}>수업시작</button>
-                  )}
 
                   <div className="info_ea">
                     <img src="https://recipe1.ezmember.co.kr/img/mobile/icon_people.png" alt="수강아이콘" width="29" style={{ paddingRight: "5px", verticalAlign: "text-bottom" }} />
@@ -353,6 +332,7 @@ function ClassList() {
               ) : (
                 <p>신청한 과외가 없습니다.</p>
               )}
+              </div>
           </div>
         </div>
   );
