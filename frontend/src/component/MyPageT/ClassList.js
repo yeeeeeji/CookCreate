@@ -264,7 +264,7 @@ function ClassList() {
             </div>
           </div>
             <div>
-              <h2>신청한 과외</h2>
+              <h2>예정된 과외</h2>
               {classData !== null && classData !== undefined && classData ? (
                 classData.map((lesson)=> (
                   <div key = {lesson.lessonId} className="columns is-multiline is-mobile courses_card_list_body">
