@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import '../../style/lesson/lessonReviewCss.css';
+import DecimalStar from "./DecimalStar";
+
 
 function LessonReview() {
   const accessToken = localStorage.getItem("access_token");
@@ -67,12 +69,15 @@ function LessonReview() {
           <h3 className="review-title">리뷰</h3>
           {ReviewGrade.reviewCnt > 0 ? (
             <div className="review-avg-container">
+              <div>
+                <DecimalStar rating={ReviewGrade.reviewAvg} />
+              </div>
               <div className="review-avg">
-                <div>평균: {ReviewGrade.reviewAvg.toFixed(2)}점</div>
+                <div>{ReviewGrade.reviewAvg.toFixed(1)}/5.0</div>
               </div>
               <div className="review-cnt">
                 <div>
-                  {ReviewGrade.reviewCnt}개의 리뷰가 존재합니다.
+                  ({ReviewGrade.reviewCnt}건)
                 </div>
               </div>
             </div>
