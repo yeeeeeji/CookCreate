@@ -14,6 +14,7 @@ const searchBarKeyword = createSlice({
   reducers: {
     setSearchBarKeyword: (state, action) => {
       state.keyword = action.payload;
+      console.log(action)
     },
   },
 });
