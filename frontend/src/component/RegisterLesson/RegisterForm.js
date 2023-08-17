@@ -107,6 +107,8 @@ function RegisterForm({ setContent, setShowAlert, setPath }) {
       .then((res) => {
         console.log(res);
         setContent("과외가 등록되었습니다.");
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
         setShowAlert(true);
         setPath("/lesson");
       })
