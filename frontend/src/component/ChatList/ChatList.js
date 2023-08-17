@@ -134,8 +134,14 @@ const ChatList = (props) => {
           {chatlist.map((chatRoom) => (
             <div key={chatRoom.lessonId}>
               {chatRoom.chatRoomOver === false && (
-                <div>
-                  <div style={{ backgroundColor: selectedRoom === chatRoom.lessonId ? "rgb(255 235 227)" : "none", marginLeft: '40px'}} 
+                <>
+                  <div style={{ backgroundColor: selectedRoom === chatRoom.lessonId ? "rgb(243 243 243)" : "none", 
+                  // marginLeft: '40px',
+                  padding: '10px',
+                  // display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                }} 
                   // onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.lessonTitle, chatOver: chatRoom.chatRoomOver }),setSelectedRoom(chatRoom.lessonId)}>
                   onClick={() => {
                     handleChatRoom({
@@ -172,7 +178,13 @@ const ChatList = (props) => {
               {chatRoom.chatRoomOver === true && (
                 <>
                   <StyledChatH3>종료된 채팅방</StyledChatH3>
-                  <div  style={{ backgroundColor: selectedRoom === chatRoom.lessonId ? "rgb(255 235 227)" : "none", marginLeft: '40px' }}
+                  <div  style={{ backgroundColor: selectedRoom === chatRoom.lessonId ? "rgb(243 243 243)" : "none", 
+                  marginLeft: '40px',
+                  padding: '10px',
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                
+                }}
                   // onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.leastContent, chatOver: chatRoom.chatRoomOver })}>
                     onClick={() => {
                       handleChatRoom({
