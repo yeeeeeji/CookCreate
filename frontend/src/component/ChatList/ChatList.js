@@ -84,18 +84,9 @@ const ChatList = (props) => {
   console.log("props", props);
   const accessToken = localStorage.getItem("access_token");
   const [chatlist, setChatList] = useState([]);
-  const [selected, setSelected] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState([]);
 
 
-//선택한 채팅방 색 바꾸기
-  const handleClick = () => {
-    setSelected(!selected);
-  };
-
-  const textStyle = {
-    color: selected ? '#FF7A42' : '#414141',
-    fontWeight: '500',
-  };
 
   useEffect(() => {
     console.log(chatlist);
@@ -144,14 +135,14 @@ const ChatList = (props) => {
             <div key={chatRoom.lessonId}>
               {chatRoom.chatRoomOver === false && (
                 <>
-                  <div style={{  marginBottom: '10px'}} onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.lessonTitle, chatOver: chatRoom.chatRoomOver })}>
+                  <div style={{ marginBottom: '10px', cursor: 'pointer'}} onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.lessonTitle, chatOver: chatRoom.chatRoomOver })}>
                     {/* <Link to={`/chatroom`}> */}
-                    {chatRoom.lessonTitle ? <strong style={textStyle} onClick={handleClick} >{chatRoom.lessonTitle}</strong> : <p>참여중인 채팅방이 없습니다.</p>}
+                    {chatRoom.lessonTitle ? <strong style={{color: selectedRoom === chatRoom.lessonId ? "#FF7A42" : "#414141", fontWeight: '400'}} onClick={() => setSelectedRoom(chatRoom.lessonId)} >{chatRoom.lessonTitle}</strong> : <p>참여중인 채팅방이 없습니다.</p>}
                     {chatRoom.leastContent !== null ? (
                       <div>
-                        <p style={{ color:'#B5B4B4'}} >{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 12) + ".." : chatRoom.leastContent}</p>
+                        <p style={{ color:'#B5B4B4', fontSize : '1rem', marginTop : '0.4rem'}} >{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 12) + ".." : chatRoom.leastContent}</p>
                         {/* <span>{formatTime(chatRoom.lestCreateTime)}</span> */}
-                        <span style={{ fontSize: "10px", color:'#B5B4B4' }}>
+                        <span style={{ fontSize: "0.8rem", color:'#B5B4B4' }}>
                           {new Date(chatRoom.lestCreateTime).toLocaleDateString("ko-KR", {
                             month: "2-digit",
                             day: "2-digit",
@@ -174,7 +165,7 @@ const ChatList = (props) => {
                   <StyledChatH3>종료된 채팅방</StyledChatH3>
                   <div  style={{ marginLeft: '40px' }} onClick={() => handleChatRoom({ lessonId: chatRoom.lessonId, chatTitle: chatRoom.leastContent, chatOver: chatRoom.chatRoomOver })}>
                     {/* <Link to={`/chatroom`}> */}
-                    <strong  style={textStyle} onClick={handleClick} >{chatRoom.lessonTitle}</strong>
+                    <strong  style={{color: selectedRoom === chatRoom.lessonId ? "#FF7A42" : "#414141"}} onClick={() => setSelectedRoom(chatRoom.lessonId)} >{chatRoom.lessonTitle}</strong>
                     {/* <h2>{chatRoom.lessonTitle}</h2> */}
                     {/* <p>마지막 메세지: {chatRoom.leastContent}</p> */}
                     <p style={{ color:'#B5B4B4' }}>{chatRoom.leastContent.length > 10 ? chatRoom.leastContent.slice(0, 12) + "..." : chatRoom.leastContent}</p>

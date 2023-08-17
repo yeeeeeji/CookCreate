@@ -47,12 +47,14 @@ function LessonDetail() {
   const lessonDate = useSelector((state) => state.lessonInfo.lessonDate);
   const userType = localStorage.getItem('role')
 
+  const [ showModal, setShowModal ] = useState(false)
 
   useEffect(() => {
     const DateTransformType = new Date(lessonDate);
     const currentTime = new Date();
-    const futureTime = new Date(currentTime.getTime() + 12 * 60 * 60 * 1000); // 현재 시간 + 12시간
-    if (lessonId) {
+    const futureTime = new Date(currentTime.getTime() + 12 * 60 * 60 * 1000); // 현재 시간 + 12시간 
+
+    if (lessonId && !showModal) {
       axios
         .get(`/api/v1/lesson/${lessonId}`, {
           headers: {
@@ -100,7 +102,7 @@ function LessonDetail() {
           alert(err.response.data.message);
         });
     }
-  }, [lessonId])
+  }, [lessonId, showModal])
 
   return (
     <div className="lessonDetailContainer">
@@ -125,7 +127,7 @@ function LessonDetail() {
 
       <div className="detailRightSection">
         <CookieeNumber />
-        <ApplyLesson />
+        <ApplyLesson showModal={showModal} setShowModal={setShowModal} />
         <LessonSchedule />
         {userType !== 'COOKIEE' && <EditLesson lessonId={lessonId} />}
       </div>

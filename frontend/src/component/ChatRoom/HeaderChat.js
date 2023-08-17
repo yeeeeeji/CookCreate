@@ -9,11 +9,10 @@ const Wrapper = styled.header`
   // background-color: #ff9416;
   background-color: #FFB697;
   height: 70px;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 30px;
 
   & span {
     color:#FFFFFF;
