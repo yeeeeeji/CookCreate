@@ -40,12 +40,6 @@
 #### 👩[모두] 핸즈프리 제스처 테스트
 ![](images/gifs/gesturetest.gif)
 
-#### 👩‍🍳[쿠커] 마이페이지
-![](images/gifs/cookyer_mypage.gif)
-
-#### 👩[쿠키] 마이페이지
-![](images/gifs/cookiee_mypage.gif)
-
 #### 👩‍🍳[쿠커] 과외등록
 ![](images/gifs/cookyer_create_lesson.gif)
 
@@ -75,6 +69,12 @@
 
 #### 👩‍🍳[쿠커] 리뷰읽기
 ![](images/gifs/cookyer_reviewread.gif)
+
+#### 👩‍🍳[쿠커] 마이페이지
+![](images/gifs/cookyer_mypage.gif)
+
+#### 👩[쿠키] 마이페이지
+![](images/gifs/cookiee_mypage.gif)
 
 
 ## :fork_and_knife: 사용한 외부 서비스
