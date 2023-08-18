@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../../style/navbar.css";
 import "../../style/video.css";
 import AppliedLessonMenu from "./AppliedLessonMenu";
 import UserDropMenu from "./UserDropMenu";
 import axios from "axios";
 import { RiArrowDropDownLine } from "react-icons/ri";
-
+import { resetlessonSearch } from "../../store/lesson/lessonSearch";
+import { setSearchBarKeyword } from "../../store/lesson/searchBarKeyword";
 function NavBar() {
   const navigator = useNavigate();
+  const dispatch = useDispatch()
   const isLogin = useSelector((state) => state.auth.isLogin);
 
   const access_token = localStorage.getItem("access_token");
@@ -102,6 +104,11 @@ function NavBar() {
     navigator("/")
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+  const gotoTotalLesson = () => {
+    navigator('/lesson')
+    dispatch(resetlessonSearch())
+    dispatch(setSearchBarKeyword(''))
+  }
   return (
     <div className="nav-wrap">
       {/* <div className='navbar'> */}
@@ -112,7 +119,11 @@ function NavBar() {
             <img src="/logo.png" alt="로고" className="logo" />
           </span>
           {/* </Link> */}
-          <Link to="/lesson">수업 전체</Link>
+          <div onClick={gotoTotalLesson}>
+            수업 전체
+            
+          </div>
+          {/* <Link to="/lesson">수업 전체</Link> */}
           <SearchBar />
         </div>
         {isLogin ? (
