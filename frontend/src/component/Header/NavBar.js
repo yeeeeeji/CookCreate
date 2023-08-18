@@ -107,6 +107,8 @@ function NavBar() {
     navigator('/lesson')
     dispatch(resetlessonSearch())
     dispatch(setSearchBarKeyword(''))
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
   }
   return (
     <div className="nav-wrap">
