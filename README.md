@@ -33,8 +33,28 @@
 - 채팅 : Web Socket, Stomp.js로 화상 과외 전후로 이용 가능한 그룹 채팅 기능 구현
 
 ## 🍪 기능별 화면 🍪
-- 메인 화면
-![](gif 경로)
+
+- 👩‍🍳[쿠커] 마이페이지
+![](images/gifs/cookyer_mypage.gif)
+
+- 👩[쿠키] 마이페이지
+![](images/gifs/cookiee_mypage.gif)
+
+- 👩[쿠키] 과외신청
+![](images/gifs/cookiee_apply_lecture.gif)
+
+- 👩‍🍳[쿠커] 화상과외
+![](images/gifs/cookyer_videochat.gif)
+
+- 👩[쿠키] 리뷰작성
+![](images/gifs/cookiee_create_review.gif)
+
+- 👩[쿠키] 리뷰수정
+![](images/gifs/cookiee_review_update.gif)
+
+- 👩‍🍳[쿠커] 리뷰읽기
+![](images/gifs/cookyer_reviewread.gif)
+
 
 ## :fork_and_knife: 사용한 외부 서비스
 - [Openvidu 플랫폼](https://docs.openvidu.io/en/2.28.0/)
