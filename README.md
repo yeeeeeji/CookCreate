@@ -34,7 +34,7 @@
 
 ## 🍪 기능별 화면 🍪
 - 메인 화면
-![메인화면](gif 경로)
+![](gif 경로)
 
 ## :fork_and_knife: 사용한 외부 서비스
 - [Openvidu 플랫폼](https://docs.openvidu.io/en/2.28.0/)
@@ -163,6 +163,7 @@ MERGE:   충돌 시 머지, develop 브랜치에 풀리퀘 등
 - 최종 발표
 
 <strong>양수원</strong>
+- 화면설계서 문서화 작업
 - React를 활용하여 회원가입, 로그인, 메인 화면, 검색 기능, 과외 CRUD 구현
 - KakaoPay 결제 api를 이용하여 redirect 처리하여 과외 신청 및 환불 구현
 - Redux Toolkit을 사용한 스토어 구축
@@ -170,6 +171,7 @@ MERGE:   충돌 시 머지, develop 브랜치에 풀리퀘 등
 - 기획 발표
 
 <strong>윤예지</strong>
+- 화면설계서 문서화 작업
 - OpenVidu를 이용한 화상과외방 생성 및 종료 기능 구현
 - OpenVidu를 이용한 화상과외방 상호작용 기능 구현
 - Redux Toolkit 및 Redux Persist 라이브러리를 이용한 스토어 구축
@@ -186,6 +188,7 @@ MERGE:   충돌 시 머지, develop 브랜치에 풀리퀘 등
 - 메인페이지 CSS
 
 <strong>황수아</strong>
+- 화면설계서 문서화 작업
 - React를 활용하여 회원 정보 수정 구현
 - stompjs를 활용한 채팅 client 구현
 - React를 활용하여 마이페이지의 과외 목록, 레시피북, 결제내역 목록 구현
