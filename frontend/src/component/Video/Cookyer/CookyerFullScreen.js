@@ -6,8 +6,6 @@ import CookyerLessonStep from './CookyerLessonStep';
 import LessonStepModal from './LessonStepModal';
 import CookyerVideoSideBar from './CookyerVideoSideBar';
 
-import '../../../style/video.css'
-
 import { AiFillCheckCircle } from 'react-icons/ai'
 import { IoIosHand } from 'react-icons/io'
 import { BsMicFill, BsMicMuteFill } from "react-icons/bs";
@@ -100,7 +98,7 @@ function CookyerFullScreen(props) {
                   </div>
                 ) : (
                   <div className="full-cookyer-nocookiees">
-                    <p>수업에 참가중인 쿠키가 없습니다.</p>
+                    <p>과외에 참가중인 쿠키가 없습니다.</p>
                     <img src='/cookiee.png' alt=''/>
                   </div>
                 )}

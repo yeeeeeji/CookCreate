@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import { useDispatch, useSelector } from "react-redux";
 import "../../style/navbar.css";
-import "../../style/video.css";
 import AppliedLessonMenu from "./AppliedLessonMenu";
 import UserDropMenu from "./UserDropMenu";
 import axios from "axios";
@@ -120,7 +119,7 @@ function NavBar() {
           </span>
           {/* </Link> */}
           <div onClick={gotoTotalLesson}>
-            수업 전체
+            전체 과외
             
           </div>
           {/* <Link to="/lesson">수업 전체</Link> */}
@@ -140,7 +139,7 @@ function NavBar() {
                     className="drop-btn"
                     onClick={dropLessonMenu}
                   >
-                    신청수업
+                    신청과외
                   </button>
                   <RiArrowDropDownLine className="dropdown-icon" />
                   {lessonDropdown ? (
@@ -172,8 +171,8 @@ function NavBar() {
         ) : (
           <React.Fragment>
             <div style={{display : 'flex'}}>
-              <div onClick={gotoLogin} style={{marginRight : '10px'}}>로그인</div>
-              <div onClick={gotoSignUp} style={{marginLeft : '10px'}}>회원가입</div>
+              <div className="nav-sign" onClick={gotoLogin} style={{marginRight : '10px'}}>로그인</div>
+              <div className="nav-sign" onClick={gotoSignUp} style={{marginLeft : '10px'}}>회원가입</div>
             </div>
           </React.Fragment>
         )}

@@ -146,7 +146,20 @@ function Review() {
               ))
             
           )}
-          <Modal isOpen={isModalOpen} onRequestClose={handleCloseModal}>
+          {/* <Modal isOpen={isModalOpen} onRequestClose={handleCloseModal}> */}
+          <Modal
+            isOpen={isModalOpen}
+            onRequestClose={handleCloseModal}
+            style={{
+              content: {
+                width: '30%',   // 모달의 너비
+                height: '50%',  // 모달의 높이
+                top: '50%',     // 화면 세로 중앙
+                left: '50%',    // 화면 가로 중앙
+                transform: 'translate(-50%, -50%)', // 모달을 중앙으로 이동
+              },
+            }}
+          >
             <ReviewDetailT reviewId={selectedReviewId} onClose={handleCloseModal} />
           </Modal>
         </section>
