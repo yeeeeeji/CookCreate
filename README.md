@@ -34,6 +34,12 @@
 
 ## 🍪 기능별 화면 🍪
 
+#### 👩[모두] 메인화면
+![](images/gifs/mainpage.gif)
+
+#### 👩[모두] 핸즈프리 제스처 테스트
+![](images/gifs/gesturetest.gif)
+
 #### 👩‍🍳[쿠커] 마이페이지
 ![](images/gifs/cookyer_mypage.gif)
 
@@ -41,25 +47,25 @@
 ![](images/gifs/cookiee_mypage.gif)
 
 #### 👩‍🍳[쿠커] 과외등록
-![]()
+![](images/gifs/cookyer_create_lesson.gif)
 
 #### 👩‍🍳[쿠커] 직전 과외 불러오기
-![]()
+![](images/gifs/cookyer_before_lesson.gif)
 
 #### 👩[쿠키] 과외신청
 ![](images/gifs/cookiee_apply_lecture.gif)
 
 #### 👩‍🍳[쿠커] 과외수정
-![]()
+![](images/gifs/cookyer_update_lesson.gif)
 
 #### 👩‍🍳[쿠커] 화상과외
 ![](images/gifs/cookyer_videochat.gif)
 
 #### 👩‍🍳[쿠커] 화면공유
-![]()
+![](images/gifs/cookyer_share_screen.gif)
 
 #### 👩[쿠키] 핸즈프리 제스처
-![]()
+![](images/gifs/cookiee_handsfree_gesture.gif)
 
 #### 👩[쿠키] 리뷰작성
 ![](images/gifs/cookiee_create_review.gif)
