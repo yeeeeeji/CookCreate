@@ -263,8 +263,8 @@ function Account() {
   };
 
   return (
-    <div className="container">
-      <div className="mypage">
+    <div className="account-container">
+      <div className="account">
         <SideBar />
         <div className="mypage-title">정보수정</div>
         <div className="mypage-container">
