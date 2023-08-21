@@ -45,7 +45,7 @@ function OpenViduVideoComponent(props) {
     console.log(`props.gesture: ${props.gesture}`);
 
     useEffect(() => {
-      if (canvasRef.current && videoRef.current && props.gesture) {
+      if (canvasRef.current && videoRef.current) { // && props.gesture 제거
         console.log("두번째 useEffect 실행됨")
         const canvas = canvasRef.current;
         const video = videoRef.current;
