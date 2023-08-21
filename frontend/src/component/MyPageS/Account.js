@@ -17,8 +17,6 @@ function Account() {
   const [phoneNumberDef, setPhoneNumber] = useState("");
   const [userEmailDef, setUserEmail] = useState("");
   const [IntroduceDef, setIntroduce] = useState("");
-  // const defaultProfileImgUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-  // const [profileImgDef, setProfileImg] = useState(userData.profileImg || defaultProfileImgUrl);
 
   const [previewImage, setPreviewImage] = useState(
     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
@@ -54,8 +52,6 @@ function Account() {
   }, [accessToken]);
 
   //오류 메세지 저장
-  // const [userIdMessage, setUserIdMessage] = useState("");
-  // const [userIdDupMessage, setUserIdDupMessage] = useState("");
   const [userNicknameMessage, setUserNicknameMessage] = useState("");
   const [userNNDupMessage, setUserNNDupMessage] = useState("");
   const [userPhoneNumberMessage, setUserPhoneNumberMessage] = useState("");
@@ -69,22 +65,26 @@ function Account() {
   const [isUserEmail, setIsUserEmail] = useState(true);
   const [isIntroduce, setIsIntroduce] = useState(true);
 
-  const [modalOpen, setModalOpen] = useState(false) 
+  const [modalOpen, setModalOpen] = useState(false);
   const handleModalClose = () => {
-    setModalOpen(false)
-  }
+    setModalOpen(false);
+  };
   //닉네임 중복검사
   const nicknameDupliCheck = () => {
-    axios
-      .get(`api/v1/auth/checkNick/${nicknameDef}`)
-      .then((res) => {
-        setUserNicknameMessage(res.data.message);
-        setIsNNdup(true);
-      })
-      .catch((err) => {
-        setUserNicknameMessage(err.response.data.message);
-        setIsNNdup(false);
-      });
+    if (userData.nickname === nicknameDef) {
+      setIsNNdup(true);
+    } else {
+      axios
+        .get(`api/v1/auth/checkNick/${nicknameDef}`)
+        .then((res) => {
+          setUserNicknameMessage(res.data.message);
+          setIsNNdup(true);
+        })
+        .catch((err) => {
+          setUserNicknameMessage(err.response.data.message);
+          setIsNNdup(false);
+        });
+    }
   };
 
   //유효성 검사 구현
@@ -103,6 +103,12 @@ function Account() {
   const onChangeUserNickName = async (e) => {
     const value = e.target.value;
     await setNickName(value);
+    if (userData.nickname !== value) {
+      setIsNNdup(false);
+    }
+    if (userData.nickname === value) {
+      setIsNNdup(true);
+    }
     if (value.length < 2 || value.length > 8) {
       setUserNicknameMessage("2글자 이상 8글자 이하로 입력해주세요");
       setIsNickname(false);
@@ -117,7 +123,11 @@ function Account() {
     const value = e.target.value;
     await setPhoneNumber(value);
     const phoneRegex = /^(01[016789]{1})[0-9]{3,4}[0-9]{4}$/;
-    if (phoneRegex.test(value)) {
+
+    if (value === "") {
+      setIsPhoneNumber(true);
+      setUserPhoneNumberMessage(""); // 입력되지 않은 경우 메세지 초기화
+    } else if (phoneRegex.test(value)) {
       setIsPhoneNumber(true);
       setUserPhoneNumberMessage("올바른 전화번호 형식입니다!");
     } else {
@@ -166,12 +176,6 @@ function Account() {
     }
   };
 
-  //기본 프로필로 변경
-  // const handleProfile = (e) => {
-  //   setProfileImg("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
-
-  // };
-
   //프로필 삭제
   const handleProfile = (e) => {
     e.preventDefault();
@@ -217,22 +221,11 @@ function Account() {
 
     const formData = new FormData();
     formData.append("nickname", nicknameDef);
-    console.log("폼데이터닉네임", formData.get("nickname"));
     formData.append("phoneNumber", phoneNumberDef);
-    console.log("폼데이터폰", formData.get("phoneNumber"));
     formData.append("userEmail", userEmailDef);
-    console.log("폼데이터이메일", formData.get("userEmail"));
-
     formData.append("food", food);
-    console.log("폼데이터푸드", formData.get("food"));
-    console.log("폼데이터푸드", typeof formData.get("food"));
-
     formData.append("introduce", IntroduceDef);
     formData.append("profileImg", profileImgDef);
-    console.log("폼데이터소개", formData.get("introduce"));
-    console.log("폼데이터이미지", formData.get("profileImg"));
-    console.log("폼데이터이미지", typeof formData.get("profileImg"));
-
     axios
       .put(`api/v1/member`, formData, {
         headers: {
@@ -242,9 +235,8 @@ function Account() {
       })
       .then((res) => {
         console.log(res);
-        setModalOpen(true)
+        setModalOpen(true);
         window.scrollTo({ top: 0, behavior: "smooth" });
-
       })
       .catch((err) => {});
   };
@@ -368,28 +360,22 @@ function Account() {
         <div class="bottomBtn-container">
           <button
             onClick={handleUpdate}
-            className="bottomBtn"
-            disabled={
-              !(
-                isNickname &&
-                isNicknameDupli &&
-                isPhoneNumber &&
-                isUserEmail &&
-                isIntroduce
-              )
-            }
+            className={`bottomBtn ${
+              !(isNickname && isNicknameDupli) ? "disabled" : ""
+            }`}
+            disabled={!(isNickname && isNicknameDupli)}
           >
             정보수정
           </button>
         </div>
-      {modalOpen && (
-        <AlertModal
-          content={'회원 정보가 성공적으로 이루어졌습니다.'}
-          path={null}
-          actions={handleModalClose}
-          data={null}
-        />
-      )}
+        {modalOpen && (
+          <AlertModal
+            content={"회원 정보가 성공적으로 이루어졌습니다."}
+            path={null}
+            actions={handleModalClose}
+            data={null}
+          />
+        )}
       </div>
     </div>
   );
