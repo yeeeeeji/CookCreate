@@ -42,8 +42,8 @@ function OpenViduVideoComponent(props) {
     console.log(props.videoStyle);
 
     useEffect(() => {
-      if (canvasRef.current && videoRef.current) { // && props.gesture 제거
-        console.log("두번째 useEffect 실행됨")
+      if (canvasRef.current && videoRef.current && props.gesture) { // && props.gesture 제거
+        console.log("두번째 useEffect 실행됨 (ver4)")
         const canvas = canvasRef.current;
         const video = videoRef.current;
         console.log(`canvasRef.current: ${canvasRef.current}`);
@@ -109,7 +109,7 @@ function OpenViduVideoComponent(props) {
           });
         }
       }
-    }, [canvasRef.current, videoRef.current, props.gesture]); // 얘 [] 없애야할수도
+    }, [props]); // 얘 [] 없애야할수도
   
     const createHandLandmarker = async () => {
       const handLandmarker = await HandLandMarker();
