@@ -89,7 +89,7 @@ function LessonReview() {
               <DecimalStar rating={ReviewGrade.reviewAvg} iconSize="20px" />
             </div>
             <div className="review-avg">
-              <div>{ReviewGrade.reviewAvg.toFixed(1)}/5.0</div>
+              <div>{ReviewGrade.reviewAvg.toFixed(1)}</div>
             </div>
             <div className="review-cnt">
               <div>({ReviewGrade.reviewCnt}건)</div>
@@ -115,7 +115,7 @@ function LessonReview() {
           )}{" "}  
                 </div>
                 <div className="review-text-wrap">
-                  <div className="review-item-star"><DecimalStar rating={content.rating} iconSize="15px"/></div>
+                  <div className="review-item-star"><DecimalStar rating={content.rating} iconSize="15px"/>{content.rating}</div>
                   <div className="review-nickname">{content.nickname}</div>
                 </div>
                 </div>
