@@ -35,9 +35,12 @@ const lessonSearch = createSlice({
     setResult : (state, action) => {
       state.result = action.payload
     },
-    resetlessonSearch : (state) => {
-      return initialState
-    }
+    resetlessonSearch: (state) => {
+      return {
+        ...initialState,
+        result: state.result, // result 필드는 유지
+      };
+    },
   }
 })
 

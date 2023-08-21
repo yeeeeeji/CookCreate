@@ -11,7 +11,7 @@ import { resetlessonSearch } from "../../store/lesson/lessonSearch";
 import { setSearchBarKeyword } from "../../store/lesson/searchBarKeyword";
 function NavBar() {
   const navigator = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.auth.isLogin);
 
   const access_token = localStorage.getItem("access_token");
@@ -73,14 +73,16 @@ function NavBar() {
           },
         })
         .then((res) => {
-          console.log(res.data)
-          console.log('신청한 수업 목록 받아와짐')
-        if (typeof(res.data) === 'object' && res.data[0].message !== "신청한 과외가 없습니다.") {
-          setMyLessons(res.data)
-        } else {
-          setMyLessons(undefined)
-        }
-
+          console.log(res.data);
+          console.log("신청한 수업 목록 받아와짐");
+          if (
+            typeof res.data === "object" &&
+            res.data[0].message !== "신청한 과외가 없습니다."
+          ) {
+            setMyLessons(res.data);
+          } else {
+            setMyLessons(undefined);
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -97,41 +99,45 @@ function NavBar() {
   const gotoSignUp = () => {
     navigator("/signupbefore");
     window.scrollTo({ top: 0, behavior: "smooth" });
-
   };
   const handleLogo = () => {
-    navigator("/")
+    navigator("/");
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  };
   const gotoTotalLesson = () => {
-    navigator('/lesson')
-    dispatch(resetlessonSearch())
-    dispatch(setSearchBarKeyword(''))
+    navigator("/lesson");
+    dispatch(resetlessonSearch());
+    dispatch(setSearchBarKeyword(""));
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  };
+  const handleChatting = () => {
+    navigator("/chatroom");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleRegisterLesson = () => {
+    navigator("/registerlesson");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   return (
     <div className="nav-wrap">
-      {/* <div className='navbar'> */}
       <div className={`navbar ${mainPageStyle ? "navbar-main" : ""}`}>
         <div className="leftNav">
-          {/* <Link to="/" className="logo"> */}
-          <span onClick={handleLogo} style={{marginRight : '32px', marginTop : '5px'}}>
+          <span
+            onClick={handleLogo}
+            style={{ marginRight: "32px", marginTop: "5px" }}
+          >
             <img src="/logo.png" alt="로고" className="logo" />
           </span>
-          {/* </Link> */}
-          <div onClick={gotoTotalLesson}>
-            전체 과외
-            
-          </div>
-          {/* <Link to="/lesson">수업 전체</Link> */}
+          <div onClick={gotoTotalLesson}>전체 과외</div>
           <SearchBar />
         </div>
         {isLogin ? (
           <div className="rightNav">
-            <Link to="/chatroom">채팅</Link>
+            <div onClick={handleChatting} className="nav-lesson">채팅</div>
             <div className="nav-lesson">
               {role === "COOKYER" ? (
-                <Link to="registerlesson">과외 등록</Link>
+                <div onClick={handleRegisterLesson}>과외 등록</div>
               ) : null}
               {role === "COOKIEE" ? (
                 <div className="dropdown">
@@ -171,9 +177,21 @@ function NavBar() {
           </div>
         ) : (
           <React.Fragment>
-            <div style={{display : 'flex'}}>
-              <div className="nav-sign" onClick={gotoLogin} style={{marginRight : '10px'}}>로그인</div>
-              <div className="nav-sign" onClick={gotoSignUp} style={{marginLeft : '10px'}}>회원가입</div>
+            <div style={{ display: "flex" }}>
+              <div
+                className="nav-sign"
+                onClick={gotoLogin}
+                style={{ marginRight: "10px" }}
+              >
+                로그인
+              </div>
+              <div
+                className="nav-sign"
+                onClick={gotoSignUp}
+                style={{ marginLeft: "10px" }}
+              >
+                회원가입
+              </div>
             </div>
           </React.Fragment>
         )}
