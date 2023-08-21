@@ -19,7 +19,7 @@ function CoreFunction() {
         // const windowHeight = window.innerHeight;
         // console.log(elementTop + " " + windowHeight);
       
-        if (elementTop < 450 && !animated[index]) {
+        if (elementTop < 500 && !animated[index]) {
           element.classList.add('visible');
           animated[index] = true;
         }
@@ -28,8 +28,8 @@ function CoreFunction() {
       imgElements.forEach((element, index) => {
         // 요소가 화면 중앙에 보일 때 클래스를 추가하여 나타나게 함
         const elementTop = element.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
-        console.log(elementTop + " " + windowHeight);
+        // const windowHeight = window.innerHeight;
+        // console.log(elementTop + " " + windowHeight);
       
         if (elementTop < 400 && !imgAnimated[index]) {
           element.classList.add('visibleImg');
@@ -89,7 +89,7 @@ function CoreFunction() {
       </div>
       <div className="core-wrap-wrap">
         <div className="core-img-wrap">
-          <img src="/hand.png" alt="진행 단계 체크" className="core-img" />
+          <img src="/hand.png" alt="손들기" className="core-img" />
         </div>
         <div className="coreWrap">
           <div className="coreSubTitle">

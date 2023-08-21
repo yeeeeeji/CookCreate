@@ -9,7 +9,8 @@
     font-size: 2.5rem;
     /* color: #FF7A42; */
     text-align: left;
-    margin: 1rem 0;
+    margin-top: 10rem;
+    margin-bottom: 1rem;
 }
 
 .coreSubTitle {
@@ -37,7 +38,7 @@
   }
 
 .coreContainer > :nth-child(1) {
-  margin: 15rem 0 0rem 0;   
+  margin: 12rem 0 0rem 0;   
 }
 
 .coreContainer > :nth-child(2) {
@@ -65,10 +66,20 @@
 
 .coreContainer > :nth-child(3) > .core-img-wrap > .core-img {
   width: 10rem;
+  transform-origin: 50% 100%;
+  animation: shake 1s infinite; /* 2초 동안 20단계로 반복 */
+  animation-delay: 0.5s; /* 0.5초 동안 애니메이션을 멈춤 */
+  }
+
+.coreContainer > :nth-child(3) > .core-img-wrap {
+  width: 30rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .coreContainer > :nth-child(4) {
-  margin-bottom: 33rem;
+  margin-bottom: 30rem;
 }
 
 /* .coreContainer > :nth-child(3) > .core-img-wrap {
@@ -110,3 +121,25 @@
     transform: translateY(0);
   }
 }
+
+@keyframes shake{
+  0%{
+    transform: rotate(0deg);
+  }
+  20%{
+    transform: rotate(-5deg);
+  }
+  40%{
+    transform: rotate(5deg);
+  }
+  60%{
+    transform: rotate(-5deg);
+  }
+  80%{
+    transform: rotate(5deg);
+  }
+  100%{
+    transform: rotate(0deg);
+  }
+}
+

@@ -152,9 +152,9 @@ const ChatWrapper = styled.div`
 `;
 const RightBlock = styled.div`
   text-align: right;
-  margin-top: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
 
   & ${ChatWrapper} {
     // background-color: #ffec42;
@@ -186,10 +186,10 @@ const RightBlock = styled.div`
 `;
 const LeftBlock = styled.div`
   position: relative;
-  margin-top: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
-  padding-left: 10px;
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding-left: 20px;
   & ${ChatWrapper} {
     // background-color: #fff;
     // background-color: #ffebd7;
