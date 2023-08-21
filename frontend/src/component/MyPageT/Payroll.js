@@ -62,10 +62,8 @@ function Payroll() {
     <div className="mypage">
       <SideBar />
       <section className="pay-box">
-        <div className="pay_=-header">
-          <div>
-            <span className="mypage-title" >정산내역</span>
-          </div>
+        <div className="my-class-title-wrap">
+          <h3 className="my-class-title">정산내역</h3>
         </div>
           {payrollMessage ? (
           <div className="no-payment">{payrollMessage}</div>
