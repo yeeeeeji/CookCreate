@@ -18,9 +18,7 @@ function Account() {
   const [userEmailDef, setUserEmail] = useState("");
   const [IntroduceDef, setIntroduce] = useState("");
 
-  const [previewImage, setPreviewImage] = useState(
-    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-  );
+  const [previewImage, setPreviewImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
   const [profileImgDef, setProfileImg] = useState(userData.profileImg);
 
   const fileInput = useRef(null);
@@ -138,8 +136,7 @@ function Account() {
 
   const onChangeUserEmail = async (e) => {
     const value = e.target.value;
-    const emailRegex =
-      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    const emailRegex = /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     await setUserEmail(value);
     if (value === "") {
       setIsUserEmail(true);
@@ -188,9 +185,7 @@ function Account() {
       })
       .then((res) => {
         console.log("프로필삭제성공", res.data);
-        setPreviewImage(
-          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-        );
+        setPreviewImage("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
       })
       .catch((err) => {
         console.log("프로필삭제못함", err);
@@ -225,7 +220,9 @@ function Account() {
     formData.append("userEmail", userEmailDef);
     formData.append("food", food);
     formData.append("introduce", IntroduceDef);
-    formData.append("profileImg", profileImgDef);
+    if (profileImgDef) {
+      formData.append("profileImg", profileImgDef);
+    }
     axios
       .put(`api/v1/member`, formData, {
         headers: {
@@ -273,10 +270,7 @@ function Account() {
                 })}
               </div>
               <div className="mypage-profile-buttongroup">
-                <button
-                  className="button orange"
-                  onClick={() => fileInput.current.click()}
-                >
+                <button className="button orange" onClick={() => fileInput.current.click()}>
                   변경
                 </button>
                 <button className="button" onClick={handleProfile}>
@@ -296,12 +290,7 @@ function Account() {
           <div className="mypage-nickname">
             <div className="subtitle">닉네임</div>
             <div className="inputWrap">
-              <input
-                placeholder={userData.nickname}
-                type="text"
-                value={nicknameDef}
-                onChange={onChangeUserNickName}
-              />
+              <input placeholder={userData.nickname} type="text" value={nicknameDef} onChange={onChangeUserNickName} />
               <button className="button" onClick={nicknameDupliCheck}>
                 중복확인
               </button>
@@ -315,11 +304,7 @@ function Account() {
           <div className="mypage-introduce">
             <div className="subtitle">자기소개</div>
             <div className="mypage-introduce-container">
-              <textarea
-                placeholder={userData.introduce}
-                value={IntroduceDef}
-                onChange={onChangeIntroduce}
-              ></textarea>
+              <textarea placeholder={userData.introduce} value={IntroduceDef} onChange={onChangeIntroduce}></textarea>
               <div className="validation">{userIntroduceMessage}</div>
             </div>
           </div>
@@ -327,12 +312,7 @@ function Account() {
           <div className="mypage-phonenumber">
             <div className="subtitle">휴대폰번호</div>
             <div>
-              <input
-                type="text"
-                placeholder={userData.phoneNumber}
-                value={phoneNumberDef}
-                onChange={onChangeUserPhonenumber}
-              />
+              <input type="text" placeholder={userData.phoneNumber} value={phoneNumberDef} onChange={onChangeUserPhonenumber} />
               <div>{userPhoneNumberMessage}</div>
             </div>
           </div>
@@ -340,12 +320,7 @@ function Account() {
           <div className="mypage-email">
             <div className="subtitle">이메일</div>
             <div>
-              <input
-                placeholder={userData.userEmail}
-                type="text"
-                value={userEmailDef}
-                onChange={onChangeUserEmail}
-              />
+              <input placeholder={userData.userEmail} type="text" value={userEmailDef} onChange={onChangeUserEmail} />
               <div>{userEmailMessage}</div>
             </div>
           </div>
@@ -360,22 +335,13 @@ function Account() {
         <div class="bottomBtn-container">
           <button
             onClick={handleUpdate}
-            className={`bottomBtn ${
-              !(isNickname && isNicknameDupli) ? "disabled" : ""
-            }`}
+            className={`bottomBtn ${!(isNickname && isNicknameDupli) ? "disabled" : ""}`}
             disabled={!(isNickname && isNicknameDupli)}
           >
             정보수정
           </button>
         </div>
-        {modalOpen && (
-          <AlertModal
-            content={"회원 정보가 성공적으로 이루어졌습니다."}
-            path={null}
-            actions={handleModalClose}
-            data={null}
-          />
-        )}
+        {modalOpen && <AlertModal content={"회원 정보가 성공적으로 이루어졌습니다."} path={null} actions={handleModalClose} data={null} />}
       </div>
     </div>
   );
