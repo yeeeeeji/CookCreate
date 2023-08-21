@@ -109,7 +109,7 @@ function OpenViduVideoComponent(props) {
           });
         }
       }
-    }, [canvasRef.current, videoRef.current, props.gesture]); // 얘 [] 없애야할수도
+    }, []); // 얘 [] 없애야할수도
   
     const createHandLandmarker = async () => {
       const handLandmarker = await HandLandMarker();
