@@ -39,11 +39,13 @@ export const cookyerVideo = createSlice({
       state.handsUpCookiee = ''
       state.handsDownCookiee = ''
     },
-    deleteCookiee: (state, { connectionId }) => {
+    deleteCookiee: (state, actions) => {
+      const connectionId = actions.payload
       console.log("그냥 나간 쿠키 리스트에서 제거됐니")
       /** 손 든 참가자 리스트에서 제외 */
       if (state.handsUpCookieeList) {
         const newHandsUpCookieeList = state.handsUpCookieeList.filter((item) => {
+          console.log(item, connectionId)
           return item !== connectionId
         })
         state.handsUpCookieeList = newHandsUpCookieeList
