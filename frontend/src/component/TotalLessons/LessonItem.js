@@ -46,6 +46,8 @@ function LessonItem({
   if (remaining === 0) {
     message = "해당 과외의 신청 정원이 모두 마감되었습니다."
   }
+  const formattedReviewAvg = reviewAvg.toFixed(1);
+
   return (
     <div onClick={handleItemClick} className="lessonItem">
       {thumbnailUrl ? (
@@ -55,7 +57,7 @@ function LessonItem({
       )}
       <h3 className="lessonItemTitle">{title}</h3>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div className="jjim">⭐ {reviewAvg}</div>
+        <div className="jjim">⭐ {formattedReviewAvg}</div>
         <div className="datename">
           {formattedDateString} | {cookyerName}
         </div>
