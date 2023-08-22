@@ -35,6 +35,9 @@ const lessonSearch = createSlice({
     setResult : (state, action) => {
       state.result = action.payload
     },
+    setSearchBarKeyword: (state, action) => {
+      state.keyword = action.payload;
+    },
     resetlessonSearch: (state) => {
       return {
         ...initialState,
@@ -45,6 +48,6 @@ const lessonSearch = createSlice({
 })
 
 export const {
-  setOrder, setDeadLine, setCategories, setKeyword, setType,setResult, setLessonId, resetlessonSearch
+  setOrder, setDeadLine, setCategories, setKeyword, setType,setResult, setLessonId,setSearchBarKeyword, resetlessonSearch
 } = lessonSearch.actions
 export default lessonSearch.reducer
