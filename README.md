@@ -236,8 +236,8 @@ CookCreate와 함께 맛있는 집밥을 만들어보세요!
 <strong>황수아</strong>
 
 - 화면설계서 문서화 작업
-- React를 활용하여 회원 정보 수정 구현
-- stompjs를 활용한 채팅 client 구현
+- React를 활용하여 회원 정보 수정 구현, 강의상세페이지 구현
+- stompjs를 활용한 채팅 client 구현, 채팅 CSS
 - React를 활용하여 마이페이지의 과외 목록, 레시피북, 결제내역 목록 구현
 - React, 모달을 이용한 리뷰 CRUD 구현
-- 채팅 CSS
+- Redux Toolkit을 사용한 스토어 구축
