@@ -1,4 +1,4 @@
-.alert-modal {
+.simple-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +11,7 @@
   z-index: 1000;
 }
 
-.alert-content-container {
+.simple-modal-content-container {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
@@ -23,13 +23,13 @@
   margin-bottom: 100px;
 }
 
-.alert-content {
+.simple-modal-content {
   background-color: #FFFDFD;
   padding: 20px;
   text-align: center;
 }
 
-.alert-button {
+.simple-modal-button {
   background-color: #FF7A42;
   color: #FFFDFD;
   padding: 10px 20px;
@@ -38,6 +38,6 @@
   cursor: pointer;
   margin-top: 20px;
 }
-.alert-button:hover {
+.simple-modal-button:hover {
   background-color: #FF6060;
 }
