@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-import { login } from '../../store/auth/auth'
+import AlertModal from '../Modal/AlertModal'
 
 import FoodList from './FoodList';
 function Signup() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [userId, setUserId] = useState('')
   const [userPw, setUserPw] = useState('')
   const [userPwCk, setUserPwCk] = useState('')
@@ -36,6 +34,10 @@ function Signup() {
   const [isPhoneNumber, setIsPhoneNumber] = useState(true)
   const [isUserEmail, setIsUserEmail] = useState(true)
 
+  /** 회원가입 성공 알림 모달 관련 */
+  const [ showAlert, setShowAlert ] = useState(false)
+  const [ content, setContent ] = useState(null)
+
   //유효성 검사 구현
   const onChangeUserId = async (e) => {
     const value = e.target.value;
@@ -47,6 +49,7 @@ function Signup() {
       setUserIdMessage('적합한 아이디 형식입니다! 🤗')
       setIsUserId(true)
     }
+    setIsIddup(false)
     setUserIdDupMessage('')
   }
   const onChangeUserPw = async (e) => {
@@ -94,6 +97,7 @@ function Signup() {
       setUserNicknameMessage('적합한 닉네임 형식입니다! 🤗')
       setIsNickname(true)
     }
+    setIsNNdup(false)
     setUserNNDupMessage('')
   }
   const onChangeUserPhonenumber = async (e) => {
@@ -162,8 +166,6 @@ function Signup() {
     }
   };
   
-
-
   const handleSignup = (e) => {
     e.preventDefault()
     const foodString = food.join(',');
@@ -172,16 +174,23 @@ function Signup() {
     .post(`api/v1/auth/signup`, 
     {userId, userPw, userPwCk, nickname, phoneNumber, userEmail, role, food})
     .then(() => {
-      alert('회원가입 성공! Cook Create를 즐겨보세요!')
+      setContent('회원가입 성공! Cook Create를 즐겨보세요!')
       localStorage.removeItem('userType')
-      navigate('/login')
     })
     .catch((err) => {
       setUserCanSignUp(err.response.data.message)
     })
   }
+
+  useEffect(() => {
+    if (content !== null) {
+      setShowAlert(true)
+    }
+  }, [content])
+
     return (
     <div className='page'>
+      {showAlert && <AlertModal content={content} path='/login'/>}
       <div className='titleWrap'>
         회원가입
       </div>
@@ -189,13 +198,16 @@ function Signup() {
         <div className='signupinputContainer'>
           <div className='signupinputTitle'>아이디 <span className="required">*</span></div>
           <div className='signupinputWrap'>
-            <input type="text" className='signupinput'
-            value={userId}
-            onChange={
-              onChangeUserId
-            }
-            placeholder='아이디'/>
-            <button className='signupdupliButton' onClick={idDupliCheck}>중복확인</button>
+            <input 
+              type="text"
+              className={`signupinput ${isUserId && isIdDupli ? 'validInput' : ''}`}
+              value={userId}
+              onChange={onChangeUserId}
+              placeholder='아이디'
+            />
+            <button className='signupdupliButton' onClick={idDupliCheck}>
+              중복확인
+            </button>
           </div>
         </div>
         <div className='signupinputMessage'>
@@ -206,7 +218,7 @@ function Signup() {
         <div className='signupinputContainer'>
           <div className='signupinputTitle'>비밀번호 <span className="required">*</span></div>
           <div className='signupinputWrap'>
-            <input type="password" className='signupinput'
+            <input type="password" className={`signupinput ${isUserPw ? 'validInput' : ''}`}
             value={userPw}
             onChange={
               onChangeUserPw
@@ -217,12 +229,13 @@ function Signup() {
         </div>
         <div className='signupinputMessage'>
           {userPwMessage}
+          {isUserPw}
         </div>
 
         <div className='signupinputContainer'>
           <div className='signupinputTitle'>비밀번호 확인 <span className="required">*</span></div>
           <div className='signupinputWrap'>
-            <input type="password" className='signupinput'
+            <input type="password" className={`signupinput ${isUserPwCk ? 'validInput' : ''}`}
             value={userPwCk}
             onChange={
               onChangeUserPwCk
@@ -233,12 +246,13 @@ function Signup() {
         </div>
         <div className='signupinputMessage'>
           {userPwCkMessage}
+          {isUserPwCk}
         </div>
         
         <div className='signupinputContainer'>
           <div className='signupinputTitle'>닉네임 <span className="required">*</span></div>
           <div className='signupinputWrap'>
-            <input type="nickname" className='signupinput'
+            <input type="nickname" className={`signupinput ${isNickname && isNicknameDupli ? 'validInput' : ''}`}
             value={nickname}
             onChange={
               onChangeUserNickName
@@ -250,6 +264,7 @@ function Signup() {
         <div className='signupinputMessage'>
           {userNicknameMessage}
           {userNNDupMessage}
+          {/* {isNickname && isNicknameDupli ? '✅' : '🔲'} */}
         </div>
 
         <div className='signupinputContainer'>
@@ -288,7 +303,7 @@ function Signup() {
 
         <div className="bottomBtnContainer">
           <button onClick={handleSignup}
-            className="bottomBtn"
+            className={`${isUserId && isIdDupli && isUserPw && isUserPwCk && isNickname && isNicknameDupli && isPhoneNumber && isUserEmail ? 'activeBtn' : 'disabledBtn'}`}
             disabled={
               !(
                 isUserId &&

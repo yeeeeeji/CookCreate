@@ -8,6 +8,7 @@ import { GoChevronLeft, GoChevronRight } from "react-icons/go"
 
 function CookyerLessonStep({ size }) {
   const dispatch = useDispatch()
+
   const checkCookieeList = useSelector((state) => state.cookyerVideo.checkCookieeList)
   const [ checkCount, setCheckCount ] = useState(0)
   const publisher = useSelector((state) => state.video.publisher)
@@ -19,6 +20,8 @@ function CookyerLessonStep({ size }) {
   const totalSteps = useSelector((state) => state.videoLessonInfo.totalSteps)
   const [ isUpdate, setIsUpdate ] = useState(false)
   const [ inputStep, setInputStep ] = useState(curStep)
+
+  const [ resetBtn, setResetBtn ] = useState(false)
 
   useEffect(() => {
     if (curStep) {
@@ -40,13 +43,15 @@ function CookyerLessonStep({ size }) {
 
   useEffect(() => {
     console.log("curStep 설정")
-    dispatch(setCurStep("수업이 시작하면 진행 단계를 표시해주세요."))
+    dispatch(setCurStep("과외가 시작하면 진행 단계를 표시해주세요."))
   }, [])
 
   useEffect(() => {
-    if (curIdx) {
+    if (curIdx >= 0) {
+      console.log(curIdx, "변화한 인덱스 값")
       if (curIdx === 0) {
-        dispatch(setCurStep("수업이 시작하면 진행 단계를 표시해주세요."))
+        dispatch(setCurStep("과외가 시작하면 진행 단계를 표시해주세요."))
+        console.log("하..")
       } else {
         if (lessonStepList) {
           const newStep = lessonStepList.find((step) => step.stepOrder === curIdx)
@@ -118,7 +123,7 @@ function CookyerLessonStep({ size }) {
               {isUpdate ? (
                 <div className={`${size}-video-step-content`}>
                   <div className={`${size}-video-step-content-update`}>
-                    <p>{curIdx}. </p>
+                    <p>{curIdx}.</p>
                     <input value={inputStep} onChange={handleInputChange}></input>
                   </div>
                   <button onClick={updateStepContent}>완료</button>
@@ -126,7 +131,9 @@ function CookyerLessonStep({ size }) {
               ) : (
                 curIdx > 0 ? (
                   <div className={`${size}-video-step-content`}>
-                    <p>{curIdx}. {curStep}</p>
+                    <div className={`${size}-video-step-p`}>
+                      <p>{curIdx}.</p><p className={`${size}-video-step-current`}>{curStep}</p>
+                    </div>
                     <button onClick={handleIsUpdate}>수정</button>
                   </div>
                 ) : (
@@ -143,14 +150,22 @@ function CookyerLessonStep({ size }) {
         </div>
         <GoChevronRight onClick={goNextStep}/>
       </div>
-      <div className={`${size}-video-step-check-btn`}  onClick={() => resetCheckCookiee(publisher)}>
-        <div className={`${size}-video-step-check-btn-wrap`}>
-          <BsFillPersonCheckFill className={`${size}-video-step-check-icon`}/>
-          <div className={`${size}-video-step-check-count`}>
-            <p>{checkCount}</p>
-            <p>/</p>
-            <p>{subscribers.length}</p>
-          </div>
+      <div className={`${size}-video-step-check-btn`} onClick={() => resetCheckCookiee(publisher)} onMouseOver={() => setResetBtn(true)} onMouseLeave={() => setResetBtn(false)}>
+        <div>
+          {resetBtn ? (
+            <div className={`${size}-video-step-check-reset-btn`}>
+              <p>reset</p>
+            </div>
+          ) : (
+            <div className={`${size}-video-step-check-btn-wrap`}>
+              <BsFillPersonCheckFill className={`${size}-video-step-check-icon`}/>
+              <div className={`${size}-video-step-check-count`}>
+                <p>{checkCount}</p>
+                <p>/</p>
+                <p>{subscribers.length}</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

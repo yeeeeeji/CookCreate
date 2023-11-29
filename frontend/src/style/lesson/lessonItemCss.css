@@ -11,14 +11,24 @@
     width: 100%;
     height: 147px;
     border-radius: 5px;
+    object-fit: cover;
 }
 
 .lessonItemTitle{
     text-align: start;
+    font-weight: 500;
+    color: #414141;
 }
 
 .datename{
     margin-bottom: 20px;
+    color: #666666;
+    font-size: 0.9rem;
+}
+
+.jjim {
+    color: #666666;  
+    font-size: 0.9rem;  
 }
 
 .badgeContainer {
@@ -29,10 +39,11 @@
 .categoryBadge, .difficultyBadge {
     display: inline-block; /* Display badges in a single row */
     margin-right: 10px; /* Add some space between badges */
-    padding: 6px 10px;
+    padding: 6px 12px;
     border-style: none;
     border-radius: 5px;
     background: #F4F4F4;
+    color: #656363;
 }
 
 .messageOverlay {

@@ -19,10 +19,11 @@ function UserDropMenu() {
     .then(() => {
       localStorage.clear()
       window.location.replace("/");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
     })
     .catch((err) => {
       console.log(err)
-      // alert('access_token이 만료되었습니다. 개발 시에는 local의 토큰을 모두 지워 주고 새로고침을 해주세요.')
     })
   }
 

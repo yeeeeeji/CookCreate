@@ -87,21 +87,14 @@ export default function ReviewDetail({ reviewId,onClose}) {
   }
 
   return (
-    <div className="modal-content">
-      <button type="submit" onClick={onClose}>❌</button>
+    <div className="modal-content" >
+      <button type="submit" onClick={onClose} style={{marginLeft: '270px', marginTop:'10px'}} >❌</button>
     <h2 className="modal-title">리뷰 상세 정보</h2>
     
     
     <div className="review-details">
       <div className="review-field">
-        <label htmlFor="lessonTitle">강의명: {selectedReview.lessonTitle}</label>
-      </div>
-      <div>
-        별점: {selectedReview.rating}
-        <StarShow rating={selectedReview.rating} size="1.4rem" color="gold" />
-      </div>
-      <div>
-        <label htmlFor="reviewContents">리뷰 내용: {selectedReview.reviewContents}</label>
+        <label htmlFor="lessonTitle">과외명: {selectedReview.lessonTitle}</label>
       </div>
       <div className="review-field">
         <label htmlFor="lessonTitle">선생님:{selectedReview.cookyerName}({selectedReview.cookyerId})</label>
@@ -124,12 +117,13 @@ export default function ReviewDetail({ reviewId,onClose}) {
         />
       ) : (
         <div>
-          {/* <div>
+          <div>
             별점: {selectedReview.rating}
+            <StarShow rating={selectedReview.rating} size="1.4rem" color="gold" />
           </div>
-          <div className="review-field">
+          <div>
             <label htmlFor="reviewContents">리뷰 내용: {selectedReview.reviewContents}</label>
-          </div> */}
+          </div>
           <div className="review-actions">
             <button type="button" onClick={handleUpdateReview}>
               수정하기

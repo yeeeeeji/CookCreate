@@ -1,32 +1,31 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { login, logout } from './store/auth/auth'
+import axios from 'axios';
 import CookyerScreen from './pages/video/cookyerScreen';
 import CookieeScreen from './pages/video/cookieeScreen';
 import AppWithLayout from './component/AppWithLayout';
 
 function App() {
-  // const dispatch = useDispatch(); 
-
-  // useEffect(() => {
-  //   const storedNickname = localStorage.getItem('nickname');
-  //   const storedRole = localStorage.getItem('role')
-  //   const access_token = localStorage.getItem('access_token')
-  //   const refresh_token = localStorage.getItem('refresh_token')
-  //   const userId = localStorage.getItem('id')
-  //   if (access_token) {
-  //     dispatch(login({
-  //       'access_token' : access_token,
-  //       'refresh_token' : refresh_token,
-  //       'nickname' : storedNickname, 
-  //       'role' : storedRole,
-  //       'userId' : userId
-  //     }));
-  //   } else {
-  //     dispatch(logout());
-  //   }
-  // }, []);
+  useEffect(() => {
+    const access_token = sessionStorage.getItem('access_token');
+    const local_access_token = localStorage.getItem('access_token')
+    const local_refresh_token = localStorage.getItem('refresh_token')
+    if (!access_token) {
+      axios.post(`/api/v1/member/logout`, {}, {
+        headers: {
+          Access_Token: local_access_token,
+          Refresh_Token: local_refresh_token
+        }
+      })
+      .then(() => {
+        localStorage.clear();
+        window.location.replace('/');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }, []);
 
   return (
     <div>

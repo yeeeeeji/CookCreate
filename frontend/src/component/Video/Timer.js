@@ -1,10 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { startTimer } from './../../store/video/gestureTest';
 
 
-function Timer({ role, size }) {
+function Timer({ role, size, isGestureTest }) {
+  const dispatch = useDispatch()
   const publisher = useSelector((state) => state.video.publisher)
   const timerCheck = useSelector((state) => state.timer.timerCheck)
+  const timerTest = useSelector((state) => state.gestureTest.timerTest)
+  console.log(`timerTest 초기에 불러와지나? ${timerTest}`)
 
   const [ curMinutes, setCurMinutes ] = useState(0)
   const [ curSeconds, setCurSeconds ] = useState(0)
@@ -13,9 +17,21 @@ function Timer({ role, size }) {
   /* 쿠키 타이머 시작 표시 */
   const [ isRunning, setIsRunning ] = useState(false)
 
+  const [ classRole, setClassRole ] = useState(null)
+
   // const [ clickInput, setSetTime ] = useState(false)
 
   console.log("나는야", role)
+
+  useEffect(() => {
+    if (role) {
+      if (role === 'COOKIEE') {
+        setClassRole('cookiee')
+      } else {
+        setClassRole('cookyer')
+      }
+    }
+  }, [role])
 
   useEffect(() => {
     const total = curMinutes*60 + curSeconds
@@ -39,6 +55,7 @@ function Timer({ role, size }) {
     if (intervalRef.current !== null) {
       return
     }
+    dispatch(startTimer());
     intervalRef.current = setInterval(() => {
       setTotalSeconds((c) => {
         if (c > 0) {
@@ -71,6 +88,32 @@ function Timer({ role, size }) {
     setTotalSeconds(0)
     stop()
   }, [])
+
+  const testerReset = useCallback(() => { // 제스처 테스트용 함수 (화면 처음 불러오거나 Rest 버튼 누르면 1분00초로 세팅)
+    if (isGestureTest === true)
+    setTotalSeconds(60)
+    stop()
+  }, [])
+
+  function testTurnOn() {
+    dispatch(startTimer());
+  }
+
+  useEffect(() => {
+    if (isGestureTest === true) {
+      testerReset();
+      testTurnOn();
+    }
+
+  }, [isGestureTest])
+
+  useEffect(() => {
+    if (isGestureTest === true && timerTest === false) {
+      testerReset();
+    }
+    console.log(`timerTest 값 바뀜1: ${timerTest}`)
+    console.log(`timerTest 값 바뀜2: ${timerTest}`)
+  }, [timerTest])
 
   useEffect(timer, [totalSeconds])
 
@@ -105,7 +148,7 @@ function Timer({ role, size }) {
       <div className={`${size}-video-timer-title`}>
         <p>타이머</p>
       </div>
-      <div className={`${size}-video-timer-content`}>
+      <div className={`${size}-video-timer-content-${classRole}`}>
         {role === 'COOKYER' ? (
           <div className={`${size}-video-timer-input`}>
             <input
@@ -145,7 +188,7 @@ function Timer({ role, size }) {
         ) : (
           <div>
             {isRunning ? (
-              <button className={`${size}-video-timer-set-btn`} onClick={stop}>Stop</button>
+              <button className={`${size}-video-timer-stop-btn`} onClick={stop}>Stop</button>
             ) : (
               <button className={`${size}-video-timer-set-btn`} onClick={start}>Start</button>
             )}

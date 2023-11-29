@@ -4,8 +4,9 @@ import { initOVSession, setSessionId, setVideoLessonId } from '../../store/video
 import { useDispatch, useSelector } from 'react-redux';
 import { OpenVidu } from 'openvidu-browser';
 import { useNavigate } from 'react-router-dom';
+import '../../style/appliedLessonMenu.css'
 
-function AppliedLessonMenu() {
+function AppliedLessonMenu({ myLessons }) {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -14,35 +15,7 @@ function AppliedLessonMenu() {
   const sessionId = useSelector((state) => state.video.sessionId)
   const session = useSelector((state) => state.video.session)
 
-  const [ myLessons, setMyLessons ] = useState(undefined)  // 학생 모달창에 불러서 쓸 레슨 정보
   const videoLessonId = useSelector((state) => state.video.videoLessonId)
-
-
-  useEffect(() => {  // 레슨 정보 받아오는 부분  // 누를때마다 요청되므로 나중에 스토어에 저장하던지 위치 바꿔주기
-    if (access_token) {
-      axios.get(
-        `api/v1/my/applied`,
-        {
-          headers : {
-            Access_Token : access_token
-          }
-        })
-        .then((res) => {
-          console.log(res.data)
-          console.log('신청한 수업 목록 받아와짐')
-        if (res.data[0].message !== "신청한 과외가 없습니다.") {
-          setMyLessons(res.data)
-        } else {
-          setMyLessons(undefined)
-        }
-
-        })
-        .catch((err) => {
-          console.log(err)
-          console.log('신청한 수업 목록 안받아와짐')
-        })
-    }
-  }, [access_token])
 
   /** 학생이 과외방 입장하는 코드 */
   const joinLesson = (lessonId) => {
@@ -100,18 +73,21 @@ function AppliedLessonMenu() {
     <div className='dropdown-content'>
       {myLessons ? (
         myLessons.map((lesson, i) => (
-          <div key={lesson.lessonId}>
-            <p>{lesson.lessonTitle}</p>
-            <p>{lesson.cookyerName}</p>
+          <div key={i} className="drop-lesson">
+          {/* <div key={lesson.lessonId} className="drop-lesson"> */}
+            <div>
+              <div className="drop-title">{lesson.lessonTitle}</div>
+              <div>{lesson.cookyerName}</div>
+            </div>
             {lesson.sessionId === null ? (
-              <button disabled='disabled'>수업예정</button>
+              <button disabled='disabled' className="drop-lesson-btn">과외예정</button>
             ) : (
-              <button onClick={() => joinLesson(lesson.lessonId)}>참여하기</button>
+              <button onClick={() => joinLesson(lesson.lessonId)} className={`drop-lesson-btn drop-lesson-btn-active`}>참여하기</button>
             )}
           </div>
         ))
       ) : (
-        <p>신청한 수업이 없습니다.</p>
+        <p>신청한 과외가 없습니다.</p>
       )}
     </div>
   );

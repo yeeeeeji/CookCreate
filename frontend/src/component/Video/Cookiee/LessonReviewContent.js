@@ -14,16 +14,6 @@ const Base = styled.section`
   gap: 8px;
 `;
 
-const Name = styled.span`
-  font-size: 1.4rem;
-  line-height: 100%;
-`;
-
-const RatingValue = styled.span`
-  font-size: 1.2rem;
-  line-height: 100%;
-`;
-
 const RatingField = styled.fieldset`
   position: relative;
   display: flex;
@@ -41,7 +31,7 @@ const RatingField = styled.fieldset`
 `;
 
 
-function LessonReviewContent() {
+function LessonReviewContent({ setShowModal, setFailModal }) {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -49,8 +39,12 @@ function LessonReviewContent() {
   const [ reviewContents, setreviewContents ] = useState("");
   const [ rating, setRating ] = useState("0");
   const lessonId = useSelector((state) => state.videoLessonInfo.lessonId)
+  const lessonTitle = useSelector((state) => state.videoLessonInfo.lessonTitle)
+  const cookyerName = useSelector((state) => state.videoLessonInfo.cookyerName)
+  const thumbnailUrl = useSelector((state) => state.videoLessonInfo.thumbnailUrl)
 
-  const leaveClass = () => {
+  const leaveClass = (e) => {
+    e.preventDefault()
     dispatch(initVideoLessonInfo())
     if (document.fullscreenElement) {
       document
@@ -88,32 +82,46 @@ function LessonReviewContent() {
     })
     .then((res) => {
       console.log(res.data);
-      dispatch(initVideoLessonInfo())
-      navigate(-1)
+      setShowModal(true)
+      // dispatch(initVideoLessonInfo())
+      // navigate(-1)
       if (document.fullscreenElement) {
         document
           .exitFullscreen()
           .then(() => console.log("Document Exited from Full screen mode"))
           .catch((err) => console.error(err));
       }
-      alert('리뷰가 등록되었습니다.');
+      // alert('리뷰가 등록되었습니다.');
     })
     .catch((err) => {
       console.log("리뷰등록못함", err);
+      setFailModal(true)
     });
 
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="lectureName">과외id: {lessonId}</label>
+      <div className="cookiee-lesson-review-modal-info">
+        <div className="cookiee-lesson-review-modal-img">
+          {thumbnailUrl ? (
+            <img src={thumbnailUrl} alt="과외 썸네일"/>
+          ) : (
+            <img src= "/logo.png" alt="로고" className='logo' />
+          )}
         </div>
-        <div>
-        <Base>
-            <Name>별점</Name>
-            <RatingField>
+        <div className="cookiee-lesson-review-modal-p">
+          <p className="cookiee-lesson-review-modal-title">{lessonTitle}</p>
+          <p className="cookiee-lesson-review-modal-cookyer">{cookyerName}</p>
+        </div>
+      </div>
+      <form onSubmit={handleSubmit}>
+        <div className="cookiee-lesson-review-modal-desc">
+          <p>과외는 어떠셨나요?</p>
+        </div>
+        <div className="cookiee-lesson-review-modal-stars-wrapper">
+         <Base>
+            <RatingField className="cookiee-lesson-review-modal-stars-wrapper">
               <StarInput required
                 onClickRating={handleClickRating}
                 value={5.0}
@@ -165,20 +173,23 @@ function LessonReviewContent() {
                 isHalf={true}
               />
               </RatingField>
-            <RatingValue>{rating}</RatingValue>
-        </Base>
+            {/* <RatingValue>{rating}</RatingValue> */}
+          </Base>
         </div>
-        <div>
+        <div className="cookiee-lesosn-review-modal-textarea">
           <label htmlFor="reviewContents"></label>
           <textarea
             id="reviewContents"
             value={reviewContents}
             onChange={(e) => setreviewContents(e.target.value)}
+            placeholder="쿠커와 수업에 대한 리뷰를 남겨주세요."
           />
         </div>
-        <button type="submit">등록</button>
+        <div className="cookiee-lesson-review-modal-btn">
+          <button className="cookiee-lesson-review-modal-submit-btn" type="submit">등록</button>
+          <button className="cookiee-lesson-review-modal-leave-btn" onClick={(e) => leaveClass(e)}>나가기</button>
+        </div>
       </form>
-      <button onClick={leaveClass}>나가기</button>
     </div>
   );
 }

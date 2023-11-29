@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { MyChat, FriendChat } from "./ChatBlock";
+import { MyChat, FriendChat, SeparationBlock } from "./ChatBlock";
 import HeaderChat from "./HeaderChat";
 import InputChat from "./InputChat"
 import * as StompJs from "@stomp/stompjs";
@@ -9,6 +9,7 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
   const accessToken = localStorage.getItem("access_token");
   const nick = localStorage.getItem("nickname");
   const id = localStorage.getItem("id");
+  // const [EnterNickname, setEnterNickname] = useState("")
 
   const [messageList, setMessageList] = useState([])
 
@@ -22,25 +23,35 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
 
   const client = useRef({});
 
+
+
   const connect = () => {
+
     client.current = new StompJs.Client({
-      brokerURL: `ws://localhost:8080/api/v1/message`,
+      brokerURL: `wss://i9c111.p.ssafy.io/api/v1/message`,
+      // brokerURL: `ws://localhost:8080/api/v1/message`,
       onConnect: () => {
         console.log("웹소켓 연결");
   
-        const destination = "/pub/chat/enter";
-        const data = {
-          lessonId: lessonId,
-          userId: id,
-          nickname: nick,
-        };
+        // const destination = "/pub/chat/enter";
+        // const data = {
+        //   lessonId: lessonId,
+        //   userId: id,
+        //   nickname: nick,
+        // };
   
-        const body = JSON.stringify(data);
-        console.log("채팅입장", body);
+        // const body = JSON.stringify(data);
+        // console.log("채팅입장", body);
+        // const ParsedData = JSON.parse(body);
+        // console.log("PD",ParsedData.nickname)
+        // setEnterNickname(ParsedData.nickname);
+        // console.log("닉넴",EnterNickname)
+        
+
+        // client.current.publish({ destination, body });
+        // console.log("enter!");
   
-        client.current.publish({ destination, body });
-        console.log("enter!");
-  
+
         //입장시 채팅내용조회
         axios
           .get(`/api/v1/chat/${lessonId}`, {
@@ -63,6 +74,9 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
   
     client.current.activate();
   }
+
+
+
 
   const subscribe = (client) => {
     client.current.subscribe("/sub/room/" + lessonId, (message) => {
@@ -91,6 +105,7 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
 
   const disconnect = () => {
     client.current.deactivate();
+
   };
 
   useEffect(() => {
@@ -103,21 +118,28 @@ const ShowChat = ({lessonId, chatTitle, chatOver}) => {
   return (
     <div>
       <HeaderChat lessonId={lessonId} chatTitle={chatTitle} chatOver={chatOver} />
-      <div style={{ overflowY: "auto", height: "300px" }} id="ChatRoom" ref={scrollRef}>
-        {messageList.map((chat, index) =>
-          chat.userId !== id ? <FriendChat key={index} message={chat.content} author={chat.userId} /> : <MyChat key={index} message={chat.content} />
+      <div style={{ overflowY: "auto", height: "450px", background:"#FFF9F6" }} id="ChatRoom" ref={scrollRef}>
+        {messageList.map((chat, index) => {
+          if (chat.type === "CHAT")  {
+            // return <SeparationBlock  key={index} EnterNickname={chat.content} />
+             return chat.userId !== id ? (<FriendChat key={index} message={chat.content} author={chat.nickname} />)
+             : (<MyChat key={index} message={chat.content} />
+             )
+          }
+        }
         )}
       </div>
-      {!chatOver && (
+      {!chatOver ? (
         <div className="InputChatContainer" >
           <InputChat sendMessage={sendMessage} />
         </div>
+      ) : (
+        <p style={{ marginLeft: '30px', marginTop: '20px',fontSize: '1rem', color : '#656363'}}>종료된 채팅방입니다.</p>
       )}
     </div>
   );
 };
 
 export default ShowChat;
-
 
 

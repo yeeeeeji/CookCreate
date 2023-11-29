@@ -11,12 +11,12 @@ function CookieeLessonStep({ size }) {
 
   return (
     <div className={`${size}-video-step-widget-cookiee`}>
-      <p className={`${size}-video-step-title`}>현재 진행 단계</p>
+      <p className={`${size}-video-step-title-cookiee`}>현재 진행 단계</p>
       <div className={`${size}-video-step-content-cookiee`}>
         {curIdx !== 0 ? (
             <p>{curIdx}. {curStep}</p>
         ) : (
-          <p>0. 수업이 시작되면 진행 단계가 표시됩니다.</p>
+          <p>0. 과외가 시작되면 진행 단계가 표시됩니다.</p>
         )}
       </div>
     </div>

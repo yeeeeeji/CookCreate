@@ -1,34 +1,42 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import FoodCategory from "./FoodCategory";
 import { useDispatch, useSelector } from "react-redux";
 import { setLessonTitle, setTitleValid } from "../../store/lesson/lessonEdit";
+import '../../style/lesson/lessonEditInfoTop.css';
 
 function EditLessonDetail() {
   const dispatch = useDispatch();
-  const initLessonTitle = useSelector((state) => state.lessonInfo.lessonTitle)
+  const initLessonTitle = useSelector((state) => state.lessonEdit.lessonTitle)
   const titleValid = useSelector((state) => state.lessonEdit.titleValid)
   
-  const [lessonTitle, sLessonTitle] = useState(initLessonTitle);
+  const [lessonTitle, setLessonTitleState] = useState('');
   
+  useEffect(() => {
+    setLessonTitleState(initLessonTitle);
+  }, [initLessonTitle]);
+
+  const inputClassName = titleValid ? "lessonInfoInput valid" : "lessonInfoInput";
+
   const titleChange = (e) => {
     const titleValue = e.target.value;
-    sLessonTitle(titleValue);
+    setLessonTitleState(titleValue);
     dispatch(setLessonTitle(titleValue));
     dispatch(setTitleValid(titleValue.trim() !== ""));
   };
   return (
-    <div style={{display : 'flex', alignItems : 'center'}}>
+    <div className='edit-info-top-container'>
       <FoodCategory />
-      <div>
-        <div style={{display : 'flex', alignItems : 'center'}}>
-          <h3>강의 제목</h3>
-          <div style={{marginLeft : '5px'}}>{titleValid ? '✅' : '🔲'}</div>
+      <div className='edit-info-top-title-container'>
+        <div className='edit-info-text'>
+          과외 제목
+          <span className='required'>*</span>
         </div>
         <input
+          className={inputClassName}
           type="text"
           value={lessonTitle}
           onChange={titleChange}
-          placeholder="강의 제목을 입력해주세요!"
+          placeholder="과외 제목을 입력해주세요."
           />
       </div>
     </div>

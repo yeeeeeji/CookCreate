@@ -1,12 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../../style/mainpage/goToGesture.css';
 
 function GoToGesture() {
+  const navigate = useNavigate();
   const gotoGesture = () => {
-    console.log('제스처 체험 해보는 곳. 아직 구현 안 했어요')
+    navigate("/gestureTest");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
   }
   return (
     <div>
-      <button onClick={gotoGesture}>제스처 동작 체험 해보기</button>
+      <button onClick={gotoGesture} className="go-to-gesture-btn">제스처 인식 체험 해보기</button>
     </div>
   );
 }

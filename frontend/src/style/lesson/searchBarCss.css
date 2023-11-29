@@ -1,5 +1,5 @@
 .searchContainer{
-    margin-top: 40px;
+    margin-top: 3rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -7,35 +7,49 @@
 }
 
 .categorySelect{
-    height: 50px;
-    border: 1px solid #FF7A42;
-    border-right: none;
-    padding-left: 40px;
-    padding-right: 15px;
-    padding-top: 12px;
-    padding-bottom: 15px;
-    border-radius: 50px 0px 0px 50px;
-    box-shadow: 0px 8px 24px 0px #FFF7F5;
-    color: #FF7A42;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
+  border: 0.7px solid #FF7A42;
+  padding: 1rem 1rem 1rem 3.5rem;
+  border-radius: 50px 0px 0px 50px; 
+  color: #FF7A42;
+  font-size: 1rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  height: 100%;
 }
 .categorySelect:focus {
     outline: none; /* 선택됐을 때의 기본 외곽선 제거 */
     border-color: #FF7A42; /* 선택됐을 때의 border 색상 설정 */
   }
 
+.category-select-wrap {
+  display: inline-block; /* 높이를 따르는 인라인 블록 요소로 설정 */
+  position: relative; /* 내부 요소를 포함하는 컨테이너로 설정 */
+  height: 56px;
+  width: 195.5px;
+  border-right: none;
+  border-radius: 50px 0px 0px 50px;
+  box-shadow: 0px 8px 24px 0px #FFF7F5;  
+}  
+
+.select-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.2rem;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color : #FF7A42;
+}
+
 .inputContainer{
     box-sizing: border-box;
-    height: 50px;
+    height: 56px;
     display: flex;
     align-items: center;
-    border: 1px solid #FF7A42;
-    padding-right: 10px;
-    padding-top: 0px;
-    padding-bottom: 0px;
+    border: 0.7px solid #FF7A42;
+    padding: 1rem 1rem 1rem 3rem;
     border-radius: 0px 50px 50px 0px;
     box-shadow: 0px 8px 24px 0px #FFF7F5;
 }
@@ -44,17 +58,14 @@
     padding-left: 30px;
     border: none;
     outline: none;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
+    font-size: 1rem;
 }
 .searchInput::placeholder {
     color: #FFC6B1; /* placeholder 텍스트 색상 설정 */
   }
 
 .searchIcon{
-    font-size: 21px;
+    font-size: 2.1rem;
     padding-right: 10px;
     color: #FF7A42;
 }

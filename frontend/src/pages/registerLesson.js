@@ -20,10 +20,12 @@ function RegisterLesson() {
   }, []) // 페이지 렌더링시 lessonReducer 초기화
   return (
     <div>
-      <h2>
-        강의 개설하기
-      </h2>
-      <PreviousLesson/>
+      <div className='registerLessonTitleContainer'>
+        <div className='registerLessonTitle'>
+          과외 개설하기
+        </div>
+        <PreviousLesson/>
+      </div>
       <LessonInfoTop/>
       <LessonTime/>
       <LessonDetail/>

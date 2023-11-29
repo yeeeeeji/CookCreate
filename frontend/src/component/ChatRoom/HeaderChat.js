@@ -1,41 +1,64 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import axios from "axios";
-
+import AlertModal from "../Modal/AlertModal";
 const Wrapper = styled.header`
   width: 100%;
-  background-color: #ff8a00;
+  // border-right: 0.7px solid #D9D9D9;
+  // background-color: #ff8a00;
+  // background-color: #ff9416;
+  background-color: #FFB697;
   height: 70px;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
-  flex-direction: row-reverse;
+  padding: 0 30px;
 
   & span {
+    color:#FFFFFF;
     font-weight: bold;
-    font-size: 20px;
-    margin-right: 50px;
+    font-size: 25px;
+    // margin-right: 50px;
     text-align: center;
     flex-grow: 1;
+    justify-content: center;
+    display:flex;
+    // margin-left: 60px;
   }
 
   & button {
-    font-size: 20px;
-    background-color: #a9bdce;
+    align-items: center;
+    justify-content: center;
+    display:flex;
+    padding: 0.3rem 0.7rem;
+
+    font-size: 15px;
+    background-color: #FF7A42;
+    // background-color: #ff9416;
+    // background-color: #FF7A42;
     outline: none;
     cursor: pointer;
-    &:hover {
-      color: #dcdcdc;
-    }
+    border-radius: 3px;
+    border: none;
+    color : #ffffff;
+    // &:hover {
+    //   background-color: #FF7A42;
+    // }
   }
 `;
+
+const style = {
+  fontSize: '1.0rem',
+  fontWeight : '500',
+  color: '#FFFFFF',
+  textAlign: 'center', 
+};
 
 const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
   const accessToken = localStorage.getItem("access_token");
   const role = localStorage.getItem("role");
   // const history = useHistory();
+  const [modalOpen, setModalOpen] = useState(false);
 
   //채팅종료여부
   console.log("chatOver", chatOver);
@@ -73,8 +96,9 @@ const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
       .catch((err) => {
         console.log("채팅나가기못함", err);
       });
-
+      // setModalOpen(true)
       alert("채팅이 종료되었습니다.")
+      window.location.href = '/';
   };
 
   const ExitS = () => {
@@ -94,31 +118,30 @@ const HeaderChat = ({ lessonId, chatTitle, chatOver }) => {
       });
 
       alert("채팅방나가기 성공")
+      // setModalOpen(true)
+      window.location.href = '/';
   };
 
-  const onBefore = () => {
-    window.location.href = '/';
-  };
+  // const onBefore = () => {
+  //   window.location.href = '/';
+  // };
 
   return (
     <Wrapper>
-      {role === 'COOKYER' && chatOver === false ? (
-      <button type="button" onClick={ExitT}>
-        <p>종료</p>
-        <i className="fas fa-arrow-left" />
-      </button>
-    ) : null}
-    {role === 'COOKIEE' && chatOver === false ? (
-      <button type="button" onClick={ExitS}>
-        <p>나가기</p>
-        <i className="fas fa-arrow-left" />
-      </button>
-    ) : null}
-    <button type="button" onClick={onBefore}>
-      <p>HOME</p>
-      <i className="fas fa-arrow-left" />
-    </button>
-    <span>{chatTitle}</span>
+      <div style={style}>{chatTitle}</div>
+        <div>
+          {role === 'COOKYER' && chatOver === false ? (
+          <button type="button" onClick={ExitT}>
+            <p>종료</p>
+            <i className="fas fa-arrow-left" />
+          </button>
+        ) : null}
+        {role === 'COOKIEE' && chatOver === false ? (
+          <button type="button" onClick={ExitS}>
+            <p>나가기</p>
+          </button>
+        ) : null}
+      </div>
     </Wrapper>
   );
 };

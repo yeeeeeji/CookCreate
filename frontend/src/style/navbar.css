@@ -1,9 +1,26 @@
+.nav-wrap {
+  position: fixed;  
+  z-index: 1001;
+  right: 0%;
+  left: 0%;
+}
+
 .navbar {
   background-color: #ffffff;
-  padding: 0.9rem 0;
+  padding: 0.9rem 15rem;
   display: flex; 
   align-items: center;
   justify-content: space-between;
+  color: #656363;
+  border-bottom: #d9d9d9 solid 0.7px;
+}
+
+.navbar-main {
+  border-bottom: #ffffff00 solid 0.7px;
+}
+
+.navbar-main.scroll {
+  border-bottom: #d9d9d9 solid 0.7px;
 }
 
 .logo {
@@ -21,10 +38,24 @@ a:not(:first-of-type) {
   margin-left: 2rem;
 }
 
+a:hover, .nav-user:hover, .drop-btn:hover,.nav-sign:hover {
+  font-weight: 500;
+  /* background-color: #f9f9f9;
+  padding: 0.8rem 0.5rem;
+  border-radius: 2px; */
+}
 
 .leftNav {
   display: flex;
   align-items: center;
+  color : #656363;
+  font-size: 0.9rem;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.leftNav:hover {
+  font-weight: 500;
 }
 
 .rightNav {
@@ -32,14 +63,17 @@ a:not(:first-of-type) {
   align-items: center;
 }
 
-.nav-cookyer {
+.nav-lesson {
   display: flex;
   font-size: 0.9rem;
+  margin-left: 2rem;
 }
 
 .nav-user {
-  margin-left: 2rem;
-  
+  margin-left: 1.7rem;
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
 }
 
 .drop-btn {
@@ -47,5 +81,63 @@ a:not(:first-of-type) {
   border: none; /* 테두리 제거 */
   font-size: 0.9rem; 
   color : #656363;
+  padding : 0;
+  cursor: pointer;
 }
 
+.drop-wrap {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+/* 네브바 드롭다운메뉴 나중에 옮기기 */
+.dropdown{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dropdown-content {
+  /* display: none; */
+  cursor: pointer;
+  padding: 1rem 1.5rem;
+  position: absolute;
+  top: 4.3rem;
+  border-radius: 0.2rem;
+  /* border: 0.7px solid #8D9193; */
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.2);
+}
+/* 옮기기 */
+
+.dropdown-icon {
+  font-size: 1.3rem;
+}
+
+.nav-sign {
+  display: flex;
+  color : #656363;
+  font-size: 0.9rem;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1350px) {
+  .navbar {
+    padding: 0.9rem 8rem;
+  }
+}
+
+/* @media screen and (max-width: 1000px) {
+  .container {
+    padding: 0 7rem;
+  }
+} */
+
+@media screen and (max-width: 646px) {
+  .navbar {
+    padding: 0.9rem 3rem;
+  }
+}

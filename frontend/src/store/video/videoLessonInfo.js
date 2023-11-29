@@ -5,6 +5,7 @@ const initialState = {
   lessonId: undefined,
   lessonTitle: undefined,
   cookyerName: undefined,
+  thumbnailUrl: undefined,
   lessonStepList: undefined,
   totalSteps: 0,
   curStep: undefined,
@@ -19,6 +20,7 @@ const videoLessonInfo = createSlice({
       state.lessonId = payload.lessonId
       state.lessonTitle = payload.lessonTitle
       state.cookyerName = payload.cookyerName
+      state.thumbnailUrl = payload.thumbnailUrl
       state.lessonStepList = payload.lessonStepList
       state.totalSteps = payload.lessonStepList.length
     },
@@ -35,7 +37,7 @@ const videoLessonInfo = createSlice({
     setStepInfo: (state, { payload }) => {
       console.log("요리단계 시그널 받아 저장", payload)
       if (payload.curIdx === 0) {
-        state.curStep = "수업이 시작되면 진행 단계가 표시됩니다."
+        state.curStep = "과외가 시작되면 진행 단계가 표시됩니다."
       } else {
         state.curStep = payload.curStep
       }
@@ -45,6 +47,7 @@ const videoLessonInfo = createSlice({
       state.lessonId = undefined
       state.lessonTitle = undefined
       state.cookyerName = undefined
+      state.thumbnailUrl = undefined
       state.lessonStepList = undefined
       state.totalSteps = 0
       state.curStep = undefined

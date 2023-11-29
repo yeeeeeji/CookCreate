@@ -20,7 +20,7 @@ const initialState = {
   descriptionValid : false,
   materials: [],
   materialsValid : false,
-  lessonStepList: [],
+  lessonStepList: [{ stepOrder: 1, stepContent: "" }],
   stepValid : false,
   videoUrl: "",
   thumbnailValid: false
@@ -38,11 +38,9 @@ const lesson = createSlice({
     },
     setCategory : (state, action) => {
       state.categoryId = action.payload
-      console.log(action)
     },
     setCategoryValid : (state, action) => {
       state.categoryValid = action.payload
-      console.log(action)
     },
     setTimeTaken : (state, action) => {
       state.timeTaken = action.payload
@@ -88,6 +86,7 @@ const lesson = createSlice({
     },
     setLessonStepList : (state, action) => {
       state.lessonStepList = action.payload
+      console.log(action)
     },
     setStepValid : (state, action) => {
       state.stepValid = action.payload

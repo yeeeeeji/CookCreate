@@ -10,15 +10,21 @@ const Wrapper = styled.footer`
   bottom: 0px;
   left: 0px;
   right: 0px;
-  width: 70%;
-  min-height: 50px;
+  width: 100%;
+  min-height: 100px;
   max-height: 200px;
   overflow: auto;
-  padding: 6px;
-  z-index: 100;
-  background-color: #eeeeee;
-  display: flex; /* Add display flex */
-  justify-content: flex-end; /* Align to the right */
+  padding: 6px 30px 6px 6px;
+  z-index: 1;
+  // background-color: #f5f2f2;
+  // display: flex;
+  justify-content: flex-end;
+
+  // border: 1px solid rgb(255 239 221);
+  border-top: 0.7px solid #D9D9D9;
+  align-items: center;
+  
+
   
   & form {
     position: relative;
@@ -36,25 +42,29 @@ const Wrapper = styled.footer`
     & textarea {
       width: 100%;
       resize: none;
-      height: 100%;
+      height: 90%;
       margin: 0;
       padding: 5px 20px;
     }
     
     & button {
-      width: 50px;
-      height: 40px;
-      background: #ff8a00;
+      width: 52px;
+      height: 47.5px;
+      // background: #ff8a00;
       
       &.canSubmit {
         cursor: pointer;
         pointer-events: all;
-        color: #ffffff;
+        color: #ffedca;
+        // background: #ff9416;
+        background: #FF7A42;
+        border-radius: 10%;
       }
       
       &.cannotSubmit {
         pointer-events: none;
         color: #b4b4b4;
+        border-radius: 10%;
       }
     }
   }
@@ -63,6 +73,7 @@ const Wrapper = styled.footer`
 
 const InputChat = ({ sendMessage }) => {
   // const accessToken = useSelector((state) => state.auth.token);
+  const role = localStorage.getItem("role");
   const [messages, setMessages] = useState("");
   const isCanSubmit = !!messages.replace(/ |\n/g, "");
   const btnClassName = isCanSubmit ? "canSubmit" : "cannotSubmit";
@@ -95,17 +106,22 @@ const InputChat = ({ sendMessage }) => {
 
   const onEnterPress = (event) => {
     if (!event.shiftKey && event.key === "Enter") {
-      // event.preventDefault();
+      event.preventDefault();
       onSubmit();
     }
   };
+
+  // const buttonContent = role === "COOKIEE" ? "🍪" : "🍳"; // 버튼 내용 설정
 
   return (
     <Wrapper>
       <form onSubmit={onSubmit}>
         <textarea value={messages} autoFocus={true} onChange={onMessageChange} onKeyPress={onEnterPress} />
         <button className={btnClassName} type="submit">
-          전송
+          {role === "COOKIEE" ? <img src= "/cookiee-user.png" style={{width : '35px'}}/> 
+          : <img src= "/cookyer.png" style={{width : '35px'}}/>}
+          {/* <p style={{ fontSize: '20px' }} >{buttonContent}</p> */}
+          {/* <p style={{ fontSize: '20px' }} >🍳</p> */}
         </button>
       </form>
     </Wrapper>

@@ -1,10 +1,18 @@
 
 .Side {
-  display: flex;
-  flex-direction: column;
-  width: 200px; 
-  background-color: #f2d694; 
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+  position: relative;
+}
+
+.Side_container {
+  position: absolute;
+  left: 0;
+  z-index: 10;
+}
+
+.sidebar {
+  position: fixed;
+  top: 270px; /* 필요에 따라 조절하여 원하는 위치에 고정 */
+  left: 70px;
 }
 
 
@@ -12,22 +20,36 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  /* border: 0.7px solid #8D9193; */
+  width: 150px;
+  /* border-radius: 8px; */
+  /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); */
+  background-color: #ffffff;
 }
 
 .side-item {
-  padding: 8px;
-  text-align: center; 
+  padding: 0.5rem;
+  text-align: left;
+  /* border-bottom: 0.7px solid #D9D9D9; */
+}
+
+.side-item:last-child {
+  border-bottom: none;
 }
 
 .side-item a {
   text-decoration: none;
-  color: #000; 
-  font-weight: bold;
+  font-size: 0.9rem;
+  color: #656363;
+  /* color: #000;  */
+  display: block;
+  padding: 3px;
+  border-radius: 5px;
 }
 
 .side-item a:hover {
-  background-color: #fcc367; 
-  border-radius: 5px; 
+  color: #FF7A42; 
+  font-weight: 500;
 }
 
 

@@ -1,49 +1,78 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import 'react-datepicker/dist/react-datepicker.css';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+// import 'react-datepicker/dist/react-datepicker.css';
 import { setTimeTaken, setTimeTakenVaild } from "../../store/lesson/lessonEdit";
+import "../../style/lesson/editLessonTime.css";
+
 function EditLessonTime() {
-  const dispatch = useDispatch()
-  const lessonDate = useSelector((state) => (state.lessonInfo.lessonDate))
-  const initTimeTaken = useSelector((state) => state.lessonInfo.timeTaken)
-  const [lessonTakenTime, setLessonTakenTime] = useState(initTimeTaken)
+  const dispatch = useDispatch();
+  const initlessonDate = useSelector((state) => state.lessonEdit.lessonDate);
+  const initTimeTaken = useSelector((state) => state.lessonEdit.timeTaken);
+  const [lessonDate, setLessonDate] = useState("");
+  const [lessonTakenTime, setLessonTakenTime] = useState(initTimeTaken);
 
-  //유효성 검사
-  const dateValid = useSelector((state) => state.lessonEdit.dateValid)
-  const timeTakenValid = useSelector((state) => state.lessonEdit.timeTakenValid)
-
+  // 유효성 검사
   const handleTakenTime = (e) => {
-    setLessonTakenTime(e.target.value)
-    dispatch(setTimeTakenVaild(e.target.value !== ''))
-    dispatch(setTimeTaken(e.target.value))
-  };  
+    setLessonTakenTime(e.target.value);
+    dispatch(setTimeTakenVaild(e.target.value !== ""));
+    dispatch(setTimeTaken(e.target.value));
+  };
+  useEffect(() => {
+    setLessonTakenTime(initTimeTaken);
+    setLessonDate(initlessonDate);
+  }, [initTimeTaken, initlessonDate]);
+
+  const formatAMPM = (date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "오후" : "오전";
+    const displayHours = hours % 12 || 12;
+    const displayMinutes = minutes.toString().padStart(2, "0");
+    return `${ampm} ${displayHours}:${displayMinutes}`;
+  };
+
+  const options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
+  let formattedDate = ""; // 초기화
+
+  if (lessonDate !== "") {
+    formattedDate = new Intl.DateTimeFormat("ko-KR", options).format(
+      new Date(lessonDate)
+    );
+  }
 
   return (
-    <div style={{display : 'flex', alignItems : 'center'}}>
-      <div>
-        <div style={{display : 'flex', alignItems : 'center'}}>
-          <h3>강의 일시</h3>
-          <h5>강의 일시는 수정할 수 없습니다.</h5>
-          <div style={{marginLeft : '5px'}}>{dateValid ? '✅' : '🔲'}</div>
+    <div className="edit-info-top-container">
+      <div className="edit-info-top-title-container">
+        <div className="edit-info-text">
+          <span>과외 일시</span>
+          <span className="required">*</span>
+          <div className="edit-info-mate-desc">
+            과외 일시는 수정할 수
+            <br />
+            없습니다.
+          </div>
         </div>
-        {lessonDate}
-
+        <p className="edit-form-cannot-edit">{formattedDate}</p>
       </div>
       <div>
-        <div style={{display : 'flex', alignItems : 'center'}}>
-          <h3>강의 시간</h3>
-          <div style={{marginLeft : '5px'}}>{timeTakenValid ? '✅' : '🔲'}</div>
+        <div className="edit-info-top-title-container">
+          <div className="edit-info-text">
+            <span>예상 소요 시간</span>
+            <span className="required">*</span>
+            <div className="edit-info-mate-desc">
+              예상 소요 시간은 수정할 수
+              <br />
+              없습니다.
+            </div>
+          </div>
+          <p className="edit-form-cannot-edit">{lessonTakenTime} 분</p>
         </div>
-        <select value={lessonTakenTime} onChange={handleTakenTime}>
-          <option value="">-</option>
-          <option value="60">60분</option>
-          <option value="90">90분</option>
-          <option value="120">120분</option>
-          <option value="150">150분</option>
-          <option value="180">180분</option>
-          <option value="210">210분</option>
-          <option value="240">240분</option>
-        </select>
       </div>
     </div>
   );

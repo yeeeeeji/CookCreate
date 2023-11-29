@@ -4,6 +4,8 @@ import UserVideoComponent from '../../component/Video/UserVideoComponent';
 import Timer from '../../component/Video/Timer';
 import CookieeLessonStep from '../../component/Video/Cookiee/CookieeLessonStep';
 import CookieeVideoSideBar from '../../component/Video/Cookiee/CookieeVideoSideBar';
+import OtherCookiees from '../../component/Video/Cookiee/OtherCookiees';
+import LessonReviewModal from '../../component/Video/Cookiee/LessonReviewModal';
 
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,15 +13,12 @@ import { audioMute, deleteSubscriber, enteredSubscriber, leaveSession, setAudioM
 import { joinSession } from '../../store/video/video-thunk';
 import { initCookieeVideo, resetCheck, resetHandsUp } from '../../store/video/cookieeVideo';
 import { setCurStep, setLessonInfo, setStepInfo } from '../../store/video/videoLessonInfo';
-import '../../style/video.css'
-// import '../../style/canvas.css'
 import { initScreenShare } from '../../store/video/screenShare';
-import LessonReviewModal from '../../component/Video/Cookiee/LessonReviewModal';
 
 import { AiFillCheckCircle } from 'react-icons/ai'
-import { IoIosHand } from 'react-icons/io'
+import { IoIosHand, IoIosTimer } from 'react-icons/io'
 import { BsMicFill, BsMicMuteFill } from "react-icons/bs";
-import OtherCookiees from '../../component/Video/Cookiee/OtherCookiees';
+import '../../style/video/cookieeScreen.css'
 
 function CookieeScreen() {
   const dispatch = useDispatch()
@@ -42,9 +41,15 @@ function CookieeScreen() {
 
   /** 체크 기능 */
   const check = useSelector((state) => state.cookieeVideo.check)
+  const [ checkVisible, setCheckVisible ] = useState(false)
 
   /** 손들기 기능 */
   const handsUp = useSelector((state) => state.cookieeVideo.handsUp)
+  const [ handsUpVisible, setHandsUpVisible ] = useState(false)
+
+  /** 타이머 아이콘 보이기 */
+  const timerCheck = useSelector((state) => state.timer.timerCheck)
+  const [ timerVisible, setTimerVisible ] = useState(false)
 
   /** 선생님 화면 고정하기 위해 선생님 subscriber 찾기 */
   const [ cookyerStream, setCookyerStream ] = useState(undefined)
@@ -202,7 +207,6 @@ function CookieeScreen() {
         role
       }
       dispatch(joinSession(data))
-      // dispatch(publishStream({data}))
 
 
       console.log(5)
@@ -231,8 +235,7 @@ function CookieeScreen() {
         })
         .then((res) => {
           console.log(res.data)
-          console.log('화상 과외 수업 정보 받아와짐')
-          // setMyLesson(res.data) // 토큰이랑 커넥션 설정하는걸로 바꾸기?
+          console.log('화상 과외 수업 정보 받아와짐', res.data)
           dispatch(setLessonInfo(res.data))
           const firstLessonStep = res.data.lessonStepList.find((step) => step.stepOrder === 1)
           console.log(firstLessonStep.stepContent)
@@ -286,83 +289,143 @@ function CookieeScreen() {
     }
   }, [mainVideo])
 
+  useEffect(() => {
+    if (check) {
+      setCheckVisible(true)
+    }
+  }, [check])
+
+  useEffect(() => {
+    if (handsUp) {
+      setHandsUpVisible(true)
+    }
+  }, [handsUp])
+
+  useEffect(() => {
+    if (checkVisible) {
+      const timeoutId = setTimeout(() => {
+        setCheckVisible(false);
+      }, 2000);
+  
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [checkVisible]);
+
+  useEffect(() => {
+    if (handsUpVisible) {
+      const timeoutId = setTimeout(() => {
+        setHandsUpVisible(false);
+      }, 2000);
+  
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [handsUpVisible]);
+
+  useEffect(() => {
+    if (timerCheck) {
+      setTimerVisible(true)
+    }
+  }, [timerCheck])
+
+  useEffect(() => {
+    if (timerVisible) {
+      const timeoutId = setTimeout(() => {
+        setTimerVisible(false);
+      }, 2000);
+  
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [timerVisible]);
+
   return (
     <div className='video-page'>
-      <CookieeVideoSideBar/>
-      <div>
-        {isCompleted ? (
-          <LessonReviewModal/>
-        ) : null}
+      {isCompleted ? (
+        <LessonReviewModal/>
+      ) : null}
+      {session ? (
         <div>
-          <VideoHeader size={'full'}/>
-          <div className='cookiee-video-content'>
+          <CookieeVideoSideBar/>
+          <div>
             <div>
-              <div className='cookiee-sharing'>
-              {/* <div className='cookiee-sharing' onClick={() => handleMainVideoStream(cookyerStream)}> */}
-                <div className='cookiee-sharing-content'>
-                  {isCompleted ? (
-                    <p>수업이 종료되었습니다.</p>
-                  ) : (
-                    screenShareStream ? (
+              <VideoHeader size={'full'}/>
+              <div className='cookiee-video-content'>
+                <div>
+                  <div className='cookiee-sharing'>
+                    <div className='cookiee-sharing-content'>
+                      {isCompleted ? (
+                        null
+                      ) : (
+                        screenShareStream ? (
+                          <UserVideoComponent
+                            videoStyle='cookiee-sharing-content'
+                            streamManager={screenShareStream}
+                          />
+                        ) : (
+                          <UserVideoComponent
+                            videoStyle='cookiee-sharing-content'
+                            streamManager={cookyerStream}
+                          />
+                        )
+                      )}
+                    </div>
+                  </div>
+                  <CookieeLessonStep size={'full'}/>
+                </div>
+                <div>
+                  {/* 쿠커 화면 */}
+                  <div className='cookiee-content'>
+                    {cookyerStream ? (
                       <UserVideoComponent
-                        videoStyle='cookiee-sharing-content'
-                        streamManager={screenShareStream}
-                      />
-                    ) : (
-                      <UserVideoComponent
-                        videoStyle='cookiee-sharing-content'
+                        videoStyle='cookiee-content-video'
                         streamManager={cookyerStream}
                       />
-                    )
-                  )}
+                    ) : (
+                      null
+                    )}
+                    {cookyerStream && audioOnList && audioOnList.find((item) => item === cookyerStream.stream.connection.connectionId) ? (
+                      <BsMicFill className='cookiee-cookyer-audio-icon-active'/>
+                    ) : (
+                      <BsMicMuteFill className='cookiee-cookyer-audio-icon'/>
+                    )}
+                  </div>
+                  <Timer role='COOKIEE' size='full'/>
+                  {/* 쿠키 본인 화면 */}
+                  <div className='cookiee-content'>
+                    {publisher !== undefined ? (
+                      <UserVideoComponent
+                        videoStyle='cookiee-content-video'
+                        streamManager={publisher}
+                        gesture={true}
+                      />
+                    ) : (
+                      null
+                    )}
+                    {check ? (
+                      <AiFillCheckCircle className='cookiee-check-icon-active'/>
+                    ) : (
+                      <AiFillCheckCircle className='cookiee-check-icon'/>
+                    )}
+                    {handsUp ? (
+                      <IoIosHand className='cookiee-handsup-icon-active'/>
+                    ) : (
+                      <IoIosHand className='cookiee-handsup-icon'/>
+                    )}
+                    {checkVisible && <AiFillCheckCircle className='cookiee-check-animation'/>}
+                    {handsUpVisible && <IoIosHand className='cookiee-handsup-animation'/>}
+                    {timerVisible && <IoIosTimer className='cookiee-timer-animation'/>}
+                  </div>
                 </div>
-              </div>
-              <CookieeLessonStep size={'full'}/>
-            </div>
-            <div>
-              {/* 쿠커 화면 */}
-              <div className='cookiee-content'>
-                {cookyerStream ? (
-                  <UserVideoComponent
-                    videoStyle='cookiee-content-video'
-                    streamManager={cookyerStream}
-                  />
-                ) : (
-                  <h1>쿠커 화면</h1>
-                )}
-                {cookyerStream && audioOnList && audioOnList.find((item) => item === cookyerStream.stream.connection.connectionId) ? (
-                  <BsMicFill className='cookiee-cookyer-audio-icon-active'/>
-                ) : (
-                  <BsMicMuteFill className='cookiee-cookyer-audio-icon'/>
-                )}
-              </div>
-              <Timer role='COOKIEE' size='full'/>
-              {/* 쿠키 본인 화면 */}
-              <div className='cookiee-content'>
-                {publisher !== undefined ? (
-                  <UserVideoComponent
-                    videoStyle='cookiee-content-video'
-                    streamManager={publisher}
-                    gesture={true}
-                  />
-                ) : (
-                  <h1>쿠키 화면</h1>
-                )}
-                {check ? (
-                  <AiFillCheckCircle className='cookiee-check-icon-active'/>
-                ) : (
-                  <AiFillCheckCircle className='cookiee-check-icon'/>
-                )}
-                {handsUp ? (
-                  <IoIosHand className='cookiee-handsup-icon-active'/>
-                ) : (
-                  <IoIosHand className='cookiee-handsup-icon'/>
-                )}
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div>                
+      ) : null}
       {showOthers ? (
         <OtherCookiees/>
       ) : null}

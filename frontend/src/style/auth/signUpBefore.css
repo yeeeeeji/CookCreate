@@ -8,17 +8,19 @@
 
 /* 회원가입 헤더 스타일 */
 .signup-header {
+  color: #404040;
   text-align: center;
-  font-size: 23px;
-  margin-top: 60px;
-  margin-bottom: 10px;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-top: 40px;
 }
 
 /* 회원가입 설명 스타일 */
 .signup-description {
+  color: #666;
   text-align: center;
-  font-size: 15px;
-  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: 400;
 }
 
 /* 사용자 유형 컨테이너 스타일 */
@@ -29,9 +31,13 @@
   display: flex;
   justify-content: center; /* 수평 가운데 정렬 */
 }
-.emoji {
+/* .emoji {
   font-size: 60px;
   margin-top: 20px;
+} */
+.role-icon {
+  margin-top: 30px;
+  height: 70px;
 }
 .user-type-container {
   display: flex;
@@ -44,33 +50,33 @@
 .user-type {
   height: 250px;
   text-align: center;
-  border: 1px solid #ccc;
+  border: 1px solid #d9d9d9;
   /* font-size: 15px; */
   padding: 10px;
-  width: 280px;
+  width: 290px;
+  height: 260px;
   cursor: pointer;
   transition: border-color 0.3s, background-color 0.3s;
   border-radius: 20px;
-  margin: 0 40px; /* 상하로 10px 간격을 주기 위해 margin 추가 */
+  margin: 0 80px; /* 상하로 10px 간격을 주기 위해 margin 추가 */
 }
 
 .user-type:hover {
-  background-color: #fff2ed;
+  background-color: #fff5f1;
   border: 1px solid rgb(255, 213, 195);
 }
 
 .user-type.active {
-  background-color: #ffdec6;
-  font-weight: 500;
+  background-color: #fff1e8;
+  border: 1px solid #FF7A42;
 }
 
 /* 사용자 이름 스타일 */
 .user-name {
   display: flex;
-  font-weight: bold;
   justify-content: center;
   margin-bottom: 8px;
-  color: rgb(255, 77, 0);
+  color: #FF7A42;
 }
 
 /* 텍스트 가운데 정렬 스타일 */
@@ -78,20 +84,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 25px;
-  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 30px;
 }
 
 /* 설명 텍스트 스타일 */
 .description {
   text-align: center;
-  margin-top: 20px;
-  font-size: 15px;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #666;
 }
 
 .signup-button {  
   display: flex;
-  width: 250px;
+  width: 299px;
   height: 40px;
   padding: 15px 94px;
   justify-content: center;
@@ -105,10 +113,11 @@
   color: #FFFDFD;
   margin: 0 auto;
   font-size: 13px;
+  font-weight: 500;
 }
 
 .signup-button:hover {
-  background-color: #FF6060;
+  background-color: #fd621f;
 }
 
 .view {
